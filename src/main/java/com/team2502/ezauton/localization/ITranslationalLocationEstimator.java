@@ -1,4 +1,4 @@
-package com.team2502.ezpp.localization;
+package com.team2502.ezauton.localization;
 
 import org.joml.ImmutableVector2f;
 

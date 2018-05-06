@@ -1,7 +1,7 @@
-package com.team2502.ezpp.localization;
+package com.team2502.ezauton.localization;
 
-import com.team2502.ezpp.localization.sensors.IEncoder;
-import com.team2502.ezpp.utils.IStopwatch;
+import com.team2502.ezauton.localization.sensors.IEncoder;
+import com.team2502.ezauton.utils.IStopwatch;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 

@@ -1,6 +1,6 @@
-package com.team2502.ezpp.localization;
+package com.team2502.ezauton.localization;
 
-import com.team2502.ezpp.localization.sensors.ICompass;
+import com.team2502.ezauton.localization.sensors.ICompass;
 import org.joml.ImmutableVector2f;
 
 /**

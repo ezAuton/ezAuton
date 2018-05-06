@@ -1,4 +1,4 @@
-package com.team2502.ezpp.localization.sensors;
+package com.team2502.ezauton.localization.sensors;
 
 public interface IEncoder extends ITachometer {
     /**

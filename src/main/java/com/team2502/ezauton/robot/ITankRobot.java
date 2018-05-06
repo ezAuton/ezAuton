@@ -1,4 +1,4 @@
-package com.team2502.ezpp.robot;
+package com.team2502.ezauton.robot;
 
 public interface ITankRobot extends IRobot {
 }

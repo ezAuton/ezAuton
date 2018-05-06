@@ -1,4 +1,4 @@
-package com.team2502.ezpp.utils;
+package com.team2502.ezauton.utils;
 
 /**
  * A handy stopwatch for recording time in seconds every time it is polled
