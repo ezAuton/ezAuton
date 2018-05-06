@@ -2,6 +2,7 @@ package com.team2502.ezauton.localization;
 
 import com.team2502.ezauton.localization.sensors.IEncoder;
 import com.team2502.ezauton.utils.IStopwatch;
+import com.team2502.ezauton.utils.MathUtils;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.joml.ImmutableVector2f;
 
