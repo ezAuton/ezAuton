@@ -400,7 +400,7 @@ public final class MathUtils
             }
             else if(discriminate == 0)
             {
-                toReturn.add(b * b / (2 * a));
+                toReturn.add(-b / (2 * a));
             }
             else
             {

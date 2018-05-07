@@ -2,59 +2,61 @@ import com.team2502.ezauton.utils.MathUtils;
 import org.joml.ImmutableVector;
 import org.junit.Assert;
 import org.junit.Test;
-import org.opencv.core.Mat;
+
+import java.util.Set;
 
 public class MathTest
 {
     private ImmutableVector e1 = new ImmutableVector(1, 0);
 
     private final double DELTA = 1E-5;
+
     @Test
     public void testRotation90()
     {
         ImmutableVector rotated90 = MathUtils.LinearAlgebra.rotate2D(e1, Math.PI / 2);
 
-        Assert.assertEquals(0,rotated90.x, 0.001);
-        Assert.assertEquals(1,rotated90.y, 0.001);
+        Assert.assertEquals(0, rotated90.x, 0.001);
+        Assert.assertEquals(1, rotated90.y, 0.001);
     }
 
     @Test
     public void testRotation720()
     {
-        ImmutableVector rotated720 = MathUtils.LinearAlgebra.rotate2D(e1, Math.PI*2);
+        ImmutableVector rotated720 = MathUtils.LinearAlgebra.rotate2D(e1, Math.PI * 2);
 
-        Assert.assertEquals(1,rotated720.x, 0.001);
-        Assert.assertEquals(0,rotated720.y, 0.001);
+        Assert.assertEquals(1, rotated720.x, 0.001);
+        Assert.assertEquals(0, rotated720.y, 0.001);
     }
 
     @Test
     public void testPosRotationCoordinateTransform()
     {
-        ImmutableVector robotLocation = new ImmutableVector(1,1);
-        double robotHeading = 7F*Math.PI/4;
-        ImmutableVector absoluteCoord = new ImmutableVector(2,2);
+        ImmutableVector robotLocation = new ImmutableVector(1, 1);
+        double robotHeading = 7F * Math.PI / 4;
+        ImmutableVector absoluteCoord = new ImmutableVector(2, 2);
 
         double distance = robotLocation.distance(absoluteCoord);
 
         ImmutableVector relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteCoord, robotLocation, robotHeading);
 
-        Assert.assertEquals(0,relativeCoord.x, 0.001);
-        Assert.assertEquals(distance,relativeCoord.y, 0.001);
+        Assert.assertEquals(0, relativeCoord.x, 0.001);
+        Assert.assertEquals(distance, relativeCoord.y, 0.001);
     }
 
     @Test
     public void testNegRotationCoordinateTransform()
     {
-        ImmutableVector robotLocation = new ImmutableVector(1,1);
-        double robotHeading = -Math.PI/4;
-        ImmutableVector absoluteCoord = new ImmutableVector(2,2);
+        ImmutableVector robotLocation = new ImmutableVector(1, 1);
+        double robotHeading = -Math.PI / 4;
+        ImmutableVector absoluteCoord = new ImmutableVector(2, 2);
 
         double distance = robotLocation.distance(absoluteCoord);
 
         ImmutableVector relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteCoord, robotLocation, robotHeading);
 
-        Assert.assertEquals(0,relativeCoord.x, 0.001);
-        Assert.assertEquals(distance,relativeCoord.y, 0.001);
+        Assert.assertEquals(0, relativeCoord.x, 0.001);
+        Assert.assertEquals(distance, relativeCoord.y, 0.001);
     }
 
     @Test //fail
@@ -62,8 +64,8 @@ public class MathTest
     {
         ImmutableVector dPos = MathUtils.Kinematics.getAbsoluteDPosLine(1, 1, 1F, (double) (Math.PI / 4F));
 
-        Assert.assertEquals(Math.sqrt(1/2F),dPos.x, 0.001);
-        Assert.assertEquals(Math.sqrt(1/2F),dPos.y, 0.001);
+        Assert.assertEquals(Math.sqrt(1 / 2F), dPos.x, 0.001);
+        Assert.assertEquals(Math.sqrt(1 / 2F), dPos.y, 0.001);
     }
 
     @Test
@@ -72,13 +74,13 @@ public class MathTest
         // TODO: returns cw radians not ccw I think
         double rad = MathUtils.Kinematics.navXToRad(270);
 
-        Assert.assertEquals(Math.PI/2F,rad, 0.001);
+        Assert.assertEquals(Math.PI / 2F, rad, 0.001);
 
-        rad = MathUtils.Kinematics.navXToRad(270+360);
-        Assert.assertEquals(Math.PI/2F,rad, 0.001);
+        rad = MathUtils.Kinematics.navXToRad(270 + 360);
+        Assert.assertEquals(Math.PI / 2F, rad, 0.001);
 
-        rad = MathUtils.Kinematics.navXToRad(270-360);
-        Assert.assertEquals(Math.PI/2F,rad, 0.001);
+        rad = MathUtils.Kinematics.navXToRad(270 - 360);
+        Assert.assertEquals(Math.PI / 2F, rad, 0.001);
     }
 
     /**
@@ -90,8 +92,8 @@ public class MathTest
         // l * pi = 1 (circumference)
         // 1/pi = l
         ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, 1, 0);
-        Assert.assertEquals(0,absoluteDPosCurve.x, 1);
-        Assert.assertEquals(0,absoluteDPosCurve.y, 1);
+        Assert.assertEquals(0, absoluteDPosCurve.x, 1);
+        Assert.assertEquals(0, absoluteDPosCurve.y, 1);
     }
 
     @Test
@@ -100,8 +102,8 @@ public class MathTest
         // l * pi = 1 (circumference)
         // 1/pi = l
         ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, 1, (double) (Math.PI / 4F));
-        Assert.assertEquals(Math.sqrt(1/2F),absoluteDPosCurve.x, 0.001);
-        Assert.assertEquals(Math.sqrt(1/2F),absoluteDPosCurve.y, 0.001);
+        Assert.assertEquals(Math.sqrt(1 / 2F), absoluteDPosCurve.x, 0.001);
+        Assert.assertEquals(Math.sqrt(1 / 2F), absoluteDPosCurve.y, 0.001);
     }
 
     /**
@@ -111,7 +113,7 @@ public class MathTest
     public void testDTheta90()
     {
         double dTheta = MathUtils.Geometry.getDThetaNavX(270, 0);
-        Assert.assertEquals(3F*Math.PI/2F, dTheta,0.001);
+        Assert.assertEquals(3F * Math.PI / 2F, dTheta, 0.001);
     }
 
     /**
@@ -144,7 +146,7 @@ public class MathTest
     @Test
     public void testNavXBound()
     {
-        Assert.assertEquals(355,MathUtils.Kinematics.navXBound(-5) , 0.001);
+        Assert.assertEquals(355, MathUtils.Kinematics.navXBound(-5), 0.001);
     }
 
     @Test
@@ -153,21 +155,21 @@ public class MathTest
         Assert.assertTrue(MathUtils.signSame(Double.MAX_VALUE, Double.MAX_VALUE));
         Assert.assertTrue(MathUtils.signSame(1234.4, 1234.1));
         Assert.assertTrue(MathUtils.signSame(1234.4, 1234.4));
-        Assert.assertTrue(MathUtils.signSame(1/3.0, 1/3.0));
+        Assert.assertTrue(MathUtils.signSame(1 / 3.0, 1 / 3.0));
         Assert.assertTrue(MathUtils.signSame(0, 0));
         Assert.assertFalse(MathUtils.signSame(-1234.4, 1234.1));
         Assert.assertFalse(MathUtils.signSame(-1234.4, 1234.4));
-        Assert.assertFalse(MathUtils.signSame(-1/3.0, 1/3.0));
+        Assert.assertFalse(MathUtils.signSame(-1 / 3.0, 1 / 3.0));
     }
 
     @Test
     public void testMinAbs()
     {
-        
+
         Assert.assertEquals(MathUtils.minAbs(3, 5), 3, DELTA);
         Assert.assertEquals(MathUtils.minAbs(3, -5), 3, DELTA);
         Assert.assertEquals(MathUtils.minAbs(-3, -5), -3, DELTA);
-        Assert.assertEquals(MathUtils.minAbs(-3, -5/3.0), -5/3.0, DELTA);
+        Assert.assertEquals(MathUtils.minAbs(-3, -5 / 3.0), -5 / 3.0, DELTA);
         Assert.assertEquals(MathUtils.minAbs(-3, 3), -3, DELTA);
         Assert.assertEquals(MathUtils.minAbs(3, -3), 3, DELTA);
     }
@@ -175,11 +177,11 @@ public class MathTest
     @Test
     public void testMaxAbs()
     {
-        
+
         Assert.assertEquals(MathUtils.maxAbs(3, 5), 5, DELTA);
         Assert.assertEquals(MathUtils.maxAbs(3, -5), -5, DELTA);
         Assert.assertEquals(MathUtils.maxAbs(-3, -5), -5, DELTA);
-        Assert.assertEquals(MathUtils.maxAbs(-3, -5/3.0), -3, DELTA);
+        Assert.assertEquals(MathUtils.maxAbs(-3, -5 / 3.0), -3, DELTA);
         Assert.assertEquals(MathUtils.maxAbs(-3, 3), -3, DELTA);
         Assert.assertEquals(MathUtils.maxAbs(3, -3), 3, DELTA);
     }
@@ -245,7 +247,7 @@ public class MathTest
     {
         for(int i = 0; i < 20; i++)
         {
-            double a = (Math.random() - 0.5) * 2 *  360;
+            double a = (Math.random() - 0.5) * 2 * 360;
             Assert.assertEquals(MathUtils.floor(a), Math.floor(a), DELTA);
             Assert.assertEquals(MathUtils.lfloor(a), Math.floor(a), DELTA);
             Assert.assertEquals(MathUtils.floor((float) a), Math.floor((float) a), DELTA);
@@ -257,8 +259,8 @@ public class MathTest
     {
         Assert.assertEquals(Math.PI, MathUtils.shiftRadiansBounded(0, Math.PI), DELTA);
         Assert.assertEquals(0, MathUtils.shiftRadiansBounded(0, MathUtils.TAU), DELTA);
-        Assert.assertEquals(Math.PI, MathUtils.shiftRadiansBounded(Math.PI/2, Math.PI/2), DELTA);
-        Assert.assertEquals(0, MathUtils.shiftRadiansBounded(Math.PI/2, 3 * Math.PI/2), DELTA);
+        Assert.assertEquals(Math.PI, MathUtils.shiftRadiansBounded(Math.PI / 2, Math.PI / 2), DELTA);
+        Assert.assertEquals(0, MathUtils.shiftRadiansBounded(Math.PI / 2, 3 * Math.PI / 2), DELTA);
 
     }
 
@@ -328,5 +330,26 @@ public class MathTest
             Assert.assertEquals(Math.pow(a, 10), MathUtils.pow10(a), 1E-2);
         }
     }
+
+    @Test
+    public void testQuadratic()
+    {
+        for(int i = -20; i < 20; i++)
+        {
+            for(int j = -20; j < 20; j++)
+            {
+                final int iWrapper = i;
+                final int jWrapper = j;
+                MathUtils.Function quadratic = (x) -> x * x - iWrapper * x - jWrapper * x + iWrapper * jWrapper;
+                Set<Double> solutions = MathUtils.Algebra.quadratic(1, -i - j, i * j);
+
+                for(double solution : solutions)
+                {
+                    Assert.assertEquals(0, quadratic.get(solution), DELTA);
+                }
+            }
+        }
+    }
+
 
 }
