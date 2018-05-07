@@ -2,6 +2,7 @@ import com.team2502.ezauton.utils.MathUtils;
 import org.joml.ImmutableVector;
 import org.junit.Assert;
 import org.junit.Test;
+import org.opencv.core.Mat;
 
 public class MathTest
 {
@@ -248,6 +249,83 @@ public class MathTest
             Assert.assertEquals(MathUtils.floor(a), Math.floor(a), DELTA);
             Assert.assertEquals(MathUtils.lfloor(a), Math.floor(a), DELTA);
             Assert.assertEquals(MathUtils.floor((float) a), Math.floor((float) a), DELTA);
+        }
+    }
+
+    @Test
+    public void testShiftRadiansBounded()
+    {
+        Assert.assertEquals(Math.PI, MathUtils.shiftRadiansBounded(0, Math.PI), DELTA);
+        Assert.assertEquals(0, MathUtils.shiftRadiansBounded(0, MathUtils.TAU), DELTA);
+        Assert.assertEquals(Math.PI, MathUtils.shiftRadiansBounded(Math.PI/2, Math.PI/2), DELTA);
+        Assert.assertEquals(0, MathUtils.shiftRadiansBounded(Math.PI/2, 3 * Math.PI/2), DELTA);
+
+    }
+
+    @Test
+    public void testBetweenVec()
+    {
+        for(int i = 0; i < 40; i++)
+        {
+            double ax = (Math.random()) * 10;
+            double ay = (Math.random()) * 10;
+            ImmutableVector a = new ImmutableVector(ax, ay);
+
+            double bx = (Math.random() * 10) + 10;
+            double by = (Math.random() * 10) + 10;
+            ImmutableVector b = new ImmutableVector(bx, by);
+
+            double cx = (ax + bx) / (2);
+            double cy = (ay + by) / (2);
+            ImmutableVector c1 = new ImmutableVector(cx, cy);
+
+            ImmutableVector c2 = new ImmutableVector(ax, cy);
+            ImmutableVector c3 = new ImmutableVector(cx, ay);
+            ImmutableVector c4 = new ImmutableVector(bx, cy);
+            ImmutableVector c5 = new ImmutableVector(cx, by);
+            Assert.assertTrue("A: " + a + " B: " + b + " C: " + c1, MathUtils.between(a, c1, b));
+            Assert.assertTrue("A: " + a + " B: " + b + " C: " + c2, MathUtils.between(a, c2, b));
+            Assert.assertTrue("A: " + a + " B: " + b + " C: " + c3, MathUtils.between(a, c3, b));
+            Assert.assertTrue("A: " + a + " B: " + b + " C: " + c4, MathUtils.between(a, c4, b));
+            Assert.assertTrue("A: " + a + " B: " + b + " C: " + c5, MathUtils.between(a, c5, b));
+        }
+    }
+
+    @Test
+    public void testLogarithms()
+    {
+        for(int i = 0; i < 40; i++)
+        {
+            double a = Math.random() * 360;
+
+            Assert.assertEquals(Math.log(a) / Math.log(2), MathUtils.log2(a), DELTA);
+            Assert.assertEquals(Math.log(a) / Math.log(3), MathUtils.log3(a), DELTA);
+            Assert.assertEquals(Math.log(a) / Math.log(4), MathUtils.log4(a), DELTA);
+            Assert.assertEquals(Math.log(a) / Math.log(5), MathUtils.log5(a), DELTA);
+            Assert.assertEquals("A: " + a, Math.log(a) / Math.log(6), MathUtils.log6(a), DELTA);
+            Assert.assertEquals(Math.log(a) / Math.log(7), MathUtils.log7(a), DELTA);
+            Assert.assertEquals(Math.log(a) / Math.log(8), MathUtils.log8(a), DELTA);
+            Assert.assertEquals(Math.log(a) / Math.log(9), MathUtils.log9(a), DELTA);
+            Assert.assertEquals(Math.log(a) / Math.log(10), MathUtils.log10(a), DELTA);
+        }
+    }
+
+    @Test
+    public void testPow()
+    {
+        for(int i = 0; i < 40; i++)
+        {
+            double a = Math.random() * 15;
+
+            Assert.assertEquals("a: " + a, Math.pow(a, 2), MathUtils.pow2(a), 1e2);
+            Assert.assertEquals(Math.pow(a, 3), MathUtils.pow3(a), DELTA);
+            Assert.assertEquals(Math.pow(a, 4), MathUtils.pow4(a), DELTA);
+            Assert.assertEquals(Math.pow(a, 5), MathUtils.pow5(a), DELTA);
+            Assert.assertEquals(Math.pow(a, 6), MathUtils.pow6(a), DELTA);
+            Assert.assertEquals(Math.pow(a, 7), MathUtils.pow7(a), DELTA);
+            Assert.assertEquals(Math.pow(a, 8), MathUtils.pow8(a), 1E-4);
+            Assert.assertEquals(Math.pow(a, 9), MathUtils.pow9(a), 1E-3);
+            Assert.assertEquals(Math.pow(a, 10), MathUtils.pow10(a), 1E-2);
         }
     }
 

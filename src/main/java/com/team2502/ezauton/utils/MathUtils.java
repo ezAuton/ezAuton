@@ -24,6 +24,16 @@ public final class MathUtils
 
     public static final ImmutableVector VECTOR_STRAIGHT = new ImmutableVector(1, 0);
 
+    private static final double ln2 = StrictMath.log(2);
+    private static final double ln3 = StrictMath.log(3);
+    private static final double ln4 = StrictMath.log(4);
+    private static final double ln5 = StrictMath.log(5);
+    private static final double ln6 = StrictMath.log(6);
+    private static final double ln7 = StrictMath.log(7);
+    private static final double ln8 = StrictMath.log(8);
+    private static final double ln9 = StrictMath.log(9);
+    private static final double ln10 = StrictMath.log(10);
+
     /**
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
      * <br>
@@ -181,7 +191,7 @@ public final class MathUtils
      * @return The log2(in)
      */
     public static double log2(final double in)
-    { return StrictMath.log(in) / 0.6931471806D; }
+    { return StrictMath.log(in) / ln2; }
 
     /**
      * Use the predefined cube logPop instead of a custom implementation.
@@ -190,7 +200,7 @@ public final class MathUtils
      * @return The log3(in)
      */
     public static double log3(final double in)
-    { return StrictMath.log(in) / 1.098612289D; }
+    { return StrictMath.log(in) / ln3; }
 
     /**
      * Use pre calculated math for optimization.
@@ -199,7 +209,7 @@ public final class MathUtils
      * @return The log4(in)
      */
     public static double log4(final double in)
-    { return StrictMath.log(in) / 1.386294361D; }
+    { return StrictMath.log(in) / ln4; }
 
     /**
      * Use pre calculated math for optimization.
@@ -208,7 +218,7 @@ public final class MathUtils
      * @return The log5(in)
      */
     public static double log5(final double in)
-    { return StrictMath.log(in) / 1.609437912D; }
+    { return StrictMath.log(in) / ln5; }
 
     /**
      * Use pre calculated math for optimization.
@@ -217,7 +227,7 @@ public final class MathUtils
      * @return The log6(in)
      */
     public static double log6(final double in)
-    { return StrictMath.log(in) / 2.791759469D; }
+    { return StrictMath.log(in) / ln6; }
 
     /**
      * Use pre calculated math for optimization.
@@ -226,7 +236,7 @@ public final class MathUtils
      * @return The log7(in)
      */
     public static double log7(final double in)
-    { return StrictMath.log(in) / 2.945910149D; }
+    { return StrictMath.log(in) / ln7; }
 
     /**
      * Use pre calculated math for optimization.
@@ -235,7 +245,7 @@ public final class MathUtils
      * @return The log8(in)
      */
     public static double log8(final double in)
-    { return StrictMath.log(in) / 2.079441542D; }
+    { return StrictMath.log(in) / ln8; }
 
     /**
      * Use pre calculated math for optimization.
@@ -244,7 +254,7 @@ public final class MathUtils
      * @return The log9(in)
      */
     public static double log9(final double in)
-    { return StrictMath.log(in) / 2.197224577D; }
+    { return StrictMath.log(in) / ln9; }
 
     /**
      * Use pre calculated math for optimization.
