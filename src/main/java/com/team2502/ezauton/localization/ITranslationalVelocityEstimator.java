@@ -1,6 +1,6 @@
 package com.team2502.ezauton.localization;
 
-import org.joml.ImmutableVector2f;
+import org.joml.ImmutableVector;
 
 /**
  * Interface for any class that will estimate position details of our robot
@@ -10,15 +10,15 @@ public interface ITranslationalVelocityEstimator
     /**
      * @return The absolute velocity of the robot
      */
-    ImmutableVector2f estimateAbsoluteVelocity();
+    ImmutableVector estimateAbsoluteVelocity();
 
-    float getLeftWheelSpeed();
+    double getLeftWheelSpeed();
 
-    float getRightWheelSpeed();
+    double getRightWheelSpeed();
 
-    float estimateSpeed();
+    double estimateSpeed();
 
-    default float avgWheelSpeed()
+    default double avgWheelSpeed()
     {
         return (Math.abs(getLeftWheelSpeed()) + Math.abs(getRightWheelSpeed())) / 2F;
     }

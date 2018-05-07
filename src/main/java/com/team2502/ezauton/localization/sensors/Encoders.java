@@ -10,13 +10,13 @@ public class Encoders {
     {
         return new IEncoder() {
             @Override
-            public float getPosition() {
-                return (float) talonSRX.getSelectedSensorPosition(0)/unitsPerRev;
+            public double getPosition() {
+                return talonSRX.getSelectedSensorPosition(0)/unitsPerRev;
             }
 
             @Override
-            public float getVelocity() {
-                return (float) talonSRX.getSelectedSensorVelocity(0)/unitsPerRev*10F;
+            public double getVelocity() {
+                return talonSRX.getSelectedSensorVelocity(0)/unitsPerRev*10F;
             }
         };
     }

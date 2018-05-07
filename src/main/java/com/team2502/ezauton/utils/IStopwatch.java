@@ -10,9 +10,9 @@ public interface IStopwatch
      *
      * @return The value of the stopwatch
      */
-    default float pop()
+    default double pop()
     {
-        float readVal = read();
+        double readVal = read();
         reset();
         return readVal;
     }
@@ -22,7 +22,7 @@ public interface IStopwatch
      *
      * @return The value of the stopwatch
      */
-    float read();
+    double read();
 
     /**
      * Reset without reading

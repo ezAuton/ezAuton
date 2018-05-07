@@ -5,5 +5,5 @@ package com.team2502.ezauton.localization;
  */
 public interface IRotationalLocationEstimator
 {
-    float estimateHeading();
+    double estimateHeading();
 }

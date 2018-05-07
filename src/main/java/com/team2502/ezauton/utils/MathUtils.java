@@ -1,6 +1,6 @@
 package com.team2502.ezauton.utils;
 
-import org.joml.ImmutableVector2f;
+import org.joml.ImmutableVector;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,10 +30,13 @@ public final class MathUtils
 
     public static final float PI_F = (float) Math.PI;
 
-    public static final ImmutableVector2f VECTOR_STRAIGHT = new ImmutableVector2f(1, 0);
+    public static final ImmutableVector VECTOR_STRAIGHT = new ImmutableVector(1, 0);
 
     /**
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
+     * <br>
+     * Because this stores 2^16 numbers, we will let it be filled with floats.
+     * After all, java allows for implicit float->double casting
      */
     private static final float[] SIN_TABLE = new float[65536];
 
@@ -54,7 +57,7 @@ public final class MathUtils
     public static void init()
     {}
 
-    public static float shiftRadiansBounded(float initRadians, float shift)
+    public static double shiftRadiansBounded(double initRadians, double shift)
     {
         return (initRadians + shift) % TAU;
     }
@@ -62,15 +65,15 @@ public final class MathUtils
     /**
      * @param x A number
      * @param y Another number
-     * @return Returns true if numbers are same sin
+     * @return Returns true if numbers are same sign
      */
-    public static boolean signSame(float x, float y)
-    { return ((Float.floatToIntBits(x) & 0x80000000) == (Float.floatToIntBits(y) & 0x80000000)); }
+    public static boolean signSame(double x, double y)
+    { return ((Double.doubleToLongBits(x) & 0x80000000) == (Double.doubleToLongBits(y) & 0x80000000)); }
 
     /**
      * sin looked up in a table
      */
-    public static float sin(final float value)
+    public static double sin(final double value)
     { return SIN_TABLE[(int) (value * 10430.378F) & 65535]; }
 
     /**
@@ -78,7 +81,7 @@ public final class MathUtils
      * @param b another number
      * @return the number closer to 0
      */
-    public static float minAbs(final float a, final float b)
+    public static double minAbs(final double a, final double b)
     {
         return Math.abs(a) > Math.abs(b) ? b : a;
     }
@@ -88,7 +91,7 @@ public final class MathUtils
      * @param b another number
      * @return the number farther from 0
      */
-    public static float maxAbs(final float a, final float b)
+    public static double maxAbs(final double a, final double b)
     {
         return Math.abs(a) < Math.abs(b) ? b : a;
     }
@@ -96,7 +99,7 @@ public final class MathUtils
     /**
      * cos looked up in the sin table with the appropriate offset
      */
-    public static float cos(final float value)
+    public static double cos(final double value)
     { return SIN_TABLE[(int) (value * 10430.378F + 16384.0F) & 65535]; }
 
     /**
@@ -104,9 +107,9 @@ public final class MathUtils
      * @param x Vector to check
      * @param c Upper/Lower bound
      * @return Returns true if x's x-component is in between that of a and c AND if x's y component is in between that of a and c.
-     * @see MathUtils.Algebra#between(float, float, float)
+     * @see MathUtils.Algebra#between(double, double, double)
      */
-    public static boolean between(final ImmutableVector2f a, final ImmutableVector2f x, final ImmutableVector2f c)
+    public static boolean between(final ImmutableVector a, final ImmutableVector x, final ImmutableVector c)
     {
         return Algebra.between(a.get(0), x.get(0), c.get(0)) && Algebra.between(a.get(1), x.get(1), c.get(1));
     }
@@ -156,7 +159,7 @@ public final class MathUtils
     public static boolean epsilonEquals(final float x, final float y)
     { return Math.abs(y - x) < 1.0E-5F; }
 
-    public static boolean epsilonEquals(ImmutableVector2f vecA, ImmutableVector2f vecB)
+    public static boolean epsilonEquals(ImmutableVector vecA, ImmutableVector vecB)
     { return epsilonEquals(vecA.x, vecB.x) && epsilonEquals(vecA.y, vecB.y); }
 
     /**
@@ -522,16 +525,16 @@ public final class MathUtils
          * @param theta  How much to rotate it by
          * @return The rotated vector
          */
-        public static ImmutableVector2f rotate2D(ImmutableVector2f vector, float theta)
+        public static ImmutableVector rotate2D(ImmutableVector vector, double theta)
         {
-            float sin = sin(theta);
-            float cos = cos(theta);
-            ImmutableVector2f immutableVector2f = new ImmutableVector2f((vector.get(0) * cos - vector.get(1) * sin),
-                                                                        (vector.get(0) * sin + vector.get(1) * cos));
-            return immutableVector2f;
+            double sin = sin(theta);
+            double cos = cos(theta);
+            ImmutableVector immutableVector = new ImmutableVector((vector.get(0) * cos - vector.get(1) * sin),
+                                                                  (vector.get(0) * sin + vector.get(1) * cos));
+            return immutableVector;
         }
 
-        public static ImmutableVector2f absoluteToRelativeCoord(ImmutableVector2f coordinateAbsolute, ImmutableVector2f robotCoordAbs, float robotHeading)
+        public static ImmutableVector absoluteToRelativeCoord(ImmutableVector coordinateAbsolute, ImmutableVector robotCoordAbs, float robotHeading)
         { return rotate2D(coordinateAbsolute.sub(robotCoordAbs), -robotHeading); }
     }
 
@@ -549,10 +552,10 @@ public final class MathUtils
          * @param c added thing
          * @return roots of the quadratic
          */
-        public static Set<Float> quadratic(float a, float b, float c)
+        public static Set<Double> quadratic(double a, double b, double c)
         {
-            Set<Float> toReturn = new HashSet<>();
-            float discriminate = discriminate(a, b, c);
+            Set<Double> toReturn = new HashSet<>();
+            double discriminate = discriminate(a, b, c);
             if(discriminate < 0)
             {
                 return toReturn;
@@ -563,8 +566,8 @@ public final class MathUtils
             }
             else
             {
-                float LHS = -b / (2 * a);
-                float RHS = (float) (Math.sqrt(discriminate) / (2 * a));
+                double LHS = -b / (2 * a);
+                double RHS = (Math.sqrt(discriminate) / (2 * a));
                 toReturn.add(LHS + RHS);
                 toReturn.add(LHS - RHS);
             }
@@ -580,15 +583,15 @@ public final class MathUtils
          * @return roots of the quadratic
          * @see MathUtils.Algebra#quadratic
          */
-        public static float discriminate(float a, float b, float c)
+        public static double discriminate(double a, double b, double c)
         {
-            return b * b - 4F * a * c;
+            return b * b - 4 * a * c;
         }
 
         /**
          * @return if a <= x <= b or b<= x <= a
          */
-        public static boolean between(final float a, final float x, final float b)
+        public static boolean between(final double a, final double x, final double b)
         {
             return bounded(a, x, b) || bounded(b, x, a);
         }
@@ -600,7 +603,7 @@ public final class MathUtils
          * @param b upper bound
          * @return if x is between lower and upper bound
          */
-        public static boolean bounded(final float a, final float x, final float b)
+        public static boolean bounded(final double a, final double x, final double b)
         {
             return a <= x && x <= b;
         }
@@ -609,9 +612,9 @@ public final class MathUtils
          * @param a A number
          * @param b Another number
          * @return If they have the same sign
-         * @deprecated Use {@link Math#signum(float)}
+         * @deprecated Use {@link Math#signum(double)}
          */
-        public static boolean positiveMultiplication(final float a, final float b)
+        public static boolean positiveMultiplication(final double a, final double b)
         {
             return a >= 0 && b >= 0 || a < 0 && b < 0;
         }
@@ -632,57 +635,57 @@ public final class MathUtils
          * @param dt
          * @return
          */
-        public static float getPos(float p0, float v0, float a0, float dt)
+        public static double getPos(double p0, double v0, double a0, double dt)
         {
             return p0 + v0 * dt + 1 / 2F * a0 * dt * dt;
         }
 
-        public static float getAngularVel(float vL, float vR, float l)
+        public static double getAngularVel(double vL, double vR, double l)
         {
             return (vR - vL) / l;
         }
 
-        public static float getTrajectoryRadius(float vL, float vR, float l)
+        public static double getTrajectoryRadius(double vL, double vR, double l)
         {
             return (l * (vR + vL)) / (2 * (vR - vL));
         }
 
-        public static ImmutableVector2f getRelativeDPosCurve(float vL, float vR, float l, float dt)
+        public static ImmutableVector getRelativeDPosCurve(double vL, double vR, double l, double dt)
         {
             // To account for an infinite pathplanning radius when going straight
             if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
             {
                 // Probably average is not needed, but it may be useful over long distances
-                return new ImmutableVector2f((vL + vR) / 2F * dt, 0);
+                return new ImmutableVector((vL + vR) / 2F * dt, 0);
             }
-            float w = getAngularVel(vL, vR, l);
-            float dTheta = w * dt;
+            double w = getAngularVel(vL, vR, l);
+            double dTheta = w * dt;
 
-            float r = getTrajectoryRadius(vL, vR, l);
+            double r = getTrajectoryRadius(vL, vR, l);
 
-            float dxRelative = -r * (1 - MathUtils.cos(-dTheta));
-            float dyRelative = -r * MathUtils.sin(-dTheta);
+            double dxRelative = -r * (1 - MathUtils.cos(-dTheta));
+            double dyRelative = -r * MathUtils.sin(-dTheta);
 
-            return new ImmutableVector2f(dxRelative, dyRelative);
+            return new ImmutableVector(dxRelative, dyRelative);
         }
 
-        public static float getTangentialSpeed(float wheelL, float wheelR)
+        public static double getTangentialSpeed(double wheelL, double wheelR)
         {
             return (wheelL + wheelR) / 2F;
         }
 
 
-        public static ImmutableVector2f getAbsoluteDPosLine(float vL, float vR, float dt, float robotHeading)
+        public static ImmutableVector getAbsoluteDPosLine(double vL, double vR, double dt, double robotHeading)
         {
-            float tangentialSpeed = getTangentialSpeed(vL, vR);
-            float tangentialDPos = getTangentialSpeed(vL, vR) * dt;
-            ImmutableVector2f dPos = VECTOR_STRAIGHT.mul(tangentialDPos);
+            double tangentialSpeed = getTangentialSpeed(vL, vR);
+            double tangentialDPos = getTangentialSpeed(vL, vR) * dt;
+            ImmutableVector dPos = VECTOR_STRAIGHT.mul(tangentialDPos);
             return LinearAlgebra.rotate2D(dPos, robotHeading);
         }
 
-        public static ImmutableVector2f getAbsoluteDPosCurve(float vL, float vR, float l, float dt, float robotHeading)
+        public static ImmutableVector getAbsoluteDPosCurve(double vL, double vR, double l, double dt, double robotHeading)
         {
-            ImmutableVector2f relativeDPos = getRelativeDPosCurve(vL, vR, l, dt);
+            ImmutableVector relativeDPos = getRelativeDPosCurve(vL, vR, l, dt);
             return LinearAlgebra.rotate2D(relativeDPos, robotHeading);
         }
 
@@ -706,9 +709,9 @@ public final class MathUtils
          * @param angle Whatever the navX is reading
          * @return An angle between 0 and 360, in degrees
          */
-        public static float navXBound(float angle)
+        public static double navXBound(double angle)
         {
-            float bounded = angle % 360;
+            double bounded = angle % 360;
             if(bounded < 0)
             {
                 return 360 + bounded;
@@ -725,20 +728,20 @@ public final class MathUtils
          * @param finalDegrees final degrees navX (counterclockwise)
          * @return the difference in radians between the two degrees from [0,2pi). Increases counterclockwise.
          */
-        public static float getDThetaNavX(float initDegrees, float finalDegrees)
+        public static double getDThetaNavX(double initDegrees, double finalDegrees)
         {
-            float degDif = -(finalDegrees - initDegrees);
+            double degDif = -(finalDegrees - initDegrees);
             double radians = MathUtils.deg2Rad(degDif);
             double radBounded = (radians % TAU);
-            if(radBounded < 0) { return (float) (TAU + radBounded); }
-            return (float) radBounded;
+            if(radBounded < 0) { return (TAU + radBounded); }
+            return radBounded;
         }
 
-        public static float getDAngle(float angle1, float angle2)
+        public static double getDAngle(double angle1, double angle2)
         {
-            float simpleAngle1 = angle1 % 360;
-            float simpleAngle2 = angle2 % 360;
-            float dif = Math.abs(simpleAngle1 - simpleAngle2);
+            double simpleAngle1 = angle1 % 360;
+            double simpleAngle2 = angle2 % 360;
+            double dif = Math.abs(simpleAngle1 - simpleAngle2);
             if(dif > 180)
             {
                 dif = 360 - dif;
@@ -746,9 +749,9 @@ public final class MathUtils
             return dif;
         }
 
-        public static boolean isCCWQuickest(float angleInit, float angleFinal)
+        public static boolean isCCWQuickest(double angleInit, double angleFinal)
         {
-            float d;
+            double d;
             if(angleFinal > angleInit)
             {
                 d = angleFinal - angleInit;
@@ -780,11 +783,11 @@ public final class MathUtils
          * @param end
          * @return The theta of the angle created ccw between \vec{i} and the line from start->end
          */
-        public static float getThetaFromPoints(ImmutableVector2f start, ImmutableVector2f end)
+        public static double getThetaFromPoints(ImmutableVector start, ImmutableVector end)
         {
-            float dx = end.x - start.x;
-            float dy = end.y - start.y;
-            return (float) Math.atan2(dy, dx);
+            double dx = end.x - start.x;
+            double dy = end.y - start.y;
+            return Math.atan2(dy, dx);
         }
 
         /**
@@ -795,7 +798,7 @@ public final class MathUtils
          * @param robotPos   The point at which our robot is
          * @return The point on the line closest to the robot
          */
-        public static ImmutableVector2f getClosestPointLineSegments(ImmutableVector2f linePointA, ImmutableVector2f linePointB, ImmutableVector2f robotPos)
+        public static ImmutableVector getClosestPointLineSegments(ImmutableVector linePointA, ImmutableVector linePointB, ImmutableVector robotPos)
         {
 
             double d1 = Math.hypot(linePointA.x - robotPos.x, linePointA.y - robotPos.y);
@@ -807,7 +810,7 @@ public final class MathUtils
 
             Line linePerp = lineSegment.getPerp(robotPos);
 
-            ImmutableVector2f intersect = linePerp.intersection(lineSegment);
+            ImmutableVector intersect = linePerp.intersection(lineSegment);
 
             double d3 = Math.hypot(intersect.x - robotPos.x, intersect.y - robotPos.y);
 
@@ -829,9 +832,10 @@ public final class MathUtils
          * @param speed Vector's magnitude
          * @param angle Angle at which it is at
          * @return A vector in <x, y> form
-         * @see ImmutableVector2f
+         * @see ImmutableVector
          */
-        public static ImmutableVector2f getVector(float speed, float angle)
+        //TODO: Shouldn't this scale by speed?
+        public static ImmutableVector getVector(double speed, double angle)
         {
             return MathUtils.LinearAlgebra.rotate2D(VECTOR_STRAIGHT, angle);
         }
@@ -845,33 +849,33 @@ public final class MathUtils
          * @param radius The radius of the circle
          * @return All points on both the line and circle, should they exist.
          */
-        public static ImmutableVector2f[] getCircleLineIntersectionPoint(ImmutableVector2f pointA, ImmutableVector2f pointB, ImmutableVector2f center, double radius)
+        public static ImmutableVector[] getCircleLineIntersectionPoint(ImmutableVector pointA, ImmutableVector pointB, ImmutableVector center, double radius)
         {
-            float baX = pointB.get(0) - pointA.get(0);
-            float baY = pointB.get(1) - pointA.get(1);
+            double baX = pointB.get(0) - pointA.get(0);
+            double baY = pointB.get(1) - pointA.get(1);
 
-            float caX = center.get(0) - pointA.get(0);
-            float caY = center.get(1) - pointA.get(1);
+            double caX = center.get(0) - pointA.get(0);
+            double caY = center.get(1) - pointA.get(1);
 
-            float a = baX * baX + baY * baY;
-            float bBy2 = baX * caX + baY * caY;
+            double a = baX * baX + baY * baY;
+            double bBy2 = baX * caX + baY * caY;
             double c = caX * caX + caY * caY - radius * radius;
 
-            float pBy2 = bBy2 / a;
+            double pBy2 = bBy2 / a;
             double q = c / a;
 
             double disc = pBy2 * pBy2 - q;
-            if(disc < 0) { return new ImmutableVector2f[0]; }
+            if(disc < 0) { return new ImmutableVector[0]; }
             // if disc == 0 ... dealt with later
-            float tmpSqrt = (float) Math.sqrt(disc);
-            float abScalingFactor1 = tmpSqrt - pBy2;
+            double tmpSqrt = Math.sqrt(disc);
+            double abScalingFactor1 = tmpSqrt - pBy2;
 
-            ImmutableVector2f p1 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor1, pointA.get(1) - baY * abScalingFactor1);
-            if(disc == 0) { return new ImmutableVector2f[] { p1 }; }
+            ImmutableVector p1 = new ImmutableVector(pointA.get(0) - baX * abScalingFactor1, pointA.get(1) - baY * abScalingFactor1);
+            if(disc == 0) { return new ImmutableVector[] { p1 }; }
 
-            float abScalingFactor2 = -pBy2 - tmpSqrt;
-            ImmutableVector2f p2 = new ImmutableVector2f(pointA.get(0) - baX * abScalingFactor2, pointA.get(1) - baY * abScalingFactor2);
-            return new ImmutableVector2f[] { p1, p2 };
+            double abScalingFactor2 = -pBy2 - tmpSqrt;
+            ImmutableVector p2 = new ImmutableVector(pointA.get(0) - baX * abScalingFactor2, pointA.get(1) - baY * abScalingFactor2);
+            return new ImmutableVector[] { p1, p2 };
         }
 
         public static class Line implements Integrable
@@ -885,10 +889,10 @@ public final class MathUtils
             final double y1;
             final double y2;
 
-            final ImmutableVector2f a;
-            final ImmutableVector2f b;
+            final ImmutableVector a;
+            final ImmutableVector b;
 
-            public Line(ImmutableVector2f a, ImmutableVector2f b)
+            public Line(ImmutableVector a, ImmutableVector b)
             {
                 x1 = a.x;
                 x2 = b.x;
@@ -934,7 +938,7 @@ public final class MathUtils
                 return integrate(x1, x2);
             }
 
-            public Line getPerp(ImmutableVector2f point)
+            public Line getPerp(ImmutableVector point)
             {
                 double perpSlope;
                 if(slope == Double.MAX_VALUE)
@@ -945,10 +949,10 @@ public final class MathUtils
                 {
                     perpSlope = -1 / slope;
                 }
-                return new Line(point, new ImmutableVector2f(point.x + 1, (float) (point.y + perpSlope)));
+                return new Line(point, new ImmutableVector(point.x + 1, (point.y + perpSlope)));
             }
 
-            public ImmutableVector2f intersection(Line other)
+            public ImmutableVector intersection(Line other)
             {
                 if(other.slope == slope)
                 {
@@ -959,14 +963,14 @@ public final class MathUtils
                     else
                     {
                         // TODO: is this a good idea to return?
-                        return new ImmutableVector2f((float) other.x1, (float) other.y2);
+                        return new ImmutableVector( other.x1,  other.y2);
                     }
                 }
                 // mx + b = cx + d
                 // (m-c) x = d - b
                 double x = (other.y_intercept - this.y_intercept) / (this.slope - other.slope);
                 double y = evaluateY(x);
-                return new ImmutableVector2f((float) x, (float) y);
+                return new ImmutableVector( x,  y);
 
 
             }

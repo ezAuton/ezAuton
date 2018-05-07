@@ -4,5 +4,5 @@ public interface IEncoder extends ITachometer {
     /**
      * @return revolutions
      */
-    float getPosition();
+    double getPosition();
 }

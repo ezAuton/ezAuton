@@ -4,5 +4,5 @@ public interface ITachometer extends ISensor {
     /**
      * @return revolutions / s
      */
-    float getVelocity();
+    double getVelocity();
 }

@@ -3,8 +3,7 @@ package com.team2502.ezauton.localization;
 import com.team2502.ezauton.localization.sensors.IEncoder;
 import com.team2502.ezauton.utils.IStopwatch;
 import com.team2502.ezauton.utils.MathUtils;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.joml.ImmutableVector2f;
+import org.joml.ImmutableVector;
 
 /**
  * Localization using encoders which can is primarily used for estimating the speed of the robot.
@@ -15,7 +14,7 @@ public class EncoderAndCompassLocationEstimator implements ITranslationalLocatio
 {
     private final IEncoder leftEncoder;
     private final IEncoder rightEncoder;
-    private ImmutableVector2f location;
+    private ImmutableVector location;
     private final IRotationalLocationEstimator rotEstimator;
     private final IStopwatch stopwatch;
 
@@ -27,7 +26,7 @@ public class EncoderAndCompassLocationEstimator implements ITranslationalLocatio
      */
     public EncoderAndCompassLocationEstimator(IRotationalLocationEstimator rotEstimator, IEncoder leftEncoder, IEncoder rightEncoder, IStopwatch stopwatch)
     {
-        location = new ImmutableVector2f(0F, 0F);
+        location = new ImmutableVector(0F, 0F);
         this.stopwatch = stopwatch;
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
@@ -43,15 +42,15 @@ public class EncoderAndCompassLocationEstimator implements ITranslationalLocatio
      * @return our location
      */
     @Override
-    public ImmutableVector2f estimateLocation()
+    public ImmutableVector estimateLocation()
     {
         // figure out time since last estimated
-        float dTime = stopwatch.pop();
-        float leftVel = leftEncoder.getVelocity();
-        float rightVel = rightEncoder.getVelocity();
+        double dTime = stopwatch.pop();
+        double leftVel = leftEncoder.getVelocity();
+        double rightVel = rightEncoder.getVelocity();
 
         // figure out how much our position has changed
-        ImmutableVector2f dPos = MathUtils.Kinematics.getAbsoluteDPosLine(leftVel, rightVel, dTime, rotEstimator.estimateHeading());
+        ImmutableVector dPos = MathUtils.Kinematics.getAbsoluteDPosLine(leftVel, rightVel, dTime, rotEstimator.estimateHeading());
 
         // add to our running total
         location = location.add(dPos);
@@ -63,25 +62,25 @@ public class EncoderAndCompassLocationEstimator implements ITranslationalLocatio
      * @return A unit vector pointing in the direction of our movement.
      */
     @Override
-    public ImmutableVector2f estimateAbsoluteVelocity()
+    public ImmutableVector estimateAbsoluteVelocity()
     {
         return MathUtils.Geometry.getVector(estimateSpeed(), rotEstimator.estimateHeading());
     }
 
     @Override
-    public float getLeftWheelSpeed()
+    public double getLeftWheelSpeed()
     {
         return leftEncoder.getVelocity();
     }
 
     @Override
-    public float getRightWheelSpeed()
+    public double getRightWheelSpeed()
     {
         return rightEncoder.getVelocity();
     }
 
     @Override
-    public float estimateSpeed()
+    public double estimateSpeed()
     {
         return MathUtils.Kinematics.getTangentialSpeed(getLeftWheelSpeed(), getRightWheelSpeed());
     }
