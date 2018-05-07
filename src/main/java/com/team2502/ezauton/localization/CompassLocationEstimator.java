@@ -32,16 +32,9 @@ public class CompassLocationEstimator implements IRotationalLocationEstimator
     @Override
     public double estimateHeading()
     {
+        //TODO: Use ICompass.getRadians();
         // switch direction of increase
-        double yawDegTotal = -Robot.NAVX.getAngle();
+        double yawDegTotal = -compass.getDegrees();
         return MathUtils.Kinematics.navXToRad(yawDegTotal - initHeading);
     }
-
-    /**
-     * @return
-     * @deprecated bad! Accurate to 1m after 15 s because of accelerometer noise
-     */
-    @Override
-    public ImmutableVector estimateLocation()
-    { return new ImmutableVector(Robot.NAVX.getDisplacementX(), Robot.NAVX.getDisplacementY()); }
 }
