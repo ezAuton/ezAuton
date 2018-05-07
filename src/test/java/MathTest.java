@@ -7,6 +7,7 @@ public class MathTest
 {
     private ImmutableVector e1 = new ImmutableVector(1, 0);
 
+    private final double DELTA = 1E-5;
     @Test
     public void testRotation90()
     {
@@ -143,6 +144,111 @@ public class MathTest
     public void testNavXBound()
     {
         Assert.assertEquals(355,MathUtils.Kinematics.navXBound(-5) , 0.001);
+    }
+
+    @Test
+    public void testSignSame()
+    {
+        Assert.assertTrue(MathUtils.signSame(Double.MAX_VALUE, Double.MAX_VALUE));
+        Assert.assertTrue(MathUtils.signSame(1234.4, 1234.1));
+        Assert.assertTrue(MathUtils.signSame(1234.4, 1234.4));
+        Assert.assertTrue(MathUtils.signSame(1/3.0, 1/3.0));
+        Assert.assertTrue(MathUtils.signSame(0, 0));
+        Assert.assertFalse(MathUtils.signSame(-1234.4, 1234.1));
+        Assert.assertFalse(MathUtils.signSame(-1234.4, 1234.4));
+        Assert.assertFalse(MathUtils.signSame(-1/3.0, 1/3.0));
+    }
+
+    @Test
+    public void testMinAbs()
+    {
+        
+        Assert.assertEquals(MathUtils.minAbs(3, 5), 3, DELTA);
+        Assert.assertEquals(MathUtils.minAbs(3, -5), 3, DELTA);
+        Assert.assertEquals(MathUtils.minAbs(-3, -5), -3, DELTA);
+        Assert.assertEquals(MathUtils.minAbs(-3, -5/3.0), -5/3.0, DELTA);
+        Assert.assertEquals(MathUtils.minAbs(-3, 3), -3, DELTA);
+        Assert.assertEquals(MathUtils.minAbs(3, -3), 3, DELTA);
+    }
+
+    @Test
+    public void testMaxAbs()
+    {
+        
+        Assert.assertEquals(MathUtils.maxAbs(3, 5), 5, DELTA);
+        Assert.assertEquals(MathUtils.maxAbs(3, -5), -5, DELTA);
+        Assert.assertEquals(MathUtils.maxAbs(-3, -5), -5, DELTA);
+        Assert.assertEquals(MathUtils.maxAbs(-3, -5/3.0), -3, DELTA);
+        Assert.assertEquals(MathUtils.maxAbs(-3, 3), -3, DELTA);
+        Assert.assertEquals(MathUtils.maxAbs(3, -3), 3, DELTA);
+    }
+
+    @Test
+    public void testDegToRad()
+    {
+        for(int i = 0; i < 20; i++)
+        {
+            double deg = Math.random() * 360;
+            double rad = MathUtils.deg2Rad(deg);
+
+            Assert.assertEquals(rad, Math.toRadians(deg), DELTA);
+        }
+    }
+
+    @Test
+    public void testRadToGegree()
+    {
+        for(int i = 0; i < 20; i++)
+        {
+            double rad = Math.random() * 360;
+            double deg = MathUtils.rad2Deg(rad);
+
+            Assert.assertEquals(deg, Math.toDegrees(rad), DELTA);
+        }
+    }
+
+    @Test
+    public void testEpsilonEqualsNumbers()
+    {
+        for(int i = 0; i < 20; i++)
+        {
+            double a = Math.random() * 360;
+            double b = (Math.sqrt(a * a) * 3.0) / 3 + 1.987 - 1 - 0.987; // try to accumulate FP errors
+
+            Assert.assertTrue(MathUtils.epsilonEquals(a, b));
+            Assert.assertTrue(MathUtils.epsilonEquals((float) a, (float) b));
+        }
+    }
+
+    @Test
+    public void testEpsilonEqualsVectors()
+    {
+        for(int i = 0; i < 20; i++)
+        {
+            double ax = Math.random() * 360;
+            double bx = (Math.sqrt(ax * ax) * 3.0) / 3 + 1.987 - 1 - 0.987; // try to accumulate FP errors
+
+            double ay = Math.random() * 360;
+            double by = (Math.sqrt(ay * ay) * 3.0) / 3 + 1.987 - 1 - 0.987; // try to accumulate FP errors
+
+            ImmutableVector vecA = new ImmutableVector(ax, ay);
+            ImmutableVector vecB = new ImmutableVector(bx, by);
+
+            Assert.assertEquals(vecA, vecB);
+            Assert.assertTrue(MathUtils.epsilonEquals(vecA, vecB));
+        }
+    }
+
+    @Test
+    public void testFloor()
+    {
+        for(int i = 0; i < 20; i++)
+        {
+            double a = (Math.random() - 0.5) * 2 *  360;
+            Assert.assertEquals(MathUtils.floor(a), Math.floor(a), DELTA);
+            Assert.assertEquals(MathUtils.lfloor(a), Math.floor(a), DELTA);
+            Assert.assertEquals(MathUtils.floor((float) a), Math.floor((float) a), DELTA);
+        }
     }
 
 }

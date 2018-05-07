@@ -68,7 +68,7 @@ public final class MathUtils
      * @return Returns true if numbers are same sign
      */
     public static boolean signSame(double x, double y)
-    { return ((Double.doubleToLongBits(x) & 0x80000000) == (Double.doubleToLongBits(y) & 0x80000000)); }
+    { return Long.signum(Double.doubleToLongBits(x)) == Long.signum(Double.doubleToLongBits(y)); }
 
     /**
      * sin looked up in a table
@@ -79,7 +79,7 @@ public final class MathUtils
     /**
      * @param a a number
      * @param b another number
-     * @return the number closer to 0
+     * @return the number closer to 0, or the {@code a} if |a| = |b|
      */
     public static double minAbs(final double a, final double b)
     {
@@ -89,7 +89,7 @@ public final class MathUtils
     /**
      * @param a a number
      * @param b another number
-     * @return the number farther from 0
+     * @return the number farther from 0, or {@code a} if |a| = |b|
      */
     public static double maxAbs(final double a, final double b)
     {
