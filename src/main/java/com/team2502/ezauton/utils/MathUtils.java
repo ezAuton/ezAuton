@@ -13,22 +13,14 @@ import java.util.Set;
  * @see MathUtils.LinearAlgebra
  * @see MathUtils.Kinematics
  */
-@SuppressWarnings("unused")
+//@SuppressWarnings("unused")
 public final class MathUtils
 {
     public static final double PHI = 1.618033989D;
-    public static final float PHI_F = 1.618033989F;
-
     public static final double ROOT_2 = 1.414213562D;
     public static final double ROOT_3 = 1.732050808D;
 
-    public static final float ROOT_2_F = 1.414213562F;
-    public static final float ROOT_3_F = 1.732050808F;
-
-    public static final double TAU_D = 2 * Math.PI;
-    public static final float TAU = 2 * (float) Math.PI;
-
-    public static final float PI_F = (float) Math.PI;
+    public static final double TAU = 2 * Math.PI;
 
     public static final ImmutableVector VECTOR_STRAIGHT = new ImmutableVector(1, 0);
 
@@ -38,7 +30,7 @@ public final class MathUtils
      * Because this stores 2^16 numbers, we will let it be filled with floats.
      * After all, java allows for implicit float->double casting
      */
-    private static final float[] SIN_TABLE = new float[65536];
+    private static final double[] SIN_TABLE = new double[65536];
 
     private MathUtils()
     {
@@ -46,7 +38,7 @@ public final class MathUtils
     }
 
     static {
-        for(int i = 0; i < 65536; ++i) { SIN_TABLE[i] = (float) Math.sin(((double) i) * Math.PI * 2.0D / 65536.0D); }
+        for(int i = 0; i < 65536; ++i) { SIN_TABLE[i] = Math.sin((i) * Math.PI * 2.0D / 65536.0D); }
 
         SIN_TABLE[0] = 0;       /* 0π */
         SIN_TABLE[16384] = 1;   /* π/2 */
@@ -74,7 +66,7 @@ public final class MathUtils
      * sin looked up in a table
      */
     public static double sin(final double value)
-    { return SIN_TABLE[(int) (value * 10430.378F) & 65535]; }
+    { return SIN_TABLE[(int) (value * 10430.378D) & 65535]; }
 
     /**
      * @param a a number
@@ -120,24 +112,6 @@ public final class MathUtils
      * @param deg Number of degrees
      * @return Number of radians
      */
-    public static float deg2Rad(float deg)
-    { return deg * 0.01745329251994F; }
-
-    /**
-     * Multiply degrees by 180/π
-     *
-     * @param rad Number of radians
-     * @return Number of degrees
-     */
-    public static float rad2Deg(float rad)
-    { return rad * 57.29577951308233F; }
-
-    /**
-     * Multiply degrees by π/180
-     *
-     * @param deg Number of degrees
-     * @return Number of radians
-     */
     public static double deg2Rad(double deg)
     { return deg * 0.01745329251994D; }
 
@@ -150,14 +124,6 @@ public final class MathUtils
     public static double rad2Deg(double rad)
     { return rad * 57.29577951308233D; }
 
-    /**
-     * Checks if two numbers are equal while accounting for
-     * the possibility of a floating point error.
-     *
-     * @return x ~= y
-     */
-    public static boolean epsilonEquals(final float x, final float y)
-    { return Math.abs(y - x) < 1.0E-5F; }
 
     public static boolean epsilonEquals(ImmutableVector vecA, ImmutableVector vecB)
     { return epsilonEquals(vecA.x, vecB.x) && epsilonEquals(vecA.y, vecB.y); }
@@ -171,15 +137,6 @@ public final class MathUtils
     public static boolean epsilonEquals(final double x, final double y)
     { return Math.abs(y - x) < 1.0E-5D; }
 
-    /**
-     * Unchecked implementation to round a number down. Parameter should be known to be valid in advance.
-     * Returns the greatest integer less than or equal to the float argument
-     */
-    public static int floor(final float value)
-    {
-        int i = (int) value;
-        return value < (float) i ? i - 1 : i;
-    }
 
     /**
      * Returns the greatest integer less than or equal to the double argument
@@ -200,67 +157,13 @@ public final class MathUtils
     }
 
     /**
-     * returns value cast as an int, and no greater than Integer.MAX_VALUE-1024
-     */
-    public static int fastFloor(final float value)
-    { return ((int) (value + 1024.0F)) - 1024; }
-
-    /**
-     * returns value cast as an int, and no greater than Integer.MAX_VALUE-1024
-     */
-    public static int fastFloor(final double value)
-    { return ((int) (value + 1024.0D)) - 1024; }
-
-    /**
      * Gets the decimal portion of the given double. For instance, {@code frac(5.5)} returns {@code .5}.
      */
     public static double frac(final double number)
-    { return number - Math.floor(number); }
-
-    /**
-     * Gets the decimal portion of the given double. For instance, {@code frac(5.5)} returns {@code .5}.
-     */
-    public static float frac(final float number)
     { return number - floor(number); }
 
-    /**
-     * Unchecked implementation to determine the smaller of two Floats. Parameters should be known to be valid in advance.
-     */
-    public static float minF(final float a, final float b)
-    { return a < b ? a : b; }
-
-    /**
-     * @return the smaller number between a and b
-     */
-    public static float minF(final int a, final float b)
-    { return a < b ? a : b; }
-
-    /**
-     * @return the smaller number between a and b
-     */
-    public static float minF(final float a, final int b)
-    { return a < b ? a : b; }
-
-    /**
-     * Unchecked implementation to determine the larger of two Floats. Parameters should be known to be valid in advance.
-     */
-    public static float maxF(final float a, final float b)
-    { return a > b ? a : b; }
-
-    /**
-     * @return the larger number between a and b
-     */
-    public static float maxF(final int a, final float b)
-    { return a > b ? a : b; }
-
-    /**
-     * @return the larger number between a and b
-     */
-    public static float maxF(final float a, final int b)
-    { return a > b ? a : b; }
 
     //region Logarithmic Functions
-
     /**
      * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
      *
@@ -269,16 +172,6 @@ public final class MathUtils
      * @return The logX(in)
      */
     public static double log(final double base, final double in)
-    { return StrictMath.log(in) / StrictMath.log(base); }
-
-    /**
-     * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
-     *
-     * @param base The base of the logPop.
-     * @param in   The value to find the logPop of.
-     * @return The logX(in)
-     */
-    public static double logX(final double base, final double in)
     { return StrictMath.log(in) / StrictMath.log(base); }
 
     /**
@@ -362,23 +255,6 @@ public final class MathUtils
     public static double log10(final double in)
     { return StrictMath.log10(in); }
 
-    /**
-     * Because why not.
-     *
-     * @param in The value to find the logPop of.
-     * @return The logPi(in)
-     */
-    public static double logPi(final double in)
-    { return StrictMath.log(in) / 1.144729886D; }
-
-    /**
-     * Calculates the natural logarithm (base e).
-     *
-     * @param in The value to find the logPop of.
-     * @return The ln(in)
-     */
-    public static double loge(final double in)
-    { return StrictMath.log(in); }
 
     /**
      * Calculates the natural logarithm (base e).
@@ -446,65 +322,9 @@ public final class MathUtils
     { return x * x * x * x * x * x * x * x * x * x; }
     //endregion
 
-    /**
-     * @return x ^ 2
-     */
-    public static float pow2f(final float x)
-    { return x * x; }
-
-    /**
-     * @return x ^ 3
-     */
-    public static float pow3f(final float x)
-    { return x * x * x; }
-
-    /**
-     * @return x ^ 4
-     */
-    public static float pow4f(final float x)
-    { return x * x * x * x; }
-
-    /**
-     * @return x ^ 5
-     */
-    public static float pow5f(final float x)
-    { return x * x * x * x * x; }
-
-    /**
-     * @return x ^ 6
-     */
-    public static float pow6f(final float x)
-    { return x * x * x * x * x * x; }
-
-    /**
-     * @return x ^ 7
-     */
-    public static float pow7f(final float x)
-    { return x * x * x * x * x * x * x; }
-
-    /**
-     * @return x ^ 8
-     */
-    public static float pow8f(final float x)
-    { return x * x * x * x * x * x * x * x; }
-
-    /**
-     * @return x ^ 9
-     */
-    public static float pow9f(final float x)
-    { return x * x * x * x * x * x * x * x * x; }
-
-    /**
-     * @return x ^ 10
-     */
-    public static float pow10f(final float x)
-    { return x * x * x * x * x * x * x * x * x * x; }
-    //endregion
-
     public interface Integrable
     {
         double integrate(double a, double b);
-
     }
 
     @FunctionalInterface
@@ -534,6 +354,14 @@ public final class MathUtils
             return immutableVector;
         }
 
+        /**
+         * Turn absolute coordinates into coordinates relative to the robot
+         *
+         * @param coordinateAbsolute The absolute coordinates
+         * @param robotCoordAbs The robot's absolute position
+         * @param robotHeading The robot's heading
+         * @return {@code cordinateAbsolute} but relative to the robot
+         */
         public static ImmutableVector absoluteToRelativeCoord(ImmutableVector coordinateAbsolute, ImmutableVector robotCoordAbs, double robotHeading)
         { return rotate2D(coordinateAbsolute.sub(robotCoordAbs), -robotHeading); }
     }
@@ -549,7 +377,7 @@ public final class MathUtils
          *
          * @param a x^2 coefficient
          * @param b x coefficient
-         * @param c added thing
+         * @param c added constant
          * @return roots of the quadratic
          */
         public static Set<Double> quadratic(double a, double b, double c)

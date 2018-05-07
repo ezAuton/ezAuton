@@ -11,7 +11,7 @@ public class MathTest
     @Test
     public void testRotation90()
     {
-        ImmutableVector rotated90 = MathUtils.LinearAlgebra.rotate2D(e1, MathUtils.PI_F / 2);
+        ImmutableVector rotated90 = MathUtils.LinearAlgebra.rotate2D(e1, Math.PI / 2);
 
         Assert.assertEquals(0,rotated90.x, 0.001);
         Assert.assertEquals(1,rotated90.y, 0.001);
@@ -20,7 +20,7 @@ public class MathTest
     @Test
     public void testRotation720()
     {
-        ImmutableVector rotated720 = MathUtils.LinearAlgebra.rotate2D(e1, MathUtils.PI_F*2);
+        ImmutableVector rotated720 = MathUtils.LinearAlgebra.rotate2D(e1, Math.PI*2);
 
         Assert.assertEquals(1,rotated720.x, 0.001);
         Assert.assertEquals(0,rotated720.y, 0.001);
@@ -30,7 +30,7 @@ public class MathTest
     public void testPosRotationCoordinateTransform()
     {
         ImmutableVector robotLocation = new ImmutableVector(1,1);
-        double robotHeading = 7F*MathUtils.PI_F/4;
+        double robotHeading = 7F*Math.PI/4;
         ImmutableVector absoluteCoord = new ImmutableVector(2,2);
 
         double distance = robotLocation.distance(absoluteCoord);
@@ -45,7 +45,7 @@ public class MathTest
     public void testNegRotationCoordinateTransform()
     {
         ImmutableVector robotLocation = new ImmutableVector(1,1);
-        double robotHeading = -MathUtils.PI_F/4;
+        double robotHeading = -Math.PI/4;
         ImmutableVector absoluteCoord = new ImmutableVector(2,2);
 
         double distance = robotLocation.distance(absoluteCoord);
