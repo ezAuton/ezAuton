@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
+    id "jacoco"
+
 }
 
 group 'com.team2502'
@@ -20,6 +22,13 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+    }
+}
+
 sourceSets {
     main {
         java { srcDirs = ['src/main/java'] }
@@ -31,3 +40,9 @@ sourceSets {
         resources { srcDirs = ['src/test/resources'] }
     }
 }
+
+
+check.dependsOn jacocoTestReport
+
+
+
