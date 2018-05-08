@@ -1,7 +1,8 @@
 package com.team2502.ezauton.localization;
 
 import com.team2502.ezauton.localization.sensors.ICompass;
-import org.joml.ImmutableVector2f;
+import com.team2502.ezauton.utils.MathUtils;
+import org.joml.ImmutableVector;
 
 /**
  * Uses the navX to estimate angle of the robot using the gyro
@@ -29,18 +30,11 @@ public class CompassLocationEstimator implements IRotationalLocationEstimator
      * @return Theta of our robot in radians
      */
     @Override
-    public float estimateHeading()
+    public double estimateHeading()
     {
+        //TODO: Use ICompass.getRadians();
         // switch direction of increase
-        double yawDegTotal = -Robot.NAVX.getAngle();
-        return (float) MathUtils.Kinematics.navXToRad(yawDegTotal - initHeading);
+        double yawDegTotal = -compass.getDegrees();
+        return MathUtils.Kinematics.navXToRad(yawDegTotal - initHeading);
     }
-
-    /**
-     * @return
-     * @deprecated bad! Accurate to 1m after 15 s because of accelerometer noise
-     */
-    @Override
-    public ImmutableVector2f estimateLocation()
-    { return new ImmutableVector2f(Robot.NAVX.getDisplacementX(), Robot.NAVX.getDisplacementY()); }
 }

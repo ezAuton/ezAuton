@@ -4,10 +4,10 @@ public interface ICompass extends ISensor {
     /**
      * @return Degrees. In front of robot is 0. To left is 90, behind is 180, to right is 270, top is 0
      */
-    float getDegrees();
+    double getDegrees();
 
-    default float getRadians()
+    default double getRadians()
     {
-        return (float) (getDegrees()/180F * Math.PI);
+        return (getDegrees()/180F * Math.PI);
     }
 }

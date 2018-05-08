@@ -33,7 +33,7 @@ import java.util.Locale;
  * @author RGreenlees
  * @author Kai Burjack
  */
-public class ImmutableVector2f
+public class ImmutableVector
 {
     public static final int numberFormatDecimals = Integer.parseInt(System.getProperty("joml.format.decimals", "3"));
     public static final boolean useNumberFormat = hasOption(System.getProperty("joml.format", "true"));
@@ -42,58 +42,51 @@ public class ImmutableVector2f
     /**
      * The x component of the vector.
      */
-    public final float x;
+    public final double x;
     /**
      * The y component of the vector.
      */
-    public final float y;
-
-    /**
-     * Create a new {@link ImmutableVector2f} and initialize its components to the given values.
-     *
-     * @param x the x component
-     * @param y the y component
-     */
-    public ImmutableVector2f(float x, float y)
+    public final double y;
+    public ImmutableVector(double x, double y)
     {
         this.x = x;
         this.y = y;
     }
 
     /**
-     * Create a new {@link ImmutableVector2f} and initialize both of its components with the given value.
+     * Create a new {@link ImmutableVector} and initialize both of its components with the given value.
      *
      * @param d the value of both components
      */
-    public ImmutableVector2f(float d)
+    public ImmutableVector(double d)
     { this(d, d); }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#y()
+     * @see org.joml.api.ImmutableVector#y()
      */
 
     /**
-     * Create a new {@link ImmutableVector2f} and initialize its components to zero.
+     * Create a new {@link ImmutableVector} and initialize its components to zero.
      */
-    public ImmutableVector2f()
+    public ImmutableVector()
     { this(0.0F); }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#getF(int)
+     * @see org.joml.api.ImmutableVector#getF(int)
      */
 
     /**
-     * Create a new {@link ImmutableVector2f} and initialize its components to the one of the given vector.
+     * Create a new {@link ImmutableVector} and initialize its components to the one of the given vector.
      *
-     * @param v the {@link ImmutableVector2f} to copy the values from
+     * @param v the {@link ImmutableVector} to copy the values from
      */
-    public ImmutableVector2f(ImmutableVector2f v)
+    public ImmutableVector(ImmutableVector v)
     {
         x = v.x();
         y = v.y();
     }
 
-    public static boolean epsilonEquals(final float a, final float b)
+    public static boolean epsilonEquals(final double a, final double b)
     { return Math.abs(b - a) < 1.0E-5F; }
 
     private static boolean hasOption(String v)
@@ -141,27 +134,27 @@ public class ImmutableVector2f
     }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#dot(org.joml.api.ImmutableVector2f)
+     * @see org.joml.api.ImmutableVector#dot(org.joml.api.ImmutableVector)
      */
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#x()
+     * @see org.joml.api.ImmutableVector#x()
      */
-    public float x()
+    public double x()
     { return this.x; }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#angle(org.joml.api.ImmutableVector2f)
+     * @see org.joml.api.ImmutableVector#angle(org.joml.api.ImmutableVector)
      */
 
-    public float y()
+    public double y()
     { return this.y; }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#length()
+     * @see org.joml.api.ImmutableVector#length()
      */
 
-    public float get(int index) throws IndexOutOfBoundsException
+    public double get(int index) throws IndexOutOfBoundsException
     {
         switch(index)
         {
@@ -175,84 +168,89 @@ public class ImmutableVector2f
     }
 
     /**
-     * Set this vector to be one of its perpendicular vectors.
+     * Return a new vector that is perpendicular to this one
      *
-     * @return this
+     * @return A perpendicular vector
      */
-    public ImmutableVector2f perpendicular()
-    { return new ImmutableVector2f(y, x * -1); }
+    public ImmutableVector perpendicular()
+    { return new ImmutableVector(y, x * -1); }
 
     /**
      * Subtract <code>v</code> from this vector.
      *
      * @param v the vector to subtract
-     * @return this
+     * @return the difference
      */
-    public ImmutableVector2f sub(ImmutableVector2f v)
-    { return new ImmutableVector2f(x - v.x(), y - v.y()); }
+    public ImmutableVector sub(ImmutableVector v)
+    { return new ImmutableVector(x - v.x(), y - v.y()); }
 
-    public ImmutableVector2f sub(float scalar)
-    { return new ImmutableVector2f(x - scalar, y - scalar); }
+    /**
+     * Subtract a scalar amount from the x and y components
+     * @param scalar The scalar amount
+     * @return the difference
+     */
+    public ImmutableVector sub(double scalar)
+    { return new ImmutableVector(x - scalar, y - scalar); }
 
     /**
      * Subtract <tt>(x, y)</tt> from this vector.
      *
      * @param x the x component to subtract
      * @param y the y component to subtract
-     * @return this
+     * @return the difference
      */
-    public ImmutableVector2f sub(float x, float y)
-    { return new ImmutableVector2f(this.x - x, this.y - y); }
+    public ImmutableVector sub(double x, double y)
+    { return new ImmutableVector(this.x - x, this.y - y); }
 
-    public float dot(ImmutableVector2f v)
+    public double dot(ImmutableVector v)
     { return x * v.x() + y * v.y(); }
 
-    public float angle(ImmutableVector2f v)
+    public double angle(ImmutableVector v)
     {
-        float dot = x * v.x() + y * v.y();
-        float det = x * v.y() - y * v.x();
-        return (float) Math.atan2(det, dot);
+        double dot = x * v.x() + y * v.y();
+        double det = x * v.y() - y * v.x();
+        return (double) Math.atan2(det, dot);
     }
 
-    public float length()
-    { return (float) Math.sqrt((x * x) + (y * y)); }
+    public double length()
+    { return (double) Math.sqrt((x * x) + (y * y)); }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#lengthSquared()
+     * @see org.joml.api.ImmutableVector#lengthSquared()
      */
-    public float lengthSquared()
+    public double lengthSquared()
     { return x * x + y * y; }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#distance(float, float)
+     * @see org.joml.api.ImmutableVector#distance(double, double)
      */
-    public float distance(float x, float y)
+    public double distance(double x, double y)
     {
-        float dx = this.x - x;
-        float dy = this.y - y;
-        return (float) Math.sqrt(dx * dx + dy * dy);
+        double dx = this.x - x;
+        double dy = this.y - y;
+        return (double) Math.sqrt(dx * dx + dy * dy);
     }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#distanceSquared(float, float)
+     * @see org.joml.api.ImmutableVector#distanceSquared(double, double)
      */
-    public float distanceSquared(float x, float y)
+    public double distanceSquared(double x, double y)
     {
-        float dx = this.x - x;
-        float dy = this.y - y;
+        double dx = this.x - x;
+        double dy = this.y - y;
         return dx * dx + dy * dy;
     }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#distance(org.joml.api.ImmutableVector2f)
+     * @see org.joml.api.ImmutableVector#distance(org.joml.api.ImmutableVector)
      */
-    public float distance(ImmutableVector2f v)
+    public double distance(ImmutableVector v)
     { return distance(v.x(), v.y()); }
 
     /* (non-Javadoc)
-     * @see org.joml.api.ImmutableVector2f#distanceSquared(org.joml.api.ImmutableVector2f)
+     * @see org.joml.api.ImmutableVector#distanceSquared(org.joml.api.ImmutableVector)
      */
-    public float distanceSquared(ImmutableVector2f v)
+    public double distanceSquared(ImmutableVector v)
     { return distanceSquared(v.x(), v.y()); }
 
     /**
@@ -260,10 +258,10 @@ public class ImmutableVector2f
      *
      * @return this
      */
-    public ImmutableVector2f normalize()
+    public ImmutableVector normalize()
     {
-        float invLength = (float) (1.0 / Math.sqrt(x * x + y * y));
-        return new ImmutableVector2f(x * invLength, y * invLength);
+        double invLength = (double) (1.0 / Math.sqrt(x * x + y * y));
+        return new ImmutableVector(x * invLength, y * invLength);
     }
 
     /**
@@ -272,10 +270,10 @@ public class ImmutableVector2f
      * @param length the desired length
      * @return this
      */
-    public ImmutableVector2f normalize(float length)
+    public ImmutableVector normalize(double length)
     {
-        float invLength = (float) (1.0 / Math.sqrt(x * x + y * y)) * length;
-        return new ImmutableVector2f(x * invLength, y * invLength);
+        double invLength = (double) (1.0 / Math.sqrt(x * x + y * y)) * length;
+        return new ImmutableVector(x * invLength, y * invLength);
     }
 
     /**
@@ -284,12 +282,12 @@ public class ImmutableVector2f
      * @param v the vector to add
      * @return this
      */
-    public ImmutableVector2f add(ImmutableVector2f v)
-    { return new ImmutableVector2f(x + v.x(), y + v.y()); }
+    public ImmutableVector add(ImmutableVector v)
+    { return new ImmutableVector(x + v.x(), y + v.y()); }
 
-    public ImmutableVector2f add(float scalar)
+    public ImmutableVector add(double scalar)
     {
-        return new ImmutableVector2f(x + scalar, y + scalar);
+        return new ImmutableVector(x + scalar, y + scalar);
     }
 
     /**
@@ -299,16 +297,16 @@ public class ImmutableVector2f
      * @param y the y component to add
      * @return this
      */
-    public ImmutableVector2f add(float x, float y)
-    { return new ImmutableVector2f(x + x, y + y); }
+    public ImmutableVector add(double x, double y)
+    { return new ImmutableVector(x + x, y + y); }
 
     /**
      * Negate this vector.
      *
      * @return this
      */
-    public ImmutableVector2f negate()
-    { return new ImmutableVector2f(-x, -y); }
+    public ImmutableVector negate()
+    { return new ImmutableVector(-x, -y); }
 
     /**
      * Multiply the components of this vector by the given scalar.
@@ -316,8 +314,8 @@ public class ImmutableVector2f
      * @param scalar the value to multiply this vector's components by
      * @return this
      */
-    public ImmutableVector2f mul(float scalar)
-    { return new ImmutableVector2f(x * scalar, y * scalar); }
+    public ImmutableVector mul(double scalar)
+    { return new ImmutableVector(x * scalar, y * scalar); }
 
     /**
      * Multiply the components of this Vector2f by the given scalar values and store the result in <code>this</code>.
@@ -326,8 +324,8 @@ public class ImmutableVector2f
      * @param y the y component to multiply this vector by
      * @return this
      */
-    public ImmutableVector2f mul(float x, float y)
-    { return new ImmutableVector2f(this.x * x, this.y * y); }
+    public ImmutableVector mul(double x, double y)
+    { return new ImmutableVector(this.x * x, this.y * y); }
 
     /**
      * Multiply this Vector2f component-wise by another Vector2f.
@@ -335,14 +333,14 @@ public class ImmutableVector2f
      * @param v the vector to multiply by
      * @return this
      */
-    public ImmutableVector2f mul(ImmutableVector2f v)
-    { return new ImmutableVector2f(x * v.x(), y * v.y()); }
+    public ImmutableVector mul(ImmutableVector v)
+    { return new ImmutableVector(x * v.x(), y * v.y()); }
 
-    public ImmutableVector2f div(ImmutableVector2f v)
-    { return new ImmutableVector2f(x / v.x(), y / v.y()); }
+    public ImmutableVector div(ImmutableVector v)
+    { return new ImmutableVector(x / v.x(), y / v.y()); }
 
-    public ImmutableVector2f div(float scalar)
-    { return new ImmutableVector2f(x / scalar, y / scalar); }
+    public ImmutableVector div(double scalar)
+    { return new ImmutableVector(x / scalar, y / scalar); }
 
     /**
      * Linearly interpolate <code>this</code> and <code>other</code> using the given interpolation factor <code>t</code>
@@ -355,16 +353,18 @@ public class ImmutableVector2f
      * @param t     the interpolation factor between 0.0 and 1.0
      * @return this
      */
-    public ImmutableVector2f lerp(ImmutableVector2f other, float t)
-    { return new ImmutableVector2f(x + (other.x() - x) * t, y + (other.y() - y) * t); }
+    public ImmutableVector lerp(ImmutableVector other, double t)
+    { return new ImmutableVector(x + (other.x() - x) * t, y + (other.y() - y) * t); }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Float.floatToIntBits(x);
-        result = prime * result + Float.floatToIntBits(y);
+        long temp;
+        temp = Double.doubleToLongBits(x);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
@@ -374,7 +374,7 @@ public class ImmutableVector2f
         if(this == obj) { return true; }
         if(obj == null) { return false; }
         if(getClass() != obj.getClass()) { return false; }
-        ImmutableVector2f other = (ImmutableVector2f) obj;
+        ImmutableVector other = (ImmutableVector) obj;
         if(!epsilonEquals(x, other.x)) { return false; }
         if(!epsilonEquals(y, other.y)) { return false; }
         return true;
@@ -385,7 +385,7 @@ public class ImmutableVector2f
     @Override
     public String toString()
     {
-        return "ImmutableVector2f{" +
+        return "ImmutableVector{" +
                "x=" + x +
                ", y=" + y +
                '}';
@@ -407,8 +407,8 @@ public class ImmutableVector2f
      * @param b the second multiplicand
      * @return this
      */
-    public ImmutableVector2f fma(ImmutableVector2f a, ImmutableVector2f b)
-    { return new ImmutableVector2f(x + a.x() * b.x(), y + a.y() * b.y()); }
+    public ImmutableVector fma(ImmutableVector a, ImmutableVector b)
+    { return new ImmutableVector(x + a.x() * b.x(), y + a.y() * b.y()); }
 
     /**
      * Add the component-wise multiplication of <code>a * b</code> to this vector.
@@ -417,6 +417,6 @@ public class ImmutableVector2f
      * @param b the second multiplicand
      * @return this
      */
-    public ImmutableVector2f fma(float a, ImmutableVector2f b)
-    { return new ImmutableVector2f(x + a * b.x(), y + a * b.y()); }
+    public ImmutableVector fma(double a, ImmutableVector b)
+    { return new ImmutableVector(x + a * b.x(), y + a * b.y()); }
 }

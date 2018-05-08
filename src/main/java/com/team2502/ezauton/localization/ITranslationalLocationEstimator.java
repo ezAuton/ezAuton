@@ -1,6 +1,6 @@
 package com.team2502.ezauton.localization;
 
-import org.joml.ImmutableVector2f;
+import org.joml.ImmutableVector;
 
 /**
  * An interface for any class trying to estimate our location
@@ -12,5 +12,5 @@ public interface ITranslationalLocationEstimator
      *
      * @return Our position
      */
-    ImmutableVector2f estimateLocation();
+    ImmutableVector estimateLocation();
 }

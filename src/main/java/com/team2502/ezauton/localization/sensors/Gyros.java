@@ -7,8 +7,8 @@ public class Gyros {
     public static ICompass fromNavx(AHRS navx)
     {
         return () -> {
-            float angle = (float) -navx.getAngle(); // we want CCW orientation
-            float boundedAngle = angle % 360;
+            double angle = -navx.getAngle(); // we want CCW orientation
+            double boundedAngle = angle % 360;
             if(boundedAngle < 0)
             {
                 boundedAngle = 360+boundedAngle;

@@ -1,2 +1,43 @@
-.idea/
+# Runtime Output
+*.class
+*.log
+*.pid
+*.log.gz
+
+# Package Files
+JDK8
+*.war
+*.ear
+
+# Build
 .gradle/
+build
+classes
+dist
+out
+run
+bin
+
+# Eclipse
+eclipse
+.classpath
+.project
+.settings
+.metadata
+*.launch
+
+# IntelliJ IDEA
+.idea/
+!.idea/codeStyles/*
+*.eml
+*.iml
+*.iws
+*.ipr
+
+# OS Garbage
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# JVM Crash Logs: http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
