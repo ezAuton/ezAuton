@@ -168,9 +168,9 @@ public class ImmutableVector
     }
 
     /**
-     * Set this vector to be one of its perpendicular vectors.
+     * Return a new vector that is perpendicular to this one
      *
-     * @return this
+     * @return A perpendicular vector
      */
     public ImmutableVector perpendicular()
     { return new ImmutableVector(y, x * -1); }
@@ -179,11 +179,16 @@ public class ImmutableVector
      * Subtract <code>v</code> from this vector.
      *
      * @param v the vector to subtract
-     * @return this
+     * @return the difference
      */
     public ImmutableVector sub(ImmutableVector v)
     { return new ImmutableVector(x - v.x(), y - v.y()); }
 
+    /**
+     * Subtract a scalar amount from the x and y components
+     * @param scalar The scalar amount
+     * @return the difference
+     */
     public ImmutableVector sub(double scalar)
     { return new ImmutableVector(x - scalar, y - scalar); }
 
@@ -192,7 +197,7 @@ public class ImmutableVector
      *
      * @param x the x component to subtract
      * @param y the y component to subtract
-     * @return this
+     * @return the difference
      */
     public ImmutableVector sub(double x, double y)
     { return new ImmutableVector(this.x - x, this.y - y); }
@@ -351,6 +356,7 @@ public class ImmutableVector
     public ImmutableVector lerp(ImmutableVector other, double t)
     { return new ImmutableVector(x + (other.x() - x) * t, y + (other.y() - y) * t); }
 
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
