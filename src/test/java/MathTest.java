@@ -13,6 +13,11 @@ public class MathTest
 
     private final double DELTA = 1E-5;
 
+    public MathTest()
+    {
+        MathUtils.init();
+    }
+
     @Test
     public void testRotation90()
     {
@@ -326,6 +331,19 @@ public class MathTest
     }
 
     @Test
+    public void testAngleFromPoints()
+    {
+        ImmutableVector i = new ImmutableVector(1, 0);
+        ImmutableVector j = new ImmutableVector(0, 1);
+        ImmutableVector diag = new ImmutableVector(1, 1);
+        ImmutableVector origin = new ImmutableVector(0, 0);
+
+        assertEquals(3 * Math.PI / 4, MathUtils.Geometry.getThetaFromPoints(i, j), DELTA);
+        assertEquals( -Math.PI / 4, MathUtils.Geometry.getThetaFromPoints(i.mul(-1), j.mul(-1)), DELTA);
+        assertEquals(0, MathUtils.Geometry.getThetaFromPoints(j, diag), DELTA); // line from j to diag is flat
+
+    }
+    @Test
     public void testMin()
     {
         for(int i = 0; i < 10; i++)
@@ -340,5 +358,34 @@ public class MathTest
         }
     }
 
+    @Test
+    public void testClosestPointOnLine()
+    {
+        ImmutableVector robotPos = new ImmutableVector(0, 0);
+
+        ImmutableVector[][] testCases = new ImmutableVector[][] {
+                {new ImmutableVector(1, 1), new ImmutableVector(3, 3)}, // point a should be closest
+                {new ImmutableVector(-1,  -1), new ImmutableVector(1, 1)},
+                {new ImmutableVector(-5, -5), new ImmutableVector(-3, -3)},
+                {new ImmutableVector(-1, 0), new ImmutableVector(1, 2)}
+        };
+
+        vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[0][0], testCases[0][1], robotPos), testCases[0][0]);
+        vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[1][0], testCases[1][1], robotPos), robotPos);
+
+        vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[2][0], testCases[2][1], robotPos), testCases[2][1]);
+
+        MathUtils.Geometry.Line segment = new MathUtils.Geometry.Line(testCases[3][0], testCases[3][1]);
+        MathUtils.Geometry.Line perp = segment.getPerp(robotPos);
+        vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[3][0], testCases[3][1], robotPos), segment.intersection(perp));
+
+
+    }
+
+
+    private void vectorsCloseEnough(ImmutableVector a, ImmutableVector b)
+    {
+        Assert.assertTrue(a + " " + b, MathUtils.epsilonEquals(a, b, 1E-3));
+    }
 
 }

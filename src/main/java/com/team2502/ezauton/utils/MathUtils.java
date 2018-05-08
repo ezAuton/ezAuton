@@ -632,9 +632,11 @@ public final class MathUtils
         }
 
         /**
-         * @param start
-         * @param end
-         * @return The theta of the angle created ccw between \vec{i} and the line from start->end
+         * @param start The starting vector
+         * @param end The ending vector
+         * @return The theta of the angle created counterclockwise between \vec{i} and the line from start->end
+         * <br>
+         * Equivalent to arctan((start - end))
          */
         public static double getThetaFromPoints(ImmutableVector start, ImmutableVector end)
         {
@@ -649,7 +651,7 @@ public final class MathUtils
          * @param linePointA One point on the line
          * @param linePointB Another point on the line
          * @param robotPos   The point at which our robot is
-         * @return The point on the line closest to the robot
+         * @return The point <b>on the line segment</b> closest to the robot
          */
         public static ImmutableVector getClosestPointLineSegments(ImmutableVector linePointA, ImmutableVector linePointB, ImmutableVector robotPos)
         {
@@ -663,7 +665,15 @@ public final class MathUtils
 
             ImmutableVector intersect = linePerp.intersection(lineSegment);
 
+
+
             double distToIntersect = Math.hypot(intersect.x - robotPos.x, intersect.y - robotPos.y);
+
+            if(!between(linePointA, intersect, linePointB))
+            {
+                distToIntersect = Double.MAX_VALUE; // This way, we will not select the line intersect as the closest point on the line
+
+            }
 
             double minDist = min(distToA, distToB, distToIntersect);
             if(minDist == distToA)
