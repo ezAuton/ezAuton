@@ -1,4 +1,4 @@
-package com.team2502.ezauton.localization;
+package com.team2502.ezauton.test.localization;
 
 import org.joml.ImmutableVector;
 

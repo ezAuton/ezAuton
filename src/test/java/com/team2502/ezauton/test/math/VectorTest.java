@@ -1,7 +1,6 @@
-package mathUtilsTesting;
+package com.team2502.ezauton.test.math;
 
 import org.joml.ImmutableVector;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

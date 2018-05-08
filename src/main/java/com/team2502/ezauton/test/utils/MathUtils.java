@@ -1,4 +1,4 @@
-package com.team2502.ezauton.utils;
+package com.team2502.ezauton.test.utils;
 
 import org.joml.ImmutableVector;
 

@@ -1,4 +1,4 @@
-package com.team2502.ezauton.localization.sensors;
+package com.team2502.ezauton.test.localization.sensors;
 
 import com.kauailabs.navx.frc.AHRS;
 

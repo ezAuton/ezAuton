@@ -1,8 +1,7 @@
-package com.team2502.ezauton.localization;
+package com.team2502.ezauton.test.localization;
 
-import com.team2502.ezauton.localization.sensors.ICompass;
-import com.team2502.ezauton.utils.MathUtils;
-import org.joml.ImmutableVector;
+import com.team2502.ezauton.test.localization.sensors.ICompass;
+import com.team2502.ezauton.test.utils.MathUtils;
 
 /**
  * Uses the navX to estimate angle of the robot using the gyro

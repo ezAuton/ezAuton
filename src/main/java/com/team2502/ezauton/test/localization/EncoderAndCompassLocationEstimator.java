@@ -1,8 +1,8 @@
-package com.team2502.ezauton.localization;
+package com.team2502.ezauton.test.localization;
 
-import com.team2502.ezauton.localization.sensors.IEncoder;
-import com.team2502.ezauton.utils.IStopwatch;
-import com.team2502.ezauton.utils.MathUtils;
+import com.team2502.ezauton.test.localization.sensors.IEncoder;
+import com.team2502.ezauton.test.utils.MathUtils;
+import com.team2502.ezauton.test.utils.IStopwatch;
 import org.joml.ImmutableVector;
 
 /**
