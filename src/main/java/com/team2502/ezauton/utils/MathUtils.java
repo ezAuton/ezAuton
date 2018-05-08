@@ -189,7 +189,7 @@ public final class MathUtils
     /**
      * Gets the decimal portion of the given double. For instance, {@code frac(5.5)} returns {@code .5}.
      */
-    public static double frac(final double number)
+    public static double decimalComponent(final double number)
     { return number - floor(number); }
 
 
@@ -476,34 +476,55 @@ public final class MathUtils
         /**
          * Get the 1D position of the robot given p0, v0, a0, and dt. Uses elementary physics formulas.
          *
-         * @param p0
-         * @param v0
-         * @param a0
+         * @param posInit
+         * @param velocityInit
+         * @param accelerationInit
          * @param dt
          * @return
          */
-        public static double getPos(double p0, double v0, double a0, double dt)
+        public static double getPos(double posInit, double velocityInit, double accelerationInit, double dt)
         {
-            return p0 + v0 * dt + 1 / 2F * a0 * dt * dt;
+            return posInit + velocityInit * dt + 1 / 2F * accelerationInit * dt * dt;
         }
 
-        public static double getAngularVel(double vL, double vR, double l)
+        /**
+         *
+         * @param leftVel
+         * @param rightVel
+         * @param lateralWheelDistance
+         * @return positive CCW, negative CW
+         */
+        public static double getAngularVel(double leftVel, double rightVel, double lateralWheelDistance)
         {
-            return (vR - vL) / l;
+            return (rightVel - leftVel) / lateralWheelDistance;
         }
 
+        /**
+         * @param vL
+         * @param vR
+         * @param l
+         * @return The radius of the circle traveling across .. positive if CCW
+         */
         public static double getTrajectoryRadius(double vL, double vR, double l)
         {
             return (l * (vR + vL)) / (2 * (vR - vL));
         }
 
+        /**
+         * The relative difference in position using arcs
+         * @param vL
+         * @param vR
+         * @param l
+         * @param dt
+         * @return
+         */
         public static ImmutableVector getRelativeDPosCurve(double vL, double vR, double l, double dt)
         {
             // To account for an infinite pathplanning radius when going straight
             if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
             {
                 // Probably average is not needed, but it may be useful over long distances
-                return new ImmutableVector((vL + vR) / 2F * dt, 0);
+                return new ImmutableVector(0, (vL + vR) / 2F * dt);
             }
             double w = getAngularVel(vL, vR, l);
             double dTheta = w * dt;
@@ -848,9 +869,11 @@ public final class MathUtils
             }
 
             @Override
-            public String toString()
-            {
-                return "Line(m=" + slope + ", b=" + y_intercept + ")";
+            public String toString() {
+                return "Line{" +
+                        "a=" + a +
+                        ", b=" + b +
+                        '}';
             }
         }
     }

@@ -198,6 +198,14 @@ public class MathTest
             assertEquals(vecA, vecB);
             assertTrue(MathUtils.epsilonEquals(vecA, vecB));
         }
+
+
+    }
+
+    @Test
+    public void testDecimalComponent()
+    {
+        assertEquals(.567,MathUtils.decimalComponent(1234.567),1E-6);
     }
 
     @Test
