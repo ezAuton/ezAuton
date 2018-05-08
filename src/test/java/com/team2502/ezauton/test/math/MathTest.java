@@ -1,6 +1,6 @@
 package com.team2502.ezauton.test.math;
 
-import com.team2502.ezauton.test.utils.MathUtils;
+import com.team2502.ezauton.utils.MathUtils;
 import org.joml.ImmutableVector;
 import org.junit.Assert;
 import org.junit.Test;
