@@ -32,7 +32,6 @@ public final class MathUtils
     private static final double ln7 = StrictMath.log(7);
     private static final double ln8 = StrictMath.log(8);
     private static final double ln9 = StrictMath.log(9);
-    private static final double ln10 = StrictMath.log(10);
 
     /**
      * A table of sin values computed from 0 (inclusive) to 2π (exclusive), with steps of 2π / 65536.
@@ -116,6 +115,15 @@ public final class MathUtils
         return Algebra.between(a.get(0), x.get(0), c.get(0)) && Algebra.between(a.get(1), x.get(1), c.get(1));
     }
 
+    public static double min(double... nums)
+    {
+        double min = nums[0];
+        for(double num : nums)
+        {
+            min = Math.min(num, min);
+        }
+        return min;
+    }
     /**
      * Multiply degrees by π/180
      *
@@ -138,6 +146,9 @@ public final class MathUtils
     public static boolean epsilonEquals(ImmutableVector vecA, ImmutableVector vecB)
     { return epsilonEquals(vecA.x, vecB.x) && epsilonEquals(vecA.y, vecB.y); }
 
+    public static boolean epsilonEquals(ImmutableVector vecA, ImmutableVector vecB, final double delta)
+    { return epsilonEquals(vecA.x, vecB.x, delta) && epsilonEquals(vecA.y, vecB.y, delta); }
+
     /**
      * Checks if two numbers are equal while accounting for
      * the possibility of a floating point error.
@@ -146,6 +157,15 @@ public final class MathUtils
      */
     public static boolean epsilonEquals(final double x, final double y)
     { return Math.abs(y - x) < 1.0E-5D; }
+
+    /**
+     * Checks if two numbers are equal while accounting for
+     * the possibility of a floating point error.
+     *
+     * @return x ~= y
+     */
+    public static boolean epsilonEquals(final double x, final double y, final double delta)
+    { return Math.abs(y - x) < delta; }
 
 
     /**
@@ -351,8 +371,8 @@ public final class MathUtils
         /**
          * Rotate the input vector theta radians counterclockwise
          *
-         * @param vector The input vector
-         * @param theta  How much to rotate it by
+         * @param vector The input vecto
+         * @param theta  How much to rotate it by (radians)
          * @return The rotated vector
          */
         public static ImmutableVector rotate2D(ImmutableVector vector, double theta)
@@ -369,13 +389,12 @@ public final class MathUtils
          *
          * @param coordinateAbsolute The absolute coordinates
          * @param robotCoordAbs The robot's absolute position
-         * @param robotHeading The robot's heading
+         * @param robotHeading The robot's heading (radians)
          * @return {@code cordinateAbsolute} but relative to the robot
          */
         public static ImmutableVector absoluteToRelativeCoord(ImmutableVector coordinateAbsolute, ImmutableVector robotCoordAbs, double robotHeading)
         { return rotate2D(coordinateAbsolute.sub(robotCoordAbs), -robotHeading); }
     }
-
     /**
      * A class containing methods pertaining to manipulation of real numbers
      */
@@ -446,16 +465,6 @@ public final class MathUtils
             return a <= x && x <= b;
         }
 
-        /**
-         * @param a A number
-         * @param b Another number
-         * @return If they have the same sign
-         * @deprecated Use {@link Math#signum(double)}
-         */
-        public static boolean positiveMultiplication(final double a, final double b)
-        {
-            return a >= 0 && b >= 0 || a < 0 && b < 0;
-        }
     }
 
     /**
@@ -575,6 +584,12 @@ public final class MathUtils
             return radBounded;
         }
 
+        /**
+         * Return the difference between 2 angles (in degrees)
+         * @param angle1 Angle 1 (in degrees)
+         * @param angle2 Angle 2 (in degrees)
+         * @return Difference between the angles (in degrees)
+         */
         public static double getDAngle(double angle1, double angle2)
         {
             double simpleAngle1 = angle1 % 360;
@@ -639,10 +654,8 @@ public final class MathUtils
         public static ImmutableVector getClosestPointLineSegments(ImmutableVector linePointA, ImmutableVector linePointB, ImmutableVector robotPos)
         {
 
-            double d1 = Math.hypot(linePointA.x - robotPos.x, linePointA.y - robotPos.y);
-            double d2 = Math.hypot(linePointB.x - robotPos.x, linePointB.y - robotPos.y);
-
-            double dPerp;
+            double distToA = Math.hypot(linePointA.x - robotPos.x, linePointA.y - robotPos.y);
+            double distToB = Math.hypot(linePointB.x - robotPos.x, linePointB.y - robotPos.y);
 
             Line lineSegment = new Line(linePointA, linePointB);
 
@@ -650,13 +663,14 @@ public final class MathUtils
 
             ImmutableVector intersect = linePerp.intersection(lineSegment);
 
-            double d3 = Math.hypot(intersect.x - robotPos.x, intersect.y - robotPos.y);
+            double distToIntersect = Math.hypot(intersect.x - robotPos.x, intersect.y - robotPos.y);
 
-            if(d1 < d2 && d1 < d3)
+            double minDist = min(distToA, distToB, distToIntersect);
+            if(minDist == distToA)
             {
                 return linePointA;
             }
-            else if(d2 < d1 && d2 < d3)
+            else if(minDist == distToB)
             {
                 return linePointB;
             }
@@ -672,10 +686,9 @@ public final class MathUtils
          * @return A vector in <x, y> form
          * @see ImmutableVector
          */
-        //TODO: Shouldn't this scale by speed?
         public static ImmutableVector getVector(double speed, double angle)
         {
-            return MathUtils.LinearAlgebra.rotate2D(VECTOR_STRAIGHT, angle);
+            return MathUtils.LinearAlgebra.rotate2D(VECTOR_STRAIGHT, angle).mul(speed);
         }
 
         /**
@@ -714,6 +727,11 @@ public final class MathUtils
             double abScalingFactor2 = -pBy2 - tmpSqrt;
             ImmutableVector p2 = new ImmutableVector(pointA.get(0) - baX * abScalingFactor2, pointA.get(1) - baY * abScalingFactor2);
             return new ImmutableVector[] { p1, p2 };
+        }
+
+        public static ImmutableVector[] getCircleLineIntersectionPoint(Line line, ImmutableVector center, double radius)
+        {
+            return getCircleLineIntersectionPoint(line.a, line.b, center, radius);
         }
 
         public static class Line implements Integrable
@@ -779,9 +797,13 @@ public final class MathUtils
             public Line getPerp(ImmutableVector point)
             {
                 double perpSlope;
-                if(slope == Double.MAX_VALUE)
+                if(slope == Double.MAX_VALUE || slope == Double.POSITIVE_INFINITY)
                 {
                     perpSlope = 0;
+                }
+                else if(slope == 0)
+                {
+                    perpSlope = Double.MAX_VALUE;
                 }
                 else
                 {
@@ -792,17 +814,9 @@ public final class MathUtils
 
             public ImmutableVector intersection(Line other)
             {
-                if(other.slope == slope)
+                if(other.slope == this.slope)
                 {
-                    if(other.x_intercept != other.x_intercept)
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        // TODO: is this a good idea to return?
-                        return new ImmutableVector( other.x1,  other.y2);
-                    }
+                    return null; // lines do not intersect
                 }
                 // mx + b = cx + d
                 // (m-c) x = d - b
@@ -810,7 +824,23 @@ public final class MathUtils
                 double y = evaluateY(x);
                 return new ImmutableVector( x,  y);
 
+            }
 
+            @Override
+            public boolean equals(Object obj)
+            {
+                if(obj instanceof Line)
+                {
+                    Line other = (Line) obj;
+                    return other.slope == this.slope && other.y_intercept == this.y_intercept;
+                }
+                return false;
+            }
+
+            @Override
+            public String toString()
+            {
+                return "Line(m=" + slope + ", b=" + y_intercept + ")";
             }
         }
     }
