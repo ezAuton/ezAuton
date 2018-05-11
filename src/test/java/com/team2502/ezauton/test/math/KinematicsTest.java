@@ -1,6 +1,6 @@
 package com.team2502.ezauton.test.math;
 
-import org.joml.ImmutableVector;
+import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import org.junit.Assert;
 import org.junit.Test;
 import com.team2502.ezauton.utils.MathUtils;
@@ -23,8 +23,8 @@ public class KinematicsTest
     {
         ImmutableVector dPos = MathUtils.Kinematics.getAbsoluteDPosLine(1, 1, 1F, (double) (Math.PI / 4F));
 
-        assertEquals(Math.sqrt(1 / 2F), dPos.x, 0.001);
-        assertEquals(Math.sqrt(1 / 2F), dPos.y, 0.001);
+        assertEquals(Math.sqrt(1 / 2F), dPos.get(0), 0.001);
+        assertEquals(Math.sqrt(1 / 2F), dPos.get(1), 0.001);
     }
 
     @Test
@@ -51,8 +51,8 @@ public class KinematicsTest
         // l * pi = 1 (circumference)
         // 1/pi = l
         ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, 1, 0);
-        assertEquals(0, absoluteDPosCurve.x, 1);
-        assertEquals(0, absoluteDPosCurve.y, 1);
+        assertEquals(0, absoluteDPosCurve.get(0), 1);
+        assertEquals(0, absoluteDPosCurve.get(1), 1);
     }
 
     @Test
@@ -61,8 +61,8 @@ public class KinematicsTest
         // l * pi = 1 (circumference)
         // 1/pi = l
         ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, 1, Math.PI / 4F);
-        assertEquals(-Math.sqrt(1 / 2F), absoluteDPosCurve.x, 0.001);
-        assertEquals(Math.sqrt(1 / 2F), absoluteDPosCurve.y, 0.001);
+        assertEquals(-Math.sqrt(1 / 2F), absoluteDPosCurve.get(0), 0.001);
+        assertEquals(Math.sqrt(1 / 2F), absoluteDPosCurve.get(1), 0.001);
     }
 
     @Test
@@ -142,8 +142,8 @@ public class KinematicsTest
 
     private void vectorsCloseEnough(ImmutableVector a, ImmutableVector b)
     {
-        Assert.assertEquals(a.x, b.x, 1E-3);
-        Assert.assertEquals(a.y, b.y, 1E-3);
+        Assert.assertEquals(a.get(0), b.get(0), 1E-3);
+        Assert.assertEquals(a.get(1), b.get(1), 1E-3);
     }
 
 }

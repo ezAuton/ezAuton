@@ -1,25 +1,23 @@
 package com.team2502.ezauton.test.math;
 
-import org.joml.ImmutableVector;
+import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
+import com.team2502.ezauton.utils.MathUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 
 public class VectorTest
 {
     private static final double DELTA = 1E-5;
     private static final ImmutableVector i = new ImmutableVector(1, 0);
     private static final ImmutableVector j = new ImmutableVector(0, 1);
-    private static final ImmutableVector origin = new ImmutableVector();
+    private static final ImmutableVector origin = new ImmutableVector(0,0);
 
     @Test
     public void testVectorConstructors()
     {
-        ImmutableVector origin = new ImmutableVector();
-        assertEquals(new ImmutableVector(1), new ImmutableVector(1, 1));
-        assertEquals(origin, new ImmutableVector(origin));
+        assertNotEquals(new ImmutableVector(1), new ImmutableVector(1, 1));
     }
 
     @Test
@@ -27,9 +25,9 @@ public class VectorTest
     {
         ImmutableVector a = new ImmutableVector(123, 155);
 
-        assertEquals(123, a.x(), DELTA);
         assertEquals(123, a.get(0), DELTA);
-        assertEquals(155, a.y(), DELTA);
+        assertEquals(123, a.get(0), DELTA);
+        assertEquals(155, a.get(1), DELTA);
         assertEquals(155, a.get(1), DELTA);
     }
 
@@ -43,8 +41,10 @@ public class VectorTest
     @Test
     public void testPerpendicular()
     {
-        assertEquals(j.mul(-1), i.perpendicular());
-        assertNotEquals(i, i.perpendicular());
-        assertEquals(origin, origin.perpendicular());
+        assertEquals(j.mul(-1), MathUtils.perp(i));
+        assertNotEquals(i, MathUtils.perp(i));
+        assertEquals(origin, MathUtils.perp(origin));
+
+        assertEquals(new ImmutableVector(0,0,1),MathUtils.cross(new ImmutableVector(1,0,0),new ImmutableVector(0,1,0)));
     }
 }

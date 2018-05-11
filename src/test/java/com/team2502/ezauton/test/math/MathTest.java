@@ -1,7 +1,7 @@
 package com.team2502.ezauton.test.math;
 
+import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
-import org.joml.ImmutableVector;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,8 +25,8 @@ public class MathTest
     {
         ImmutableVector rotated90 = MathUtils.LinearAlgebra.rotate2D(e1, Math.PI / 2);
 
-        assertEquals(0, rotated90.x, 0.001);
-        assertEquals(1, rotated90.y, 0.001);
+        assertEquals(0, rotated90.get(0), 0.001);
+        assertEquals(1, rotated90.get(1), 0.001);
     }
 
     @Test
@@ -34,8 +34,8 @@ public class MathTest
     {
         ImmutableVector rotated720 = MathUtils.LinearAlgebra.rotate2D(e1, Math.PI * 2);
 
-        assertEquals(1, rotated720.x, 0.001);
-        assertEquals(0, rotated720.y, 0.001);
+        assertEquals(1, rotated720.get(0), 0.001);
+        assertEquals(0, rotated720.get(1), 0.001);
     }
 
     @Test
@@ -45,12 +45,12 @@ public class MathTest
         double robotHeading = 7F * Math.PI / 4;
         ImmutableVector absoluteCoord = new ImmutableVector(2, 2);
 
-        double distance = robotLocation.distance(absoluteCoord);
+        double distance = robotLocation.dist(absoluteCoord);
 
         ImmutableVector relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteCoord, robotLocation, robotHeading);
 
-        assertEquals(0, relativeCoord.x, 0.001);
-        assertEquals(distance, relativeCoord.y, 0.001);
+        assertEquals(0, relativeCoord.get(0), 0.001);
+        assertEquals(distance, relativeCoord.get(1), 0.001);
     }
 
     @Test
@@ -60,12 +60,12 @@ public class MathTest
         double robotHeading = -Math.PI / 4;
         ImmutableVector absoluteCoord = new ImmutableVector(2, 2);
 
-        double distance = robotLocation.distance(absoluteCoord);
+        double distance = robotLocation.dist(absoluteCoord);
 
         ImmutableVector relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteCoord, robotLocation, robotHeading);
 
-        assertEquals(0, relativeCoord.x, 0.001);
-        assertEquals(distance, relativeCoord.y, 0.001);
+        assertEquals(0, relativeCoord.get(0), 0.001);
+        assertEquals(distance, relativeCoord.get(1), 0.001);
     }
 
 
@@ -198,8 +198,6 @@ public class MathTest
             assertEquals(vecA, vecB);
             assertTrue(MathUtils.epsilonEquals(vecA, vecB));
         }
-
-
     }
 
     @Test

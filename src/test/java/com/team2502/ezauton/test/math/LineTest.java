@@ -1,7 +1,7 @@
 package com.team2502.ezauton.test.math;
 
+import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
-import org.joml.ImmutableVector;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -94,6 +94,6 @@ public class LineTest {
     @Test
     public void testToString() {
         MathUtils.Geometry.Line line = new MathUtils.Geometry.Line(new ImmutableVector(1, 2), new ImmutableVector(3, 4));
-        assertEquals("Line{a=ImmutableVector{x=1.0, y=2.0}, b=ImmutableVector{x=3.0, y=4.0}}",line.toString());
+        assertEquals("Line{a=ImmutableVector{x=[1.0, 2.0]}, b=ImmutableVector{x=[3.0, 4.0]}}",line.toString());
     }
 }

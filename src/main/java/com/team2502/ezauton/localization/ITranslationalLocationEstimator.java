@@ -1,6 +1,6 @@
 package com.team2502.ezauton.localization;
 
-import org.joml.ImmutableVector;
+import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
 /**
  * An interface for any class trying to estimate our location
