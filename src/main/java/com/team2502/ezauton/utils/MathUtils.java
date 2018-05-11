@@ -1,6 +1,6 @@
 package com.team2502.ezauton.utils;
 
-import org.joml.ImmutableVector;
+import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +13,7 @@ import java.util.Set;
  * @see MathUtils.LinearAlgebra
  * @see MathUtils.Kinematics
  */
-//@SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public final class MathUtils
 {
     public static final double PHI = 1.618033989D;
@@ -57,6 +57,24 @@ public final class MathUtils
 
     public static void init()
     {}
+
+    /**
+     * Untraditional perpendicular
+     * @param immutableVector
+     * @return
+     */
+    public static ImmutableVector perp(ImmutableVector immutableVector)
+    {
+        immutableVector.assertSize(2);
+        return new ImmutableVector(immutableVector.get(1),-immutableVector.get(0));
+    }
+
+    public static ImmutableVector cross(ImmutableVector a, ImmutableVector b)
+    {
+        a.assertSize(3);
+        b.assertSize(3);
+        return new ImmutableVector(a.get(1)*b.get(2) - b.get(1)*a.get(2),a.get(0)*b.get(2) - b.get(0)*a.get(2),a.get(0)*b.get(1) - b.get(0)*a.get(1));
+    }
 
     public static double shiftRadiansBounded(double initRadians, double shift)
     {
@@ -105,7 +123,7 @@ public final class MathUtils
 
     /**
      * @param a Lower/Upper bound
-     * @param x Vector to check
+     * @param x ImmutableVector to check
      * @param c Upper/Lower bound
      * @return Returns true if x's x-component is in between that of a and c AND if x's y component is in between that of a and c.
      * @see MathUtils.Algebra#between(double, double, double)
@@ -144,10 +162,10 @@ public final class MathUtils
 
 
     public static boolean epsilonEquals(ImmutableVector vecA, ImmutableVector vecB)
-    { return epsilonEquals(vecA.x, vecB.x) && epsilonEquals(vecA.y, vecB.y); }
+    { return epsilonEquals(vecA.get(0), vecB.get(0)) && epsilonEquals(vecA.get(1), vecB.get(1)); }
 
     public static boolean epsilonEquals(ImmutableVector vecA, ImmutableVector vecB, final double delta)
-    { return epsilonEquals(vecA.x, vecB.x, delta) && epsilonEquals(vecA.y, vecB.y, delta); }
+    { return epsilonEquals(vecA.get(0), vecB.get(0), delta) && epsilonEquals(vecA.get(1), vecB.get(1), delta); }
 
     /**
      * Checks if two numbers are equal while accounting for
@@ -189,7 +207,7 @@ public final class MathUtils
     /**
      * Gets the decimal portion of the given double. For instance, {@code frac(5.5)} returns {@code .5}.
      */
-    public static double frac(final double number)
+    public static double decimalComponent(final double number)
     { return number - floor(number); }
 
 
@@ -390,7 +408,7 @@ public final class MathUtils
          * @param coordinateAbsolute The absolute coordinates
          * @param robotCoordAbs The robot's absolute position
          * @param robotHeading The robot's heading (radians)
-         * @return {@code cordinateAbsolute} but relative to the robot
+         * @return {@code coordinateAbsolute} but relative to the robot
          */
         public static ImmutableVector absoluteToRelativeCoord(ImmutableVector coordinateAbsolute, ImmutableVector robotCoordAbs, double robotHeading)
         { return rotate2D(coordinateAbsolute.sub(robotCoordAbs), -robotHeading); }
@@ -476,34 +494,55 @@ public final class MathUtils
         /**
          * Get the 1D position of the robot given p0, v0, a0, and dt. Uses elementary physics formulas.
          *
-         * @param p0
-         * @param v0
-         * @param a0
+         * @param posInit
+         * @param velocityInit
+         * @param accelerationInit
          * @param dt
          * @return
          */
-        public static double getPos(double p0, double v0, double a0, double dt)
+        public static double getPos(double posInit, double velocityInit, double accelerationInit, double dt)
         {
-            return p0 + v0 * dt + 1 / 2F * a0 * dt * dt;
+            return posInit + velocityInit * dt + 1 / 2F * accelerationInit * dt * dt;
         }
 
-        public static double getAngularVel(double vL, double vR, double l)
+        /**
+         *
+         * @param leftVel
+         * @param rightVel
+         * @param lateralWheelDistance
+         * @return positive CCW, negative CW
+         */
+        public static double getAngularVel(double leftVel, double rightVel, double lateralWheelDistance)
         {
-            return (vR - vL) / l;
+            return (rightVel - leftVel) / lateralWheelDistance;
         }
 
+        /**
+         * @param vL
+         * @param vR
+         * @param l
+         * @return The radius of the circle traveling across .. positive if CCW
+         */
         public static double getTrajectoryRadius(double vL, double vR, double l)
         {
             return (l * (vR + vL)) / (2 * (vR - vL));
         }
 
+        /**
+         * The relative difference in position using arcs
+         * @param vL
+         * @param vR
+         * @param l
+         * @param dt
+         * @return
+         */
         public static ImmutableVector getRelativeDPosCurve(double vL, double vR, double l, double dt)
         {
             // To account for an infinite pathplanning radius when going straight
             if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
             {
                 // Probably average is not needed, but it may be useful over long distances
-                return new ImmutableVector((vL + vR) / 2F * dt, 0);
+                return new ImmutableVector(0, (vL + vR) / 2F * dt);
             }
             double w = getAngularVel(vL, vR, l);
             double dTheta = w * dt;
@@ -640,8 +679,8 @@ public final class MathUtils
          */
         public static double getThetaFromPoints(ImmutableVector start, ImmutableVector end)
         {
-            double dx = end.x - start.x;
-            double dy = end.y - start.y;
+            double dx = end.get(0) - start.get(0);
+            double dy = end.get(1) - start.get(1);
             return Math.atan2(dy, dx);
         }
 
@@ -656,8 +695,8 @@ public final class MathUtils
         public static ImmutableVector getClosestPointLineSegments(ImmutableVector linePointA, ImmutableVector linePointB, ImmutableVector robotPos)
         {
 
-            double distToA = Math.hypot(linePointA.x - robotPos.x, linePointA.y - robotPos.y);
-            double distToB = Math.hypot(linePointB.x - robotPos.x, linePointB.y - robotPos.y);
+            double distToA = Math.hypot(linePointA.get(0) - robotPos.get(0), linePointA.get(1) - robotPos.get(1));
+            double distToB = Math.hypot(linePointB.get(1) - robotPos.get(0), linePointB.get(1) - robotPos.get(1));
 
             Line lineSegment = new Line(linePointA, linePointB);
 
@@ -667,7 +706,7 @@ public final class MathUtils
 
 
 
-            double distToIntersect = Math.hypot(intersect.x - robotPos.x, intersect.y - robotPos.y);
+            double distToIntersect = Math.hypot(intersect.get(0) - robotPos.get(0), intersect.get(1) - robotPos.get(1));
 
             if(!between(linePointA, intersect, linePointB))
             {
@@ -691,7 +730,7 @@ public final class MathUtils
         }
 
         /**
-         * @param speed Vector's magnitude
+         * @param speed ImmutableVector's magnitude
          * @param angle Angle at which it is at
          * @return A vector in <x, y> form
          * @see ImmutableVector
@@ -760,24 +799,24 @@ public final class MathUtils
 
             public Line(ImmutableVector a, ImmutableVector b)
             {
-                x1 = a.x;
-                x2 = b.x;
-                y1 = a.y;
-                y2 = b.y;
+                x1 = a.get(0);
+                x2 = b.get(0);
+                y1 = a.get(1);
+                y2 = b.get(1);
 
                 this.a = a;
                 this.b = b;
 
-                if(a.x - b.x != 0)
+                if(a.get(0) - b.get(0) != 0)
                 {
-                    slope = (a.y - b.y) / (a.x - b.x);
+                    slope = (a.get(1) - b.get(1)) / (a.get(0) - b.get(0));
 
                 }
                 else
                 {
                     slope = Double.MAX_VALUE;
                 }
-                y_intercept = a.y - slope * a.x;
+                y_intercept = a.get(1) - slope * a.get(0);
                 x_intercept = -y_intercept / slope;
             }
 
@@ -819,7 +858,7 @@ public final class MathUtils
                 {
                     perpSlope = -1 / slope;
                 }
-                return new Line(point, new ImmutableVector(point.x + 1, (point.y + perpSlope)));
+                return new Line(point, new ImmutableVector(point.get(0) + 1, (point.get(1) + perpSlope)));
             }
 
             public ImmutableVector intersection(Line other)
@@ -848,9 +887,11 @@ public final class MathUtils
             }
 
             @Override
-            public String toString()
-            {
-                return "Line(m=" + slope + ", b=" + y_intercept + ")";
+            public String toString() {
+                return "Line{" +
+                        "a=" + a +
+                        ", b=" + b +
+                        '}';
             }
         }
     }

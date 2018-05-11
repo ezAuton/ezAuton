@@ -1,9 +1,9 @@
 package com.team2502.ezauton.localization;
 
 import com.team2502.ezauton.localization.sensors.IEncoder;
+import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 import com.team2502.ezauton.utils.IStopwatch;
-import org.joml.ImmutableVector;
 
 /**
  * Localization using encoders which can is primarily used for estimating the speed of the robot.
