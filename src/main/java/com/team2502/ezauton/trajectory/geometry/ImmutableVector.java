@@ -45,19 +45,39 @@ public class ImmutableVector {
 
     public ImmutableVector add(ImmutableVector other)
     {
+        other.assertSize(getSize());
         return applyOperator(other, (first, second) -> first+second);
     }
 
     public double dot(ImmutableVector other)
     {
+        other.assertSize(getSize());
         return mul(other).sum();
     }
 
     public double dist(ImmutableVector other)
     {
+        other.assertSize(getSize());
         ImmutableVector sub = this.sub(other);
-        double dot = sub.dot(sub);
-        return Math.sqrt(dot); /// Math.sqrt(dot(other));
+        return sub.mag();
+    }
+
+    /**
+     *
+     * @return magnitude squared
+     */
+    public double mag2()
+    {
+        return dot(this);
+    }
+
+    /**
+     *
+     * @return magnitude
+     */
+    public double mag()
+    {
+        return Math.sqrt(mag2());
     }
 
 
