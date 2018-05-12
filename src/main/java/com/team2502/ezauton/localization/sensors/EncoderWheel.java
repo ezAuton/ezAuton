@@ -4,7 +4,7 @@ public class EncoderWheel {
 
     private final IEncoder encoder;
     private final double wheelDiameter;
-    private double multiplier;
+    private double multiplier = 1D;
 
     /**
      * @param encoder The encoder for measuring revolutions
@@ -34,17 +34,18 @@ public class EncoderWheel {
      */
     public double getPosition()
     {
-        return encoder.getPosition() * Math.PI * wheelDiameter * getMultiplier();
+        double epos = encoder.getPosition();
+        return epos * Math.PI * wheelDiameter * getMultiplier();
     }
 
-    /**
-     *
-     * @return velocity (probably in ft/s)
-     */
-    public double getVelocity()
-    {
-        return encoder.getPosition() * Math.PI * wheelDiameter * getMultiplier() / 60D; // because minute to second
-    }
+//    /**
+//     *
+//     * @return velocity (probably in ft/s)
+//     */
+//    public double getVelocity()
+//    {
+//        return encoder.getPosition() * Math.PI * wheelDiameter * getMultiplier() / 60D; // because minute to second
+//    }
 
     /**
      *

@@ -5,7 +5,7 @@ import com.team2502.ezauton.robot.ITankRobot;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 
-public class EncoderRotationEstimator implements IRotationalLocationEstimator {
+public class EncoderRotationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, Updateable {
 
     private final ITankRobot tankRobot;
     private double lastPosLeft;
@@ -23,6 +23,7 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator {
         this.tankRobot = tankRobot;
     }
 
+
     public void reset()
     {
         lastPosLeft = left.getPosition();
@@ -32,21 +33,32 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator {
 
     @Override
     public double estimateHeading() {
+        return heading;
+    }
+
+    @Override
+    public ImmutableVector estimateLocation() {
+        return location;
+    }
+
+    @Override
+    public boolean update() {
         if(!init)
         {
             throw new IllegalArgumentException("Must be initialized! (call reset())");
         }
 
         double leftPosition = left.getPosition();
-        double dl = lastPosLeft - leftPosition;
+        double dl = leftPosition - lastPosLeft;
         double rightPosition = right.getPosition();
-        double dr = lastPosRight - rightPosition;
+        double dr = rightPosition - lastPosRight;
 
         lastPosLeft = leftPosition;
         lastPosRight = rightPosition;
 
-        MathUtils.Kinematics.getAbsoluteDPosCurve(leftPosition,rightPosition,tankRobot.getLateralWheelDistance(),heading);
+        ImmutableVector dLocation = MathUtils.Kinematics.getAbsoluteDPosCurve(dl, dr, tankRobot.getLateralWheelDistance(), heading);
+        location = location.add(dLocation);
         heading+=MathUtils.Kinematics.getAngularDistance(dl,dr,tankRobot.getLateralWheelDistance());
-        return heading;
+        return true;
     }
 }
