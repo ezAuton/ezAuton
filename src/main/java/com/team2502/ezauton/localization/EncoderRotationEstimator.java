@@ -2,6 +2,7 @@ package com.team2502.ezauton.localization;
 
 import com.team2502.ezauton.localization.sensors.EncoderWheel;
 import com.team2502.ezauton.robot.ITankRobot;
+import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 
 public class EncoderRotationEstimator implements IRotationalLocationEstimator {
@@ -13,6 +14,7 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator {
     private final EncoderWheel left;
     private final EncoderWheel right;
     private double heading = 0;
+    private ImmutableVector location = ImmutableVector.origin(2);
 
     public EncoderRotationEstimator(EncoderWheel left, EncoderWheel right, ITankRobot tankRobot)
     {
@@ -43,6 +45,7 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator {
         lastPosLeft = leftPosition;
         lastPosRight = rightPosition;
 
+        MathUtils.Kinematics.getAbsoluteDPosCurve(leftPosition,rightPosition,tankRobot.getLateralWheelDistance(),heading);
         heading+=MathUtils.Kinematics.getAngularDistance(dl,dr,tankRobot.getLateralWheelDistance());
         return heading;
     }

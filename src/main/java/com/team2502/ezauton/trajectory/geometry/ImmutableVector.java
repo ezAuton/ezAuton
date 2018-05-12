@@ -33,6 +33,16 @@ public class ImmutableVector {
         return new ImmutableVector(elements);
     }
 
+    /**
+     *
+     * @param size The dimension of the vector.
+     * @return
+     */
+    public static  ImmutableVector origin(int size)
+    {
+        return of(0,size);
+    }
+
     public int getSize()
     {
         return x.length;

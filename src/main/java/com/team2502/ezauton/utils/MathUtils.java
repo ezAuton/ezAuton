@@ -530,24 +530,23 @@ public final class MathUtils
 
         /**
          * The relative difference in position using arcs
-         * @param vL
-         * @param vR
-         * @param l
-         * @param dt
+         * @param distanceLeft
+         * @param distanceRight
+         * @param lateralWheelDistance
          * @return
          */
-        public static ImmutableVector getRelativeDPosCurve(double vL, double vR, double l, double dt)
+        public static ImmutableVector getRelativeDPosCurve(double distanceLeft, double distanceRight, double lateralWheelDistance)
         {
             // To account for an infinite pathplanning radius when going straight
-            if(Math.abs(vL - vR) <= (vL + vR) * 1E-2)
+            if(Math.abs(distanceLeft - distanceRight) <= (distanceLeft + distanceRight) * 1E-2)
             {
                 // Probably average is not needed, but it may be useful over long distances
-                return new ImmutableVector(0, (vL + vR) / 2F * dt);
+                return new ImmutableVector(0, (distanceLeft + distanceRight) / 2F);
             }
-            double w = getAngularDistance(vL, vR, l);
-            double dTheta = w * dt;
+            double w = getAngularDistance(distanceLeft, distanceRight, lateralWheelDistance);
+            double dTheta = w;
 
-            double r = getTrajectoryRadius(vL, vR, l);
+            double r = getTrajectoryRadius(distanceLeft, distanceRight, lateralWheelDistance);
 
             double dxRelative = -r * (1 - MathUtils.cos(-dTheta));
             double dyRelative = -r * MathUtils.sin(-dTheta);
@@ -569,9 +568,9 @@ public final class MathUtils
             return LinearAlgebra.rotate2D(dPos, robotHeading);
         }
 
-        public static ImmutableVector getAbsoluteDPosCurve(double vL, double vR, double l, double dt, double robotHeading)
+        public static ImmutableVector getAbsoluteDPosCurve(double vL, double vR, double l, double robotHeading)
         {
-            ImmutableVector relativeDPos = getRelativeDPosCurve(vL, vR, l, dt);
+            ImmutableVector relativeDPos = getRelativeDPosCurve(vL, vR, l);
             return LinearAlgebra.rotate2D(relativeDPos, robotHeading);
         }
 

@@ -50,7 +50,7 @@ public class KinematicsTest
     {
         // l * pi = 1 (circumference)
         // 1/pi = l
-        ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, 1, 0);
+        ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, 0);
         assertEquals(0, absoluteDPosCurve.get(0), 1);
         assertEquals(0, absoluteDPosCurve.get(1), 1);
     }
@@ -60,7 +60,7 @@ public class KinematicsTest
     {
         // l * pi = 1 (circumference)
         // 1/pi = l
-        ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, 1, Math.PI / 4F);
+        ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123,  Math.PI / 4F);
         assertEquals(-Math.sqrt(1 / 2F), absoluteDPosCurve.get(0), 0.001);
         assertEquals(Math.sqrt(1 / 2F), absoluteDPosCurve.get(1), 0.001);
     }
@@ -132,12 +132,12 @@ public class KinematicsTest
     public void testRelativeDPosCurve()
     {
         // straight
-        vectorsCloseEnough(new ImmutableVector(0,1),MathUtils.Kinematics.getRelativeDPosCurve(1,1,1,1));
+        vectorsCloseEnough(new ImmutableVector(0,1),MathUtils.Kinematics.getRelativeDPosCurve(1,1,1));
 
         // full circle
-        vectorsCloseEnough(new ImmutableVector(0,0),MathUtils.Kinematics.getRelativeDPosCurve(Math.PI,0,1/2F,1));
+        vectorsCloseEnough(new ImmutableVector(0,0),MathUtils.Kinematics.getRelativeDPosCurve(Math.PI,0,1/2F));
 
-        vectorsCloseEnough(new ImmutableVector(0.5,0),MathUtils.Kinematics.getRelativeDPosCurve(Math.PI/2,0,1/2F,1));
+        vectorsCloseEnough(new ImmutableVector(0.5,0),MathUtils.Kinematics.getRelativeDPosCurve(Math.PI/2,0,1/2F));
     }
 
     private void vectorsCloseEnough(ImmutableVector a, ImmutableVector b)
