@@ -512,7 +512,7 @@ public final class MathUtils
          * @param lateralWheelDistance
          * @return positive CCW, negative CW
          */
-        public static double getAngularVel(double leftVel, double rightVel, double lateralWheelDistance)
+        public static double getAngularDistance(double leftVel, double rightVel, double lateralWheelDistance)
         {
             return (rightVel - leftVel) / lateralWheelDistance;
         }
@@ -544,7 +544,7 @@ public final class MathUtils
                 // Probably average is not needed, but it may be useful over long distances
                 return new ImmutableVector(0, (vL + vR) / 2F * dt);
             }
-            double w = getAngularVel(vL, vR, l);
+            double w = getAngularDistance(vL, vR, l);
             double dTheta = w * dt;
 
             double r = getTrajectoryRadius(vL, vR, l);

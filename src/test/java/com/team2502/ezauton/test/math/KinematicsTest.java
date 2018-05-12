@@ -114,11 +114,11 @@ public class KinematicsTest
     public void testAngularVelocity()
     {
         // straight
-        assertEquals(0,MathUtils.Kinematics.getAngularVel(1,1,1),1E-6);
-        assertEquals(0,MathUtils.Kinematics.getAngularVel(0,0,1),1E-6);
+        assertEquals(0,MathUtils.Kinematics.getAngularDistance(1,1,1),1E-6);
+        assertEquals(0,MathUtils.Kinematics.getAngularDistance(0,0,1),1E-6);
 
-        assertTrue(MathUtils.Kinematics.getAngularVel(0,1,1) > 0);
-        assertTrue(MathUtils.Kinematics.getAngularVel(1,0,1) < 0);
+        assertTrue(MathUtils.Kinematics.getAngularDistance(0,1,1) > 0);
+        assertTrue(MathUtils.Kinematics.getAngularDistance(1,0,1) < 0);
     }
 
     @Test
