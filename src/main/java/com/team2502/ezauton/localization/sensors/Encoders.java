@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class Encoders {
 
-    int MAG_ENCODER = 4096;
+    int CTRE_MAG_ENCODER = 4096;
 
     public static IEncoder fromTalon(TalonSRX talonSRX, int unitsPerRev)
     {
