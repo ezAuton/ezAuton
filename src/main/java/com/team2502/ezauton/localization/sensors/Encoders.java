@@ -9,7 +9,11 @@ public class Encoders {
 
     public static IEncoder fromTalon(TalonSRX talonSRX, int unitsPerRev)
     {
-        return () -> talonSRX.getSelectedSensorPosition(0)/unitsPerRev;
+        if(unitsPerRev <= 0)
+        {
+            throw new IllegalArgumentException("unitsPerRev must be non-zero");
+        }
+        return () -> (double) talonSRX.getSelectedSensorPosition(0)/unitsPerRev;
     }
 
     public static IEncoder fromTachometer(ITachometer tachometer, IStopwatch stopwatch)
