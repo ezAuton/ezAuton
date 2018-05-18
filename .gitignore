@@ -34,7 +34,6 @@ eclipse
 .idea/libraries
 
 *.eml
-*.iml
 *.iws
 *.ipr
 
