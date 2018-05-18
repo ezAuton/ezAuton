@@ -38,15 +38,17 @@ public class SimulatedTankRobot implements ITankRobot
 
         SimulatedStopwatch stopwatch = new SimulatedStopwatch(dt);
 
-        left = new EncoderWheel(Encoders.fromTachometer(leftTach, stopwatch.clone()),wheelSize);
-        right = new EncoderWheel(Encoders.fromTachometer(rightTach, stopwatch.clone()),wheelSize);
+        left = new EncoderWheel(Encoders.fromTachometer(leftTach, stopwatch.clone()), wheelSize);
+        right = new EncoderWheel(Encoders.fromTachometer(rightTach, stopwatch.clone()), wheelSize);
     }
 
-    public EncoderWheel getLeft() {
+    public EncoderWheel getLeft()
+    {
         return left;
     }
 
-    public EncoderWheel getRight() {
+    public EncoderWheel getRight()
+    {
         return right;
     }
 

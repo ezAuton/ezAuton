@@ -11,9 +11,8 @@ import static org.junit.Assert.*;
 
 public class MathTest
 {
-    private ImmutableVector e1 = new ImmutableVector(1, 0);
-
     private final double DELTA = 1E-5;
+    private ImmutableVector e1 = new ImmutableVector(1, 0);
 
     public MathTest()
     {
@@ -203,7 +202,7 @@ public class MathTest
     @Test
     public void testDecimalComponent()
     {
-        assertEquals(.567,MathUtils.decimalComponent(1234.567),1E-6);
+        assertEquals(.567, MathUtils.decimalComponent(1234.567), 1E-6);
     }
 
     @Test
@@ -334,8 +333,8 @@ public class MathTest
         MathUtils.Geometry.Line horizontal = new MathUtils.Geometry.Line(origin, i);
         MathUtils.Geometry.Line vertical = new MathUtils.Geometry.Line(origin, j);
 
-        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(horizontal, origin, 1), new ImmutableVector[]{i.mul(-1), i});
-        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(vertical, origin, 1), new ImmutableVector[]{j.mul(-1), j});
+        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(horizontal, origin, 1), new ImmutableVector[] { i.mul(-1), i });
+        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(vertical, origin, 1), new ImmutableVector[] { j.mul(-1), j });
     }
 
     @Test
@@ -347,10 +346,11 @@ public class MathTest
         ImmutableVector origin = new ImmutableVector(0, 0);
 
         assertEquals(3 * Math.PI / 4, MathUtils.Geometry.getThetaFromPoints(i, j), DELTA);
-        assertEquals( -Math.PI / 4, MathUtils.Geometry.getThetaFromPoints(i.mul(-1), j.mul(-1)), DELTA);
+        assertEquals(-Math.PI / 4, MathUtils.Geometry.getThetaFromPoints(i.mul(-1), j.mul(-1)), DELTA);
         assertEquals(0, MathUtils.Geometry.getThetaFromPoints(j, diag), DELTA); // line from j to diag is flat
 
     }
+
     @Test
     public void testMin()
     {
@@ -372,10 +372,10 @@ public class MathTest
         ImmutableVector robotPos = new ImmutableVector(0, 0);
 
         ImmutableVector[][] testCases = new ImmutableVector[][] {
-                {new ImmutableVector(1, 1), new ImmutableVector(3, 3)}, // point a should be closest
-                {new ImmutableVector(-1,  -1), new ImmutableVector(1, 1)},
-                {new ImmutableVector(-5, -5), new ImmutableVector(-3, -3)},
-                {new ImmutableVector(-1, 0), new ImmutableVector(1, 2)}
+                { new ImmutableVector(1, 1), new ImmutableVector(3, 3) }, // point a should be closest
+                { new ImmutableVector(-1, -1), new ImmutableVector(1, 1) },
+                { new ImmutableVector(-5, -5), new ImmutableVector(-3, -3) },
+                { new ImmutableVector(-1, 0), new ImmutableVector(1, 2) }
         };
 
         vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[0][0], testCases[0][1], robotPos), testCases[0][0]);

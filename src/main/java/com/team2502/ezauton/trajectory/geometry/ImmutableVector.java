@@ -2,7 +2,8 @@ package com.team2502.ezauton.trajectory.geometry;
 
 import java.util.Arrays;
 
-public class ImmutableVector {
+public class ImmutableVector
+{
 
     private final double[] x;
 
@@ -11,8 +12,26 @@ public class ImmutableVector {
         this.x = x;
     }
 
+    public static ImmutableVector of(double element, int size)
+    {
+        double[] elements = new double[size];
+        for(int i = 0; i < size; i++)
+        {
+            elements[i] = element;
+        }
+        return new ImmutableVector(elements);
+    }
+
     /**
-     *
+     * @param size The dimension of the vector.
+     * @return
+     */
+    public static ImmutableVector origin(int size)
+    {
+        return of(0, size);
+    }
+
+    /**
      * @param size
      * @throws IllegalArgumentException if size does not match
      */
@@ -22,25 +41,6 @@ public class ImmutableVector {
         {
             throw new IllegalArgumentException("Wrong size vector");
         }
-    }
-
-    public static  ImmutableVector of(double element, int size)
-    {
-        double[] elements = new double[size];
-        for (int i = 0; i < size; i++) {
-            elements[i] = element;
-        }
-        return new ImmutableVector(elements);
-    }
-
-    /**
-     *
-     * @param size The dimension of the vector.
-     * @return
-     */
-    public static  ImmutableVector origin(int size)
-    {
-        return of(0,size);
     }
 
     public int getSize()
@@ -56,7 +56,7 @@ public class ImmutableVector {
     public ImmutableVector add(ImmutableVector other)
     {
         other.assertSize(getSize());
-        return applyOperator(other, (first, second) -> first+second);
+        return applyOperator(other, (first, second) -> first + second);
     }
 
     public double dot(ImmutableVector other)
@@ -73,7 +73,6 @@ public class ImmutableVector {
     }
 
     /**
-     *
      * @return magnitude squared
      */
     public double mag2()
@@ -82,7 +81,6 @@ public class ImmutableVector {
     }
 
     /**
-     *
      * @return magnitude
      */
     public double mag()
@@ -94,8 +92,9 @@ public class ImmutableVector {
     public double sum()
     {
         double val = 0;
-        for (double v : x) {
-            val+=v;
+        for(double v : x)
+        {
+            val += v;
         }
         return val;
     }
@@ -103,37 +102,40 @@ public class ImmutableVector {
     public ImmutableVector applyOperator(ImmutableVector other, Operator operator)
     {
         double[] temp = new double[x.length];
-        for (int i = 0; i < x.length; i++) {
-            temp[i] = operator.operate(x[i],other.x[i]);
+        for(int i = 0; i < x.length; i++)
+        {
+            temp[i] = operator.operate(x[i], other.x[i]);
         }
         return new ImmutableVector(temp);
     }
 
     public ImmutableVector sub(ImmutableVector other)
     {
-        return applyOperator(other, (first, second) -> first-second);
+        return applyOperator(other, (first, second) -> first - second);
     }
 
     public ImmutableVector mul(ImmutableVector other)
     {
-        return applyOperator(other, (first, second) -> first*second);
+        return applyOperator(other, (first, second) -> first * second);
     }
 
     public ImmutableVector mul(double scalar)
     {
-        return mul(of(scalar,getSize()));
+        return mul(of(scalar, getSize()));
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if(this == o) { return true; }
+        if(o == null || getClass() != o.getClass()) { return false; }
         ImmutableVector that = (ImmutableVector) o;
         if(that.getSize() != getSize())
         {
             return false;
         }
-        for (int i = 0; i < getSize(); i++) {
+        for(int i = 0; i < getSize(); i++)
+        {
             if(Math.abs(that.x[i] - x[i]) > 1E-6) // epsilon eq
             {
                 return false;
@@ -143,15 +145,17 @@ public class ImmutableVector {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Arrays.hashCode(x);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "ImmutableVector{" +
-                "x=" + Arrays.toString(x) +
-                '}';
+               "x=" + Arrays.toString(x) +
+               '}';
     }
 
     interface Operator

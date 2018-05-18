@@ -27,8 +27,11 @@ eclipse
 *.launch
 
 # IntelliJ IDEA
-.idea/
-!.idea/codeStyles/*
+.idea/gradle.xml
+.idea/misc.xml
+.idea/uiDesigner.xml
+.idea/workspace.xml
+
 *.eml
 *.iml
 *.iws

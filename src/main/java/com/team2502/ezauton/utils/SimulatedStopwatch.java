@@ -38,7 +38,8 @@ public class SimulatedStopwatch implements IStopwatch
     }
 
     @Override
-    public SimulatedStopwatch clone() {
+    public SimulatedStopwatch clone()
+    {
         SimulatedStopwatch simulatedStopwatch = new SimulatedStopwatch(dt);
         simulatedStopwatch.count = count;
         return simulatedStopwatch;

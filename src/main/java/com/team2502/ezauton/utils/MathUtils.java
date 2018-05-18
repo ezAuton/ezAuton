@@ -41,12 +41,8 @@ public final class MathUtils
      */
     private static final double[] SIN_TABLE = new double[65536];
 
-    private MathUtils()
+    static
     {
-
-    }
-
-    static {
         for(int i = 0; i < 65536; ++i) { SIN_TABLE[i] = Math.sin((i) * Math.PI * 2.0D / 65536.0D); }
 
         SIN_TABLE[0] = 0;       /* 0π */
@@ -55,25 +51,31 @@ public final class MathUtils
         SIN_TABLE[49152] = -1;  /* 3π/2 */
     }
 
+    private MathUtils()
+    {
+
+    }
+
     public static void init()
     {}
 
     /**
      * Untraditional perpendicular
+     *
      * @param immutableVector
      * @return
      */
     public static ImmutableVector perp(ImmutableVector immutableVector)
     {
         immutableVector.assertSize(2);
-        return new ImmutableVector(immutableVector.get(1),-immutableVector.get(0));
+        return new ImmutableVector(immutableVector.get(1), -immutableVector.get(0));
     }
 
     public static ImmutableVector cross(ImmutableVector a, ImmutableVector b)
     {
         a.assertSize(3);
         b.assertSize(3);
-        return new ImmutableVector(a.get(1)*b.get(2) - b.get(1)*a.get(2),a.get(0)*b.get(2) - b.get(0)*a.get(2),a.get(0)*b.get(1) - b.get(0)*a.get(1));
+        return new ImmutableVector(a.get(1) * b.get(2) - b.get(1) * a.get(2), a.get(0) * b.get(2) - b.get(0) * a.get(2), a.get(0) * b.get(1) - b.get(0) * a.get(1));
     }
 
     public static double shiftRadiansBounded(double initRadians, double shift)
@@ -142,6 +144,7 @@ public final class MathUtils
         }
         return min;
     }
+
     /**
      * Multiply degrees by π/180
      *
@@ -212,6 +215,7 @@ public final class MathUtils
 
 
     //region Logarithmic Functions
+
     /**
      * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
      *
@@ -406,13 +410,14 @@ public final class MathUtils
          * Turn absolute coordinates into coordinates relative to the robot
          *
          * @param coordinateAbsolute The absolute coordinates
-         * @param robotCoordAbs The robot's absolute position
-         * @param robotHeading The robot's heading (radians)
+         * @param robotCoordAbs      The robot's absolute position
+         * @param robotHeading       The robot's heading (radians)
          * @return {@code coordinateAbsolute} but relative to the robot
          */
         public static ImmutableVector absoluteToRelativeCoord(ImmutableVector coordinateAbsolute, ImmutableVector robotCoordAbs, double robotHeading)
         { return rotate2D(coordinateAbsolute.sub(robotCoordAbs), -robotHeading); }
     }
+
     /**
      * A class containing methods pertaining to manipulation of real numbers
      */
@@ -506,7 +511,6 @@ public final class MathUtils
         }
 
         /**
-         *
          * @param leftVel
          * @param rightVel
          * @param lateralWheelDistance
@@ -530,6 +534,7 @@ public final class MathUtils
 
         /**
          * The relative difference in position using arcs
+         *
          * @param distanceLeft
          * @param distanceRight
          * @param lateralWheelDistance
@@ -624,6 +629,7 @@ public final class MathUtils
 
         /**
          * Return the difference between 2 angles (in degrees)
+         *
          * @param angle1 Angle 1 (in degrees)
          * @param angle2 Angle 2 (in degrees)
          * @return Difference between the angles (in degrees)
@@ -671,7 +677,7 @@ public final class MathUtils
 
         /**
          * @param start The starting vector
-         * @param end The ending vector
+         * @param end   The ending vector
          * @return The theta of the angle created counterclockwise between \vec{i} and the line from start->end
          * <br>
          * Equivalent to arctan((start - end))
@@ -702,7 +708,6 @@ public final class MathUtils
             Line linePerp = lineSegment.getPerp(robotPos);
 
             ImmutableVector intersect = linePerp.intersection(lineSegment);
-
 
 
             double distToIntersect = Math.hypot(intersect.get(0) - robotPos.get(0), intersect.get(1) - robotPos.get(1));
@@ -870,7 +875,7 @@ public final class MathUtils
                 // (m-c) x = d - b
                 double x = (other.y_intercept - this.y_intercept) / (this.slope - other.slope);
                 double y = evaluateY(x);
-                return new ImmutableVector( x,  y);
+                return new ImmutableVector(x, y);
 
             }
 
@@ -886,11 +891,12 @@ public final class MathUtils
             }
 
             @Override
-            public String toString() {
+            public String toString()
+            {
                 return "Line{" +
-                        "a=" + a +
-                        ", b=" + b +
-                        '}';
+                       "a=" + a +
+                       ", b=" + b +
+                       '}';
             }
         }
     }

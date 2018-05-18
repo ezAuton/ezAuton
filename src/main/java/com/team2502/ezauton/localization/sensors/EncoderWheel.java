@@ -1,13 +1,14 @@
 package com.team2502.ezauton.localization.sensors;
 
-public class EncoderWheel {
+public class EncoderWheel
+{
 
     private final IEncoder encoder;
     private final double wheelDiameter;
     private double multiplier = 1D;
 
     /**
-     * @param encoder The encoder for measuring revolutions
+     * @param encoder       The encoder for measuring revolutions
      * @param wheelDiameter The diameter of the wheel with the encoder (recommended in ft)
      */
     public EncoderWheel(IEncoder encoder, double wheelDiameter)
@@ -16,26 +17,28 @@ public class EncoderWheel {
         this.wheelDiameter = wheelDiameter;
     }
 
-    public IEncoder getEncoder() {
+    public IEncoder getEncoder()
+    {
         return encoder;
     }
 
-    public double getWheelDiameter() {
+    public double getWheelDiameter()
+    {
         return wheelDiameter;
     }
 
-    public double getMultiplier() {
+    public double getMultiplier()
+    {
         return multiplier;
     }
 
     /**
-     *
-     * @return position (probably in ft)
+     * @param multiplier If there are additional gear ratios to consider, this is the multiplier
+     *                   (wheel rev / encoder rev)
      */
-    public double getPosition()
+    public void setMultiplier(double multiplier)
     {
-        double epos = encoder.getPosition();
-        return epos * Math.PI * wheelDiameter * getMultiplier();
+        this.multiplier = multiplier;
     }
 
 //    /**
@@ -48,11 +51,11 @@ public class EncoderWheel {
 //    }
 
     /**
-     *
-     * @param multiplier If there are additional gear ratios to consider, this is the multiplier
-     *                          (wheel rev / encoder rev)
+     * @return position (probably in ft)
      */
-    public void setMultiplier(double multiplier) {
-        this.multiplier = multiplier;
+    public double getPosition()
+    {
+        double epos = encoder.getPosition();
+        return epos * Math.PI * wheelDiameter * getMultiplier();
     }
 }

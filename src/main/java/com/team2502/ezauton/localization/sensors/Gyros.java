@@ -2,7 +2,8 @@ package com.team2502.ezauton.localization.sensors;
 
 import com.kauailabs.navx.frc.AHRS;
 
-public class Gyros {
+public class Gyros
+{
 
     public static ICompass fromNavx(AHRS navx)
     {
@@ -11,7 +12,7 @@ public class Gyros {
             double boundedAngle = angle % 360;
             if(boundedAngle < 0)
             {
-                boundedAngle = 360+boundedAngle;
+                boundedAngle = 360 + boundedAngle;
             }
             return boundedAngle;
         };

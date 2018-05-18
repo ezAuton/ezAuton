@@ -13,17 +13,23 @@ public class BasicStopwatchTest
     @Test
     public void testRead()
     {
-        new Thread (() -> {
+        new Thread(() -> {
             BasicStopwatch stopwatch = new BasicStopwatch();
-            try {
+            try
+            {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
+            }
+            catch(InterruptedException e)
+            {
                 e.printStackTrace();
             }
             assertEquals(1000, stopwatch.read(), 7); // Delta of 5 ms
-            try {
+            try
+            {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
+            }
+            catch(InterruptedException e)
+            {
                 e.printStackTrace();
             }
             assertEquals(2000, stopwatch.read(), 14); // Delta of 10 ms
@@ -31,12 +37,16 @@ public class BasicStopwatchTest
     }
 
     @Test
-    public void testPop() {
-        new Thread (() -> {
+    public void testPop()
+    {
+        new Thread(() -> {
             BasicStopwatch stopwatch = new BasicStopwatch();
-            try {
+            try
+            {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
+            }
+            catch(InterruptedException e)
+            {
                 e.printStackTrace();
             }
             assertEquals(1000, stopwatch.pop(), 5); // Delta of 10 ms
@@ -45,12 +55,16 @@ public class BasicStopwatchTest
     }
 
     @Test
-    public void testReset() {
-        new Thread (() -> {
+    public void testReset()
+    {
+        new Thread(() -> {
             BasicStopwatch stopwatch = new BasicStopwatch();
-            try {
+            try
+            {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
+            }
+            catch(InterruptedException e)
+            {
                 e.printStackTrace();
             }
             assertEquals(1000, stopwatch.read(), 5); // Delta of 10 ms
@@ -60,7 +74,8 @@ public class BasicStopwatchTest
     }
 
     @Test
-    public void testIsInit() {
+    public void testIsInit()
+    {
         BasicStopwatch stopwatch = new BasicStopwatch();
         assertTrue(stopwatch.isInit());
     }

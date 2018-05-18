@@ -1,9 +1,9 @@
 package com.team2502.ezauton.test.math;
 
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
+import com.team2502.ezauton.utils.MathUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import com.team2502.ezauton.utils.MathUtils;
 
 import static com.team2502.ezauton.utils.MathUtils.ROOT_2;
 import static org.junit.Assert.assertEquals;
@@ -60,7 +60,7 @@ public class KinematicsTest
     {
         // l * pi = 1 (circumference)
         // 1/pi = l
-        ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123,  Math.PI / 4F);
+        ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, Math.PI / 4F);
         assertEquals(-Math.sqrt(1 / 2F), absoluteDPosCurve.get(0), 0.001);
         assertEquals(Math.sqrt(1 / 2F), absoluteDPosCurve.get(1), 0.001);
     }
@@ -101,43 +101,43 @@ public class KinematicsTest
     public void testGetPos()
     {
         double standstill = MathUtils.Kinematics.getPos(10, 0, 0, 100);
-        assertEquals(10,standstill,1E-6);
+        assertEquals(10, standstill, 1E-6);
 
         double noAccel = MathUtils.Kinematics.getPos(10, 10, 0, 100); // 10 + 10*100
-        assertEquals(10 + 10*100,noAccel,1E-6);
+        assertEquals(10 + 10 * 100, noAccel, 1E-6);
 
         double accel = MathUtils.Kinematics.getPos(0, 0, 1, 2); // 1/2*1*2^2
-        assertEquals(1/2F*1*2*2,accel,1E-6);
+        assertEquals(1 / 2F * 1 * 2 * 2, accel, 1E-6);
     }
 
     @Test
     public void testAngularVelocity()
     {
         // straight
-        assertEquals(0,MathUtils.Kinematics.getAngularDistance(1,1,1),1E-6);
-        assertEquals(0,MathUtils.Kinematics.getAngularDistance(0,0,1),1E-6);
+        assertEquals(0, MathUtils.Kinematics.getAngularDistance(1, 1, 1), 1E-6);
+        assertEquals(0, MathUtils.Kinematics.getAngularDistance(0, 0, 1), 1E-6);
 
-        assertTrue(MathUtils.Kinematics.getAngularDistance(0,1,1) > 0);
-        assertTrue(MathUtils.Kinematics.getAngularDistance(1,0,1) < 0);
+        assertTrue(MathUtils.Kinematics.getAngularDistance(0, 1, 1) > 0);
+        assertTrue(MathUtils.Kinematics.getAngularDistance(1, 0, 1) < 0);
     }
 
     @Test
     public void testTrajRadius()
     {
-        assertTrue(MathUtils.Kinematics.getTrajectoryRadius(0,1,1) > 0);
-        assertTrue(MathUtils.Kinematics.getTrajectoryRadius(1,0,1) < 0);
+        assertTrue(MathUtils.Kinematics.getTrajectoryRadius(0, 1, 1) > 0);
+        assertTrue(MathUtils.Kinematics.getTrajectoryRadius(1, 0, 1) < 0);
     }
 
     @Test
     public void testRelativeDPosCurve()
     {
         // straight
-        vectorsCloseEnough(new ImmutableVector(0,1),MathUtils.Kinematics.getRelativeDPosCurve(1,1,1));
+        vectorsCloseEnough(new ImmutableVector(0, 1), MathUtils.Kinematics.getRelativeDPosCurve(1, 1, 1));
 
         // full circle
-        vectorsCloseEnough(new ImmutableVector(0,0),MathUtils.Kinematics.getRelativeDPosCurve(Math.PI,0,1/2F));
+        vectorsCloseEnough(new ImmutableVector(0, 0), MathUtils.Kinematics.getRelativeDPosCurve(Math.PI, 0, 1 / 2F));
 
-        vectorsCloseEnough(new ImmutableVector(0.5,0),MathUtils.Kinematics.getRelativeDPosCurve(Math.PI/2,0,1/2F));
+        vectorsCloseEnough(new ImmutableVector(0.5, 0), MathUtils.Kinematics.getRelativeDPosCurve(Math.PI / 2, 0, 1 / 2F));
     }
 
     private void vectorsCloseEnough(ImmutableVector a, ImmutableVector b)
