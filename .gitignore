@@ -28,7 +28,7 @@ eclipse
 
 # IntelliJ IDEA
 .idea/gradle.xml
-.idea/misc.xml
+# .idea/misc.xml
 .idea/uiDesigner.xml
 .idea/workspace.xml
 .idea/libraries
