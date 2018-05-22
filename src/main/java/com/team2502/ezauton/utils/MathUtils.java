@@ -86,7 +86,7 @@ public final class MathUtils
     /**
      * @param x A number
      * @param y Another number
-     * @return Returns true if numbers are same sign
+     * @return Returns true if numbers are assertSameDim sign
      */
     public static boolean signSame(double x, double y)
     { return Long.signum(Double.doubleToLongBits(x)) == Long.signum(Double.doubleToLongBits(y)); }
