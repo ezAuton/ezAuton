@@ -1,9 +1,9 @@
 package com.team2502.ezauton.trajectory.geometry;
 
-import com.team2502.ezauton.Pair;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class ImmutableVector
 {
@@ -13,6 +13,15 @@ public class ImmutableVector
     public ImmutableVector(double... x)
     {
         this.elements = x;
+    }
+
+    public ImmutableVector(List<Double> list)
+    {
+        elements = new double[list.size()];
+        for(int i = 0; i < list.size(); i++)
+        {
+            elements[i] = list.get(i);
+        }
     }
 
     public static ImmutableVector of(double element, int size)
@@ -32,6 +41,7 @@ public class ImmutableVector
 
     /**
      * throws error if not same dimension
+     *
      * @param vectors
      */
     public static void assertSameDim(Collection<ImmutableVector> vectors)
@@ -41,7 +51,7 @@ public class ImmutableVector
         {
             if(initSize == -1)
             {
-                initSize = vector.getSize();
+                initSize = vector.getDimension();
             }
             else
             {
@@ -70,13 +80,13 @@ public class ImmutableVector
      */
     public void assertSize(int size) throws IllegalArgumentException
     {
-        if(getSize() != size)
+        if(getDimension() != size)
         {
             throw new IllegalArgumentException("Wrong size vector");
         }
     }
 
-    public int getSize()
+    public int getDimension()
     {
         return elements.length;
     }
@@ -88,26 +98,26 @@ public class ImmutableVector
 
     public ImmutableVector add(ImmutableVector other)
     {
-        other.assertSize(getSize());
+        other.assertSize(getDimension());
         return applyOperator(other, (first, second) -> first + second);
     }
 
     public double dot(ImmutableVector other)
     {
-        other.assertSize(getSize());
+        other.assertSize(getDimension());
         return mul(other).sum();
     }
 
     public double dist(ImmutableVector other)
     {
-        other.assertSize(getSize());
+        other.assertSize(getDimension());
         ImmutableVector sub = this.sub(other);
         return sub.mag();
     }
 
     public double dist2(ImmutableVector other)
     {
-        other.assertSize(getSize());
+        other.assertSize(getDimension());
         ImmutableVector sub = this.sub(other);
         return sub.mag2();
     }
@@ -159,22 +169,44 @@ public class ImmutableVector
         return applyOperator(other, (first, second) -> first * second);
     }
 
-    public ImmutableVector mul(double scalar)
+    public ImmutableVector div(ImmutableVector other)
     {
-        return mul(of(scalar, getSize()));
+        return applyOperator(other, (first, second) -> first / second);
     }
 
+    public ImmutableVector truncateElement(double toTruncate)
+    {
+        List<Double> toReturn = new ArrayList<>(getDimension());
+        for(double element : elements)
+        {
+            if(toTruncate != element)
+            {
+                toReturn.add(toTruncate);
+            }
+        }
+        return new ImmutableVector(toReturn);
+    }
+
+    public ImmutableVector mul(double scalar)
+    {
+        return mul(of(scalar, getDimension()));
+    }
+
+    /**
+     * @param o
+     * @return If epsilon equals
+     */
     @Override
     public boolean equals(Object o)
     {
         if(this == o) { return true; }
         if(o == null || getClass() != o.getClass()) { return false; }
         ImmutableVector that = (ImmutableVector) o;
-        if(that.getSize() != getSize())
+        if(that.getDimension() != getDimension())
         {
             return false;
         }
-        for(int i = 0; i < getSize(); i++)
+        for(int i = 0; i < getDimension(); i++)
         {
             if(Math.abs(that.elements[i] - elements[i]) > 1E-6) // epsilon eq
             {

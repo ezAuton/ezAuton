@@ -18,14 +18,14 @@ public class Path
 {
 
     private static final double SEGMENTS_PER_UNIT = 2; // 2 segments per foot -> 6 inches per segment. Pretty reasonable resolution for a 2 foot long robot.
-    protected List<PathSegment> pathSegments;
+    private List<PathSegment> pathSegments;
 
-    protected int segmentOnI = -1;
-    protected PathSegment segmentOn;
-    protected ImmutableVector closestPoint;
-    protected ImmutableVector robotLocationClosestPoint;
+    private int segmentOnI = -1;
+    private PathSegment segmentOn;
+    private ImmutableVector closestPoint;
+    private ImmutableVector robotLocationClosestPoint;
 
-    protected Path() {}
+    private Path() {}
 
     public static Path fromSegments(List<PathSegment> pathSegments)
     {
@@ -34,21 +34,21 @@ public class Path
         path.moveNextSegment();
         return path;
     }
-
-    public static Path fromPoints(List<? extends ImmutableVector> waypointList)
-    {
-        List<PathSegment> pathSegments = new ArrayList<>();
-        float distance = 0;
-        for(int i = 0; i < waypointList.size() - 1; i++)
-        {
-            ImmutableVector waypoint1 = waypointList.get(i);
-            ImmutableVector waypoint2 = waypointList.get(i + 1);
-            double length = waypoint1.dist(waypoint2);
-            PathSegment pathSegment = new PathSegment(waypoint1, waypoint2, i == 0, i == waypointList.size() - 2, distance, distance += length, length);
-            pathSegments.add(pathSegment);
-        }
-        return fromSegments(pathSegments);
-    }
+//
+//    public static Path fromPoints(List<? extends ImmutableVector> waypointList)
+//    {
+//        List<PathSegment> pathSegments = new ArrayList<>();
+//        float distance = 0;
+//        for(int i = 0; i < waypointList.size() - 1; i++)
+//        {
+//            ImmutableVector waypoint1 = waypointList.get(i);
+//            ImmutableVector waypoint2 = waypointList.get(i + 1);
+//            double length = waypoint1.dist(waypoint2);
+//            PathSegment pathSegment = new PathSegment(waypoint1, waypoint2, i == 0, i == waypointList.size() - 2, distance, distance += length, length);
+//            pathSegments.add(pathSegment);
+//        }
+//        return fromSegments(pathSegments);
+//    }
 
 //    public static Path fromSplinePoints(List<SplineWaypoint> waypointList)
 //    {
@@ -97,10 +97,10 @@ public class Path
 //        return fromPoints(interpolatedWaypoints);
 //    }
 
-    public static Path fromPoints(ImmutableVector... points)
-    {
-        return fromPoints(Arrays.asList(points));
-    }
+//    public static Path fromPoints(ImmutableVector... points)
+//    {
+//        return fromPoints(Arrays.asList(points));
+//    }
 
 //    public static Path fromSplinePoints(SplineWaypoint... points)
 //    {
@@ -151,7 +151,7 @@ public class Path
      * @param lookahead                  Our current lookahead distance
      * @return Where we should drive at
      */
-    public ImmutableVector getGoalPoint(float distanceLeftCurrentSegment, double lookahead)
+    public ImmutableVector getGoalPoint(double distanceLeftCurrentSegment, double lookahead)
     {
         PathSegment current = getCurrent();
         // If our circle intersects on the assertSameDim path
@@ -237,7 +237,7 @@ public class Path
     public double getAbsDistanceOfClosestPoint(ImmutableVector closestPoint)
     {
         PathSegment current = getCurrent();
-        ImmutableVector firstLocation = current.getFirst();
+        ImmutableVector firstLocation = current.getFrom();
         return current.getAbsoluteDistanceStart() + firstLocation.dist(closestPoint);
     }
 
@@ -284,12 +284,12 @@ public class Path
 
     public ImmutableVector getStart()
     {
-        return pathSegments.get(0).getFirst();
+        return pathSegments.get(0).getFrom();
     }
 
     public ImmutableVector getEnd()
     {
-        return pathSegments.get(pathSegments.size() - 1).getLast();
+        return pathSegments.get(pathSegments.size() - 1).getTo();
     }
 
     public List<PathSegment> getPathSegments()
@@ -314,15 +314,15 @@ public class Path
 //        List<Waypoint> ret = new ArrayList<>();
 //        for(PathSegment segment : pathSegments)
 //        {
-//            if(segment.getFirst().getClass().equals(Waypoint.class))
+//            if(segment.getFrom().getClass().equals(Waypoint.class))
 //            {
-//                ret.add((Waypoint) segment.getFirst());
+//                ret.add((Waypoint) segment.getFrom());
 //            }
 //        }
 //
-//        if(pathSegments.get(pathSegments.size() - 1).getLast().getClass().equals(Waypoint.class))
+//        if(pathSegments.get(pathSegments.size() - 1).getTo().getClass().equals(Waypoint.class))
 //        {
-//            ret.add((Waypoint) pathSegments.get(pathSegments.size() - 1).getLast());
+//            ret.add((Waypoint) pathSegments.get(pathSegments.size() - 1).getTo());
 //        }
 //        return ret;
 //    }
