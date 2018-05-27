@@ -324,18 +324,18 @@ public class MathTest
         assertEquals(0, solutions.size());
     }
 
-    @Test
-    public void testCircleLineIntersection()
-    {
-        ImmutableVector i = new ImmutableVector(1, 0);
-        ImmutableVector j = new ImmutableVector(0, 1);
-        ImmutableVector origin = new ImmutableVector(0, 0);
-        MathUtils.Geometry.Line horizontal = new MathUtils.Geometry.Line(origin, i);
-        MathUtils.Geometry.Line vertical = new MathUtils.Geometry.Line(origin, j);
-
-        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(horizontal, origin, 1), new ImmutableVector[] { i.mul(-1), i });
-        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(vertical, origin, 1), new ImmutableVector[] { j.mul(-1), j });
-    }
+//    @Test
+//    public void testCircleLineIntersection()
+//    {
+//        ImmutableVector i = new ImmutableVector(1, 0);
+//        ImmutableVector j = new ImmutableVector(0, 1);
+//        ImmutableVector origin = new ImmutableVector(0, 0);
+//        MathUtils.Geometry.Line horizontal = new MathUtils.Geometry.Line(origin, i);
+//        MathUtils.Geometry.Line vertical = new MathUtils.Geometry.Line(origin, j);
+//
+//        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(horizontal, origin, 1), new ImmutableVector[] { i.mul(-1), i });
+//        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(vertical, origin, 1), new ImmutableVector[] { j.mul(-1), j });
+//    }
 
     @Test
     public void testAngleFromPoints()

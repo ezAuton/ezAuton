@@ -14,6 +14,12 @@ public class MotionProfile
         this.motionSegments = new ArrayList<>(motionSegments);
     }
 
+    public static MotionProfile generate(MotionState start, MotionProfilingConstraints constraints, MotionGoalState goalState)
+    {
+        // If accelerate to higher velocity
+        double maxAcceleration = constraints.getMaxAcceleration();
+    }
+
     public double getSpeed(double position)
     {
         MotionSegment motionSegment = getMotionSegment(position);

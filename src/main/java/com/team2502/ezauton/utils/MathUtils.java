@@ -782,10 +782,10 @@ public final class MathUtils
             return new ImmutableVector[] { p1, p2 };
         }
 
-        public static ImmutableVector[] getCircleLineIntersectionPoint(Line line, ImmutableVector center, double radius)
-        {
-            return getCircleLineIntersectionPoint(line.a, line.b, center, radius);
-        }
+//        public static ImmutableVector[] getCircleLineIntersectionPoint(Line line, ImmutableVector center, double radius)
+//        {
+//            return getCircleLineIntersectionPoint(line.a, line.b, center, radius);
+//        }
 
         public static class Line implements Integrable
         {
@@ -798,18 +798,12 @@ public final class MathUtils
             final double y1;
             final double y2;
 
-            final ImmutableVector a;
-            final ImmutableVector b;
-
             public Line(ImmutableVector a, ImmutableVector b)
             {
                 x1 = a.get(0);
                 x2 = b.get(0);
                 y1 = a.get(1);
                 y2 = b.get(1);
-
-                this.a = a;
-                this.b = b;
 
                 if(a.get(0) - b.get(0) != 0)
                 {
@@ -822,6 +816,11 @@ public final class MathUtils
                 }
                 y_intercept = a.get(1) - slope * a.get(0);
                 x_intercept = -y_intercept / slope;
+            }
+
+            public Line(ImmutableVector a, double slope)
+            {
+                this(a,new ImmutableVector(1,slope));
             }
 
 
@@ -893,10 +892,7 @@ public final class MathUtils
             @Override
             public String toString()
             {
-                return "Line{" +
-                       "a=" + a +
-                       ", b=" + b +
-                       '}';
+                return super.toString();
             }
         }
     }

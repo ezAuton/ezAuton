@@ -67,8 +67,8 @@ public class Path
 //            SplinePathSegment pathSegment = new SplinePathSegment(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope,i == 0, i == waypointList.size() - 2, distance, distance += length, length);
 //            int interpolatedSegNum = (int) (SEGMENTS_PER_UNIT * pathSegment.getLength());
 //
-//            InterpolationMap maxVel = new InterpolationMap(0D, (double) waypoint1.getMaxSpeed());
-//            final float maxSpeedWaypoint2 = waypoint2.getMaxSpeed();
+//            InterpolationMap maxVel = new InterpolationMap(0D, (double) waypoint1.getMaxVelocity());
+//            final float maxSpeedWaypoint2 = waypoint2.getMaxVelocity();
 //            if(maxSpeedWaypoint2 < 0)
 //            {
 //                throw new IllegalArgumentException("Somehow, maxSpeed is less than 0 for this waypoint: " + waypoint2.toString());

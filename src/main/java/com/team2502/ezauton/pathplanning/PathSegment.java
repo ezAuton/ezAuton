@@ -19,7 +19,7 @@ public class PathSegment implements IPathSegment
     private final double distanceStart;
     private final double distanceEnd;
     private final ImmutableVector dPos;
-    private MotionProfile motionProfile;
+    private MotionProfile[] motionProfiles;
 
     protected PathSegment(ImmutableVector from, ImmutableVector to, double dt, double maxSpeed, boolean finish, boolean beginning, double distanceStart)
     {
@@ -27,6 +27,7 @@ public class PathSegment implements IPathSegment
         this.finish = finish;
         this.from = from;
         this.to = to;
+        motionProfiles = new MotionProfile[to.getDimension()];
         difference = to.sub(from);
         this.length = this.from.dist(this.to);
         if(MathUtils.epsilonEquals(0,length))
@@ -40,13 +41,14 @@ public class PathSegment implements IPathSegment
         dPos = to.sub(from);
     }
 
-    public void generateMotionProfile(MotionSegment currentState, double end_speed, double maxAcceleration)
+    public MotionProfile[] getMotionProfiles()
     {
-        MotionProfilingConstraints constraints = new MotionProfilingConstraints(maxSpeed, maxAcceleration);
-        // accelerate up to maxSpeed
-        // cruise at maxSpeed
-        // decelerate down to end_speed
+        return motionProfiles;
+    }
 
+    public void setMotionProfiles(MotionProfile[] motionProfiles)
+    {
+        this.motionProfiles = motionProfiles;
     }
 
     @Override
