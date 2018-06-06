@@ -20,6 +20,8 @@ public final class MathUtils
     public static final double ROOT_2 = 1.414213562D;
     public static final double ROOT_3 = 1.732050808D;
 
+    public static final double EPSILON = 1E-6;
+
     public static final double TAU = 2 * Math.PI;
 
     public static final ImmutableVector VECTOR_STRAIGHT = new ImmutableVector(1, 0);

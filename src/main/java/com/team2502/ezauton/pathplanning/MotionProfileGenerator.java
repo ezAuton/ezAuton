@@ -1,74 +1,87 @@
 package com.team2502.ezauton.pathplanning;
 
-import com.team2502.ezauton.utils.MathUtils;
-
 public class MotionProfileGenerator
 {
 
     public static MotionProfile generate(MotionState start, MotionProfilingConstraints constraints, MotionGoalState goalState)
     {
-        double startVelocity = start.getVelocity();
-        double endVelocity = goalState.getEndVelocity();
 
-        double maxVelocity = constraints.getMaxVelocity();
-        double minVelocity = constraints.getMinVelocity();
+        MotionState from = new MotionState(start.getPosition(), start.getSpeed(), constraints.getMaxAcceleration(), start.getTime());
 
-        double dPos = goalState.getEndPosition() - start.getPosition();
+        if(constraints.getMaxSpeed() <= 0)
+        {
+            throw new IllegalArgumentException("max speed must be greater than 0");
+        }
+
+        if(goalState.getEndSpeed() < 0)
+        {
+            throw new IllegalArgumentException("end speed must be positive");
+        }
+
+        double maxAcceleration = constraints.getMaxAcceleration();
+        if(maxAcceleration <= 0)
+        {
+            throw new IllegalArgumentException("acceleration must be positive");
+        }
+
+        double maxDeceleration = constraints.getMaxDeceleration();
+        if(constraints.getMaxDeceleration() >= 0)
+        {
+            throw new IllegalArgumentException("deceleration must be negative");
+        }
+
+        double startPosition = start.getPosition();
+
+        double endPosition = goalState.getEndPosition();
+
+        double dPos = endPosition - startPosition;
 
         if(dPos < 0)
         {
             throw new IllegalArgumentException("goalState pos must be greater than the start pos");
         }
 
-        if(!MathUtils.Algebra.bounded(minVelocity, startVelocity, maxVelocity) ||
-           !MathUtils.Algebra.bounded(minVelocity, endVelocity, maxVelocity))
+        double maxSpeed = constraints.getMaxSpeed();
+
+        double startSpeed = Math.max(start.getSpeed(), maxSpeed);
+
+        double endSpeed = goalState.getEndSpeed();
+
+        double cruiseSpeed = constraints.getMaxSpeed();
+
+        double dAccelCruise = (cruiseSpeed * cruiseSpeed - startSpeed * startSpeed) / (2 * maxAcceleration);
+        double dCruiseDecel = (endSpeed * endSpeed - cruiseSpeed * cruiseSpeed) / (2 * maxDeceleration);
+
+        if(dAccelCruise + dCruiseDecel > dPos) // Triangular Motion Profiling
         {
-            throw new IllegalArgumentException("end points must be within constraints!");
+            double u = endSpeed * endSpeed - startSpeed * startSpeed;
+            double dDecel = (u - maxAcceleration * dPos) / (maxDeceleration - maxAcceleration);
+            double dAccel = dPos - dDecel;
+
+            MotionState to = from.extrapolatePos(from.getPosition() + dAccel);
+            MotionSegment accel = new MotionSegment(from, to);
+
+            MotionState decelFirst = new MotionState(to.getPosition(), to.getSpeed(), constraints.getMaxDeceleration(), to.getTime());
+            MotionSegment decel = new MotionSegment(decelFirst, decelFirst.extrapolatePos(to.getPosition() + dDecel));
+            return new MotionProfile(accel, decel);
         }
-
-        (startVelocity*startVelocity - endVelocity*endVelocity -2*)
-        double dVelocity = endVelocity - startVelocity;
-
-        if(dVelocity < 0)
+        else // Trapezoidal Motion Profiling
         {
-            if(endVelocity > 0)
-            {
+            MotionState to = from.extrapolatePos(from.getPosition()+dAccelCruise);
+            MotionSegment accel = new MotionSegment(from, to);
+            MotionState mid = to.forAcceleration(0);
+            MotionState lastCruise = mid.extrapolatePos(to.getPosition() + dPos - dCruiseDecel);
+            MotionSegment cruise = new MotionSegment(mid, lastCruise);
 
-            }
-            else
-            {
-
-            }
+            MotionState decelStart = lastCruise.forAcceleration(maxDeceleration);
+            MotionSegment decel = new MotionSegment(decelStart, decelStart.extrapolatePos(lastCruise.getPosition() + dCruiseDecel));
+            return new MotionProfile(accel, cruise, decel);
         }
-        else
-        {
-            if(endVelocity > 0)
-            {
-
-            }
-            else
-            {
-
-            }
-        }
-    }
-
-    /**
-     *
-     * @param vi
-     * @param vf
-     * @param a1
-     * @param a2
-     * @return
-     */
-    private double distanceMeet(double vi, double vf, double a1, double a2, double pathLength)
-    {
-        if(vi)
-        return (vf*vf - vi*vi - 2*a2 * pathLength)/(2*a1 -2*a2);
     }
 
     /**
      * Whether velocity should be changed first or last
+     *
      * @param initVel
      * @param finalVel
      * @return

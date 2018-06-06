@@ -3,29 +3,29 @@ package com.team2502.ezauton.pathplanning;
 import com.team2502.ezauton.utils.BinarySearch;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MotionProfile
 {
-    List<MotionSegment> motionSegments;
+    private final List<MotionSegment> motionSegments;
 
     public MotionProfile(List<MotionSegment> motionSegments)
     {
         this.motionSegments = new ArrayList<>(motionSegments);
     }
 
-    public static MotionProfile generate(MotionState start, MotionProfilingConstraints constraints, MotionGoalState goalState)
+    public MotionProfile(MotionSegment... motionSegments)
     {
-        // If accelerate to higher velocity
-        double maxAcceleration = constraints.getMaxAcceleration();
+        this.motionSegments = new ArrayList<>(Arrays.asList(motionSegments));
     }
 
     public double getSpeed(double position)
     {
         MotionSegment motionSegment = getMotionSegment(position);
         double time = motionSegment.getFrom().timeByPos(position);
-        MotionState extrapolated = motionSegment.getFrom().extrapolate(time);
-        return extrapolated.getVelocity();
+        MotionState extrapolated = motionSegment.getFrom().extrapolateTime(time);
+        return extrapolated.getSpeed();
     }
 
     public MotionSegment getMotionSegment(double position)

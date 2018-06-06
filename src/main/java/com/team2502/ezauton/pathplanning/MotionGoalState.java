@@ -4,12 +4,12 @@ public class MotionGoalState
 {
 
     private final double endPosition;
-    private final double endVelocity;
+    private final double endSpeed;
 
-    public MotionGoalState(double endPosition, double endVelocity)
+    public MotionGoalState(double endPosition, double endSpeed)
     {
         this.endPosition = endPosition;
-        this.endVelocity = endVelocity;
+        this.endSpeed = endSpeed;
     }
 
     public double getEndPosition()
@@ -17,8 +17,8 @@ public class MotionGoalState
         return endPosition;
     }
 
-    public double getEndVelocity()
+    public double getEndSpeed()
     {
-        return endVelocity;
+        return endSpeed;
     }
 }

@@ -4,21 +4,14 @@ public class MotionProfilingConstraints
 {
 
     private final double maxAcceleration;
-    private final double maxVelocity;
-    private final double minVelocity;
+    private final double maxSpeed;
     private final double maxDeceleration;
 
-    public MotionProfilingConstraints(double maxAcceleration, double maxVelocity, double minVelocity, double maxDeceleration)
+    public MotionProfilingConstraints(double maxAcceleration, double maxSpeed, double minSpeed, double maxDeceleration)
     {
         this.maxAcceleration = maxAcceleration;
-        this.maxVelocity = maxVelocity;
-        this.minVelocity = minVelocity;
+        this.maxSpeed = maxSpeed;
         this.maxDeceleration = maxDeceleration;
-    }
-
-    public double getMinVelocity()
-    {
-        return minVelocity;
     }
 
     public double getMaxDeceleration()
@@ -31,8 +24,8 @@ public class MotionProfilingConstraints
         return maxAcceleration;
     }
 
-    public double getMaxVelocity()
+    public double getMaxSpeed()
     {
-        return maxVelocity;
+        return maxSpeed;
     }
 }
