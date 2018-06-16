@@ -34,7 +34,7 @@ public class Path
         path.moveNextSegment();
         return path;
     }
-//
+
 //    public static Path fromPoints(List<? extends ImmutableVector> waypointList)
 //    {
 //        List<PathSegment> pathSegments = new ArrayList<>();
@@ -155,7 +155,7 @@ public class Path
     {
         PathSegment current = getCurrent();
         // If our circle intersects on the assertSameDim path
-        if(lookahead < distanceLeftCurrentSegment || current.isEnd())
+        if(lookahead < distanceLeftCurrentSegment || current.isFinish())
         {
             double relativeDistance = current.getLength() - distanceLeftCurrentSegment + lookahead;
             return current.getPoint(relativeDistance);
@@ -169,7 +169,7 @@ public class Path
             {
                 PathSegment pathSegment = pathSegments.get(i);
                 double length = pathSegment.getLength();
-                if(lookahead > length && !pathSegment.isEnd())
+                if(lookahead > length && !pathSegment.isFinish())
                 {
                     lookahead -= length;
                 }

@@ -10,7 +10,6 @@ public class PathSegment implements IPathSegment
 {
     private final ImmutableVector from;
     private final ImmutableVector to;
-    private final double dt;
     private final boolean finish;
     private final ImmutableVector difference;
     private final double maxSpeed;
@@ -21,7 +20,7 @@ public class PathSegment implements IPathSegment
     private final ImmutableVector dPos;
     private MotionProfile[] motionProfiles;
 
-    protected PathSegment(ImmutableVector from, ImmutableVector to, double dt, double maxSpeed, boolean finish, boolean beginning, double distanceStart)
+    protected PathSegment(ImmutableVector from, ImmutableVector to, double maxSpeed, boolean finish, boolean beginning, double distanceStart)
     {
         this.maxSpeed = maxSpeed;
         this.finish = finish;
@@ -34,7 +33,6 @@ public class PathSegment implements IPathSegment
         {
             throw new IllegalArgumentException("PathSegment length must be non-zero.");
         }
-        this.dt = dt;
         this.beginning = beginning;
         this.distanceStart = distanceStart;
         this.distanceEnd = distanceStart+length;
