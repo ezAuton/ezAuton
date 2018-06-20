@@ -17,4 +17,24 @@ public class PPWaypoint
         this.acceleration = acceleration;
         this.deceleration = deceleration;
     }
+
+    public ImmutableVector getLocation()
+    {
+        return location;
+    }
+
+    public double getSpeed()
+    {
+        return speed;
+    }
+
+    public double getAcceleration()
+    {
+        return acceleration;
+    }
+
+    public double getDeceleration()
+    {
+        return deceleration;
+    }
 }
