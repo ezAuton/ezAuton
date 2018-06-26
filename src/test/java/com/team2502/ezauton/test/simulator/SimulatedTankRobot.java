@@ -1,5 +1,6 @@
 package com.team2502.ezauton.test.simulator;
 
+import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.localization.sensors.EncoderWheel;
 import com.team2502.ezauton.localization.sensors.Encoders;
 import com.team2502.ezauton.localization.sensors.ITachometer;
@@ -11,9 +12,9 @@ public class SimulatedTankRobot implements ITankRobotConstants
 
     public static final double NORM_DT = 0.02D;
 
-    public static final float MAX_VEL = 16F;
-    public static final float VOLTAGE_CHANGE_MAX = .02F;
-    public static final float LATERAL_WHEEL_DIST = 2F;
+    public static final double MAX_VEL = 16F;
+    public static final double VOLTAGE_CHANGE_MAX = .02F;
+    public static final double LATERAL_WHEEL_DIST = 2F;
 
     private final double lateralWheelDistance;
 
@@ -21,9 +22,12 @@ public class SimulatedTankRobot implements ITankRobotConstants
     private final EncoderWheel right;
     private final double dt;
     private final double wheelSize;
+    
+    private final IVelocityMotor leftMotor = this::runLeftMotorVel;
+    private final IVelocityMotor rightMotor = this::runRightMotorVel;
 
-    private float leftMotorPercentVoltage = 0;
-    private float rightMotorPercentVoltage = 0;
+    private double leftMotorPercentVoltage = 0;
+    private double rightMotorPercentVoltage = 0;
 
     public SimulatedTankRobot(double lateralWheelDistance, double wheelSize, double dt)
     {
@@ -42,12 +46,22 @@ public class SimulatedTankRobot implements ITankRobotConstants
         right = new EncoderWheel(Encoders.fromTachometer(rightTach, stopwatch.clone()), wheelSize);
     }
 
-    public EncoderWheel getLeft()
+    public IVelocityMotor getLeftMotor()
+    {
+        return leftMotor;
+    }
+
+    public IVelocityMotor getRightMotor()
+    {
+        return rightMotor;
+    }
+
+    public EncoderWheel getLeftWheel()
     {
         return left;
     }
 
-    public EncoderWheel getRight()
+    public EncoderWheel getRightWheel()
     {
         return right;
     }
@@ -63,16 +77,26 @@ public class SimulatedTankRobot implements ITankRobotConstants
      * @param leftVel
      * @param rightVel
      */
-    public void runMotorsVel(float leftVel, float rightVel)
+    public void runMotorsVel(double leftVel, double rightVel)
+    {
+        runLeftMotorVel(leftVel);
+        runRightMotorVel(rightVel);
+    }
+    
+    public void runLeftMotorVel(double leftVel)
     {
         leftMotorPercentVoltage = runMotorVel(leftVel, leftMotorPercentVoltage);
+    }
+
+    public void runRightMotorVel(double rightVel)
+    {
         rightMotorPercentVoltage = runMotorVel(rightVel, rightMotorPercentVoltage);
     }
 
     /**
      * @return Get velocity given current status
      */
-    public float getLeftVel()
+    public double getLeftVel()
     {
         return leftMotorPercentVoltage * MAX_VEL; //TODO
     }
@@ -80,14 +104,14 @@ public class SimulatedTankRobot implements ITankRobotConstants
     /**
      * @return Get velocity given current status
      */
-    public float getRightVel()
+    public double getRightVel()
     {
         return rightMotorPercentVoltage * MAX_VEL; //TODO
     }
 
-    private float runMotorVel(float velocity, float currentVoltage)
+    private double runMotorVel(double velocity, double currentVoltage)
     {
-        float percentVoltage = velocity / MAX_VEL;
+        double percentVoltage = velocity / MAX_VEL;
         if(percentVoltage > 1)
         {
             percentVoltage = 1;
@@ -99,9 +123,9 @@ public class SimulatedTankRobot implements ITankRobotConstants
         return runMotorVoltage(percentVoltage, currentVoltage);
     }
 
-    private float runMotorVoltage(float percentVoltage, float currentVoltage)
+    private double runMotorVoltage(double percentVoltage, double currentVoltage)
     {
-        float dif = percentVoltage - currentVoltage;
+        double dif = percentVoltage - currentVoltage;
         if(dif < -VOLTAGE_CHANGE_MAX)
         {
             percentVoltage = currentVoltage - VOLTAGE_CHANGE_MAX;

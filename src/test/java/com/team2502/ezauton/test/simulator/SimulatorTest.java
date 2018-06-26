@@ -10,7 +10,7 @@ public class SimulatorTest
     public void testStraight()
     {
         SimulatedTankRobot robot = new SimulatedTankRobot(1, 0.2D, SimulatedTankRobot.NORM_DT);
-        TankRobotEncoderRotationEstimator encoderRotationEstimator = new TankRobotEncoderRotationEstimator(robot.getLeft(), robot.getRight(), robot);
+        TankRobotEncoderRotationEstimator encoderRotationEstimator = new TankRobotEncoderRotationEstimator(robot.getLeftWheel(), robot.getRightWheel(), robot);
         encoderRotationEstimator.reset();
         for(int i = 0; i < 1000; i++)
         {

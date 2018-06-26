@@ -1,4 +1,4 @@
-package com.team2502.ezauton.test.pptest;
+package com.team2502.ezauton.test.purepursuit;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -16,6 +16,7 @@ import com.team2502.ezauton.pathplanning.purepursuit.PPWaypoint;
 import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
+import edu.wpi.first.wpilibj.command.Command;
 
 public class PPExample
 {
@@ -51,6 +52,6 @@ public class PPExample
         ILookahead lookahead = new LookaheadBounds(1,5,2,10,locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
-        PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).build();
     }
 }

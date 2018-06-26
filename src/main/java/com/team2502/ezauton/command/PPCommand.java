@@ -9,7 +9,7 @@ import com.team2502.ezauton.robot.subsystems.TranslationalLocationDriveable;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class PPCommand extends Command
+public class PPCommand implements ICommand
 {
     private final PurePursuitMovementStrategy purePursuitMovementStrategy;
     private final ITranslationalLocationEstimator translationalLocationEstimator;
@@ -25,7 +25,7 @@ public class PPCommand extends Command
     }
 
     @Override
-    protected void execute()
+    public void execute()
     {
         ImmutableVector loc = translationalLocationEstimator.estimateLocation();
         ImmutableVector goalPoint = purePursuitMovementStrategy.update(loc, lookahead.getLookahead());
@@ -37,7 +37,7 @@ public class PPCommand extends Command
     }
 
     @Override
-    protected boolean isFinished()
+    public boolean isFinished()
     {
         return purePursuitMovementStrategy.isFinished();
     }
