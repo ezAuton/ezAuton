@@ -1,6 +1,6 @@
 package com.team2502.ezauton.test.simulator;
 
-import com.team2502.ezauton.localization.EncoderRotationEstimator;
+import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
 import org.junit.Test;
 
 public class SimulatorTest
@@ -10,7 +10,7 @@ public class SimulatorTest
     public void testStraight()
     {
         SimulatedTankRobot robot = new SimulatedTankRobot(1, 0.2D, SimulatedTankRobot.NORM_DT);
-        EncoderRotationEstimator encoderRotationEstimator = new EncoderRotationEstimator(robot.getLeft(), robot.getRight(), robot);
+        TankRobotEncoderRotationEstimator encoderRotationEstimator = new TankRobotEncoderRotationEstimator(robot.getLeft(), robot.getRight(), robot);
         encoderRotationEstimator.reset();
         for(int i = 0; i < 1000; i++)
         {

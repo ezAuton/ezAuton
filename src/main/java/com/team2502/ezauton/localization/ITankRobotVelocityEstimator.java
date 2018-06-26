@@ -5,21 +5,23 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 /**
  * Interface for any class that will estimate position details of our robot
  */
-public interface ITranslationalVelocityEstimator
+public interface ITankRobotVelocityEstimator
 {
     /**
      * @return The absolute velocity of the robot
      */
     ImmutableVector estimateAbsoluteVelocity();
 
-    double getLeftWheelSpeed();
+    double getLeftWheelVelocity();
 
-    double getRightWheelSpeed();
+    double getRightWheelVelocity();
 
-    double estimateSpeed();
-
+    default double avgWheelVelocity()
+    {
+        return (getLeftWheelVelocity()+getRightWheelVelocity())/2D;
+    }
     default double avgWheelSpeed()
     {
-        return (Math.abs(getLeftWheelSpeed()) + Math.abs(getRightWheelSpeed())) / 2F;
+        return (Math.abs(getLeftWheelVelocity()) + Math.abs(getRightWheelVelocity())) / 2F;
     }
 }

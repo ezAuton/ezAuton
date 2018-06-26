@@ -5,7 +5,7 @@ import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 
-public class EncoderRotationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, Updateable
+public class TankRobotEncoderRotationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, ITankRobotVelocityEstimator, Updateable
 {
 
     private final ITankRobotConstants tankRobot;
@@ -17,7 +17,7 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator, I
     private double heading = 0;
     private ImmutableVector location = ImmutableVector.origin(2);
 
-    public EncoderRotationEstimator(EncoderWheel left, EncoderWheel right, ITankRobotConstants tankRobot)
+    public TankRobotEncoderRotationEstimator(EncoderWheel left, EncoderWheel right, ITankRobotConstants tankRobot)
     {
         this.left = left;
         this.right = right;
@@ -64,5 +64,23 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator, I
         location = location.add(dLocation);
         heading += MathUtils.Kinematics.getAngularDistance(dl, dr, tankRobot.getLateralWheelDistance());
         return true;
+    }
+
+    @Override
+    public ImmutableVector estimateAbsoluteVelocity()
+    {
+        return MathUtils.Geometry.getVector(avgWheelVelocity(), heading);
+    }
+
+    @Override
+    public double getLeftWheelVelocity()
+    {
+        return left.getVelocity();
+    }
+
+    @Override
+    public double getRightWheelVelocity()
+    {
+        return right.getVelocity();
     }
 }
