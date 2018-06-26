@@ -48,13 +48,12 @@ public class PurePursuitMovementStrategy
 
     /**
      *
-     * @param pose
-     * @param lookahead
+     * @param loc
      * @return The wanted pose of the robot at a certain location
      */
-    public ImmutableVector update(ImmutableVector pose, double lookahead)
+    public ImmutableVector update(ImmutableVector loc, double lookahead)
     {
-        ImmutableVector closestPoint = path.getClosestPoint(pose);
+        ImmutableVector closestPoint = path.getClosestPoint(loc);
 
         double currentDistance = path.getCurrent().getAbsoluteDistance(closestPoint);
         double finalDistance = path.getLength();
@@ -67,6 +66,11 @@ public class PurePursuitMovementStrategy
             return null;
         }
         return calculateAbsoluteGoalPoint(distanceLeft,lookahead);
+    }
+
+    public Path getPath()
+    {
+        return path;
     }
 
     public boolean isFinished()

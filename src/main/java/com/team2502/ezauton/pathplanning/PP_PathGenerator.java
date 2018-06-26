@@ -6,17 +6,17 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import java.util.ArrayList;
 import java.util.List;
 
-public class PathGenerator
+public class PP_PathGenerator
 {
 
     private final PPWaypoint[] ppWaypoints;
 
-    public PathGenerator(PPWaypoint... ppWaypoints)
+    public PP_PathGenerator(PPWaypoint... ppWaypoints)
     {
         this.ppWaypoints = ppWaypoints;
     }
 
-    public Path generate(PurePursuitMovementStrategy ppMovementStrat, double dt)
+    public Path generate(double dt)
     {
         List<PathSegment> pathSegments = new ArrayList<>();
         double distance = 0;

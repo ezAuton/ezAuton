@@ -1,6 +1,8 @@
 package com.team2502.ezauton.pathplanning.purepursuit;
 
-public class LookaheadBounds implements ILookaheadBounds
+import com.team2502.ezauton.localization.ITranslationalVelocityEstimator;
+
+public class LookaheadBounds implements ILookahead
 {
 
     private final double minDistance;
@@ -9,19 +11,22 @@ public class LookaheadBounds implements ILookaheadBounds
 
     private final double dDistance;
     private final double dSpeed;
+    private final ITranslationalVelocityEstimator velocityEstimator;
 
-    public LookaheadBounds(double minDistance, double maxDistance, double minSpeed, double maxSpeed)
+    public LookaheadBounds(double minDistance, double maxDistance, double minSpeed, double maxSpeed, ITranslationalVelocityEstimator velocityEstimator)
     {
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
         dDistance = maxDistance - minDistance;
         this.minSpeed = minSpeed;
         dSpeed = maxSpeed - minSpeed;
+        this.velocityEstimator = velocityEstimator;
     }
 
     @Override
-    public double getLookahead(double speed)
+    public double getLookahead()
     {
+        double speed = velocityEstimator.avgWheelSpeed();
         double lookahead = dDistance * (speed - minSpeed) / dSpeed + minDistance;
         return Double.isNaN(lookahead) ? minDistance : Math.max(minDistance, Math.min(maxDistance, lookahead));
     }
