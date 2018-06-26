@@ -6,28 +6,27 @@ import com.team2502.ezauton.utils.MathUtils;
 /**
  * Makes segments created by two {@link ImmutableVector}s easier to work with in {@link Path}
  */
-public class PathSegment implements IPathSegment
+public abstract class PathSegment implements IPathSegment
 {
     private final ImmutableVector from;
     private final ImmutableVector to;
     private final boolean finish;
-    private final ImmutableVector difference;
-    private final double maxSpeed;
+    private final ImmutableVector differenceVec;
+//    private final double maxSpeed;
     private double length;
     private final boolean beginning;
     private final double distanceStart;
     private final double distanceEnd;
     private final ImmutableVector dPos;
-    private MotionProfile[] motionProfiles;
+//    private MotionProfile motionProfiles;
 
-    protected PathSegment(ImmutableVector from, ImmutableVector to, double maxSpeed, boolean finish, boolean beginning, double distanceStart)
+    protected PathSegment(ImmutableVector from, ImmutableVector to, boolean finish, boolean beginning, double distanceStart)
     {
-        this.maxSpeed = maxSpeed;
+//        this.maxSpeed = maxSpeed;
         this.finish = finish;
         this.from = from;
         this.to = to;
-        motionProfiles = new MotionProfile[to.getDimension()];
-        difference = to.sub(from);
+        differenceVec = to.sub(from);
         this.length = this.from.dist(this.to);
         if(MathUtils.epsilonEquals(0,length))
         {
@@ -37,16 +36,6 @@ public class PathSegment implements IPathSegment
         this.distanceStart = distanceStart;
         this.distanceEnd = distanceStart+length;
         dPos = to.sub(from);
-    }
-
-    public MotionProfile[] getMotionProfiles()
-    {
-        return motionProfiles;
-    }
-
-    public void setMotionProfiles(MotionProfile[] motionProfiles)
-    {
-        this.motionProfiles = motionProfiles;
     }
 
     @Override
@@ -88,11 +77,7 @@ public class PathSegment implements IPathSegment
     }
 
     @Override
-    public double getSpeed(double absoluteDistance)
-    {
-        checkDistance(absoluteDistance);
-        return 0;
-    }
+    public abstract double getSpeed(double absoluteDistance);
 
     private void checkDistance(double absoluteDistance)
     {
@@ -125,11 +110,6 @@ public class PathSegment implements IPathSegment
     public double getAbsoluteDistanceStart()
     {
         return distanceStart;
-    }
-
-    public double getMaxSpeed()
-    {
-        return maxSpeed;
     }
     /**
      * @return How far along the entire path that the end point is

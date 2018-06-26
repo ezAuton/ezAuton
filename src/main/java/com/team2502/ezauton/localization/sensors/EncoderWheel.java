@@ -41,14 +41,14 @@ public class EncoderWheel
         this.multiplier = multiplier;
     }
 
-//    /**
-//     *
-//     * @return velocity (probably in ft/s)
-//     */
-//    public double getVelocity()
-//    {
-//        return encoder.getPosition() * Math.PI * wheelDiameter * getMultiplier() / 60D; // because minute to second
-//    }
+    /**
+     *
+     * @return velocity (probably in ft/s)
+     */
+    public double getVelocity()
+    {
+        return encoder.getVelocity() * Math.PI * wheelDiameter * getMultiplier(); // because minute to second
+    }
 
     /**
      * @return position (probably in ft)
