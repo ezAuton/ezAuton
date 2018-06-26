@@ -98,11 +98,4 @@ public class LineTest
         assertEquals(0.5, diag.integrate(), DELTA);
         assertEquals(0, diag.integrate(-1, 1), DELTA);
     }
-
-    @Test
-    public void testToString()
-    {
-        MathUtils.Geometry.Line line = new MathUtils.Geometry.Line(new ImmutableVector(1, 2), new ImmutableVector(3, 4));
-        assertEquals("Line{a=ImmutableVector{x=[1.0, 2.0]}, b=ImmutableVector{x=[3.0, 4.0]}}", line.toString());
-    }
 }
