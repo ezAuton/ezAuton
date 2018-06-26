@@ -51,6 +51,21 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     }
 
     /**
+     *
+     * @return A sorted table
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        table.entrySet()
+             .stream()
+             .sorted(Comparator.comparingDouble(Entry::getKey))
+             .forEach(doubleDoubleEntry -> stringBuilder.append("\n"+doubleDoubleEntry.getKey()+": "+doubleDoubleEntry.getValue()));
+        return stringBuilder.toString();
+    }
+
+    /**
      * @deprecated needs testing
      * @return
      */

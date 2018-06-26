@@ -40,12 +40,17 @@ public class PathSegmentExtrapolated extends LinearPathSegment
         extrap();
     }
 
+    public InterpolationMap getSpeedInterpolator()
+    {
+        return speedInterpolator;
+    }
+
     private void extrap()
     {
         // You have probably seen: d_f = 1/2at^2 + vt + d_i
         // However, we are not having constant acceleration... so we need
 
-        speedInterpolator = new InterpolationMap(0D, speedStart);
+        speedInterpolator = new InterpolationMap(getAbsoluteDistanceStart(), speedStart);
 
         double distance = getLength();
         double time = 0;
@@ -61,6 +66,7 @@ public class PathSegmentExtrapolated extends LinearPathSegment
         else if(speedStart > speedStop) // decel
         {
             MotionState motionState = new MotionState(getLength(), speedStop, maxDecel, 0);
+            speedInterpolator.put(getLength(),speedStop);
             while(motionState.getSpeed() < speedStart)
             {
                 motionState = motionState.extrapolateTime(motionState.getTime() - dt);

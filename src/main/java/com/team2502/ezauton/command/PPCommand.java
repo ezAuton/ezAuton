@@ -1,6 +1,7 @@
 package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.localization.ITranslationalLocationEstimator;
+import com.team2502.ezauton.pathplanning.IPathSegment;
 import com.team2502.ezauton.pathplanning.LinearPathSegment;
 import com.team2502.ezauton.pathplanning.Path;
 import com.team2502.ezauton.pathplanning.purepursuit.ILookahead;
@@ -36,7 +37,7 @@ public class PPCommand implements ICommand
             return;
         }
         Path path = purePursuitMovementStrategy.getPath();
-        LinearPathSegment current = path.getCurrent();
+        IPathSegment current = path.getCurrent();
         ImmutableVector closestPoint = current.getClosestPoint(loc);
         double absoluteDistance = current.getAbsoluteDistance(closestPoint);
         double speed = current.getSpeed(absoluteDistance);

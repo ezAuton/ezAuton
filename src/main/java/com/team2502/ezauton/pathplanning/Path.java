@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A path is the conglomerate of several {@link LinearPathSegment}s, which are in turn made from two {@link ImmutableVector}s.
+ * A path is the conglomerate of several {@link IPathSegment}s, which are in turn made from two {@link ImmutableVector}s.
  * Thus, a Path is the overall Path that the robot will take formed by Waypoints.
  * This class is very helpful when it comes to tracking which segment is currently on and getting the distance
  * on the path at any point (taking arclength ... basically making path 1D).
@@ -17,21 +17,21 @@ public class Path
 {
 
     private static final double SEGMENTS_PER_UNIT = 2; // 2 segments per foot -> 6 inches per segment. Pretty reasonable resolution for a 2 foot long robot.
-    private List<LinearPathSegment> pathSegments;
+    private List<IPathSegment> pathSegments;
 
     private int segmentOnI = -1;
-    private LinearPathSegment segmentOn;
+    private IPathSegment segmentOn;
     private ImmutableVector closestPoint;
     private ImmutableVector robotLocationClosestPoint;
     private double length;
 
     private Path() {}
 
-    public static Path fromSegments(List<LinearPathSegment> pathSegments)
+    public static Path fromSegments(List<IPathSegment> pathSegments)
     {
         Path path = new Path();
         path.pathSegments = pathSegments;
-        LinearPathSegment last = pathSegments.get(pathSegments.size() - 1);
+        IPathSegment last = pathSegments.get(pathSegments.size() - 1);
         path.length = last.getAbsoluteDistanceEnd();
         path.moveNextSegment();
         return path;
@@ -141,7 +141,7 @@ public class Path
         }
 
         this.robotLocationClosestPoint = origin;
-        LinearPathSegment current = getCurrent();
+        IPathSegment current = getCurrent();
         closestPoint = current.getClosestPoint(origin);
         return closestPoint;
     }
@@ -160,7 +160,7 @@ public class Path
      */
     public ImmutableVector getGoalPoint(double distanceLeftCurrentSegment, double lookahead)
     {
-        LinearPathSegment current = getCurrent();
+        IPathSegment current = getCurrent();
         // If our circle intersects on the assertSameDim path
         if(lookahead < distanceLeftCurrentSegment || current.isFinish())
         {
@@ -174,7 +174,7 @@ public class Path
 
             for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
             {
-                LinearPathSegment pathSegment = pathSegments.get(i);
+                IPathSegment pathSegment = pathSegments.get(i);
                 double length = pathSegment.getLength();
                 if(lookahead > length && !pathSegment.isFinish())
                 {
@@ -197,7 +197,7 @@ public class Path
      * @param robotPos
      * @return The PathSegments progressed
      */ 
-    public List<LinearPathSegment> progressIfNeeded(double distanceLeftSegment, double closestPointDist, ImmutableVector robotPos)
+    public List<IPathSegment> progressIfNeeded(double distanceLeftSegment, double closestPointDist, ImmutableVector robotPos)
     {
 
         if(distanceLeftSegment < .16F)
@@ -209,10 +209,10 @@ public class Path
         }
 
         // path segments 2 ft ahead
-        List<LinearPathSegment> pathSegments = nextSegmentsInclusive(2);
+        List<IPathSegment> pathSegments = nextSegmentsInclusive(2);
         int i = segmentOnI;
         int j = 0;
-        for(LinearPathSegment pathSegment : pathSegments)
+        for(IPathSegment pathSegment : pathSegments)
         {
             if(shouldProgress(pathSegment,robotPos,closestPointDist))
             {
@@ -225,13 +225,13 @@ public class Path
         return Collections.emptyList();
     }
 
-    public void moveSegment(int segmentOnI, LinearPathSegment segmentOn)
+    public void moveSegment(int segmentOnI, IPathSegment segmentOn)
     {
         this.segmentOnI = segmentOnI;
         this.segmentOn = segmentOn;
     }
 
-    public boolean shouldProgress(LinearPathSegment segment, ImmutableVector robotPos, double currentSegmentCPDist)
+    public boolean shouldProgress(IPathSegment segment, ImmutableVector robotPos, double currentSegmentCPDist)
     {
         if(segment == null) // we are on the last segment... we cannot progress
         {
@@ -247,7 +247,7 @@ public class Path
 
     public double getAbsDistanceOfClosestPoint(ImmutableVector closestPoint)
     {
-        LinearPathSegment current = getCurrent();
+        IPathSegment current = getCurrent();
         ImmutableVector firstLocation = current.getFrom();
         return current.getAbsoluteDistanceStart() + firstLocation.dist(closestPoint);
     }
@@ -256,15 +256,15 @@ public class Path
      * @param maxAheadDistance The distance to look ahead from the last segment
      * @return
      */
-    public List<LinearPathSegment> nextSegmentsInclusive(double maxAheadDistance)
+    public List<IPathSegment> nextSegmentsInclusive(double maxAheadDistance)
     {
-        List<LinearPathSegment> segments = new ArrayList<>();
-        LinearPathSegment startSegment = getCurrent();
+        List<IPathSegment> segments = new ArrayList<>();
+        IPathSegment startSegment = getCurrent();
         segments.add(startSegment);
         double distanceStart = startSegment.getAbsoluteDistanceEnd();
         for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
         {
-            LinearPathSegment pathSegment = pathSegments.get(i);
+            IPathSegment pathSegment = pathSegments.get(i);
             if(pathSegment.getAbsoluteDistanceStart() - distanceStart < maxAheadDistance)
             {
                 segments.add(pathSegment);
@@ -277,19 +277,19 @@ public class Path
         return segments;
     }
 
-    public LinearPathSegment getCurrent()
+    public IPathSegment getCurrent()
     {
         return segmentOn;
     }
 
-    public LinearPathSegment getNext()
+    public IPathSegment getNext()
     {
         int nextSegmentI = segmentOnI + 1;
         if(nextSegmentI >= pathSegments.size())
         {
             return null;
         }
-        LinearPathSegment nextSegment = pathSegments.get(nextSegmentI);
+        IPathSegment nextSegment = pathSegments.get(nextSegmentI);
         return nextSegment;
     }
 
@@ -303,7 +303,7 @@ public class Path
         return pathSegments.get(pathSegments.size() - 1).getTo();
     }
 
-    public List<LinearPathSegment> getPathSegments()
+    public List<IPathSegment> getPathSegments()
     {
         return pathSegments;
     }

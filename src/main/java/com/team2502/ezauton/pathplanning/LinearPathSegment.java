@@ -38,6 +38,7 @@ public abstract class LinearPathSegment implements IPathSegment
         dPos = to.sub(from);
     }
 
+
     @Override
     public ImmutableVector getClosestPoint(ImmutableVector robotPos)
     {
@@ -87,6 +88,7 @@ public abstract class LinearPathSegment implements IPathSegment
         }
     }
 
+    @Override
     public ImmutableVector getPoint(double relativeDistance)
     {
         return dPos.mul(relativeDistance / length).add(from);
@@ -107,6 +109,7 @@ public abstract class LinearPathSegment implements IPathSegment
     /**
      * @return How far along the entire path that the from point is
      */
+    @Override
     public double getAbsoluteDistanceStart()
     {
         return distanceStart;
@@ -115,6 +118,7 @@ public abstract class LinearPathSegment implements IPathSegment
     /**
      * @return How far along the entire path that the end point is
      */
+    @Override
     public double getAbsoluteDistanceEnd()
     {
         return distanceEnd;

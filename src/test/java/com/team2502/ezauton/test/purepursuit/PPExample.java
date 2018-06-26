@@ -31,25 +31,25 @@ public class PPExample
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -3);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 12, 0, 3, -3);
 
-        PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoint1,waypoint2,waypoint3);
+        PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoint1, waypoint2, waypoint3);
         Path path = pathGenerator.generate(0.05);
 
-        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path,0.1D);
+        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1D);
 
         IVelocityMotor leftMotor = velocity -> leftTalon.set(ControlMode.Velocity, velocity);
         IVelocityMotor rightMotor = velocity -> rightTalon.set(ControlMode.Velocity, velocity);
 
         IEncoder leftEncoder = Encoders.fromTalon(leftTalon, Encoders.CTRE_MAG_ENCODER);
-        EncoderWheel leftEncoderWheel = new EncoderWheel(leftEncoder,3);
+        EncoderWheel leftEncoderWheel = new EncoderWheel(leftEncoder, 3);
 
         IEncoder rightEncoder = Encoders.fromTalon(rightTalon, Encoders.CTRE_MAG_ENCODER);
-        EncoderWheel rightEncoderWheel = new EncoderWheel(rightEncoder,3);
+        EncoderWheel rightEncoderWheel = new EncoderWheel(rightEncoder, 3);
 
         ITankRobotConstants constants = () -> 20;
 
-        TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(leftEncoderWheel,rightEncoderWheel, constants);
+        TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(leftEncoderWheel, rightEncoderWheel, constants);
 
-        ILookahead lookahead = new LookaheadBounds(1,5,2,10,locEstimator);
+        ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
         Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).build();

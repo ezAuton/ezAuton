@@ -1,5 +1,6 @@
 package com.team2502.ezauton.pathplanning.purepursuit;
 
+import com.team2502.ezauton.pathplanning.IPathSegment;
 import com.team2502.ezauton.pathplanning.Path;
 import com.team2502.ezauton.pathplanning.LinearPathSegment;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
@@ -54,7 +55,7 @@ public class PurePursuitMovementStrategy
     public ImmutableVector update(ImmutableVector loc, double lookahead)
     {
 
-        LinearPathSegment current = path.getCurrent();
+        IPathSegment current = path.getCurrent();
         ImmutableVector closestPoint = path.getClosestPoint(loc);
         double currentDistance = current.getAbsoluteDistance(closestPoint);
         double distanceLeftSegment = current.getAbsoluteDistanceEnd() - currentDistance;

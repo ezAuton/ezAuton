@@ -17,7 +17,7 @@ public class PP_PathGenerator
 
     public Path generate(double dt)
     {
-        List<LinearPathSegment> pathSegments = new ArrayList<>();
+        List<IPathSegment> pathSegments = new ArrayList<>();
         double distance = 0;
         for(int i = 0; i < ppWaypoints.length - 1; i++)
         {

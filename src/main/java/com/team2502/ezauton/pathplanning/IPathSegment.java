@@ -7,6 +7,8 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
  */
 public interface IPathSegment
 {
+    double getAbsoluteDistanceEnd();
+
     boolean isBeginning();
 
     boolean isFinish();
@@ -16,6 +18,10 @@ public interface IPathSegment
     ImmutableVector getTo();
 
     double getLength();
+
+    ImmutableVector getPoint(double relativeDistance);
+
+    double getAbsoluteDistanceStart();
 
     ImmutableVector getClosestPoint(ImmutableVector robotPos);
 
