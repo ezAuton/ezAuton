@@ -24,6 +24,7 @@ public class Path
     private PathSegment segmentOn;
     private ImmutableVector closestPoint;
     private ImmutableVector robotLocationClosestPoint;
+    private double length;
 
     private Path() {}
 
@@ -31,11 +32,18 @@ public class Path
     {
         Path path = new Path();
         path.pathSegments = pathSegments;
+        PathSegment last = pathSegments.get(pathSegments.size() - 1);
+        path.length = last.getAbsoluteDistanceEnd();
         path.moveNextSegment();
         return path;
     }
 
-//    public static Path fromPoints(List<? extends ImmutableVector> waypointList)
+    public double getLength()
+    {
+        return length;
+    }
+
+    //    public static Path fromPoints(List<? extends ImmutableVector> waypointList)
 //    {
 //        List<PathSegment> pathSegments = new ArrayList<>();
 //        float distance = 0;

@@ -1,6 +1,6 @@
 package com.team2502.ezauton.robot;
 
-public interface ITankRobot extends IRobot
+public interface ITankRobotConstants extends IRobotConstants
 {
     double getLateralWheelDistance();
 }

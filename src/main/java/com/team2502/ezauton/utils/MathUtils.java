@@ -58,6 +58,19 @@ public final class MathUtils
 
     }
 
+    /***
+     * @return The curvature (1/radius) to the goal point ... positive when CCW
+     */
+    public static double calculateCurvature(ImmutableVector relativeGoalPoint)
+    {
+        double lSquared = relativeGoalPoint.mag2(); // x^2 + y^2 = l^2 (length)
+
+        // curvature = 2x / l^2 (from Pure Pursuit paper)
+        // added - so it is positive when counterclockwise
+        double toReturn = -2 * relativeGoalPoint.get(0) / lSquared;
+        return toReturn;
+    }
+
     public static void init()
     {}
 

@@ -4,6 +4,7 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Make a new interpolating map. You need 2 key/value pairs to interpolate properly.
@@ -29,6 +30,16 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     {
         table = new HashMap<>();
         table.put(firstKey, firstValue);
+    }
+
+
+    public InterpolationMap inverse()
+    {
+        Map<Double, Double> mapInversed =
+                table.entrySet()
+                   .stream()
+                   .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+        return new InterpolationMap(mapInversed);
     }
 
     /**

@@ -3,10 +3,8 @@ package com.team2502.ezauton.pathplanning.purepursuit;
 import com.team2502.ezauton.pathplanning.Path;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
-import java.util.List;
-
 /**
- * The main logic behind Pure Pursuit
+ * The main logic behind Pure Pursuit ... returns a point to try to get to next
  */
 public class PurePursuitMovementStrategy
 {
@@ -21,12 +19,10 @@ public class PurePursuitMovementStrategy
     /**
      * Strategize your movement!
      *
-     * @param waypoints A list of waypoints for the robot to drive through
      */
-    public PurePursuitMovementStrategy(List<ImmutableVector> waypoints, double stopTolerance)
+    public PurePursuitMovementStrategy(Path path, double stopTolerance)
     {
-        ImmutableVector.assertSameDim(waypoints);
-        this.path = Path.fromPoints(waypoints);
+        this.path = path;
         if(stopTolerance <= 0)
         {
             throw new IllegalArgumentException("stopTolerance must be a positive number!");
@@ -53,26 +49,24 @@ public class PurePursuitMovementStrategy
     /**
      *
      * @param pose
-     * @param closestPoint
      * @param lookahead
      * @return The wanted pose of the robot at a certain location
      */
-    public ImmutableVector update(ImmutableVector pose, ImmutableVector closestPoint, double lookahead)
+    public ImmutableVector update(ImmutableVector pose, double lookahead)
     {
+        ImmutableVector closestPoint = path.getClosestPoint(pose);
 
-        if(pose == null)
-        {
-            throw new IllegalArgumentException("Pose cannot be null");
-        }
+        double currentDistance = path.getCurrent().getAbsoluteDistance(closestPoint);
+        double finalDistance = path.getLength();
 
-        double distanceLeftSq = path.getCurrent().getDistanceLeft(closestPoint);
+        double distanceLeft = finalDistance - currentDistance;
 
-        if(path.getCurrent().isEnd() && distanceLeftSq < stopTolerance)
+        if(distanceLeft < stopTolerance)
         {
             isFinished = true;
             return null;
         }
-        return calculateAbsoluteGoalPoint(distanceLeftSq,lookahead);
+        return calculateAbsoluteGoalPoint(distanceLeft,lookahead);
     }
 
     public boolean isFinished()

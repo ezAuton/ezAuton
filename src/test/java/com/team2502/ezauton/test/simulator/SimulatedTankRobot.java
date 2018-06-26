@@ -3,10 +3,10 @@ package com.team2502.ezauton.test.simulator;
 import com.team2502.ezauton.localization.sensors.EncoderWheel;
 import com.team2502.ezauton.localization.sensors.Encoders;
 import com.team2502.ezauton.localization.sensors.ITachometer;
-import com.team2502.ezauton.robot.ITankRobot;
+import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 
-public class SimulatedTankRobot implements ITankRobot
+public class SimulatedTankRobot implements ITankRobotConstants
 {
 
     public static final double NORM_DT = 0.02D;

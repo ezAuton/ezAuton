@@ -1,5 +1,5 @@
 package com.team2502.ezauton.robot;
 
-public interface ISwerveRobot extends IRobot
+public interface ISwerveRobot extends IRobotConstants
 {
 }
