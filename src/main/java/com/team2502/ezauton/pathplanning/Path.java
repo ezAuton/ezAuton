@@ -45,7 +45,7 @@ public class Path
     //    public static Path fromPoints(List<? extends ImmutableVector> waypointList)
 //    {
 //        List<PathSegment> pathSegments = new ArrayList<>();
-//        float distance = 0;
+//        double distance = 0;
 //        for(int i = 0; i < waypointList.size() - 1; i++)
 //        {
 //            ImmutableVector waypoint1 = waypointList.get(i);
@@ -60,7 +60,7 @@ public class Path
 //    public static Path fromSplinePoints(List<SplineWaypoint> waypointList)
 //    {
 //        List<Waypoint> interpolatedWaypoints = new ArrayList<>();
-//        float distance = 0;
+//        double distance = 0;
 //        for(int i = 0; i < waypointList.size() - 1; i++)
 //        {
 //            SplineWaypoint waypoint1 = waypointList.get(i);
@@ -69,13 +69,13 @@ public class Path
 //            SplineWaypoint waypoint2 = waypointList.get(i + 1);
 //            Point waypoint2Slope = waypointList.get(i + 1).getSlopeVec();
 //
-//            float length = (float) SplinePathSegment.getArcLength(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope, 0, 1);
+//            double length = (double) SplinePathSegment.getArcLength(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope, 0, 1);
 //
 //            SplinePathSegment pathSegment = new SplinePathSegment(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope,i == 0, i == waypointList.size() - 2, distance, distance += length, length);
 //            int interpolatedSegNum = (int) (SEGMENTS_PER_UNIT * pathSegment.getLength());
 //
 //            InterpolationMap maxVel = new InterpolationMap(0D, (double) waypoint1.getMaxVelocity());
-//            final float maxSpeedWaypoint2 = waypoint2.getMaxVelocity();
+//            final double maxSpeedWaypoint2 = waypoint2.getMaxVelocity();
 //            if(maxSpeedWaypoint2 < 0)
 //            {
 //                throw new IllegalArgumentException("Somehow, maxSpeed is less than 0 for this waypoint: " + waypoint2.toString());
@@ -92,12 +92,12 @@ public class Path
 //            {
 //                double t = (double) j / interpolatedSegNum;
 //                ImmutableVector2f loc = pathSegment.get(t);
-//                final float maxSpeed = maxVel.get(t).floatValue();
+//                final double maxSpeed = maxVel.get(t).doubleValue();
 //                if(maxSpeed < 0)
 //                {
 //                    throw new IllegalArgumentException("Max speed is negative!");
 //                }
-//                Waypoint waypoint = new Waypoint(loc, maxSpeed, maxAccel.get(t).floatValue(), maxDecel.get(t).floatValue(), j == 0 ? waypoint1.getCommands() : null);
+//                Waypoint waypoint = new Waypoint(loc, maxSpeed, maxAccel.get(t).doubleValue(), maxDecel.get(t).doubleValue(), j == 0 ? waypoint1.getCommands() : null);
 //                interpolatedWaypoints.add(waypoint);
 //            }
 //        }
@@ -189,18 +189,23 @@ public class Path
         return null;
     }
 
+
+    //TODO: make this better
     /**
      * @param distanceLeftSegment
      * @param closestPointDist
      * @param robotPos
      * @return The PathSegments progressed
-     */
-    public List<PathSegment> progressIfNeeded(float distanceLeftSegment, float closestPointDist, ImmutableVector robotPos)
+     */ 
+    public List<PathSegment> progressIfNeeded(double distanceLeftSegment, double closestPointDist, ImmutableVector robotPos)
     {
 
-        if(distanceLeftSegment < 0)
+        if(distanceLeftSegment < .16F)
         {
-            throw new IllegalArgumentException("distanceLeftSegment cannot be less than 0!");
+            if(moveNextSegment())
+            {
+                return Collections.singletonList(pathSegments.get(segmentOnI - 1));
+            }
         }
 
         // path segments 2 ft ahead
@@ -209,10 +214,10 @@ public class Path
         int j = 0;
         for(PathSegment pathSegment : pathSegments)
         {
-            if(shouldProgress(pathSegment, robotPos, closestPointDist))
+            if(shouldProgress(pathSegment,robotPos,closestPointDist))
             {
-                moveSegment(i, pathSegment);
-                return pathSegments.subList(0, j + 1);
+                moveSegment(i,pathSegment);
+                return pathSegments.subList(0,j+1);
             }
             i++;
             j++;
@@ -226,7 +231,7 @@ public class Path
         this.segmentOn = segmentOn;
     }
 
-    public boolean shouldProgress(PathSegment segment, ImmutableVector robotPos, float currentSegmentCPDist)
+    public boolean shouldProgress(PathSegment segment, ImmutableVector robotPos, double currentSegmentCPDist)
     {
         if(segment == null) // we are on the last segment... we cannot progress
         {
@@ -251,7 +256,7 @@ public class Path
      * @param maxAheadDistance The distance to look ahead from the last segment
      * @return
      */
-    public List<PathSegment> nextSegmentsInclusive(float maxAheadDistance)
+    public List<PathSegment> nextSegmentsInclusive(double maxAheadDistance)
     {
         List<PathSegment> segments = new ArrayList<>();
         PathSegment startSegment = getCurrent();

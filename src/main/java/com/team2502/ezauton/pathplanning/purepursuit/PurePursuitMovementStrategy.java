@@ -1,6 +1,7 @@
 package com.team2502.ezauton.pathplanning.purepursuit;
 
 import com.team2502.ezauton.pathplanning.Path;
+import com.team2502.ezauton.pathplanning.PathSegment;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
 /**
@@ -51,19 +52,32 @@ public class PurePursuitMovementStrategy
      */
     public ImmutableVector update(ImmutableVector loc, double lookahead)
     {
-        ImmutableVector closestPoint = path.getClosestPoint(loc);
 
-        double currentDistance = path.getCurrent().getAbsoluteDistance(closestPoint);
+        PathSegment current = path.getCurrent();
+        ImmutableVector closestPoint = path.getClosestPoint(loc);
+        double currentDistance = current.getAbsoluteDistance(closestPoint);
+        double distanceLeftSegment = current.getAbsoluteDistanceEnd() - currentDistance;
+        double cpDist = closestPoint.dist(loc);
+        if(distanceLeftSegment < 0)
+        {
+            if(path.progressIfNeeded(distanceLeftSegment, cpDist,loc).size() != 0)
+            {
+                return update(loc,lookahead);
+            }
+        }
+
         double finalDistance = path.getLength();
 
-        double distanceLeft = finalDistance - currentDistance;
+        double distanceLeftTotal = finalDistance - currentDistance;
 
-        if(distanceLeft < stopTolerance)
+        if(distanceLeftTotal < stopTolerance)
         {
             isFinished = true;
             return null;
         }
-        return calculateAbsoluteGoalPoint(distanceLeft, lookahead);
+
+        path.progressIfNeeded(distanceLeftSegment, cpDist,loc);
+        return calculateAbsoluteGoalPoint(distanceLeftSegment, lookahead);
     }
 
     public Path getPath()

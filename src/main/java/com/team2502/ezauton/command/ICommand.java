@@ -4,8 +4,10 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public interface ICommand
 {
-    default void init(){}
-    default void execute(){}
+    default void init() {}
+
+    default void execute() {}
+
     boolean isFinished();
 
     default Command build()
@@ -13,12 +15,36 @@ public interface ICommand
         return new CommandCreator(this);
     }
 
-    default void test()
+    default void testWith(ICommand... with)
     {
         init();
-        while(!isFinished())
+        for(ICommand iCommand : with)
         {
-            execute();
+            iCommand.init();
+        }
+
+        boolean allFinished = false;
+        while(!allFinished)
+        {
+            boolean notFinished = false;
+            if(!isFinished())
+            {
+                execute();
+                notFinished = true;
+            }
+            for(ICommand iCommand : with)
+            {
+                if(!iCommand.isFinished())
+                {
+                    iCommand.execute();
+                    notFinished = true;
+                }
+
+            }
+            if(!notFinished)
+            {
+                allFinished = true;
+            }
         }
     }
 }

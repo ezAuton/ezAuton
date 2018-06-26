@@ -1,6 +1,7 @@
 package com.team2502.ezauton.test.purepursuit;
 
 import com.team2502.ezauton.actuators.IVelocityMotor;
+import com.team2502.ezauton.command.ICommand;
 import com.team2502.ezauton.command.PPCommand;
 import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
 import com.team2502.ezauton.pathplanning.PP_PathGenerator;
@@ -11,7 +12,8 @@ import com.team2502.ezauton.pathplanning.purepursuit.PPWaypoint;
 import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import com.team2502.ezauton.test.simulator.SimulatedTankRobot;
-import edu.wpi.first.wpilibj.command.Command;
+import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class PPSimulatorTest
@@ -31,7 +33,7 @@ public class PPSimulatorTest
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoint1, waypoint2, waypoint3);
         Path path = pathGenerator.generate(0.05);
 
-        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 1);
+        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
 
         SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST,WHEEL_SIZE,0.05);
 
@@ -39,11 +41,44 @@ public class PPSimulatorTest
         IVelocityMotor rightMotor = robot.getRightMotor();
 
         TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(robot.getLeftWheel(), robot.getRightWheel(), robot);
+        locEstimator.reset();
 
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
-        new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).test();
-        System.out.println(locEstimator.estimateLocation());
+
+        PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        ICommand locUpdator = new ICommand()
+        {
+            @Override
+            public void execute()
+            {
+                locEstimator.update();
+            }
+
+            @Override
+            public boolean isFinished()
+            {
+                return ppCommand.isFinished();
+            }
+        };
+
+        ppCommand.testWith(locUpdator);
+
+        double leftWheelVelocity = locEstimator.getLeftWheelVelocity();
+        Assert.assertEquals(0,leftWheelVelocity,0.2D);
+        
+        ImmutableVector finalLoc = locEstimator.estimateLocation();
+        approxEqual(waypoint3.getLocation(),finalLoc,0.2);
+    }
+
+    private void approxEqual(ImmutableVector a, ImmutableVector b, double epsilon)
+    {
+        double[] bElements = b.getElements();
+        double[] aElements = a.getElements();
+        for(int i = 0; i < aElements.length; i++)
+        {
+            Assert.assertEquals(aElements[i],bElements[i],epsilon);
+        }
     }
 }

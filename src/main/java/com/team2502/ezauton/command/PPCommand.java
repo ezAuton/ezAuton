@@ -29,11 +29,16 @@ public class PPCommand implements ICommand
     {
         ImmutableVector loc = translationalLocationEstimator.estimateLocation();
         ImmutableVector goalPoint = purePursuitMovementStrategy.update(loc, lookahead.getLookahead());
+        if(purePursuitMovementStrategy.isFinished()) // to prevent null pointer
+        {
+            return;
+        }
         Path path = purePursuitMovementStrategy.getPath();
         PathSegment current = path.getCurrent();
         ImmutableVector closestPoint = current.getClosestPoint(loc);
         double absoluteDistance = current.getAbsoluteDistance(closestPoint);
-        translationalLocationDriveable.driveTowardTransLoc(current.getSpeed(absoluteDistance), goalPoint);
+        double speed = current.getSpeed(absoluteDistance);
+        translationalLocationDriveable.driveTowardTransLoc(speed, goalPoint);
     }
 
     @Override

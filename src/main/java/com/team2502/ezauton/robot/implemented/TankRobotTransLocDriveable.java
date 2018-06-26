@@ -31,8 +31,13 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
     public boolean driveTowardTransLoc(double speed, ImmutableVector loc)
     {
         ImmutableVector wheelVelocities = getWheelVelocities(speed, loc);
-        leftMotor.runVelocity(wheelVelocities.get(0));
-        rightMotor.runVelocity(wheelVelocities.get(1));
+
+        double left = wheelVelocities.get(0);
+        leftMotor.runVelocity(left);
+
+        double right = wheelVelocities.get(1);
+        rightMotor.runVelocity(right);
+
         return true; // always possible
     }
 

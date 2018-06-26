@@ -65,7 +65,7 @@ public abstract class PathSegment implements IPathSegment
             if(element != 0)
             {
                 double proportion = element / dPos.get(i);
-                return proportion * length;
+                return getAbsoluteDistanceStart()+proportion * length;
             }
         }
         throw new ArithmeticException("Somehow dif has a dimension of 0.");

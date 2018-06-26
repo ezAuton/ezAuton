@@ -705,45 +705,48 @@ public final class MathUtils
         }
 
         /**
+         * //TODO: rewrite in parametric.... actually quite horrible
          * Given a line defined by two points, find the point on the line closest to our robot's position
          *
-         * @param linePointA One point on the line
-         * @param linePointB Another point on the line
-         * @param robotPos   The point at which our robot is
-         * @return The point <b>on the line segment</b> closest to the robot
+         * @param linea    One point on the line
+         * @param lineb    Another point on the line
+         * @param robotPos The point at which our robot is
+         * @return The point on the line closest to the robot
          */
-        public static ImmutableVector getClosestPointLineSegments(ImmutableVector linePointA, ImmutableVector linePointB, ImmutableVector robotPos)
+        public static ImmutableVector getClosestPointLineSegments(ImmutableVector linea, ImmutableVector lineb, ImmutableVector robotPos)
         {
 
-            double distToA = Math.hypot(linePointA.get(0) - robotPos.get(0), linePointA.get(1) - robotPos.get(1));
-            double distToB = Math.hypot(linePointB.get(1) - robotPos.get(0), linePointB.get(1) - robotPos.get(1));
+            double d1 = Math.hypot(linea.get(0) - robotPos.get(0), linea.get(1) - robotPos.get(1));
+            double d2 = Math.hypot(lineb.get(0) - robotPos.get(0), lineb.get(1) - robotPos.get(1));
 
-            Line lineSegment = new Line(linePointA, linePointB);
+            double dPerp;
+
+            Line lineSegment = new Line(linea, lineb);
 
             Line linePerp = lineSegment.getPerp(robotPos);
 
             ImmutableVector intersect = linePerp.intersection(lineSegment);
 
+            double d3 = Math.hypot(intersect.get(0) - robotPos.get(0), intersect.get(1) - robotPos.get(1));
 
-            double distToIntersect = Math.hypot(intersect.get(0) - robotPos.get(0), intersect.get(1) - robotPos.get(1));
-
-            if(!between(linePointA, intersect, linePointB))
+            if(Double.isNaN(intersect.get(1)))
             {
-                distToIntersect = Double.MAX_VALUE; // This way, we will not select the line intersect as the closest point on the line
 
             }
-
-            double minDist = min(distToA, distToB, distToIntersect);
-            if(minDist == distToA)
+            if(d1 < d2 && d1 < d3)
             {
-                return linePointA;
+                return linea;
             }
-            else if(minDist == distToB)
+            else if(d2 < d1 && d2 < d3)
             {
-                return linePointB;
+                return lineb;
             }
             else
             {
+                if(lineSegment.slope == 0)
+                {
+                    return new ImmutableVector(robotPos.get(0), (float) lineSegment.evaluateY(robotPos.get(0)));
+                }
                 return intersect;
             }
         }
@@ -813,6 +816,9 @@ public final class MathUtils
             final double y1;
             final double y2;
 
+            final ImmutableVector a;
+            final ImmutableVector b;
+
             public Line(ImmutableVector a, ImmutableVector b)
             {
                 x1 = a.get(0);
@@ -820,22 +826,21 @@ public final class MathUtils
                 y1 = a.get(1);
                 y2 = b.get(1);
 
+                this.a = a;
+                this.b = b;
+
                 if(a.get(0) - b.get(0) != 0)
                 {
                     slope = (a.get(1) - b.get(1)) / (a.get(0) - b.get(0));
-
+                    y_intercept = a.get(1) - slope * a.get(0);
+                    x_intercept = -y_intercept / slope;
                 }
                 else
                 {
-                    slope = Double.MAX_VALUE;
+                    slope = Double.NaN;
+                    y_intercept = Double.POSITIVE_INFINITY;
+                    x_intercept = a.get(0);
                 }
-                y_intercept = a.get(1) - slope * a.get(0);
-                x_intercept = -y_intercept / slope;
-            }
-
-            public Line(ImmutableVector a, double slope)
-            {
-                this(a, new ImmutableVector(1, slope));
             }
 
 
@@ -864,50 +869,47 @@ public final class MathUtils
             public Line getPerp(ImmutableVector point)
             {
                 double perpSlope;
-                if(slope == Double.MAX_VALUE || slope == Double.POSITIVE_INFINITY)
+                if(Double.isNaN(slope))
                 {
                     perpSlope = 0;
-                }
-                else if(slope == 0)
-                {
-                    perpSlope = Double.MAX_VALUE;
                 }
                 else
                 {
                     perpSlope = -1 / slope;
                 }
-                return new Line(point, new ImmutableVector(point.get(0) + 1, (point.get(1) + perpSlope)));
+                return new Line(point, new ImmutableVector(point.get(0) + 1, (float) (point.get(1) + perpSlope)));
             }
 
             public ImmutableVector intersection(Line other)
             {
-                if(other.slope == this.slope)
+                if(other.slope == slope)
                 {
-                    return null; // lines do not intersect
+                    if(other.x_intercept != other.x_intercept)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        // TODO: is this a good idea to return?
+                        return new ImmutableVector((float) other.x1, (float) other.y2);
+                    }
+                }
+                if(Double.isNaN(slope))
+                {
+                    return new ImmutableVector(a.get(0), (float) other.evaluateY(a.get(0)));
+                }
+
+                if(Double.isNaN(other.slope))
+                {
+                    return new ImmutableVector(other.a.get(0), (float) evaluateY(other.a.get(0)));
                 }
                 // mx + b = cx + d
                 // (m-c) x = d - b
                 double x = (other.y_intercept - this.y_intercept) / (this.slope - other.slope);
                 double y = evaluateY(x);
-                return new ImmutableVector(x, y);
+                return new ImmutableVector((float) x, (float) y);
 
-            }
 
-            @Override
-            public boolean equals(Object obj)
-            {
-                if(obj instanceof Line)
-                {
-                    Line other = (Line) obj;
-                    return other.slope == this.slope && other.y_intercept == this.y_intercept;
-                }
-                return false;
-            }
-
-            @Override
-            public String toString()
-            {
-                return super.toString();
             }
         }
     }

@@ -34,7 +34,7 @@ public class PPExample
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoint1,waypoint2,waypoint3);
         Path path = pathGenerator.generate(0.05);
 
-        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path,0.1);
+        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path,0.1D);
 
         IVelocityMotor leftMotor = velocity -> leftTalon.set(ControlMode.Velocity, velocity);
         IVelocityMotor rightMotor = velocity -> rightTalon.set(ControlMode.Velocity, velocity);

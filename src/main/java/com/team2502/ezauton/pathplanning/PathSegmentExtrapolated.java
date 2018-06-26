@@ -31,6 +31,7 @@ public class PathSegmentExtrapolated extends PathSegment
         this.dt = dt;
         this.maxAccel = maxAccel;
         this.maxDecel = maxDecel;
+        extrap();
     }
 
     private void extrap()
@@ -53,11 +54,11 @@ public class PathSegmentExtrapolated extends PathSegment
         }
         else if(speedStart > speedStop) // decel
         {
-            MotionState motionState = new MotionState(0, speedStart, maxDecel, 0);
-            while(motionState.getSpeed() > speedStop)
+            MotionState motionState = new MotionState(getLength(), speedStop, maxDecel, 0);
+            while(motionState.getSpeed() < speedStart)
             {
-                motionState = motionState.extrapolateTime(motionState.getTime() + dt);
-                speedInterpolator.put(motionState.getPosition(), Math.max(speedStop, motionState.getSpeed()));
+                motionState = motionState.extrapolateTime(motionState.getTime() - dt);
+                speedInterpolator.put(motionState.getPosition(), Math.min(speedStart, motionState.getSpeed()));
             }
         }
     }
