@@ -25,6 +25,6 @@ public class BinarySearchTest
             }
             return BinarySearch.SearchEntryResult.CORRECT;
         });
-        Assert.assertEquals(8,result.intValue());
+        Assert.assertEquals(8, result.intValue());
     }
 }

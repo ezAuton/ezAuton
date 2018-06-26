@@ -2,7 +2,6 @@ package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.localization.ITranslationalLocationEstimator;
 import com.team2502.ezauton.pathplanning.IPathSegment;
-import com.team2502.ezauton.pathplanning.LinearPathSegment;
 import com.team2502.ezauton.pathplanning.Path;
 import com.team2502.ezauton.pathplanning.purepursuit.ILookahead;
 import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;

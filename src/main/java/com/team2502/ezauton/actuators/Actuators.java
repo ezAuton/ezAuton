@@ -11,6 +11,7 @@ public class Actuators
      * Converts voltage drive to velocity drive. This is not 100% as it does not use encoders. The
      * interpolating map allows for mapping voltage to velocity if the relationship is non-linear
      * (note: most FRC motors are _very_ linear). Note: values will be different on different surfaces.
+     *
      * @param voltageMotor
      * @param velToVoltage
      * @return
@@ -23,6 +24,7 @@ public class Actuators
     /**
      * Converts voltage drive to velocity drive. This is not 100% as it does not use encoders and assumes
      * the motor has a roughly linear relationship between voltage and velocity.
+     *
      * @param voltageMotor
      * @param maxSpeed
      * @return

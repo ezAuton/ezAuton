@@ -11,7 +11,6 @@ public interface ICommand
     boolean isFinished();
 
     /**
-     *
      * @return A WPILib command
      */
     default Command build()
@@ -24,6 +23,7 @@ public interface ICommand
      * executes of the other commands will be run before moving on to the next iteration of calling
      * execute on this command and the rest of the commands. This is instantaneous and will generally
      * be used for simulation.
+     *
      * @param with
      */
     default void testWith(ICommand... with)

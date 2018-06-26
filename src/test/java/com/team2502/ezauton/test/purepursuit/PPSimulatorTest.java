@@ -4,7 +4,10 @@ import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.command.ICommand;
 import com.team2502.ezauton.command.PPCommand;
 import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
-import com.team2502.ezauton.pathplanning.*;
+import com.team2502.ezauton.pathplanning.IPathSegment;
+import com.team2502.ezauton.pathplanning.PP_PathGenerator;
+import com.team2502.ezauton.pathplanning.Path;
+import com.team2502.ezauton.pathplanning.PathSegmentExtrapolated;
 import com.team2502.ezauton.pathplanning.purepursuit.ILookahead;
 import com.team2502.ezauton.pathplanning.purepursuit.LookaheadBounds;
 import com.team2502.ezauton.pathplanning.purepursuit.PPWaypoint;
@@ -32,7 +35,7 @@ public class PPSimulatorTest
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -3);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 0, 3, -2);
 
-        test(waypoint1,waypoint2,waypoint3);
+        test(waypoint1, waypoint2, waypoint3);
     }
 
     public void testRight()
@@ -41,7 +44,7 @@ public class PPSimulatorTest
         PPWaypoint waypoint2 = PPWaypoint.simple2D(6, 6, 5, 3, -3);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(12, 0, 0, 3, -3);
 
-        test(waypoint1,waypoint2,waypoint3);
+        test(waypoint1, waypoint2, waypoint3);
     }
 
     private void test(PPWaypoint... waypoints)
@@ -51,7 +54,7 @@ public class PPSimulatorTest
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
 
-        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST,WHEEL_SIZE,0.05);
+        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, WHEEL_SIZE, 0.05);
 
         IVelocityMotor leftMotor = robot.getLeftMotor();
         IVelocityMotor rightMotor = robot.getRightMotor();
@@ -70,7 +73,7 @@ public class PPSimulatorTest
         PathSegmentExtrapolated extrapolated = (PathSegmentExtrapolated) pathSegment;
         double speed = extrapolated.getSpeed(19.95D);
         InterpolationMap speedInterpolator = extrapolated.getSpeedInterpolator();
-        System.out.println("speedInterpolator: "+speedInterpolator.toString());
+        System.out.println("speedInterpolator: " + speedInterpolator.toString());
 
         ICommand locUpdator = new ICommand()
         {
@@ -90,10 +93,10 @@ public class PPSimulatorTest
         ppCommand.testWith(locUpdator);
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
-        Assert.assertEquals(0,leftWheelVelocity,0.2D);
+        Assert.assertEquals(0, leftWheelVelocity, 0.2D);
 
         ImmutableVector finalLoc = locEstimator.estimateLocation();
-        approxEqual(waypoints[waypoints.length-1].getLocation(),finalLoc,0.2);
+        approxEqual(waypoints[waypoints.length - 1].getLocation(), finalLoc, 0.2);
     }
 
     private void approxEqual(ImmutableVector a, ImmutableVector b, double epsilon)
@@ -102,7 +105,7 @@ public class PPSimulatorTest
         double[] aElements = a.getElements();
         for(int i = 0; i < aElements.length; i++)
         {
-            Assert.assertEquals(aElements[i],bElements[i],epsilon);
+            Assert.assertEquals(aElements[i], bElements[i], epsilon);
         }
     }
 }

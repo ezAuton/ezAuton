@@ -6,9 +6,8 @@ import java.util.List;
  * A class for easy binary searches which can potentially result in massive improvements
  * over sequentially-based searches.
  *
- * @deprecated Needs testing!!!
- *
  * @param <T>
+ * @deprecated Needs testing!!!
  */
 public class BinarySearch<T> //TODO test
 {

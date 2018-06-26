@@ -29,7 +29,7 @@ public class PP_PathGenerator
             if(i == 0)
             {
                 pathSegment = new LinearPathSegment(from.getLocation(), to.getLocation(),
-                                              i == ppWaypoints.length - 2, true, distance)
+                                                    i == ppWaypoints.length - 2, true, distance)
                 {
                     @Override
                     public double getSpeed(double absoluteDistance)

@@ -191,12 +191,13 @@ public class Path
 
 
     //TODO: make this better
+
     /**
      * @param distanceLeftSegment
      * @param closestPointDist
      * @param robotPos
      * @return The PathSegments progressed
-     */ 
+     */
     public List<IPathSegment> progressIfNeeded(double distanceLeftSegment, double closestPointDist, ImmutableVector robotPos)
     {
 
@@ -214,10 +215,10 @@ public class Path
         int j = 0;
         for(IPathSegment pathSegment : pathSegments)
         {
-            if(shouldProgress(pathSegment,robotPos,closestPointDist))
+            if(shouldProgress(pathSegment, robotPos, closestPointDist))
             {
-                moveSegment(i,pathSegment);
-                return pathSegments.subList(0,j+1);
+                moveSegment(i, pathSegment);
+                return pathSegments.subList(0, j + 1);
             }
             i++;
             j++;

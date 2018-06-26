@@ -2,7 +2,6 @@ package com.team2502.ezauton.pathplanning.purepursuit;
 
 import com.team2502.ezauton.pathplanning.IPathSegment;
 import com.team2502.ezauton.pathplanning.Path;
-import com.team2502.ezauton.pathplanning.LinearPathSegment;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
 /**
@@ -62,9 +61,9 @@ public class PurePursuitMovementStrategy
         double cpDist = closestPoint.dist(loc);
         if(distanceLeftSegment < 0)
         {
-            if(path.progressIfNeeded(distanceLeftSegment, cpDist,loc).size() != 0)
+            if(path.progressIfNeeded(distanceLeftSegment, cpDist, loc).size() != 0)
             {
-                return update(loc,lookahead);
+                return update(loc, lookahead);
             }
         }
 
@@ -78,7 +77,7 @@ public class PurePursuitMovementStrategy
             return null;
         }
 
-        path.progressIfNeeded(distanceLeftSegment, cpDist,loc);
+        path.progressIfNeeded(distanceLeftSegment, cpDist, loc);
         return calculateAbsoluteGoalPoint(distanceLeftSegment, lookahead);
     }
 

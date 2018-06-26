@@ -22,12 +22,10 @@ public class SimulatedTankRobot implements ITankRobotConstants
     private final EncoderWheel right;
     private final double dt;
     private final double wheelSize;
-    
-    private final IVelocityMotor leftMotor = this::runLeftMotorVel;
-    private final IVelocityMotor rightMotor = this::runRightMotorVel;
-
     private double leftMotorPercentVoltage = 0;
+    private final IVelocityMotor leftMotor = this::runLeftMotorVel;
     private double rightMotorPercentVoltage = 0;
+    private final IVelocityMotor rightMotor = this::runRightMotorVel;
 
     public SimulatedTankRobot(double lateralWheelDistance, double wheelSize, double dt)
     {
@@ -82,7 +80,7 @@ public class SimulatedTankRobot implements ITankRobotConstants
         runLeftMotorVel(leftVel);
         runRightMotorVel(rightVel);
     }
-    
+
     public void runLeftMotorVel(double leftVel)
     {
         leftMotorPercentVoltage = runMotorVel(leftVel, leftMotorPercentVoltage);

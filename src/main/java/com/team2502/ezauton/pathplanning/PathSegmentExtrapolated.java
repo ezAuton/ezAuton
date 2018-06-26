@@ -66,7 +66,7 @@ public class PathSegmentExtrapolated extends LinearPathSegment
         else if(speedStart > speedStop) // decel
         {
             MotionState motionState = new MotionState(getLength(), speedStop, maxDecel, 0);
-            speedInterpolator.put(getLength(),speedStop);
+            speedInterpolator.put(getLength(), speedStop);
             while(motionState.getSpeed() < speedStart)
             {
                 motionState = motionState.extrapolateTime(motionState.getTime() - dt);

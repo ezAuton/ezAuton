@@ -23,6 +23,7 @@ public class PPWaypoint
 
     /**
      * A shortcut to making a 2D waypoint
+     *
      * @param x
      * @param y
      * @param speed
@@ -38,13 +39,13 @@ public class PPWaypoint
     /**
      * A shortcut to making a 3D waypoint (Deep Space will have drones so we need 3D PP) ... ofc you never
      * know when we will need 4D either!!
-     *
+     * <p>
      * ⠀⠰⡿⠿⠛⠛⠻⠿⣷
      * ⠀⠀⠀⠀⠀⠀⣀⣄⡀⠀⠀⠀⠀⢀⣀⣀⣤⣄⣀⡀
      * ⠀⠀⠀⠀⠀⢸⣿⣿⣷⠀⠀⠀⠀⠛⠛⣿⣿⣿⡛⠿⠷
      * ⠀⠀⠀⠀⠀⠘⠿⠿⠋⠀⠀⠀⠀⠀⠀⣿⣿⣿⠇
      * ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠁
-     *
+     * <p>
      * ⠀⠀⠀⠀⣿⣷⣄⠀⢶⣶⣷⣶⣶⣤⣀
      * ⠀⠀⠀⠀⣿⣿⣿⠀⠀⠀⠀⠀⠈⠙⠻⠗
      * ⠀⠀⠀⣰⣿⣿⣿⠀⠀⠀⠀⢀⣀⣠⣤⣴⣶⡄

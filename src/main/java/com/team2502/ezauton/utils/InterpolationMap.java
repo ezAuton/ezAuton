@@ -51,7 +51,6 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     }
 
     /**
-     *
      * @return A sorted table
      */
     @Override
@@ -61,13 +60,13 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
         table.entrySet()
              .stream()
              .sorted(Comparator.comparingDouble(Entry::getKey))
-             .forEach(doubleDoubleEntry -> stringBuilder.append("\n"+doubleDoubleEntry.getKey()+": "+doubleDoubleEntry.getValue()));
+             .forEach(doubleDoubleEntry -> stringBuilder.append("\n" + doubleDoubleEntry.getKey() + ": " + doubleDoubleEntry.getValue()));
         return stringBuilder.toString();
     }
 
     /**
-     * @deprecated needs testing
      * @return
+     * @deprecated needs testing
      */
     public InterpolationMap inverse() //TODO: test inverse()
     {
