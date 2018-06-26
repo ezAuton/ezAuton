@@ -23,14 +23,28 @@ public class PPSimulatorTest
     private static final double WHEEL_SIZE = 0.5;
 
     @Test
-    public void testSimulator()
+    public void testStraight()
     {
 
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -3);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 12, 0, 3, -3);
 
-        PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoint1, waypoint2, waypoint3);
+        test(waypoint1,waypoint2,waypoint3);
+    }
+
+    public void testRight()
+    {
+        PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
+        PPWaypoint waypoint2 = PPWaypoint.simple2D(6, 6, 5, 3, -3);
+        PPWaypoint waypoint3 = PPWaypoint.simple2D(12, 0, 0, 3, -3);
+
+        test(waypoint1,waypoint2,waypoint3);
+    }
+
+    private void test(PPWaypoint... waypoints)
+    {
+        PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
         Path path = pathGenerator.generate(0.05);
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
@@ -69,7 +83,7 @@ public class PPSimulatorTest
         Assert.assertEquals(0,leftWheelVelocity,0.2D);
 
         ImmutableVector finalLoc = locEstimator.estimateLocation();
-        approxEqual(waypoint3.getLocation(),finalLoc,0.2);
+        approxEqual(waypoints[waypoints.length-1].getLocation(),finalLoc,0.2);
     }
 
     private void approxEqual(ImmutableVector a, ImmutableVector b, double epsilon)
