@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * An n-dimensional, immutable vector.
+ */
 public class ImmutableVector
 {
 

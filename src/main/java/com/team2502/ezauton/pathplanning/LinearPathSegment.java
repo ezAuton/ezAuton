@@ -4,9 +4,9 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 
 /**
- * Makes segments created by two {@link ImmutableVector}s easier to work with in {@link Path}
+ * A mostly-implemented linear IPathSegment which contains all methods save getSpeed(...).
  */
-public abstract class PathSegment implements IPathSegment
+public abstract class LinearPathSegment implements IPathSegment
 {
     private final ImmutableVector from;
     private final ImmutableVector to;
@@ -20,7 +20,7 @@ public abstract class PathSegment implements IPathSegment
     private double length;
 //    private MotionProfile motionProfiles;
 
-    protected PathSegment(ImmutableVector from, ImmutableVector to, boolean finish, boolean beginning, double distanceStart)
+    protected LinearPathSegment(ImmutableVector from, ImmutableVector to, boolean finish, boolean beginning, double distanceStart)
     {
 //        this.maxSpeed = maxSpeed;
         this.finish = finish;

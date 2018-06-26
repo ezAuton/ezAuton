@@ -5,6 +5,10 @@ import com.team2502.ezauton.utils.MathUtils;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * Contains the pose of the robot at a certain time and distance. This class provides useful tools
+ * for extrapolating future/previous MotionStates based on distances/times.
+ */
 public class MotionState
 {
 

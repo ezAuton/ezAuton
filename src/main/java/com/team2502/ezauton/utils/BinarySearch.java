@@ -2,7 +2,15 @@ package com.team2502.ezauton.utils;
 
 import java.util.List;
 
-public class BinarySearch<T>
+/**
+ * A class for easy binary searches which can potentially result in massive improvements
+ * over sequentially-based searches.
+ *
+ * @deprecated Needs testing!!!
+ *
+ * @param <T>
+ */
+public class BinarySearch<T> //TODO test
 {
 
     private final List<T> list;

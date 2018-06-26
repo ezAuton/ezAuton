@@ -3,7 +3,13 @@ package com.team2502.ezauton.pathplanning;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.InterpolationMap;
 
-public class PathSegmentExtrapolated extends PathSegment
+/**
+ * A fully-implemented linear path segment. This class
+ * relies on finding motion states every dt and from this
+ * using an interpolation map to see what desired motion states
+ * should be for certain distances.
+ */
+public class PathSegmentExtrapolated extends LinearPathSegment
 {
 
     private final double speedStart;

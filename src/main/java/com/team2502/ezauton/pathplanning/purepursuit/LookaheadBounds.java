@@ -26,7 +26,7 @@ public class LookaheadBounds implements ILookahead
     @Override
     public double getLookahead()
     {
-        double speed = velocityEstimator.avgWheelSpeed();
+        double speed = velocityEstimator.getAvgTranslationalWheelSpeed();
         double lookahead = dDistance * (speed - minSpeed) / dSpeed + minDistance;
         return Double.isNaN(lookahead) ? minDistance : Math.max(minDistance, Math.min(maxDistance, lookahead));
     }

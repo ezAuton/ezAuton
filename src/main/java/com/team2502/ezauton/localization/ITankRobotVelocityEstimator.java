@@ -12,17 +12,31 @@ public interface ITankRobotVelocityEstimator
      */
     ImmutableVector estimateAbsoluteVelocity();
 
-    double getLeftWheelVelocity();
+    /**
+     * @return Velocity of the left wheel. Can be negative or positive.
+     */
+    double getLeftTranslationalWheelVelocity();
 
-    double getRightWheelVelocity();
+    /**
+     * @return Velocity of the right wheel. Can be negative or positive.
+     */
+    double getRightTranslationalWheelVelocity();
 
-    default double avgWheelVelocity()
+    /**
+     * @return Average velocity of both wheels. This will be the tangential velocity of the robot
+     * if it is a normal tank robot.
+     */
+    default double getAvgTranslationalWheelVelocity()
     {
-        return (getLeftWheelVelocity() + getRightWheelVelocity()) / 2D;
+        return (getLeftTranslationalWheelVelocity() + getRightTranslationalWheelVelocity()) / 2D;
     }
 
-    default double avgWheelSpeed()
+    /**
+     * @return The average wheel speed. NOTE: this will always be positive and can be non-zero even
+     * if the robot has 0 translational velocity.
+     */
+    default double getAvgTranslationalWheelSpeed()
     {
-        return (Math.abs(getLeftWheelVelocity()) + Math.abs(getRightWheelVelocity())) / 2F;
+        return (Math.abs(getLeftTranslationalWheelVelocity()) + Math.abs(getRightTranslationalWheelVelocity())) / 2F;
     }
 }

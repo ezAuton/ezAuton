@@ -8,6 +8,9 @@ import com.team2502.ezauton.robot.subsystems.TranslationalLocationDriveable;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 
+/**
+ * A robot that
+ */
 public class TankRobotTransLocDriveable implements TranslationalLocationDriveable
 {
 

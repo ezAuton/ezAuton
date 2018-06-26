@@ -17,7 +17,7 @@ public class PP_PathGenerator
 
     public Path generate(double dt)
     {
-        List<PathSegment> pathSegments = new ArrayList<>();
+        List<LinearPathSegment> pathSegments = new ArrayList<>();
         double distance = 0;
         for(int i = 0; i < ppWaypoints.length - 1; i++)
         {
@@ -25,10 +25,10 @@ public class PP_PathGenerator
             PPWaypoint to = ppWaypoints[i + 1];
 
             //TODO: Update from RobotCode2018 style pathsegments
-            PathSegment pathSegment;
+            LinearPathSegment pathSegment;
             if(i == 0)
             {
-                pathSegment = new PathSegment(from.getLocation(), to.getLocation(),
+                pathSegment = new LinearPathSegment(from.getLocation(), to.getLocation(),
                                               i == ppWaypoints.length - 2, true, distance)
                 {
                     @Override

@@ -4,6 +4,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.team2502.ezauton.utils.IStopwatch;
 
+/**
+ * A utility class to convert WPILib libraries (i.e. TalonSRX, VictorSPX) into more abstract
+ * representations which are used in ezAuton.
+ */
 public class Encoders
 {
 

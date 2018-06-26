@@ -8,7 +8,7 @@ import com.team2502.ezauton.utils.MathUtils;
  * (magnetometer = compass is too inaccurate and slow + it is bad w/ motors ... just overall horrible)
  * navX can also be used to estimate the absolute location of the robot using the accelerometer.
  * However, this is generally very inaccurate and should instead be done by combining this with
- * {@link EncoderAndCompassLocationEstimator}.
+ * {@link TankRobotEncoderRotationEstimator}
  */
 public class CompassLocationEstimator implements IRotationalLocationEstimator
 {

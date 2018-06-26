@@ -10,11 +10,22 @@ public interface ICommand
 
     boolean isFinished();
 
+    /**
+     *
+     * @return A WPILib command
+     */
     default Command build()
     {
         return new CommandCreator(this);
     }
 
+    /**
+     * Test command (with optional other commands). If there are multiple commands, all the other
+     * executes of the other commands will be run before moving on to the next iteration of calling
+     * execute on this command and the rest of the commands. This is instantaneous and will generally
+     * be used for simulation.
+     * @param with
+     */
     default void testWith(ICommand... with)
     {
         init();

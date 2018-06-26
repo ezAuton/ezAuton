@@ -1,11 +1,12 @@
 package com.team2502.ezauton.pathplanning.purepursuit;
 
 import com.team2502.ezauton.pathplanning.Path;
-import com.team2502.ezauton.pathplanning.PathSegment;
+import com.team2502.ezauton.pathplanning.LinearPathSegment;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
 /**
- * The main logic behind Pure Pursuit ... returns a point to try to get to next
+ * The main logic behind Pure Pursuit ... returns the subsequent location the robot should try to
+ * go towards.
  */
 public class PurePursuitMovementStrategy
 {
@@ -53,7 +54,7 @@ public class PurePursuitMovementStrategy
     public ImmutableVector update(ImmutableVector loc, double lookahead)
     {
 
-        PathSegment current = path.getCurrent();
+        LinearPathSegment current = path.getCurrent();
         ImmutableVector closestPoint = path.getClosestPoint(loc);
         double currentDistance = current.getAbsoluteDistance(closestPoint);
         double distanceLeftSegment = current.getAbsoluteDistanceEnd() - currentDistance;

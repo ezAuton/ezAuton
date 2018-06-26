@@ -65,9 +65,9 @@ public class PPSimulatorTest
 
         ppCommand.testWith(locUpdator);
 
-        double leftWheelVelocity = locEstimator.getLeftWheelVelocity();
+        double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
         Assert.assertEquals(0,leftWheelVelocity,0.2D);
-        
+
         ImmutableVector finalLoc = locEstimator.estimateLocation();
         approxEqual(waypoint3.getLocation(),finalLoc,0.2);
     }

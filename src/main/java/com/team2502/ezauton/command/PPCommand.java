@@ -1,14 +1,16 @@
 package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.localization.ITranslationalLocationEstimator;
+import com.team2502.ezauton.pathplanning.LinearPathSegment;
 import com.team2502.ezauton.pathplanning.Path;
-import com.team2502.ezauton.pathplanning.PathSegment;
 import com.team2502.ezauton.pathplanning.purepursuit.ILookahead;
 import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.ezauton.robot.subsystems.TranslationalLocationDriveable;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
-import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * A Pure Pursuit command which can be used in simulation or as a WPILib Command
+ */
 public class PPCommand implements ICommand
 {
     private final PurePursuitMovementStrategy purePursuitMovementStrategy;
@@ -34,7 +36,7 @@ public class PPCommand implements ICommand
             return;
         }
         Path path = purePursuitMovementStrategy.getPath();
-        PathSegment current = path.getCurrent();
+        LinearPathSegment current = path.getCurrent();
         ImmutableVector closestPoint = current.getClosestPoint(loc);
         double absoluteDistance = current.getAbsoluteDistance(closestPoint);
         double speed = current.getSpeed(absoluteDistance);

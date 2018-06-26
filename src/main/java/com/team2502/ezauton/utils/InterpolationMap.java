@@ -50,7 +50,11 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
         }
     }
 
-    public InterpolationMap inverse()
+    /**
+     * @deprecated needs testing
+     * @return
+     */
+    public InterpolationMap inverse() //TODO: test inverse()
     {
         Map<Double, Double> mapInversed =
                 table.entrySet()

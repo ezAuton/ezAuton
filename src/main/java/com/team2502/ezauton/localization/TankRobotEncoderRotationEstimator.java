@@ -69,17 +69,17 @@ public class TankRobotEncoderRotationEstimator implements IRotationalLocationEst
     @Override
     public ImmutableVector estimateAbsoluteVelocity()
     {
-        return MathUtils.Geometry.getVector(avgWheelVelocity(), heading);
+        return MathUtils.Geometry.getVector(getAvgTranslationalWheelVelocity(), heading);
     }
 
     @Override
-    public double getLeftWheelVelocity()
+    public double getLeftTranslationalWheelVelocity()
     {
         return left.getVelocity();
     }
 
     @Override
-    public double getRightWheelVelocity()
+    public double getRightTranslationalWheelVelocity()
     {
         return right.getVelocity();
     }

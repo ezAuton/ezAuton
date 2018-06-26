@@ -1,5 +1,8 @@
 package com.team2502.ezauton.localization;
 
+/**
+ * Any class which can be regularly updated
+ */
 public interface Updateable
 {
     /**
