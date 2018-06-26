@@ -18,8 +18,9 @@ public interface ITankRobotVelocityEstimator
 
     default double avgWheelVelocity()
     {
-        return (getLeftWheelVelocity()+getRightWheelVelocity())/2D;
+        return (getLeftWheelVelocity() + getRightWheelVelocity()) / 2D;
     }
+
     default double avgWheelSpeed()
     {
         return (Math.abs(getLeftWheelVelocity()) + Math.abs(getRightWheelVelocity())) / 2F;

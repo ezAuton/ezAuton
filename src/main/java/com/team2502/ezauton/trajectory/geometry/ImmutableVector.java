@@ -34,11 +34,6 @@ public class ImmutableVector
         return new ImmutableVector(elements);
     }
 
-    public double[] getElements()
-    {
-        return elements;
-    }
-
     /**
      * throws error if not same dimension
      *
@@ -67,6 +62,11 @@ public class ImmutableVector
     public static ImmutableVector origin(int size)
     {
         return of(0, size);
+    }
+
+    public double[] getElements()
+    {
+        return elements;
     }
 
 //    public Pair<ImmutableVector,ImmutableVector> split(int min, int max)

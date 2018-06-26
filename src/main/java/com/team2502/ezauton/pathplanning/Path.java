@@ -4,7 +4,6 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -191,7 +190,6 @@ public class Path
     }
 
     /**
-     *
      * @param distanceLeftSegment
      * @param closestPointDist
      * @param robotPos
@@ -211,10 +209,10 @@ public class Path
         int j = 0;
         for(PathSegment pathSegment : pathSegments)
         {
-            if(shouldProgress(pathSegment,robotPos,closestPointDist))
+            if(shouldProgress(pathSegment, robotPos, closestPointDist))
             {
-                moveSegment(i,pathSegment);
-                return pathSegments.subList(0,j+1);
+                moveSegment(i, pathSegment);
+                return pathSegments.subList(0, j + 1);
             }
             i++;
             j++;

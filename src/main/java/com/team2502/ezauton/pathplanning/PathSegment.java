@@ -12,12 +12,12 @@ public abstract class PathSegment implements IPathSegment
     private final ImmutableVector to;
     private final boolean finish;
     private final ImmutableVector differenceVec;
-//    private final double maxSpeed;
-    private double length;
     private final boolean beginning;
     private final double distanceStart;
     private final double distanceEnd;
     private final ImmutableVector dPos;
+    //    private final double maxSpeed;
+    private double length;
 //    private MotionProfile motionProfiles;
 
     protected PathSegment(ImmutableVector from, ImmutableVector to, boolean finish, boolean beginning, double distanceStart)
@@ -28,13 +28,13 @@ public abstract class PathSegment implements IPathSegment
         this.to = to;
         differenceVec = to.sub(from);
         this.length = this.from.dist(this.to);
-        if(MathUtils.epsilonEquals(0,length))
+        if(MathUtils.epsilonEquals(0, length))
         {
             throw new IllegalArgumentException("PathSegment length must be non-zero.");
         }
         this.beginning = beginning;
         this.distanceStart = distanceStart;
-        this.distanceEnd = distanceStart+length;
+        this.distanceEnd = distanceStart + length;
         dPos = to.sub(from);
     }
 
@@ -73,7 +73,7 @@ public abstract class PathSegment implements IPathSegment
 
     public double getRelativeDistance(double absoluteDistance)
     {
-        return absoluteDistance-distanceStart;
+        return absoluteDistance - distanceStart;
     }
 
     @Override
@@ -111,6 +111,7 @@ public abstract class PathSegment implements IPathSegment
     {
         return distanceStart;
     }
+
     /**
      * @return How far along the entire path that the end point is
      */

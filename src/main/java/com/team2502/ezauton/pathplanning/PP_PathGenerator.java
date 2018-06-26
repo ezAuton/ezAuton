@@ -1,7 +1,6 @@
 package com.team2502.ezauton.pathplanning;
 
 import com.team2502.ezauton.pathplanning.purepursuit.PPWaypoint;
-import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ public class PP_PathGenerator
 
             //TODO: Update from RobotCode2018 style pathsegments
             PathSegment pathSegment;
-            if(i==0)
+            if(i == 0)
             {
                 pathSegment = new PathSegment(from.getLocation(), to.getLocation(),
                                               i == ppWaypoints.length - 2, true, distance)

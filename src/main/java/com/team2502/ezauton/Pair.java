@@ -1,6 +1,6 @@
 package com.team2502.ezauton;
 
-public class Pair<A,B>
+public class Pair<A, B>
 {
     private final A first;
     private final B second;

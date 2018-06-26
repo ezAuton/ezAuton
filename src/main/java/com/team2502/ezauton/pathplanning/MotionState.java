@@ -42,7 +42,6 @@ public class MotionState
     }
 
     /**
-     *
      * @param time
      * @return The future Motion State given a time
      */
@@ -55,10 +54,10 @@ public class MotionState
 
     public MotionState forAcceleration(double a)
     {
-        return new MotionState(position,speed,a,time);
+        return new MotionState(position, speed, a, time);
     }
+
     /**
-     *
      * @param pos
      * @return The future Motion State given a pos
      */
@@ -68,7 +67,6 @@ public class MotionState
     }
 
     /**
-     *
      * @param position
      * @return The time it will be given a position by extrapolation
      */
@@ -80,7 +78,7 @@ public class MotionState
         {
             return Double.NaN;
         }
-        return Collections.min(solutions)+time;
+        return Collections.min(solutions) + time;
     }
 
 }

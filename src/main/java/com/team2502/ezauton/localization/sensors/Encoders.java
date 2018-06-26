@@ -53,7 +53,8 @@ public class Encoders
         {
             throw new IllegalArgumentException("unitsPerRev must be non-zero");
         }
-        return new IEncoder() {
+        return new IEncoder()
+        {
             @Override
             public double getPosition()
             {
@@ -74,13 +75,13 @@ public class Encoders
         return new IEncoder()
         {
 
+            double position = 0;
+
             @Override
             public double getVelocity()
             {
                 return tachometer.getVelocity();
             }
-
-            double position = 0;
 
             @Override
             public double getPosition()

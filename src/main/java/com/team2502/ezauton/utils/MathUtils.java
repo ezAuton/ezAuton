@@ -835,7 +835,7 @@ public final class MathUtils
 
             public Line(ImmutableVector a, double slope)
             {
-                this(a,new ImmutableVector(1,slope));
+                this(a, new ImmutableVector(1, slope));
             }
 
 

@@ -20,12 +20,12 @@ public class PPWaypoint
 
     public static PPWaypoint simple2D(double x, double y, double speed, double acceleration, double deceleration)
     {
-        return new PPWaypoint(new ImmutableVector(x,y),speed,acceleration,deceleration);
+        return new PPWaypoint(new ImmutableVector(x, y), speed, acceleration, deceleration);
     }
 
     public static PPWaypoint simple3D(double x, double y, double z, double speed, double acceleration, double deceleration)
     {
-        return new PPWaypoint(new ImmutableVector(x,y,z),speed,acceleration,deceleration);
+        return new PPWaypoint(new ImmutableVector(x, y, z), speed, acceleration, deceleration);
     }
 
     public ImmutableVector getLocation()

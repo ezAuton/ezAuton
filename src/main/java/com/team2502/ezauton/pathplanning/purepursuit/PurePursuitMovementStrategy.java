@@ -18,7 +18,6 @@ public class PurePursuitMovementStrategy
 
     /**
      * Strategize your movement!
-     *
      */
     public PurePursuitMovementStrategy(Path path, double stopTolerance)
     {
@@ -47,7 +46,6 @@ public class PurePursuitMovementStrategy
 
 
     /**
-     *
      * @param loc
      * @return The wanted pose of the robot at a certain location
      */
@@ -65,7 +63,7 @@ public class PurePursuitMovementStrategy
             isFinished = true;
             return null;
         }
-        return calculateAbsoluteGoalPoint(distanceLeft,lookahead);
+        return calculateAbsoluteGoalPoint(distanceLeft, lookahead);
     }
 
     public Path getPath()

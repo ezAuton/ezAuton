@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.command.PPCommand;
-import com.team2502.ezauton.localization.ITranslationalLocationEstimator;
 import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
 import com.team2502.ezauton.localization.sensors.EncoderWheel;
 import com.team2502.ezauton.localization.sensors.Encoders;
@@ -18,7 +17,7 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 
-public class PP_POC
+public class PPExample
 {
 
     public void exampleCommand()

@@ -42,7 +42,6 @@ public class EncoderWheel
     }
 
     /**
-     *
      * @return velocity (probably in ft/s)
      */
     public double getVelocity()

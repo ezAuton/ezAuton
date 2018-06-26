@@ -33,15 +33,6 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     }
 
 
-    public InterpolationMap inverse()
-    {
-        Map<Double, Double> mapInversed =
-                table.entrySet()
-                   .stream()
-                   .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
-        return new InterpolationMap(mapInversed);
-    }
-
     /**
      * Make a new interpolating hash table
      *
@@ -57,6 +48,15 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
         {
             table = initTable;
         }
+    }
+
+    public InterpolationMap inverse()
+    {
+        Map<Double, Double> mapInversed =
+                table.entrySet()
+                     .stream()
+                     .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+        return new InterpolationMap(mapInversed);
     }
 
     /**

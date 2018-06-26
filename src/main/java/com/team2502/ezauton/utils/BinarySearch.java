@@ -13,7 +13,7 @@ public class BinarySearch<T>
     {
         this.list = list;
         searchIndex = list.size() / 2;
-        dif = searchIndex/2;
+        dif = searchIndex / 2;
     }
 
     public T search(Search<T> search)
@@ -26,14 +26,14 @@ public class BinarySearch<T>
             switch(accept)
             {
                 case LOW:
-                    searchIndex+=dif;
+                    searchIndex += dif;
                     break;
                 case HIGH:
-                    searchIndex-=dif;
+                    searchIndex -= dif;
                 case CORRECT:
                     return t;
             }
-            dif/=2;
+            dif /= 2;
         }
         return null;
     }

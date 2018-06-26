@@ -67,7 +67,7 @@ public class MotionProfileGenerator
         }
         else // Trapezoidal Motion Profiling
         {
-            MotionState to = from.extrapolatePos(from.getPosition()+dAccelCruise);
+            MotionState to = from.extrapolatePos(from.getPosition() + dAccelCruise);
             MotionSegment accel = new MotionSegment(from, to);
             MotionState mid = to.forAcceleration(0);
             MotionState lastCruise = mid.extrapolatePos(to.getPosition() + dPos - dCruiseDecel);

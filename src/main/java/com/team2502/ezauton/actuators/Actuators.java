@@ -11,8 +11,8 @@ public class Actuators
 
     public IVelocityMotor roughConvertVoltageToVel(IVoltageMotor voltageMotor, double maxSpeed)
     {
-        InterpolationMap interpolationMap = new InterpolationMap(0D,0D);
-        interpolationMap.put(maxSpeed,1D);
+        InterpolationMap interpolationMap = new InterpolationMap(0D, 0D);
+        interpolationMap.put(maxSpeed, 1D);
         return roughConvertVoltageToVel(voltageMotor, interpolationMap);
     }
 }
