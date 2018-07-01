@@ -3,14 +3,14 @@ package com.team2502.ezauton.utils;
 /**
  * A stopwatch that measures time in milliseconds
  */
-public class BasicStopwatch implements IStopwatch
+public class RealStopwatch implements IStopwatch
 {
     /**
-     * Time in nanoseconds since last {@link BasicStopwatch#reset()}
+     * Time in nanoseconds since last {@link RealStopwatch#reset()}
      */
     private long lastTime;
 
-    public BasicStopwatch()
+    public RealStopwatch()
     {
         lastTime = System.nanoTime();
     }

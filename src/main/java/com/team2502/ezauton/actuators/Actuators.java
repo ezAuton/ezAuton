@@ -16,7 +16,7 @@ public class Actuators
      * @param velToVoltage
      * @return
      */
-    public IVelocityMotor roughConvertVoltageToVel(IVoltageMotor voltageMotor, InterpolationMap velToVoltage)
+    public static IVelocityMotor roughConvertVoltageToVel(IVoltageMotor voltageMotor, InterpolationMap velToVoltage)
     {
         return velocity -> voltageMotor.runVoltage(velToVoltage.get(voltageMotor));
     }
@@ -29,7 +29,7 @@ public class Actuators
      * @param maxSpeed
      * @return
      */
-    public IVelocityMotor roughConvertVoltageToVel(IVoltageMotor voltageMotor, double maxSpeed)
+    public static IVelocityMotor roughConvertVoltageToVel(IVoltageMotor voltageMotor, double maxSpeed)
     {
         InterpolationMap interpolationMap = new InterpolationMap(0D, 0D);
         interpolationMap.put(maxSpeed, 1D);

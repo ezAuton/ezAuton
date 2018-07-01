@@ -40,7 +40,7 @@ public class PP_PathGenerator
             }
             else
             {
-                pathSegment = new PathSegmentExtrapolated(
+                pathSegment = new PathSegmentInterpolated(
                         from.getLocation(), to.getLocation(), i == ppWaypoints.length - 2, false, distance,
                         from.getSpeed(), to.getSpeed(), dt,
                         from.getAcceleration(), from.getDeceleration());

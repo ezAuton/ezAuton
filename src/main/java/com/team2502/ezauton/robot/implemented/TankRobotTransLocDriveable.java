@@ -44,6 +44,14 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
         return true; // always possible
     }
 
+    @Override
+    public boolean driveSpeed(double speed)
+    {
+        leftMotor.runVelocity(speed);
+        rightMotor.runVelocity(speed);
+        return true;
+    }
+
     private ImmutableVector getWheelVelocities(double speed, ImmutableVector loc)
     {
         ImmutableVector relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(loc, translationalLocationEstimator.estimateLocation(), rotationalLocationEstimator.estimateHeading());

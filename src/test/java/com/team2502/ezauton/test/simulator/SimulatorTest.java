@@ -14,7 +14,7 @@ public class SimulatorTest
         encoderRotationEstimator.reset();
         for(int i = 0; i < 1000; i++)
         {
-            robot.runMotorsVel(10, 10);
+//            robot.runMotorsVel(10, 10);
             encoderRotationEstimator.update();
         }
         System.out.println("encoderRotationEstimator = " + encoderRotationEstimator.estimateLocation());

@@ -74,7 +74,7 @@ public class PurePursuitMovementStrategy
         if(distanceLeftTotal < stopTolerance)
         {
             isFinished = true;
-            return null;
+//            return null;
         }
 
         path.progressIfNeeded(distanceLeftSegment, cpDist, loc);

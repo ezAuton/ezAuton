@@ -4,10 +4,8 @@ import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.command.ICommand;
 import com.team2502.ezauton.command.PPCommand;
 import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
-import com.team2502.ezauton.pathplanning.IPathSegment;
 import com.team2502.ezauton.pathplanning.PP_PathGenerator;
 import com.team2502.ezauton.pathplanning.Path;
-import com.team2502.ezauton.pathplanning.PathSegmentExtrapolated;
 import com.team2502.ezauton.pathplanning.purepursuit.ILookahead;
 import com.team2502.ezauton.pathplanning.purepursuit.LookaheadBounds;
 import com.team2502.ezauton.pathplanning.purepursuit.PPWaypoint;
@@ -15,11 +13,8 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import com.team2502.ezauton.test.simulator.SimulatedTankRobot;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
-import com.team2502.ezauton.utils.InterpolationMap;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class PPSimulatorTest
 {
@@ -31,13 +26,14 @@ public class PPSimulatorTest
     public void testStraight()
     {
 
-        PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
-        PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -3);
-        PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 0, 3, -2);
+        PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -4);
+        PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -4);
+        PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 0, 3, -4);
 
         test(waypoint1, waypoint2, waypoint3);
     }
 
+    @Test
     public void testRight()
     {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
@@ -68,12 +64,12 @@ public class PPSimulatorTest
 
         PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-        List<IPathSegment> pathSegments = path.getPathSegments();
-        IPathSegment pathSegment = pathSegments.get(pathSegments.size() - 1);
-        PathSegmentExtrapolated extrapolated = (PathSegmentExtrapolated) pathSegment;
-        double speed = extrapolated.getSpeed(19.95D);
-        InterpolationMap speedInterpolator = extrapolated.getSpeedInterpolator();
-        System.out.println("speedInterpolator: " + speedInterpolator.toString());
+//        List<IPathSegment> pathSegments = path.getPathSegments();
+//        IPathSegment pathSegment = pathSegments.get(pathSegments.size() - 1);
+//        PathSegmentInterpolated extrapolated = (PathSegmentInterpolated) pathSegment;
+//        double speed = extrapolated.getSpeed(19.95D);
+//        InterpolationMap speedInterpolator = extrapolated.getSpeedInterpolator();
+//        System.out.println("speedInterpolator: " + speedInterpolator.toString());
 
         ICommand locUpdator = new ICommand()
         {

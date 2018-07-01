@@ -1,7 +1,7 @@
 package com.team2502.ezauton.utils;
 
 /**
- * Each time it is read, SimulatedStopwatch increases by dt
+ * Each time progress() is called, SimulatedStopwatch increases by dt
  */
 public class SimulatedStopwatch implements IStopwatch
 {
@@ -17,12 +17,31 @@ public class SimulatedStopwatch implements IStopwatch
     @Override
     public double read()
     {
+        return count;
+    }
+
+    /**
+     *  progress to next time step
+     */
+    public void progress()
+    {
         if(count == -1)
         {
             count = 0;
         }
         count += dt;
-        return count;
+    }
+
+    /**
+     *  progress to next time step
+     */
+    public void progress(double dt)
+    {
+        if(count == -1)
+        {
+            count = 0;
+        }
+        count += dt;
     }
 
     @Override

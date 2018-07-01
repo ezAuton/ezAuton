@@ -9,7 +9,7 @@ import com.team2502.ezauton.utils.InterpolationMap;
  * using an interpolation map to see what desired motion states
  * should be for certain distances.
  */
-public class PathSegmentExtrapolated extends LinearPathSegment
+public class PathSegmentInterpolated extends LinearPathSegment
 {
 
     private final double speedStart;
@@ -29,7 +29,7 @@ public class PathSegmentExtrapolated extends LinearPathSegment
      * @param speedStop
      * @param dt            The difference in time should be extrapolated
      */
-    protected PathSegmentExtrapolated(ImmutableVector from, ImmutableVector to, boolean finish, boolean beginning, double distanceStart, double speedStart, double speedStop, double dt, double maxAccel, double maxDecel)
+    protected PathSegmentInterpolated(ImmutableVector from, ImmutableVector to, boolean finish, boolean beginning, double distanceStart, double speedStart, double speedStop, double dt, double maxAccel, double maxDecel)
     {
         super(from, to, finish, beginning, distanceStart);
         this.speedStart = speedStart;
@@ -78,6 +78,8 @@ public class PathSegmentExtrapolated extends LinearPathSegment
     @Override
     public double getSpeed(double absoluteDistance)
     {
-        return speedInterpolator.get(getRelativeDistance(absoluteDistance));
+        double relativeDistance = getRelativeDistance(absoluteDistance);
+        Double toReturn = speedInterpolator.get(relativeDistance);
+        return toReturn;
     }
 }

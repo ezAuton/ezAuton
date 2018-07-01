@@ -33,4 +33,18 @@ public interface IStopwatch
      * @return If this stopwatch is initialized
      */
     boolean isInit();
+
+    /**
+     *
+     * @return If is not init
+     */
+    default boolean resetIfNotInit()
+    {
+        if(isInit())
+        {
+            return false;
+        }
+        reset();
+        return true;
+    }
 }

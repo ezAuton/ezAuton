@@ -1,6 +1,6 @@
 package com.team2502.ezauton.test.utils;
 
-import com.team2502.ezauton.utils.BasicStopwatch;
+import com.team2502.ezauton.utils.RealStopwatch;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -14,7 +14,7 @@ public class BasicStopwatchTest
     public void testRead()
     {
         new Thread(() -> {
-            BasicStopwatch stopwatch = new BasicStopwatch();
+            RealStopwatch stopwatch = new RealStopwatch();
             try
             {
                 Thread.sleep(1000);
@@ -40,7 +40,7 @@ public class BasicStopwatchTest
     public void testPop()
     {
         new Thread(() -> {
-            BasicStopwatch stopwatch = new BasicStopwatch();
+            RealStopwatch stopwatch = new RealStopwatch();
             try
             {
                 Thread.sleep(1000);
@@ -58,7 +58,7 @@ public class BasicStopwatchTest
     public void testReset()
     {
         new Thread(() -> {
-            BasicStopwatch stopwatch = new BasicStopwatch();
+            RealStopwatch stopwatch = new RealStopwatch();
             try
             {
                 Thread.sleep(1000);
@@ -76,7 +76,7 @@ public class BasicStopwatchTest
     @Test
     public void testIsInit()
     {
-        BasicStopwatch stopwatch = new BasicStopwatch();
+        RealStopwatch stopwatch = new RealStopwatch();
         assertTrue(stopwatch.isInit());
     }
 }
