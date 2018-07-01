@@ -22,7 +22,7 @@ public class RampUpSimulatedMotor extends InstantSimulatedMotor
     @Override
     public void runVelocity(double targetVelocity)
     {
-        if(targetVelocity > lastVelocity)
+        if(targetVelocity > velocity)
         {
             lastVelocity = Math.min(lastVelocity + dvMax, targetVelocity); // TODO: make this better and use triangle integral + stopwatch
         }

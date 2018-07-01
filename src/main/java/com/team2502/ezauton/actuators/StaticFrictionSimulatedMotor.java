@@ -16,7 +16,7 @@ public class StaticFrictionSimulatedMotor extends RampUpSimulatedMotor
     @Override
     public void runVelocity(double targetVelocity)
     {
-        if(getLastVelocity() == 0 && Math.abs(targetVelocity) >= minVelMove)
+        if(getLastVelocity() != 0 || Math.abs(targetVelocity) >= minVelMove)
         {
             super.runVelocity(targetVelocity);
         }

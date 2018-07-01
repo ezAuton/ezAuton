@@ -13,7 +13,7 @@ public class InstantSimulatedMotor implements IVelocityMotor, IEncoder
 {
     Set<IVelocityMotor> subscribers = new HashSet<>();
 
-    private double velocity = 0;
+    protected double velocity = 0;
 
     private double position = 0;
 

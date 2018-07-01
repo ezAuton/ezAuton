@@ -1,8 +1,8 @@
 package com.team2502.ezauton.test.simulator;
 
-import com.team2502.ezauton.actuators.*;
+import com.team2502.ezauton.actuators.BoundedSFSimMotor;
+import com.team2502.ezauton.actuators.StaticFrictionSimulatedMotor;
 import com.team2502.ezauton.localization.sensors.EncoderWheel;
-import com.team2502.ezauton.localization.sensors.Encoders;
 import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 
@@ -18,15 +18,14 @@ public class SimulatedTankRobot implements ITankRobotConstants
     private final StaticFrictionSimulatedMotor leftMotor;
     private final StaticFrictionSimulatedMotor rightMotor;
 
-    public SimulatedTankRobot(double lateralWheelDistance, double wheelSize, double dt)
+    public SimulatedTankRobot(double lateralWheelDistance, double wheelSize, SimulatedStopwatch stopwatch)
     {
-        SimulatedStopwatch stopwatch = new SimulatedStopwatch(dt);
-        leftMotor = new BoundedSFSimMotor(stopwatch, 0.2, 0.3,16);
-        rightMotor = new BoundedSFSimMotor(stopwatch, 0.2, 0.3,16);
+        leftMotor = new BoundedSFSimMotor(stopwatch.copy(), 1, 0.3,16);
+        rightMotor = new BoundedSFSimMotor(stopwatch.copy(), 1, 0.3,16);
         this.lateralWheelDistance = lateralWheelDistance;
 
-        left = new EncoderWheel(Encoders.fromTachometer(leftMotor, stopwatch.clone()), wheelSize);
-        right = new EncoderWheel(Encoders.fromTachometer(rightMotor, stopwatch.clone()), wheelSize);
+        left = new EncoderWheel(leftMotor, wheelSize);
+        right = new EncoderWheel(rightMotor, wheelSize);
     }
 
     public StaticFrictionSimulatedMotor getLeftMotor()
@@ -37,6 +36,12 @@ public class SimulatedTankRobot implements ITankRobotConstants
     public StaticFrictionSimulatedMotor getRightMotor()
     {
         return rightMotor;
+    }
+
+    public void run(double left, double right)
+    {
+        leftMotor.runVelocity(left);
+        rightMotor.runVelocity(right);
     }
 
     public EncoderWheel getLeftWheel()

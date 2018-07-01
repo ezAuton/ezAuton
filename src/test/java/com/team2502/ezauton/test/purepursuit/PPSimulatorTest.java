@@ -13,6 +13,7 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import com.team2502.ezauton.test.simulator.SimulatedTankRobot;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
+import com.team2502.ezauton.utils.SimulatedStopwatch;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -50,7 +51,8 @@ public class PPSimulatorTest
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
 
-        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, WHEEL_SIZE, 0.05);
+        SimulatedStopwatch stopwatch = new SimulatedStopwatch(0.05);
+        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, WHEEL_SIZE, stopwatch);
 
         IVelocityMotor leftMotor = robot.getLeftMotor();
         IVelocityMotor rightMotor = robot.getRightMotor();
@@ -64,19 +66,13 @@ public class PPSimulatorTest
 
         PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-//        List<IPathSegment> pathSegments = path.getPathSegments();
-//        IPathSegment pathSegment = pathSegments.get(pathSegments.size() - 1);
-//        PathSegmentInterpolated extrapolated = (PathSegmentInterpolated) pathSegment;
-//        double speed = extrapolated.getSpeed(19.95D);
-//        InterpolationMap speedInterpolator = extrapolated.getSpeedInterpolator();
-//        System.out.println("speedInterpolator: " + speedInterpolator.toString());
-
         ICommand locUpdator = new ICommand()
         {
             @Override
             public void execute()
             {
                 locEstimator.update();
+                stopwatch.progress();
             }
 
             @Override
