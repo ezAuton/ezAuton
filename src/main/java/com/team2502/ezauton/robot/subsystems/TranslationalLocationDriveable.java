@@ -15,7 +15,6 @@ public interface TranslationalLocationDriveable
     boolean driveTowardTransLoc(double speed, ImmutableVector loc);
 
     /**
-     *
      * @param speed
      * @return Drive in any direction (normally straight) at a certain speed. Good for low speeds
      */

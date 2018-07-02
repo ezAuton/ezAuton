@@ -2,7 +2,7 @@ package com.team2502.ezauton.command;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public interface ICommand
+public interface IAction
 {
     default void init() {}
 
@@ -26,10 +26,10 @@ public interface ICommand
      *
      * @param with
      */
-    default void testWith(ICommand... with)
+    default void testWith(IAction... with)
     {
         init();
-        for(ICommand iCommand : with)
+        for(IAction iCommand : with)
         {
             iCommand.init();
         }
@@ -43,7 +43,7 @@ public interface ICommand
                 execute();
                 notFinished = true;
             }
-            for(ICommand iCommand : with)
+            for(IAction iCommand : with)
             {
                 if(!iCommand.isFinished())
                 {

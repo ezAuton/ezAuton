@@ -11,7 +11,7 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 /**
  * A Pure Pursuit command which can be used in simulation or as a WPILib Command
  */
-public class PPCommand implements ICommand
+public class PPCommand implements IAction
 {
     private final PurePursuitMovementStrategy purePursuitMovementStrategy;
     private final ITranslationalLocationEstimator translationalLocationEstimator;

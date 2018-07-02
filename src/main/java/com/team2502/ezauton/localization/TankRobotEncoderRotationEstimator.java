@@ -1,6 +1,6 @@
 package com.team2502.ezauton.localization;
 
-import com.team2502.ezauton.localization.sensors.EncoderWheel;
+import com.team2502.ezauton.localization.sensors.ITranslationalDistanceSensor;
 import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
@@ -9,15 +9,15 @@ public class TankRobotEncoderRotationEstimator implements IRotationalLocationEst
 {
 
     private final ITankRobotConstants tankRobot;
-    private final EncoderWheel left;
-    private final EncoderWheel right;
+    private final ITranslationalDistanceSensor left;
+    private final ITranslationalDistanceSensor right;
     private double lastPosLeft;
     private double lastPosRight;
     private boolean init = false;
     private double heading = 0;
     private ImmutableVector location = ImmutableVector.origin(2);
 
-    public TankRobotEncoderRotationEstimator(EncoderWheel left, EncoderWheel right, ITankRobotConstants tankRobot)
+    public TankRobotEncoderRotationEstimator(ITranslationalDistanceSensor left, ITranslationalDistanceSensor right, ITankRobotConstants tankRobot)
     {
         this.left = left;
         this.right = right;

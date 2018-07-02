@@ -1,7 +1,7 @@
 package com.team2502.ezauton.test.purepursuit;
 
 import com.team2502.ezauton.actuators.IVelocityMotor;
-import com.team2502.ezauton.command.ICommand;
+import com.team2502.ezauton.command.IAction;
 import com.team2502.ezauton.command.PPCommand;
 import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
 import com.team2502.ezauton.pathplanning.PP_PathGenerator;
@@ -57,7 +57,7 @@ public class PPSimulatorTest
         IVelocityMotor leftMotor = robot.getLeftMotor();
         IVelocityMotor rightMotor = robot.getRightMotor();
 
-        TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(robot.getLeftWheel(), robot.getRightWheel(), robot);
+        TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(robot.getLeftMotor(), robot.getRightMotor(), robot);
         locEstimator.reset();
 
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
@@ -66,7 +66,7 @@ public class PPSimulatorTest
 
         PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-        ICommand locUpdator = new ICommand()
+        IAction locUpdator = new IAction()
         {
             @Override
             public void execute()

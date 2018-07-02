@@ -24,7 +24,8 @@ public class BoundedSFSimMotor extends StaticFrictionSimulatedMotor
         {
             super.runVelocity(-maxVel);
         }
-        else {
+        else
+        {
             super.runVelocity(targetVelocity);
         }
     }

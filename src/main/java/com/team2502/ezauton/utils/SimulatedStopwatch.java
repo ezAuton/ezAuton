@@ -9,8 +9,8 @@ import java.util.Set;
 public class SimulatedStopwatch implements IStopwatch
 {
 
-    Set<SimulatedStopwatch> related = new HashSet<>();
     private final double dt;
+    Set<SimulatedStopwatch> related = new HashSet<>();
     float count = -1;
 
     public SimulatedStopwatch(double dt)
@@ -25,7 +25,7 @@ public class SimulatedStopwatch implements IStopwatch
     }
 
     /**
-     *  progress to next time step
+     * progress to next time step
      */
     public void progress()
     {
@@ -38,7 +38,7 @@ public class SimulatedStopwatch implements IStopwatch
     }
 
     /**
-     *  progress to next time step
+     * progress to next time step
      */
     public void progress(double dt)
     {
@@ -63,7 +63,6 @@ public class SimulatedStopwatch implements IStopwatch
     }
 
     /**
-     *
      * @return A new SimulatedStopwatch that is linked to progress()
      */
     public SimulatedStopwatch copy()

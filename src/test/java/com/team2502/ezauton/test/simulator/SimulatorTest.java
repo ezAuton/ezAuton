@@ -12,11 +12,11 @@ public class SimulatorTest
     {
         SimulatedStopwatch stopwatch = new SimulatedStopwatch(SimulatedTankRobot.NORM_DT);
         SimulatedTankRobot robot = new SimulatedTankRobot(1, 0.2D, stopwatch);
-        TankRobotEncoderRotationEstimator encoderRotationEstimator = new TankRobotEncoderRotationEstimator(robot.getLeftWheel(), robot.getRightWheel(), robot);
+        TankRobotEncoderRotationEstimator encoderRotationEstimator = new TankRobotEncoderRotationEstimator(robot.getLeftMotor(), robot.getRightMotor(), robot);
         encoderRotationEstimator.reset();
         for(int i = 0; i < 1000; i++)
         {
-            robot.run(1,1);
+            robot.run(1, 1);
             encoderRotationEstimator.update();
             stopwatch.progress();
         }

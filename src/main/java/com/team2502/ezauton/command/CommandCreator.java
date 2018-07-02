@@ -3,14 +3,14 @@ package com.team2502.ezauton.command;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Creates a command from an {@link ICommand}. This allows for abstraction and use of commands in simulators.
+ * Creates a command from an {@link IAction}. This allows for abstraction and use of commands in simulators.
  */
 public class CommandCreator extends Command
 {
 
-    private final ICommand iCommand;
+    private final IAction iCommand;
 
-    public CommandCreator(ICommand iCommand)
+    public CommandCreator(IAction iCommand)
     {
         this.iCommand = iCommand;
     }

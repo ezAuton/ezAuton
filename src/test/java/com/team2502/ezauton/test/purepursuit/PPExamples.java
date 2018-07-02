@@ -3,7 +3,10 @@ package com.team2502.ezauton.test.purepursuit;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2502.ezauton.actuators.IVelocityMotor;
+import com.team2502.ezauton.actuators.InstantSimulatedMotor;
 import com.team2502.ezauton.command.PPCommand;
+import com.team2502.ezauton.helper.EzVoltagePPBuilder;
+import com.team2502.ezauton.helper.Paths;
 import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
 import com.team2502.ezauton.localization.sensors.EncoderWheel;
 import com.team2502.ezauton.localization.sensors.Encoders;
@@ -18,10 +21,15 @@ import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class PPExample
+public class PPExamples
 {
 
-    public void exampleCommand()
+
+    /**
+     * Uses encoders
+     * Minimal use of helper methods
+     */
+    public void exampleNoHelpers()
     {
 
         TalonSRX leftTalon = new TalonSRX(1);
@@ -36,8 +44,8 @@ public class PPExample
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1D);
 
-        IVelocityMotor leftMotor = velocity -> leftTalon.set(ControlMode.Velocity, velocity);
-        IVelocityMotor rightMotor = velocity -> rightTalon.set(ControlMode.Velocity, velocity);
+        IVelocityMotor leftMotor = velocity -> leftTalon.set(ControlMode.Velocity, velocity * Encoders.CTRE_MAG_ENCODER);
+        IVelocityMotor rightMotor = velocity -> rightTalon.set(ControlMode.Velocity, velocity * Encoders.CTRE_MAG_ENCODER);
 
         IEncoder leftEncoder = Encoders.fromTalon(leftTalon, Encoders.CTRE_MAG_ENCODER);
         EncoderWheel leftEncoderWheel = new EncoderWheel(leftEncoder, 3);
@@ -53,5 +61,36 @@ public class PPExample
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
         Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).build();
+    }
+
+    public void exampleVoltage()
+    {
+        TalonSRX leftTalon = new TalonSRX(1);
+        TalonSRX rightTalon = new TalonSRX(2);
+
+        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(Paths.STRAIGHT_12FT, 0.1D);
+
+        InstantSimulatedMotor leftMotor = InstantSimulatedMotor.fromVolt(voltage -> leftTalon.set(ControlMode.PercentOutput, voltage), 16);
+        InstantSimulatedMotor rightMotor = InstantSimulatedMotor.fromVolt(voltage -> rightTalon.set(ControlMode.PercentOutput, voltage), 16);
+
+        ITankRobotConstants constants = () -> 5;
+
+        TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(leftMotor, rightMotor, constants);
+
+        ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
+
+        TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
+        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).build();
+    }
+
+    public void simpleExample()
+    {
+        Command command = new EzVoltagePPBuilder()
+                .addLeft(new TalonSRX(1))
+                .addRight(new TalonSRX(2))
+                .addLateralWheelDist(1)
+                .addSpeedPair(16, 1)
+                .addSpeedPair(1, 0.1)
+                .build(Paths.STRAIGHT_12FT);
     }
 }

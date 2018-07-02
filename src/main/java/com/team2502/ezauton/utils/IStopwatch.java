@@ -35,7 +35,6 @@ public interface IStopwatch
     boolean isInit();
 
     /**
-     *
      * @return If is not init
      */
     default boolean resetIfNotInit()
