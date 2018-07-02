@@ -13,9 +13,31 @@ public interface IAction
     /**
      * @return A WPILib command
      */
-    default Command build()
+    default Command buildWPI()
     {
         return new CommandCreator(this);
+    }
+
+    /**
+     * @return A Thread which acts like a command but can be run faster
+     */
+    default Thread buildThread(long millisDelay)
+    {
+        return new Thread(() -> {
+            init();
+            while(!isFinished())
+            {
+                execute();
+                try
+                {
+                    Thread.sleep(millisDelay);
+                }
+                catch(InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**

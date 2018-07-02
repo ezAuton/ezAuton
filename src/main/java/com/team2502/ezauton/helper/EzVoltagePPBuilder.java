@@ -97,6 +97,6 @@ public class EzVoltagePPBuilder
         }
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(left, right, locEstimator, locEstimator, constants);
-        return new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).build();
+        return new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable,locEstimator).buildWPI();
     }
 }

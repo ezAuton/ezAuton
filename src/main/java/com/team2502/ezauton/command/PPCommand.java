@@ -1,6 +1,7 @@
 package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.localization.ITranslationalLocationEstimator;
+import com.team2502.ezauton.localization.Updateable;
 import com.team2502.ezauton.pathplanning.IPathSegment;
 import com.team2502.ezauton.pathplanning.Path;
 import com.team2502.ezauton.pathplanning.purepursuit.ILookahead;
@@ -17,13 +18,15 @@ public class PPCommand implements IAction
     private final ITranslationalLocationEstimator translationalLocationEstimator;
     private final ILookahead lookahead;
     private final TranslationalLocationDriveable translationalLocationDriveable;
+    private final Updateable toUpdate;
 
-    public PPCommand(PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable)
+    public PPCommand(PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable, Updateable toUpdate)
     {
         this.purePursuitMovementStrategy = purePursuitMovementStrategy;
         this.translationalLocationEstimator = translationalLocationEstimator;
         this.lookahead = lookahead;
         this.translationalLocationDriveable = translationalLocationDriveable;
+        this.toUpdate = toUpdate;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class PPCommand implements IAction
         double absoluteDistance = current.getAbsoluteDistance(closestPoint);
         double speed = current.getSpeed(absoluteDistance);
         translationalLocationDriveable.driveTowardTransLoc(speed, goalPoint);
+        toUpdate.update();
     }
 
     @Override
