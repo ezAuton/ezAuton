@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.team2502.ezauton.actuators.Actuators;
 import com.team2502.ezauton.actuators.IVoltageMotor;
-import com.team2502.ezauton.actuators.InstantSimulatedMotor;
+import com.team2502.ezauton.actuators.RampUpSimulatedMotor;
 import com.team2502.ezauton.command.PPCommand;
 import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
 import com.team2502.ezauton.pathplanning.Path;
@@ -61,7 +61,7 @@ public class EzVoltagePPBuilder
     }
 
 
-    public Command build(Path path)
+    public Command build(Path path, double dvMax)
     {
         if(pair.size() == 0)
         {
@@ -76,8 +76,8 @@ public class EzVoltagePPBuilder
         pair.put(0D, 0D);
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1D);
-        InstantSimulatedMotor left = new InstantSimulatedMotor(new RealStopwatch());
-        InstantSimulatedMotor right = new InstantSimulatedMotor(new RealStopwatch());
+        RampUpSimulatedMotor left = new RampUpSimulatedMotor(new RealStopwatch(), dvMax);
+        RampUpSimulatedMotor right = new RampUpSimulatedMotor(new RealStopwatch(), dvMax);
 
         InterpolationMap interpolationMap = new InterpolationMap(pair);
 
@@ -97,6 +97,6 @@ public class EzVoltagePPBuilder
         }
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(left, right, locEstimator, locEstimator, constants);
-        return new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable,locEstimator).buildWPI();
+        return new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable, locEstimator).buildWPI();
     }
 }

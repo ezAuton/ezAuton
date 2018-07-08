@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.actuators.InstantSimulatedMotor;
+import com.team2502.ezauton.actuators.RampUpSimulatedMotor;
 import com.team2502.ezauton.command.PPCommand;
 import com.team2502.ezauton.helper.EzVoltagePPBuilder;
 import com.team2502.ezauton.helper.Paths;
@@ -70,8 +71,17 @@ public class PPExamples
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(Paths.STRAIGHT_12FT, 0.1D);
 
-        InstantSimulatedMotor leftMotor = InstantSimulatedMotor.fromVolt(voltage -> leftTalon.set(ControlMode.PercentOutput, voltage), 16);
-        InstantSimulatedMotor rightMotor = InstantSimulatedMotor.fromVolt(voltage -> rightTalon.set(ControlMode.PercentOutput, voltage), 16);
+        // max speed of robot in feet. This can be any unit; however, units must be consistent across entire use of PP.
+        double maxRobotSpeed = 16;
+
+        // We need to limit acceleration for voltage drive because the motor will always need to run within its bounds to
+        // get accurate localization
+        // we need accel per 20ms because that is how often a command in WPILib is called
+        double maxAccelPerSecond = 3D;
+        double maxAccelPer20ms = 3/50D;
+
+        RampUpSimulatedMotor leftMotor = RampUpSimulatedMotor.fromVolt(voltage -> leftTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPer20ms);
+        RampUpSimulatedMotor rightMotor = RampUpSimulatedMotor.fromVolt(voltage -> rightTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPer20ms);
 
         ITankRobotConstants constants = () -> 5;
 
@@ -91,6 +101,6 @@ public class PPExamples
                 .addLateralWheelDist(1)
                 .addSpeedPair(16, 1)
                 .addSpeedPair(1, 0.1)
-                .build(Paths.STRAIGHT_12FT);
+                .build(Paths.STRAIGHT_12FT, 0.5);
     }
 }

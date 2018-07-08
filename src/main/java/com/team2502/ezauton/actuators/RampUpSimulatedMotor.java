@@ -1,6 +1,7 @@
 package com.team2502.ezauton.actuators;
 
 import com.team2502.ezauton.utils.IStopwatch;
+import com.team2502.ezauton.utils.RealStopwatch;
 
 public class RampUpSimulatedMotor extends InstantSimulatedMotor
 {
@@ -12,6 +13,13 @@ public class RampUpSimulatedMotor extends InstantSimulatedMotor
     {
         super(stopwatch);
         this.dvMax = dvMax;
+    }
+
+    public static RampUpSimulatedMotor fromVolt(IVoltageMotor voltageMotor, double maxSpeed, double dvMax)
+    {
+        RampUpSimulatedMotor motor = new RampUpSimulatedMotor(new RealStopwatch(), dvMax);
+        motor.setSubscribed(Actuators.roughConvertVoltageToVel(voltageMotor, maxSpeed));
+        return motor;
     }
 
     public double getLastVelocity()
