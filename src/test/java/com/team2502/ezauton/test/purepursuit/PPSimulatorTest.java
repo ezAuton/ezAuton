@@ -13,6 +13,7 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import com.team2502.ezauton.test.simulator.SimulatedTankRobot;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
+import com.team2502.ezauton.utils.IStopwatch;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 import org.junit.Assert;
 import org.junit.Test;
@@ -51,8 +52,8 @@ public class PPSimulatorTest
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
 
-        SimulatedStopwatch stopwatch = new SimulatedStopwatch(0.05);
-        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, WHEEL_SIZE, stopwatch);
+        SimulatedStopwatch mainStopwatch = new SimulatedStopwatch(0.05);
+        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, WHEEL_SIZE, mainStopwatch.copy());
 
         IVelocityMotor leftMotor = robot.getLeftMotor();
         IVelocityMotor rightMotor = robot.getRightMotor();
@@ -65,24 +66,7 @@ public class PPSimulatorTest
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
 
         PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable, locEstimator);
-
-        IAction locUpdator = new IAction()
-        {
-            @Override
-            public void execute()
-            {
-                locEstimator.update();
-                stopwatch.progress();
-            }
-
-            @Override
-            public boolean isFinished()
-            {
-                return ppCommand.isFinished();
-            }
-        };
-
-        ppCommand.testWith(locUpdator);
+        ppCommand.testWith(mainStopwatch);
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
         Assert.assertEquals(0, leftWheelVelocity, 0.2D);

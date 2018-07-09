@@ -1,5 +1,6 @@
 package com.team2502.ezauton.command;
 
+import com.team2502.ezauton.utils.RealStopwatch;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -9,16 +10,18 @@ public class CommandCreator extends Command
 {
 
     private final IAction iCommand;
+    private final RealStopwatch stopwatch;
 
     public CommandCreator(IAction iCommand)
     {
         this.iCommand = iCommand;
+        stopwatch = new RealStopwatch();
     }
 
     @Override
     protected void initialize()
     {
-        iCommand.init();
+        iCommand.init(stopwatch);
     }
 
     @Override

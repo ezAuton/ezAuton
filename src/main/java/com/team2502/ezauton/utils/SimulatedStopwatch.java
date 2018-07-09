@@ -1,12 +1,14 @@
 package com.team2502.ezauton.utils;
 
+import com.team2502.ezauton.localization.Updateable;
+
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Each time progress() is called, SimulatedStopwatch increases by dt
  */
-public class SimulatedStopwatch implements IStopwatch
+public class SimulatedStopwatch implements IStopwatch, Updateable
 {
 
     private final double dt;
@@ -73,5 +75,12 @@ public class SimulatedStopwatch implements IStopwatch
         related.add(simulatedStopwatch);
 
         return simulatedStopwatch;
+    }
+
+    @Override
+    public boolean update()
+    {
+        progress();
+        return true;
     }
 }

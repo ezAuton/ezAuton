@@ -1,12 +1,25 @@
 package com.team2502.ezauton.command;
 
+import com.team2502.ezauton.utils.IStopwatch;
+import com.team2502.ezauton.utils.RealStopwatch;
+import com.team2502.ezauton.utils.SimulatedStopwatch;
 import edu.wpi.first.wpilibj.command.Command;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public interface IAction
 {
-    default void init() {}
+    default void init(IStopwatch stopwatch)
+    {
 
-    default void execute() {}
+    }
+
+    default void execute()
+    {
+
+    }
 
     boolean isFinished();
 
@@ -24,7 +37,8 @@ public interface IAction
     default Thread buildThread(long millisDelay)
     {
         return new Thread(() -> {
-            init();
+            RealStopwatch stopwatch = new RealStopwatch();
+            init(stopwatch);
             while(!isFinished())
             {
                 execute();
@@ -48,12 +62,16 @@ public interface IAction
      *
      * @param with
      */
-    default void testWith(IAction... with)
+    default void testWith(SimulatedStopwatch mainStopwatch, IAction... with)
     {
-        init();
-        for(IAction iCommand : with)
+        init(mainStopwatch);
+        Map<IAction, SimulatedStopwatch> actionMap = new HashMap<>();
+
+        for(IAction action : with)
         {
-            iCommand.init();
+            SimulatedStopwatch stopwatch = mainStopwatch.copy();
+            actionMap.put(action, stopwatch);
+            action.init(stopwatch);
         }
 
         boolean allFinished = false;
@@ -65,19 +83,25 @@ public interface IAction
                 execute();
                 notFinished = true;
             }
-            for(IAction iCommand : with)
+            Iterator<Map.Entry<IAction, SimulatedStopwatch>> iterator = actionMap.entrySet().iterator();
+            while(iterator.hasNext())
             {
-                if(!iCommand.isFinished())
+                Map.Entry<IAction, SimulatedStopwatch> entry = iterator.next();
+                IAction action = entry.getKey();
+                if(!action.isFinished())
                 {
-                    iCommand.execute();
                     notFinished = true;
                 }
-
+                else
+                {
+                    iterator.remove();
+                }
             }
             if(!notFinished)
             {
                 allFinished = true;
             }
+            mainStopwatch.progress();
         }
     }
 }
