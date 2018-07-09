@@ -24,7 +24,7 @@ public class EzVoltagePPBuilder
     private BaseMotorController leftMotor;
     private BaseMotorController rightMotor;
     private double lateralWheelDist;
-    private InterpolationMap interpolationMap = new OddInterpolationMap(0D,0D);
+    private InterpolationMap interpolationMap = new OddInterpolationMap(0D, 0D);
     private ILookahead lookahead = null;
 
     public EzVoltagePPBuilder()

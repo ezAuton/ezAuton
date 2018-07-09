@@ -29,7 +29,7 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator, I
     public void reset()
     {
         lastPosition = distanceSensor.getPosition();
-        dPosVec = new ImmutableVector(0,0);
+        dPosVec = new ImmutableVector(0, 0);
         init = true;
     }
 
@@ -42,7 +42,7 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator, I
     @Override
     public ImmutableVector estimateAbsoluteVelocity()
     {
-        return MathUtils.Geometry.getVector(velocity,rotationalLocationEstimator.estimateHeading());
+        return MathUtils.Geometry.getVector(velocity, rotationalLocationEstimator.estimateHeading());
     }
 
 
@@ -65,7 +65,7 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator, I
         }
         velocity = distanceSensor.getVelocity();
         dPos = distanceSensor.getPosition() - lastPosition;
-        dPosVec = MathUtils.Geometry.getVector(dPos,rotationalLocationEstimator.estimateHeading());
+        dPosVec = MathUtils.Geometry.getVector(dPos, rotationalLocationEstimator.estimateHeading());
         positionVec = positionVec.add(dPosVec);
 
         lastPosition = distanceSensor.getPosition();

@@ -395,45 +395,45 @@ public class MathTest
     @Test
     public void testEvenFunc()
     {
-        Map<Double, Double> map = ImmutableMap.<Double,Double>builder()
-                .put(-1D,0D)
-                .put(1D,0D)
+        Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
+                .put(-1D, 0D)
+                .put(1D, 0D)
                 .build();
         assertTrue(MathUtils.Algebra.hasEvenSymmetry(map));
 
-        map = ImmutableMap.<Double,Double>builder()
-                .put(1D,0D)
-                .put(2D,0D)
+        map = ImmutableMap.<Double, Double>builder()
+                .put(1D, 0D)
+                .put(2D, 0D)
                 .build();
         assertFalse(MathUtils.Algebra.hasEvenSymmetry(map));
 
-        map = ImmutableMap.<Double,Double>builder()
-                .put(-1D,0D)
-                .put(-2D,0D)
+        map = ImmutableMap.<Double, Double>builder()
+                .put(-1D, 0D)
+                .put(-2D, 0D)
                 .build();
         assertFalse(MathUtils.Algebra.hasEvenSymmetry(map));
 
-        map = ImmutableMap.<Double,Double>builder()
-                .put(-1D,0D)
-                .put(-2D,0D)
-                .put(1D,1D)
-                .put(2D,0D)
+        map = ImmutableMap.<Double, Double>builder()
+                .put(-1D, 0D)
+                .put(-2D, 0D)
+                .put(1D, 1D)
+                .put(2D, 0D)
                 .build();
         assertFalse(MathUtils.Algebra.hasEvenSymmetry(map));
 
-        map = ImmutableMap.<Double,Double>builder()
-                .put(-1D,1D)
-                .put(-2D,0D)
-                .put(1D,0D)
-                .put(2D,0D)
+        map = ImmutableMap.<Double, Double>builder()
+                .put(-1D, 1D)
+                .put(-2D, 0D)
+                .put(1D, 0D)
+                .put(2D, 0D)
                 .build();
         assertFalse(MathUtils.Algebra.hasEvenSymmetry(map));
 
-        map = ImmutableMap.<Double,Double>builder()
-                .put(-1D,1D)
-                .put(-2D,0D)
-                .put(1D,1D)
-                .put(2D,0D)
+        map = ImmutableMap.<Double, Double>builder()
+                .put(-1D, 1D)
+                .put(-2D, 0D)
+                .put(1D, 1D)
+                .put(2D, 0D)
                 .build();
 
         assertTrue(MathUtils.Algebra.hasEvenSymmetry(map));
@@ -442,45 +442,45 @@ public class MathTest
     @Test
     public void testOddFunc()
     {
-        Map<Double, Double> map = ImmutableMap.<Double,Double>builder()
-                .put(-1D,0D)
-                .put(1D,0D)
+        Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
+                .put(-1D, 0D)
+                .put(1D, 0D)
                 .build();
         assertTrue(MathUtils.Algebra.hasOddSymmetry(map));
 
-        map = ImmutableMap.<Double,Double>builder()
-                .put(1D,0D)
-                .put(2D,0D)
+        map = ImmutableMap.<Double, Double>builder()
+                .put(1D, 0D)
+                .put(2D, 0D)
                 .build();
         assertFalse(MathUtils.Algebra.hasOddSymmetry(map));
 
-        map = ImmutableMap.<Double,Double>builder()
-                .put(-1D,0D)
-                .put(-2D,0D)
+        map = ImmutableMap.<Double, Double>builder()
+                .put(-1D, 0D)
+                .put(-2D, 0D)
                 .build();
         assertFalse(MathUtils.Algebra.hasOddSymmetry(map));
 
-        map = ImmutableMap.<Double,Double>builder()
-                .put(-1D,0D)
-                .put(-2D,0D)
-                .put(1D,1D)
-                .put(2D,0D)
+        map = ImmutableMap.<Double, Double>builder()
+                .put(-1D, 0D)
+                .put(-2D, 0D)
+                .put(1D, 1D)
+                .put(2D, 0D)
                 .build();
         assertFalse(MathUtils.Algebra.hasOddSymmetry(map));
 
-        map = ImmutableMap.<Double,Double>builder()
-                .put(-1D,1D)
-                .put(-2D,0D)
-                .put(1D,0D)
-                .put(2D,0D)
+        map = ImmutableMap.<Double, Double>builder()
+                .put(-1D, 1D)
+                .put(-2D, 0D)
+                .put(1D, 0D)
+                .put(2D, 0D)
                 .build();
         assertFalse(MathUtils.Algebra.hasOddSymmetry(map));
 
-        map = ImmutableMap.<Double,Double>builder()
-                .put(-1D,1D)
-                .put(-2D,0D)
-                .put(1D,-1D)
-                .put(2D,0D)
+        map = ImmutableMap.<Double, Double>builder()
+                .put(-1D, 1D)
+                .put(-2D, 0D)
+                .put(1D, -1D)
+                .put(2D, 0D)
                 .build();
 
         assertTrue(MathUtils.Algebra.hasOddSymmetry(map));

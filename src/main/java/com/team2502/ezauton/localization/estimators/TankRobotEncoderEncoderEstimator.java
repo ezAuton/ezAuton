@@ -32,7 +32,7 @@ public class TankRobotEncoderEncoderEstimator implements IRotationalLocationEsti
     {
         lastPosLeft = left.getPosition();
         lastPosRight = right.getPosition();
-        location = new ImmutableVector(0,0);
+        location = new ImmutableVector(0, 0);
         heading = 0D;
         init = true;
     }

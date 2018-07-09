@@ -441,7 +441,6 @@ public final class MathUtils
     {
 
         /**
-         *
          * @param map
          * @return If is odd function
          */
@@ -456,7 +455,6 @@ public final class MathUtils
         }
 
         /**
-         *
          * @param map
          * @return If is even function
          */
@@ -784,7 +782,7 @@ public final class MathUtils
 
         /**
          * @param distance The distance gone
-         * @param angle Angle at which it is at
+         * @param angle    Angle at which it is at
          * @return A vector in <x, y> form
          * @see ImmutableVector
          */

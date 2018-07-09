@@ -11,7 +11,6 @@ public class UpdateableGroup implements Updateable
     }
 
     /**
-     *
      * @return If at least one of the Updateables updated
      */
     @Override
