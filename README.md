@@ -1,4 +1,4 @@
-[![travis-ci](https://travis-ci.org/Team-2502/ezAuton.svg?branch=master)](https://travis-ci.org/Team-2502/ezAuton) [![codecov](https://codecov.io/gh/Team-2502/ezAuton/branch/master/graph/badge.svg?token=mDoht49dKM)](https://codecov.io/gh/Team-2502/ezAuton)
+[![travis-ci](https://travis-ci.org/ezAuton/ezAuton.svg?branch=master)](https://travis-ci.org/ezAuton/ezAuton) [![codecov](https://codecov.io/gh/ezAuton/ezAuton/branch/master/graph/badge.svg?token=mDoht49dKM)](https://codecov.io/gh/ezAuton/ezAuton)
 # ezAuton
 A collection of tools to help with FRC autonomous for Java robots. 
 
