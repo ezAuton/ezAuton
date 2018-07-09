@@ -1,7 +1,6 @@
 package com.team2502.ezauton.test.purepursuit;
 
 import com.team2502.ezauton.actuators.IVelocityMotor;
-import com.team2502.ezauton.command.IAction;
 import com.team2502.ezauton.command.PPCommand;
 import com.team2502.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.team2502.ezauton.pathplanning.PP_PathGenerator;
@@ -13,7 +12,6 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import com.team2502.ezauton.test.simulator.SimulatedTankRobot;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
-import com.team2502.ezauton.utils.IStopwatch;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 import org.junit.Assert;
 import org.junit.Test;

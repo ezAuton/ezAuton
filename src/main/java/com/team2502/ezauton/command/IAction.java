@@ -24,6 +24,44 @@ public interface IAction
     boolean isFinished();
 
     /**
+     * Combines two actions together
+     * @param other
+     * @param bothCompleteForFinish
+     * @return
+     */
+    default IAction addSubAction(IAction other, boolean bothCompleteForFinish)
+    {
+        return new IAction() {
+            @Override
+            public void init(IStopwatch stopwatch)
+            {
+                IAction.this.init(stopwatch);
+                other.init(stopwatch);
+            }
+
+            @Override
+            public void execute()
+            {
+                IAction.this.execute();
+                other.execute();
+            }
+
+            @Override
+            public boolean isFinished()
+            {
+                if(bothCompleteForFinish)
+                {
+                    return IAction.this.isFinished() && other.isFinished();
+                }
+                else
+                {
+                    return IAction.this.isFinished();
+                }
+            }
+        };
+    }
+
+    /**
      * @return A WPILib command
      */
     default Command buildWPI()
