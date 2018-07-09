@@ -98,6 +98,7 @@ public interface IAction
      * execute on this command and the rest of the commands. This is instantaneous and will generally
      * be used for simulation.
      *
+     * @deprecated Use {@link SimulatorManager}
      * @param with
      */
     default void testWith(SimulatedStopwatch mainStopwatch, IAction... with)

@@ -3,6 +3,7 @@ package com.team2502.ezauton.test.simulator;
 import com.team2502.ezauton.actuators.BoundedSFSimMotor;
 import com.team2502.ezauton.actuators.StaticFrictionSimulatedMotor;
 import com.team2502.ezauton.robot.ITankRobotConstants;
+import com.team2502.ezauton.utils.ICopyableStopwatch;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 
 public class SimulatedTankRobot implements ITankRobotConstants
@@ -15,7 +16,7 @@ public class SimulatedTankRobot implements ITankRobotConstants
     private final StaticFrictionSimulatedMotor leftMotor;
     private final StaticFrictionSimulatedMotor rightMotor;
 
-    public SimulatedTankRobot(double lateralWheelDistance, double wheelSize, SimulatedStopwatch stopwatch)
+    public SimulatedTankRobot(double lateralWheelDistance, double wheelSize, ICopyableStopwatch stopwatch)
     {
         leftMotor = new BoundedSFSimMotor(stopwatch.copy(), 1, 0.3, 16);
         rightMotor = new BoundedSFSimMotor(stopwatch.copy(), 1, 0.3, 16);

@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Each time progress() is called, SimulatedStopwatch increases by dt
  */
-public class SimulatedStopwatch implements IStopwatch, Updateable
+public class SimulatedStopwatch implements ICopyableStopwatch, Updateable
 {
 
     private final double dt;
@@ -67,6 +67,7 @@ public class SimulatedStopwatch implements IStopwatch, Updateable
     /**
      * @return A new SimulatedStopwatch that is linked to progress()
      */
+    @Override
     public SimulatedStopwatch copy()
     {
         SimulatedStopwatch simulatedStopwatch = new SimulatedStopwatch(dt);
