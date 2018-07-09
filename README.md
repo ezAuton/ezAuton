@@ -17,6 +17,8 @@ A collection of tools to help with FRC autonomous for Java robots.
 - Interface for easier unit testing of commands and easy creation of commands which run faster than once every 20ms.
 
 ## Examples
+ezAuton is not currently stable! If you are using the current _ezAuton_ library, your code might not work with most updated version a week later.
+
 ### Tank robot Pure Pursuit no helpers
 This is code for encoder-encoder localization with a tank robot with no helper classes. The code is overly-verbose for most scenarios; it is usually not needed.
 
