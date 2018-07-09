@@ -3,7 +3,6 @@ package com.team2502.ezauton.test.purepursuit;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2502.ezauton.actuators.IVelocityMotor;
-import com.team2502.ezauton.actuators.InstantSimulatedMotor;
 import com.team2502.ezauton.actuators.RampUpSimulatedMotor;
 import com.team2502.ezauton.command.PPCommand;
 import com.team2502.ezauton.helper.EzVoltagePPBuilder;
@@ -61,7 +60,7 @@ public class PPExamples
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
-        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable,locEstimator).buildWPI();
+        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable, locEstimator).buildWPI();
     }
 
     public void exampleVoltage()
@@ -78,7 +77,7 @@ public class PPExamples
         // get accurate localization
         // we need accel per 20ms because that is how often a command in WPILib is called
         double maxAccelPerSecond = 3D;
-        double maxAccelPer20ms = 3/50D;
+        double maxAccelPer20ms = 3 / 50D;
 
         RampUpSimulatedMotor leftMotor = RampUpSimulatedMotor.fromVolt(voltage -> leftTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPer20ms);
         RampUpSimulatedMotor rightMotor = RampUpSimulatedMotor.fromVolt(voltage -> rightTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPer20ms);
@@ -90,7 +89,7 @@ public class PPExamples
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
-        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable,locEstimator).buildWPI();
+        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable, locEstimator).buildWPI();
     }
 
     public void simpleExample()

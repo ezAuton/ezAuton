@@ -1,10 +1,12 @@
 package com.team2502.ezauton.test.math;
 
+import com.google.common.collect.ImmutableMap;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -388,6 +390,100 @@ public class MathTest
         vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[3][0], testCases[3][1], robotPos), segment.intersection(perp));
 
 
+    }
+
+    @Test
+    public void testEvenFunc()
+    {
+        Map<Double, Double> map = ImmutableMap.<Double,Double>builder()
+                .put(-1D,0D)
+                .put(1D,0D)
+                .build();
+        assertTrue(MathUtils.Algebra.hasEvenSymmetry(map));
+
+        map = ImmutableMap.<Double,Double>builder()
+                .put(1D,0D)
+                .put(2D,0D)
+                .build();
+        assertFalse(MathUtils.Algebra.hasEvenSymmetry(map));
+
+        map = ImmutableMap.<Double,Double>builder()
+                .put(-1D,0D)
+                .put(-2D,0D)
+                .build();
+        assertFalse(MathUtils.Algebra.hasEvenSymmetry(map));
+
+        map = ImmutableMap.<Double,Double>builder()
+                .put(-1D,0D)
+                .put(-2D,0D)
+                .put(1D,1D)
+                .put(2D,0D)
+                .build();
+        assertFalse(MathUtils.Algebra.hasEvenSymmetry(map));
+
+        map = ImmutableMap.<Double,Double>builder()
+                .put(-1D,1D)
+                .put(-2D,0D)
+                .put(1D,0D)
+                .put(2D,0D)
+                .build();
+        assertFalse(MathUtils.Algebra.hasEvenSymmetry(map));
+
+        map = ImmutableMap.<Double,Double>builder()
+                .put(-1D,1D)
+                .put(-2D,0D)
+                .put(1D,1D)
+                .put(2D,0D)
+                .build();
+
+        assertTrue(MathUtils.Algebra.hasEvenSymmetry(map));
+    }
+
+    @Test
+    public void testOddFunc()
+    {
+        Map<Double, Double> map = ImmutableMap.<Double,Double>builder()
+                .put(-1D,0D)
+                .put(1D,0D)
+                .build();
+        assertTrue(MathUtils.Algebra.hasOddSymmetry(map));
+
+        map = ImmutableMap.<Double,Double>builder()
+                .put(1D,0D)
+                .put(2D,0D)
+                .build();
+        assertFalse(MathUtils.Algebra.hasOddSymmetry(map));
+
+        map = ImmutableMap.<Double,Double>builder()
+                .put(-1D,0D)
+                .put(-2D,0D)
+                .build();
+        assertFalse(MathUtils.Algebra.hasOddSymmetry(map));
+
+        map = ImmutableMap.<Double,Double>builder()
+                .put(-1D,0D)
+                .put(-2D,0D)
+                .put(1D,1D)
+                .put(2D,0D)
+                .build();
+        assertFalse(MathUtils.Algebra.hasOddSymmetry(map));
+
+        map = ImmutableMap.<Double,Double>builder()
+                .put(-1D,1D)
+                .put(-2D,0D)
+                .put(1D,0D)
+                .put(2D,0D)
+                .build();
+        assertFalse(MathUtils.Algebra.hasOddSymmetry(map));
+
+        map = ImmutableMap.<Double,Double>builder()
+                .put(-1D,1D)
+                .put(-2D,0D)
+                .put(1D,-1D)
+                .put(2D,0D)
+                .build();
+
+        assertTrue(MathUtils.Algebra.hasOddSymmetry(map));
     }
 
 

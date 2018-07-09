@@ -14,19 +14,17 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import com.team2502.ezauton.utils.InterpolationMap;
+import com.team2502.ezauton.utils.OddInterpolationMap;
 import com.team2502.ezauton.utils.RealStopwatch;
 import edu.wpi.first.wpilibj.command.Command;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class EzVoltagePPBuilder
 {
 
-    Map<Double, Double> pair = new HashMap<>();
     private BaseMotorController leftMotor;
     private BaseMotorController rightMotor;
     private double lateralWheelDist;
+    private InterpolationMap interpolationMap = new OddInterpolationMap(0D,0D);
     private ILookahead lookahead = null;
 
     public EzVoltagePPBuilder()
@@ -35,10 +33,7 @@ public class EzVoltagePPBuilder
 
     public EzVoltagePPBuilder addSpeedPair(double speed, double voltage)
     {
-        pair.put(speed, voltage);
-
-        // negative the same (usually)
-        pair.put(-speed, -voltage);
+        interpolationMap.put(speed, voltage);
         return this;
     }
 
@@ -63,7 +58,7 @@ public class EzVoltagePPBuilder
 
     public Command build(Path path, double dvMax)
     {
-        if(pair.size() == 0)
+        if(interpolationMap.size() == 1)
         {
             throw new IllegalArgumentException("Must add at least one pair!");
         }
@@ -72,14 +67,9 @@ public class EzVoltagePPBuilder
             throw new IllegalArgumentException("Both left and right motors must have been initialized!");
         }
 
-        // 0 voltage = 0 speed
-        pair.put(0D, 0D);
-
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1D);
         RampUpSimulatedMotor left = new RampUpSimulatedMotor(new RealStopwatch(), dvMax);
         RampUpSimulatedMotor right = new RampUpSimulatedMotor(new RealStopwatch(), dvMax);
-
-        InterpolationMap interpolationMap = new InterpolationMap(pair);
 
         IVoltageMotor leftVolt = volt -> leftMotor.set(ControlMode.PercentOutput, volt);
         left.setSubscribed(Actuators.roughConvertVoltageToVel(leftVolt, interpolationMap));

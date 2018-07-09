@@ -3,6 +3,7 @@ package com.team2502.ezauton.utils;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -438,6 +439,36 @@ public final class MathUtils
      */
     public static class Algebra
     {
+
+        /**
+         *
+         * @param map
+         * @return If is odd function
+         */
+        public static boolean hasOddSymmetry(Map<? extends Double, ? extends Double> map)
+        {
+            return map.entrySet().stream().allMatch(entry -> {
+                Double key = entry.getKey();
+                Double value = entry.getValue();
+                Double symmetricEntry = map.get(-key);
+                return symmetricEntry != null && symmetricEntry == -value;
+            });
+        }
+
+        /**
+         *
+         * @param map
+         * @return If is even function
+         */
+        public static boolean hasEvenSymmetry(Map<? extends Double, ? extends Double> map)
+        {
+            return map.entrySet().stream().allMatch(entry -> {
+                Double key = entry.getKey();
+                Double value = entry.getValue();
+                Double symmetricValue = map.get(-key);
+                return symmetricValue != null && symmetricValue.equals(value);
+            });
+        }
 
         /**
          * Solve for the roots of a quadratic of the form ax^2 + bx + c

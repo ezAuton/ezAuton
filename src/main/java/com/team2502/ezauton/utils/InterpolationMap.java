@@ -29,7 +29,7 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     public InterpolationMap(Double firstKey, Double firstValue)
     {
         table = new HashMap<>();
-        table.put(firstKey, firstValue);
+        put(firstKey, firstValue);
     }
 
 
@@ -46,7 +46,7 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
         }
         else
         {
-            table = initTable;
+            putAll(initTable);
         }
     }
 
