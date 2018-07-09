@@ -51,6 +51,31 @@ public class Encoders
         return fixRegEncoder(encoder, unitsPerRev);
     }
 
+    /**
+     * Have an encoder which is the average of two other encoders. If the robot is a differential drive robot and a and b
+     * are two encoders on two different wheels, average(a,b) will return an encoder which will act as if it is in the
+     * center of the robot and should be proportional to the tangential velocity of the robot.
+     * @param a
+     * @param b
+     * @return
+     */
+    public static IEncoder average(IEncoder a, IEncoder b)
+    {
+        return new IEncoder() {
+            @Override
+            public double getPosition()
+            {
+                return (a.getPosition() + b.getPosition())/2D;
+            }
+
+            @Override
+            public double getVelocity()
+            {
+                return (a.getVelocity() + b.getVelocity())/2D;
+            }
+        };
+    }
+
     private static IEncoder fixRegEncoder(IEncoder hardwareEncoder, int unitsPerRev)
     {
         if(unitsPerRev <= 0)

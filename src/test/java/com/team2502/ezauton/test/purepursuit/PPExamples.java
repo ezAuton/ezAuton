@@ -7,7 +7,7 @@ import com.team2502.ezauton.actuators.RampUpSimulatedMotor;
 import com.team2502.ezauton.command.PPCommand;
 import com.team2502.ezauton.helper.EzVoltagePPBuilder;
 import com.team2502.ezauton.helper.Paths;
-import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
+import com.team2502.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.team2502.ezauton.localization.sensors.EncoderWheel;
 import com.team2502.ezauton.localization.sensors.Encoders;
 import com.team2502.ezauton.localization.sensors.IEncoder;
@@ -35,11 +35,14 @@ public class PPExamples
         TalonSRX leftTalon = new TalonSRX(1);
         TalonSRX rightTalon = new TalonSRX(2);
 
+        // (x, y, speed, acceleration, deceleration)
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -3);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 12, 0, 3, -3);
 
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoint1, waypoint2, waypoint3);
+
+        // dt = 0.05
         Path path = pathGenerator.generate(0.05);
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1D);
@@ -53,9 +56,10 @@ public class PPExamples
         IEncoder rightEncoder = Encoders.fromTalon(rightTalon, Encoders.CTRE_MAG_ENCODER);
         EncoderWheel rightEncoderWheel = new EncoderWheel(rightEncoder, 3);
 
+        // The lateral wheel distance between wheels
         ITankRobotConstants constants = () -> 20;
 
-        TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(leftEncoderWheel, rightEncoderWheel, constants);
+        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(leftEncoderWheel, rightEncoderWheel, constants);
 
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
@@ -84,7 +88,7 @@ public class PPExamples
 
         ITankRobotConstants constants = () -> 5;
 
-        TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(leftMotor, rightMotor, constants);
+        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(leftMotor, rightMotor, constants);
 
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 

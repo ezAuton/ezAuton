@@ -1,11 +1,15 @@
-package com.team2502.ezauton.localization;
+package com.team2502.ezauton.localization.estimators;
 
+import com.team2502.ezauton.localization.IRotationalLocationEstimator;
+import com.team2502.ezauton.localization.ITankRobotVelocityEstimator;
+import com.team2502.ezauton.localization.ITranslationalLocationEstimator;
+import com.team2502.ezauton.localization.Updateable;
 import com.team2502.ezauton.localization.sensors.ITranslationalDistanceSensor;
 import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 
-public class TankRobotEncoderRotationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, ITankRobotVelocityEstimator, Updateable
+public class TankRobotEncoderEncoderEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, ITankRobotVelocityEstimator, Updateable
 {
 
     private final ITankRobotConstants tankRobot;
@@ -17,18 +21,19 @@ public class TankRobotEncoderRotationEstimator implements IRotationalLocationEst
     private double heading = 0;
     private ImmutableVector location = ImmutableVector.origin(2);
 
-    public TankRobotEncoderRotationEstimator(ITranslationalDistanceSensor left, ITranslationalDistanceSensor right, ITankRobotConstants tankRobot)
+    public TankRobotEncoderEncoderEstimator(ITranslationalDistanceSensor left, ITranslationalDistanceSensor right, ITankRobotConstants tankRobot)
     {
         this.left = left;
         this.right = right;
         this.tankRobot = tankRobot;
     }
 
-
     public void reset()
     {
         lastPosLeft = left.getPosition();
         lastPosRight = right.getPosition();
+        location = new ImmutableVector(0,0);
+        heading = 0D;
         init = true;
     }
 

@@ -6,7 +6,7 @@ import com.team2502.ezauton.actuators.Actuators;
 import com.team2502.ezauton.actuators.IVoltageMotor;
 import com.team2502.ezauton.actuators.RampUpSimulatedMotor;
 import com.team2502.ezauton.command.PPCommand;
-import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
+import com.team2502.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.team2502.ezauton.pathplanning.Path;
 import com.team2502.ezauton.pathplanning.purepursuit.ILookahead;
 import com.team2502.ezauton.pathplanning.purepursuit.LookaheadBounds;
@@ -79,7 +79,7 @@ public class EzVoltagePPBuilder
 
         ITankRobotConstants constants = () -> lateralWheelDist;
 
-        TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(left, right, constants);
+        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(left, right, constants);
 
         if(this.lookahead == null)
         {

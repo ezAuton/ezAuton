@@ -23,7 +23,7 @@ public class KinematicsTest
     {
         ImmutableVector dPos = MathUtils.Kinematics.getAbsoluteDPosLine(1, 1, 1F, (double) (Math.PI / 4F));
 
-        assertEquals(Math.sqrt(1 / 2F), dPos.get(0), 0.001);
+        assertEquals(-Math.sqrt(1 / 2F), dPos.get(0), 0.001);
         assertEquals(Math.sqrt(1 / 2F), dPos.get(1), 0.001);
     }
 
@@ -91,9 +91,9 @@ public class KinematicsTest
         ImmutableVector i = new ImmutableVector(1, 0);
         ImmutableVector j = new ImmutableVector(0, 1);
 
-        vectorsCloseEnough(i, MathUtils.Geometry.getVector(1, 0));
-        vectorsCloseEnough(j, MathUtils.Geometry.getVector(1, Math.PI / 2));
-        vectorsCloseEnough(i.add(j), MathUtils.Geometry.getVector(ROOT_2, Math.PI / 4));
+        vectorsCloseEnough(j, MathUtils.Geometry.getVector(1, 0));
+        vectorsCloseEnough(i, MathUtils.Geometry.getVector(1, -Math.PI / 2));
+        vectorsCloseEnough(i.add(j), MathUtils.Geometry.getVector(ROOT_2, -Math.PI / 4));
 
     }
 

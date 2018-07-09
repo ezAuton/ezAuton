@@ -25,7 +25,7 @@ public final class MathUtils
 
     public static final double TAU = 2 * Math.PI;
 
-    public static final ImmutableVector VECTOR_STRAIGHT = new ImmutableVector(1, 0);
+    public static final ImmutableVector VECTOR_FORWARD = new ImmutableVector(0, 1);
 
     private static final double ln2 = StrictMath.log(2);
     private static final double ln3 = StrictMath.log(3);
@@ -615,7 +615,7 @@ public final class MathUtils
         {
             double tangentialSpeed = getTangentialSpeed(vL, vR);
             double tangentialDPos = getTangentialSpeed(vL, vR) * dt;
-            ImmutableVector dPos = VECTOR_STRAIGHT.mul(tangentialDPos);
+            ImmutableVector dPos = VECTOR_FORWARD.mul(tangentialDPos);
             return LinearAlgebra.rotate2D(dPos, robotHeading);
         }
 
@@ -783,14 +783,14 @@ public final class MathUtils
         }
 
         /**
-         * @param speed ImmutableVector's magnitude
+         * @param distance The distance gone
          * @param angle Angle at which it is at
          * @return A vector in <x, y> form
          * @see ImmutableVector
          */
-        public static ImmutableVector getVector(double speed, double angle)
+        public static ImmutableVector getVector(double distance, double angle)
         {
-            return MathUtils.LinearAlgebra.rotate2D(VECTOR_STRAIGHT, angle).mul(speed);
+            return MathUtils.LinearAlgebra.rotate2D(VECTOR_FORWARD, angle).mul(distance);
         }
 
         /**

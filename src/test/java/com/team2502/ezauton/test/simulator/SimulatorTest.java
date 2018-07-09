@@ -1,6 +1,6 @@
 package com.team2502.ezauton.test.simulator;
 
-import com.team2502.ezauton.localization.TankRobotEncoderRotationEstimator;
+import com.team2502.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ public class SimulatorTest
     {
         SimulatedStopwatch stopwatch = new SimulatedStopwatch(SimulatedTankRobot.NORM_DT);
         SimulatedTankRobot robot = new SimulatedTankRobot(1, 0.2D, stopwatch);
-        TankRobotEncoderRotationEstimator encoderRotationEstimator = new TankRobotEncoderRotationEstimator(robot.getLeftMotor(), robot.getRightMotor(), robot);
+        TankRobotEncoderEncoderEstimator encoderRotationEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftMotor(), robot.getRightMotor(), robot);
         encoderRotationEstimator.reset();
         for(int i = 0; i < 1000; i++)
         {
