@@ -123,9 +123,10 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     @Override
     public Double get(Object key) throws IllegalArgumentException
     {
-        if(key.getClass() == Double.class)
+        if(key instanceof Number)
         {
-            return this.get((Double) key);
+            Number number = (Number) key;
+            return this.get(number.doubleValue());
         }
         throw new IllegalArgumentException("The key was not an instance of the Double class");
     }
