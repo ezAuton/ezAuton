@@ -42,14 +42,17 @@ public class PPExamples
 
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoint1, waypoint2, waypoint3);
 
-        // dt = 0.05
+        // Generates a path by looking for nominal poses every 0.05 (dt) seconds. A small dt will yield more precision. The path will automatically interpolate between generated poses.
         Path path = pathGenerator.generate(0.05);
 
+        // The strategy for moving. The stop tolerance is the distance away from the endpoint where Pure Pursuit is happy.
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1D);
 
+        // Means to easily interface with motors
         IVelocityMotor leftMotor = velocity -> leftTalon.set(ControlMode.Velocity, velocity * Encoders.CTRE_MAG_ENCODER);
         IVelocityMotor rightMotor = velocity -> rightTalon.set(ControlMode.Velocity, velocity * Encoders.CTRE_MAG_ENCODER);
 
+        // Means to easily interface with encoders
         IEncoder leftEncoder = Encoders.fromTalon(leftTalon, Encoders.CTRE_MAG_ENCODER);
         EncoderWheel leftEncoderWheel = new EncoderWheel(leftEncoder, 3);
 
@@ -59,14 +62,16 @@ public class PPExamples
         // The lateral wheel distance between wheels
         ITankRobotConstants constants = () -> 20;
 
+        // Encoder-encoder location estimator
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(leftEncoderWheel, rightEncoderWheel, constants);
 
-
+        // Dynamic lookahead with speed (speed comes from location estimator)
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
+        // An implementation for the robot to move toward a point at a provided speed
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
 
-        // Background task to update location
+        // Background task to periodically update location calculations
         Thread thread = new BackgroundAction(locEstimator).buildThread(10);
         thread.start();
 
@@ -86,9 +91,10 @@ public class PPExamples
 
         // We need to limit acceleration for voltage drive because the motor will always need to run within its bounds to
         // get accurate localization
-        // we need accel per 20ms because that is how often a command in WPILib is called
         double maxAccelPerSecond = 3D;
 
+        // These RampUpSimulatedMotors provide a ramp up when setting a voltage. For example, if you immediately want 100% voltage the motor will actually slowly be set
+        // From 0% to 100%. This smooth transition between voltage allows for easier localization as the relationship between voltage and velocity is predictable (and linear for most FRC motors)
         RampUpSimulatedMotor leftMotor = RampUpSimulatedMotor.fromVolt(voltage -> leftTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPerSecond);
         RampUpSimulatedMotor rightMotor = RampUpSimulatedMotor.fromVolt(voltage -> rightTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPerSecond);
 
@@ -96,12 +102,11 @@ public class PPExamples
 
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(leftMotor, rightMotor, constants);
 
-
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
 
-        // Background task to update location and percent voltage applied
+        // Background task to update location and percent voltage applied to motors. Will run every 10ms.
         Thread thread = new BackgroundAction(locEstimator, leftMotor, rightMotor).buildThread(10);
         thread.start();
 

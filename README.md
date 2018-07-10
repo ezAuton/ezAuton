@@ -23,8 +23,8 @@ ezAuton is not currently stable! If you are using the current _ezAuton_ library,
 This is code for encoder-encoder localization with a tank robot with no helper classes. The code is overly-verbose for most scenarios; it is usually not needed.
 
 ```Java
-TalonSRX leftTalon = new TalonSRX(ID1);
-TalonSRX rightTalon = new TalonSRX(ID2);
+TalonSRX leftTalon = new TalonSRX(1);
+TalonSRX rightTalon = new TalonSRX(2);
 
 // (x, y, speed, acceleration, deceleration)
 PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
@@ -33,14 +33,17 @@ PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 12, 0, 3, -3);
 
 PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoint1, waypoint2, waypoint3);
 
-// dt = 0.05
+// Generates a path by looking for nominal poses every 0.05 (dt) seconds. A small dt will yield more precision. The path will automatically interpolate between generated poses.
 Path path = pathGenerator.generate(0.05);
 
+// The strategy for moving. The stop tolerance is the distance away from the endpoint where Pure Pursuit is happy.
 PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1D);
 
+// Means to easily interface with motors
 IVelocityMotor leftMotor = velocity -> leftTalon.set(ControlMode.Velocity, velocity * Encoders.CTRE_MAG_ENCODER);
 IVelocityMotor rightMotor = velocity -> rightTalon.set(ControlMode.Velocity, velocity * Encoders.CTRE_MAG_ENCODER);
 
+// Means to easily interface with encoders
 IEncoder leftEncoder = Encoders.fromTalon(leftTalon, Encoders.CTRE_MAG_ENCODER);
 EncoderWheel leftEncoderWheel = new EncoderWheel(leftEncoder, 3);
 
@@ -50,12 +53,21 @@ EncoderWheel rightEncoderWheel = new EncoderWheel(rightEncoder, 3);
 // The lateral wheel distance between wheels
 ITankRobotConstants constants = () -> 20;
 
-TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(leftEncoderWheel, rightEncoderWheel, constants);
+// Encoder-encoder location estimator
+TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(leftEncoderWheel, rightEncoderWheel, constants);
 
+// Dynamic lookahead with speed (speed comes from location estimator) 
 ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
+// An implementation for the robot to move toward a point at a provided speed
 TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
-Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable, locEstimator).buildWPI();
+
+// Background task to periodically update location calculations
+Thread thread = new BackgroundAction(locEstimator).buildThread(10);
+thread.start();
+
+// Command to start Pure Pursuit
+Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
  ```
  
  ### Tank robot voltage localization
@@ -71,18 +83,25 @@ double maxRobotSpeed = 16;
 
 // We need to limit acceleration for voltage drive because the motor will always need to run within its bounds to
 // get accurate localization
-// we need accel per 20ms because that is how often a command in WPILib is called
 double maxAccelPerSecond = 3D;
-double maxAccelPer20ms = 3 / 50D;
 
-RampUpSimulatedMotor leftMotor = RampUpSimulatedMotor.fromVolt(voltage -> leftTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPer20ms);
-RampUpSimulatedMotor rightMotor = RampUpSimulatedMotor.fromVolt(voltage -> rightTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPer20ms);
+// These RampUpSimulatedMotors provide a ramp up when setting a voltage. For example, if you immediately want 100% voltage the motor will actually slowly be set
+// From 0% to 100%. This smooth transition between voltage allows for easier localization as the relationship between voltage and velocity is predictable (and linear for most FRC motors)
+RampUpSimulatedMotor leftMotor = RampUpSimulatedMotor.fromVolt(voltage -> leftTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPerSecond);
+RampUpSimulatedMotor rightMotor = RampUpSimulatedMotor.fromVolt(voltage -> rightTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPerSecond);
 
 ITankRobotConstants constants = () -> 5;
 
-TankRobotEncoderRotationEstimator locEstimator = new TankRobotEncoderRotationEstimator(leftMotor, rightMotor, constants);
+TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(leftMotor, rightMotor, constants);
 
 ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
 TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
-Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable, locEstimator).buildWPI();
+
+// Background task to update location and percent voltage applied to motors. Will run every 10ms.
+Thread thread = new BackgroundAction(locEstimator, leftMotor, rightMotor).buildThread(10);
+thread.start();
+
+// Command to start Pure Pursuit
+Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
+```
