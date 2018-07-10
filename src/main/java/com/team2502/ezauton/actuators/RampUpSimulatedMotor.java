@@ -1,18 +1,22 @@
 package com.team2502.ezauton.actuators;
 
-import com.team2502.ezauton.utils.IStopwatch;
+import com.team2502.ezauton.localization.Updateable;
+import com.team2502.ezauton.utils.ICopyableStopwatch;
 import com.team2502.ezauton.utils.RealStopwatch;
 
-public class RampUpSimulatedMotor extends InstantSimulatedMotor
+public class RampUpSimulatedMotor extends InstantSimulatedMotor implements Updateable
 {
 
-    private final double dvMax;
+    private final double dvPerdt;
+    private final ICopyableStopwatch accelStopwatch;
     private double lastVelocity = 0;
+    private double targetVelocity;
 
-    public RampUpSimulatedMotor(IStopwatch stopwatch, double dvMax)
+    public RampUpSimulatedMotor(ICopyableStopwatch stopwatch, double dvPerdt)
     {
         super(stopwatch);
-        this.dvMax = dvMax;
+        accelStopwatch = stopwatch.copy();
+        this.dvPerdt = dvPerdt;
     }
 
     public static RampUpSimulatedMotor fromVolt(IVoltageMotor voltageMotor, double maxSpeed, double dvMax)
@@ -30,14 +34,22 @@ public class RampUpSimulatedMotor extends InstantSimulatedMotor
     @Override
     public void runVelocity(double targetVelocity)
     {
+        accelStopwatch.reset();
+        this.targetVelocity = targetVelocity;
+    }
+
+    @Override
+    public boolean update()
+    {
         if(targetVelocity > lastVelocity)
         {
-            lastVelocity = Math.min(lastVelocity + dvMax, targetVelocity); // TODO: make this better and use triangle integral + stopwatch
+            lastVelocity = Math.min(lastVelocity + dvPerdt * accelStopwatch.pop(), targetVelocity); // TODO: make this better and use triangle integral + stopwatch
         }
         else
         {
-            lastVelocity = Math.max(lastVelocity - dvMax, targetVelocity);
+            lastVelocity = Math.max(lastVelocity - dvPerdt * accelStopwatch.pop(), targetVelocity);
         }
         super.runVelocity(lastVelocity);
+        return true;
     }
 }

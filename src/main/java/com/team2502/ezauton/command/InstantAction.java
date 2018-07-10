@@ -4,13 +4,13 @@ public class InstantAction implements IAction
 {
 
     private final Runnable runnable;
+    private boolean finished = false;
 
     public InstantAction(Runnable runnable)
     {
         this.runnable = runnable;
     }
 
-    private boolean finished = false;
     @Override
     public void execute()
     {

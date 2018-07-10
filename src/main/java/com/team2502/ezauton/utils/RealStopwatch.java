@@ -3,7 +3,7 @@ package com.team2502.ezauton.utils;
 /**
  * A stopwatch that measures time in milliseconds
  */
-public class RealStopwatch implements IStopwatch
+public class RealStopwatch implements ICopyableStopwatch
 {
     /**
      * Time in nanoseconds since last {@link RealStopwatch#reset()}
@@ -31,5 +31,13 @@ public class RealStopwatch implements IStopwatch
     public boolean isInit()
     {
         return lastTime != -1;
+    }
+
+    @Override
+    public RealStopwatch copy()
+    {
+        RealStopwatch realStopwatch = new RealStopwatch();
+        realStopwatch.lastTime = lastTime;
+        return realStopwatch;
     }
 }

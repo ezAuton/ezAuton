@@ -25,13 +25,15 @@ public interface IAction
 
     /**
      * Combines two actions together
+     *
      * @param other
      * @param bothCompleteForFinish
      * @return
      */
     default IAction addSubAction(IAction other, boolean bothCompleteForFinish)
     {
-        return new IAction() {
+        return new IAction()
+        {
             @Override
             public void init(IStopwatch stopwatch)
             {
@@ -72,7 +74,7 @@ public interface IAction
     /**
      * @return A Thread which acts like a command but can be run faster
      */
-    default Thread buildThread(long millisDelay)
+    default Thread buildThread(long millisPeriod)
     {
         return new Thread(() -> {
             RealStopwatch stopwatch = new RealStopwatch();
@@ -82,7 +84,7 @@ public interface IAction
                 execute();
                 try
                 {
-                    Thread.sleep(millisDelay);
+                    Thread.sleep(millisPeriod);
                 }
                 catch(InterruptedException e)
                 {
@@ -98,8 +100,8 @@ public interface IAction
      * execute on this command and the rest of the commands. This is instantaneous and will generally
      * be used for simulation.
      *
-     * @deprecated Use {@link SimulatorManager}
      * @param with
+     * @deprecated Use {@link SimulatorManager}
      */
     default void testWith(SimulatedStopwatch mainStopwatch, IAction... with)
     {

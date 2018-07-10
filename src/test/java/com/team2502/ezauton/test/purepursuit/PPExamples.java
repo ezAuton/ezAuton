@@ -4,8 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.actuators.RampUpSimulatedMotor;
+import com.team2502.ezauton.command.BackgroundAction;
 import com.team2502.ezauton.command.PPCommand;
-import com.team2502.ezauton.helper.EzVoltagePPBuilder;
 import com.team2502.ezauton.helper.Paths;
 import com.team2502.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.team2502.ezauton.localization.sensors.EncoderWheel;
@@ -61,10 +61,17 @@ public class PPExamples
 
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(leftEncoderWheel, rightEncoderWheel, constants);
 
+
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
-        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable, locEstimator).buildWPI();
+
+        // Background task to update location
+        Thread thread = new BackgroundAction(locEstimator).buildThread(10);
+        thread.start();
+
+        // Command to start Pure Pursuit
+        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
     }
 
     public void exampleVoltage()
@@ -81,29 +88,24 @@ public class PPExamples
         // get accurate localization
         // we need accel per 20ms because that is how often a command in WPILib is called
         double maxAccelPerSecond = 3D;
-        double maxAccelPer20ms = 3 / 50D;
 
-        RampUpSimulatedMotor leftMotor = RampUpSimulatedMotor.fromVolt(voltage -> leftTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPer20ms);
-        RampUpSimulatedMotor rightMotor = RampUpSimulatedMotor.fromVolt(voltage -> rightTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPer20ms);
+        RampUpSimulatedMotor leftMotor = RampUpSimulatedMotor.fromVolt(voltage -> leftTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPerSecond);
+        RampUpSimulatedMotor rightMotor = RampUpSimulatedMotor.fromVolt(voltage -> rightTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPerSecond);
 
         ITankRobotConstants constants = () -> 5;
 
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(leftMotor, rightMotor, constants);
 
+
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
-        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable, locEstimator).buildWPI();
-    }
 
-    public void simpleExample()
-    {
-        Command command = new EzVoltagePPBuilder()
-                .addLeft(new TalonSRX(1))
-                .addRight(new TalonSRX(2))
-                .addLateralWheelDist(1)
-                .addSpeedPair(16, 1)
-                .addSpeedPair(1, 0.1)
-                .build(Paths.STRAIGHT_12FT, 0.5);
+        // Background task to update location and percent voltage applied
+        Thread thread = new BackgroundAction(locEstimator, leftMotor, rightMotor).buildThread(10);
+        thread.start();
+
+        // Command to start Pure Pursuit
+        Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
     }
 }

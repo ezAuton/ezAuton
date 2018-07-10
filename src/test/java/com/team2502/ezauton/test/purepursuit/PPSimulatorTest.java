@@ -1,8 +1,7 @@
 package com.team2502.ezauton.test.purepursuit;
 
-import com.team2502.ezauton.actuators.IVelocityMotor;
-import com.team2502.ezauton.command.PPCommand;
-import com.team2502.ezauton.command.SimulatorManager;
+import com.team2502.ezauton.actuators.StaticFrictionSimulatedMotor;
+import com.team2502.ezauton.command.*;
 import com.team2502.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.team2502.ezauton.pathplanning.PP_PathGenerator;
 import com.team2502.ezauton.pathplanning.Path;
@@ -14,8 +13,6 @@ import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import com.team2502.ezauton.test.simulator.SimulatedTankRobot;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.ICopyableStopwatch;
-import com.team2502.ezauton.utils.IStopwatch;
-import com.team2502.ezauton.utils.SimulatedStopwatch;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -56,19 +53,25 @@ public class PPSimulatorTest
         ICopyableStopwatch stopwatch = SimulatorManager.getInstance().generateStopwatch();
         SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, WHEEL_SIZE, stopwatch);
 
-        IVelocityMotor leftMotor = robot.getLeftMotor();
-        IVelocityMotor rightMotor = robot.getRightMotor();
+        StaticFrictionSimulatedMotor leftMotor = robot.getLeftMotor();
+        StaticFrictionSimulatedMotor rightMotor = robot.getRightMotor();
 
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftMotor(), robot.getRightMotor(), robot);
         locEstimator.reset();
+
+        BackgroundAction backgroundAction = new BackgroundAction(locEstimator, leftMotor, rightMotor);
+
+        SimulatorManager.getInstance().schedule(backgroundAction, 1);
 
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
 
-        PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable, locEstimator);
+        PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-        SimulatorManager.getInstance().schedule(ppCommand,50);
+        ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::kill));
+
+        SimulatorManager.getInstance().schedule(actionGroup, 50);
         SimulatorManager.getInstance().loopAll(100000);
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();

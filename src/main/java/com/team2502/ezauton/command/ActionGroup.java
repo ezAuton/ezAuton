@@ -2,6 +2,7 @@ package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.utils.IStopwatch;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class ActionGroup implements IAction
 
     public ActionGroup(IAction... actions)
     {
-        this.actions = Arrays.asList(actions);
+        this.actions = new ArrayList<>(Arrays.asList(actions));
     }
 
     @Override

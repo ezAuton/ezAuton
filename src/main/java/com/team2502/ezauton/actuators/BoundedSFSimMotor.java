@@ -1,15 +1,15 @@
 package com.team2502.ezauton.actuators;
 
-import com.team2502.ezauton.utils.IStopwatch;
+import com.team2502.ezauton.utils.ICopyableStopwatch;
 
 public class BoundedSFSimMotor extends StaticFrictionSimulatedMotor
 {
 
     private final double maxVel;
 
-    public BoundedSFSimMotor(IStopwatch stopwatch, double dv, double minVelMove, double maxVel)
+    public BoundedSFSimMotor(ICopyableStopwatch stopwatch, double dvOverdt, double minVelMove, double maxVel)
     {
-        super(stopwatch, dv, minVelMove);
+        super(stopwatch, dvOverdt, minVelMove);
         this.maxVel = maxVel;
     }
 

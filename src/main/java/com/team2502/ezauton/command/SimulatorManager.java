@@ -2,7 +2,6 @@ package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.localization.Updateable;
 import com.team2502.ezauton.utils.ICopyableStopwatch;
-import com.team2502.ezauton.utils.IStopwatch;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 
 import java.util.HashSet;
@@ -13,10 +12,9 @@ public class SimulatorManager
 {
 
     private static SimulatorManager instance;
+    Set<ScheduledAction> scheduledActions = new HashSet<>();
     private SimulatedStopwatch masterStopwatch = new SimulatedStopwatch(0.001);
     private int count = 0;
-
-    Set<ScheduledAction> scheduledActions = new HashSet<>();
 
     public static SimulatorManager getInstance()
     {
@@ -38,12 +36,11 @@ public class SimulatorManager
     public void schedule(IAction action, int millisRepeat)
     {
         SimulatedStopwatch stopwatch = new SimulatedStopwatch(millisRepeat * 1E-3);
-        scheduledActions.add(new ScheduledAction(action,millisRepeat,stopwatch));
+        scheduledActions.add(new ScheduledAction(action, millisRepeat, stopwatch));
         action.init(stopwatch);
     }
 
     /**
-     *
      * @param timeout Max millis
      */
     public void loopAll(int timeout)
