@@ -100,11 +100,11 @@ public class PPExamples
         // From 0% to 100%. This smooth transition between voltage allows for easier localization as the relationship between voltage and velocity is predictable (and linear for most FRC motors)
         BaseSimulatedMotor leftMotorBase = new BaseSimulatedMotor(new RealStopwatch());
         RampUpVelocityProcessor leftRampUpMotor = new RampUpVelocityProcessor(leftMotorBase, new RealStopwatch(), maxAccelPerSecond);
-        BoundedVelocityProcessor leftMotor = new BoundedVelocityProcessor(leftRampUpMotor,maxRobotSpeed);
+        BoundedVelocityProcessor leftMotor = new BoundedVelocityProcessor(leftRampUpMotor, maxRobotSpeed);
 
         BaseSimulatedMotor rightMotorBase = new BaseSimulatedMotor(new RealStopwatch());
         RampUpVelocityProcessor rightRampUpMotor = new RampUpVelocityProcessor(rightMotorBase, new RealStopwatch(), maxAccelPerSecond);
-        BoundedVelocityProcessor rightMotor = new BoundedVelocityProcessor(rightRampUpMotor,maxRobotSpeed);
+        BoundedVelocityProcessor rightMotor = new BoundedVelocityProcessor(rightRampUpMotor, maxRobotSpeed);
 
         ITankRobotConstants constants = () -> 5;
 

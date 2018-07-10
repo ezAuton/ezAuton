@@ -27,11 +27,10 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
     private UpdateableGroup toUpdate = new UpdateableGroup();
 
     /**
-     *
      * @param lateralWheelDistance The lateral wheel distance between the wheels of the robot
-     * @param stopwatch The stopwatch that the simulated tank robot is using
-     * @param maxAccel The max acceleration of the motors
-     * @param minVel The minimum velocity the robot can continuously drive at (i.e. the robot cannot drive at 0.0001 ft/s)
+     * @param stopwatch            The stopwatch that the simulated tank robot is using
+     * @param maxAccel             The max acceleration of the motors
+     * @param minVel               The minimum velocity the robot can continuously drive at (i.e. the robot cannot drive at 0.0001 ft/s)
      */
     public SimulatedTankRobot(double lateralWheelDistance, ICopyableStopwatch stopwatch, double maxAccel, double minVel, double maxVel)
     {
@@ -39,7 +38,7 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
         this.leftMotor = buildMotor(baseLeftSimulatedMotor, stopwatch, maxAccel, minVel, maxVel);
 
         baseRightSimulatedMotor = new BaseSimulatedMotor(stopwatch.copy());
-        this.rightMotor = buildMotor(baseRightSimulatedMotor,stopwatch,maxAccel,minVel,maxVel);
+        this.rightMotor = buildMotor(baseRightSimulatedMotor, stopwatch, maxAccel, minVel, maxVel);
 
         this.lateralWheelDistance = lateralWheelDistance;
 

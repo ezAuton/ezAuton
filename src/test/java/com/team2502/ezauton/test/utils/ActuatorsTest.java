@@ -18,24 +18,24 @@ public class ActuatorsTest
         IVelocityMotor velocityMotor = Actuators.roughConvertVoltageToVel(voltageMotor, 16);
 
         velocityMotor.runVelocity(16);
-        assertEquals(1D,atomicDouble.doubleValue(),1E-6);
+        assertEquals(1D, atomicDouble.doubleValue(), 1E-6);
 
         velocityMotor.runVelocity(20);
-        assertEquals(1D,atomicDouble.doubleValue(),1E-6);
+        assertEquals(1D, atomicDouble.doubleValue(), 1E-6);
 
         velocityMotor.runVelocity(8);
-        assertEquals(0.5D,atomicDouble.doubleValue(),1E-6);
+        assertEquals(0.5D, atomicDouble.doubleValue(), 1E-6);
 
         velocityMotor.runVelocity(0);
-        assertEquals(0,atomicDouble.doubleValue(),1E-6);
+        assertEquals(0, atomicDouble.doubleValue(), 1E-6);
 
         velocityMotor.runVelocity(-8);
-        assertEquals(-0.5D,atomicDouble.doubleValue(),1E-6);
+        assertEquals(-0.5D, atomicDouble.doubleValue(), 1E-6);
 
         velocityMotor.runVelocity(-16);
-        assertEquals(-1D,atomicDouble.doubleValue(),1E-6);
+        assertEquals(-1D, atomicDouble.doubleValue(), 1E-6);
 
         velocityMotor.runVelocity(-20);
-        assertEquals(-1D,atomicDouble.doubleValue(),1E-6);
+        assertEquals(-1D, atomicDouble.doubleValue(), 1E-6);
     }
 }
