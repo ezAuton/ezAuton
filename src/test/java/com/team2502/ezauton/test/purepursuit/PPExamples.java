@@ -2,6 +2,7 @@ package com.team2502.ezauton.test.purepursuit;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team2502.ezauton.actuators.Actuators;
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.actuators.implementations.BaseSimulatedMotor;
 import com.team2502.ezauton.actuators.implementations.BoundedVelocityProcessor;
@@ -96,13 +97,18 @@ public class PPExamples
         // get accurate localization
         double maxAccelPerSecond = 3D;
 
-        // These RampUpSimulatedMotors provide a ramp up when setting a voltage. For example, if you immediately want 100% voltage the motor will actually slowly be set
-        // From 0% to 100%. This smooth transition between voltage allows for easier localization as the relationship between voltage and velocity is predictable (and linear for most FRC motors)
+        IVelocityMotor left = Actuators.roughConvertVoltageToVel(targetVoltage -> leftTalon.set(ControlMode.PercentOutput, targetVoltage), 16);
+        IVelocityMotor right = Actuators.roughConvertVoltageToVel(targetVoltage -> leftTalon.set(ControlMode.PercentOutput, targetVoltage), 16);
+
         BaseSimulatedMotor leftMotorBase = new BaseSimulatedMotor(new RealStopwatch());
+        leftMotorBase.setSubscribed(left);
+
         RampUpVelocityProcessor leftRampUpMotor = new RampUpVelocityProcessor(leftMotorBase, new RealStopwatch(), maxAccelPerSecond);
         BoundedVelocityProcessor leftMotor = new BoundedVelocityProcessor(leftRampUpMotor, maxRobotSpeed);
 
         BaseSimulatedMotor rightMotorBase = new BaseSimulatedMotor(new RealStopwatch());
+        rightMotorBase.setSubscribed(right);
+
         RampUpVelocityProcessor rightRampUpMotor = new RampUpVelocityProcessor(rightMotorBase, new RealStopwatch(), maxAccelPerSecond);
         BoundedVelocityProcessor rightMotor = new BoundedVelocityProcessor(rightRampUpMotor, maxRobotSpeed);
 
