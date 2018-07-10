@@ -4,12 +4,15 @@ import com.google.common.util.concurrent.AtomicDouble;
 import com.team2502.ezauton.actuators.Actuators;
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.actuators.IVoltageMotor;
+import com.team2502.ezauton.actuators.implementations.BaseSimulatedMotor;
 import com.team2502.ezauton.actuators.implementations.BoundedVelocityProcessor;
 import com.team2502.ezauton.actuators.implementations.RampUpVelocityProcessor;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class ActuatorsTest
 {
@@ -106,5 +109,44 @@ public class ActuatorsTest
         velocityProcessor.runVelocity(18);
         assertEquals(16, velocity.doubleValue(), 1E-6);
 
+    }
+
+    @Test
+    public void testBaseSimulatedMotor()
+    {
+        AtomicDouble velocity = new AtomicDouble();
+        IVelocityMotor velocityMotor = velocity::set;
+
+        SimulatedStopwatch stopwatch = new SimulatedStopwatch(1);
+        BaseSimulatedMotor simulatedMotor = new BaseSimulatedMotor(stopwatch);
+
+        simulatedMotor.runVelocity(1);
+        stopwatch.progress(1);
+
+        assertEquals(1,simulatedMotor.getPosition(),1E-6);
+        assertEquals(1,simulatedMotor.getVelocity(),1E-6);
+
+        stopwatch.progress(1);
+
+        assertEquals(2,simulatedMotor.getPosition(),1E-6);
+        assertEquals(1,simulatedMotor.getVelocity(),1E-6);
+
+        simulatedMotor.runVelocity(2);
+
+        stopwatch.progress(1);
+
+        assertEquals(4,simulatedMotor.getPosition(),1E-6);
+
+        simulatedMotor.runVelocity(3);
+
+        stopwatch.progress(1);
+
+        assertEquals(7,simulatedMotor.getPosition(),1E-6);
+
+        simulatedMotor.setSubscribed(velocityMotor);
+        simulatedMotor.runVelocity(2);
+
+        assertEquals(2,velocity.doubleValue(),1E-6);
+        assertSame(velocityMotor,simulatedMotor.getSubscribed());
     }
 }
