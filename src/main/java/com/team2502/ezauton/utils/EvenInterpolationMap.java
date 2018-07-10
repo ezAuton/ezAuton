@@ -21,10 +21,11 @@ public class EvenInterpolationMap extends InterpolationMap
     @Override
     public void putAll(Map<? extends Double, ? extends Double> m)
     {
-        if(!MathUtils.Algebra.hasEvenSymmetry(m))
+        if(m == null)
         {
-            throw new IllegalArgumentException("Map must be even!");
+            return;
         }
+        m.forEach(this::put);
     }
 
     @Override
