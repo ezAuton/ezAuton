@@ -2,7 +2,7 @@ package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.localization.Updateable;
 
-public class BackgroundAction implements IAction
+public class BackgroundAction extends BaseAction
 {
 
     private final Updateable[] updateables;

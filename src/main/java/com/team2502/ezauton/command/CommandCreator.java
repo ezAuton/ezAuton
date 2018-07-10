@@ -4,35 +4,38 @@ import com.team2502.ezauton.utils.RealStopwatch;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Creates a command from an {@link IAction}. This allows for abstraction and use of commands in simulators.
+ * Creates a command from an {@link BaseAction}. This allows for abstraction and use of commands in simulators.
  */
 public class CommandCreator extends Command
 {
 
-    private final IAction iCommand;
-    private final RealStopwatch stopwatch;
+    private final BaseAction action;
 
-    public CommandCreator(IAction iCommand)
+    public CommandCreator(BaseAction action)
     {
-        this.iCommand = iCommand;
-        stopwatch = new RealStopwatch();
+        this.action = action;
     }
 
     @Override
     protected void initialize()
     {
-        iCommand.init(stopwatch);
+        action.init(new RealStopwatch());
     }
 
     @Override
     protected void execute()
     {
-        iCommand.execute();
+        action.execute();
     }
 
     @Override
     protected boolean isFinished()
     {
-        return iCommand.isFinished();
+        boolean finished = action.isFinished();
+        if(finished)
+        {
+            action.getRunnables().forEach(Runnable::run);
+        }
+        return finished;
     }
 }

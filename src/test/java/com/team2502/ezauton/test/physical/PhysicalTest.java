@@ -2,10 +2,7 @@ package com.team2502.ezauton.test.physical;
 
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.actuators.IVoltageMotor;
-import com.team2502.ezauton.command.ActionGroup;
-import com.team2502.ezauton.command.IAction;
-import com.team2502.ezauton.command.InstantAction;
-import com.team2502.ezauton.command.TimedAction;
+import com.team2502.ezauton.command.*;
 import com.team2502.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.team2502.ezauton.localization.sensors.ITranslationalDistanceSensor;
 
@@ -75,22 +72,8 @@ public class PhysicalTest
         IAction action = testStraightVoltage(leftMotor, rightMotor, voltage);
         TankRobotEncoderEncoderEstimator localizer = new TankRobotEncoderEncoderEstimator(left, right, () -> lateralWheelDistance);
         localizer.reset();
-        IAction mainAction = action.addSubAction(new IAction()
-        {
-
-            @Override
-            public void execute()
-            {
-                localizer.update();
-            }
-
-            @Override
-            public boolean isFinished()
-            {
-                return false;
-            }
-        }, false);
-
-        return new ActionGroup(mainAction, new InstantAction(() -> System.out.println(localizer.estimateLocation())));
+        return new ActionGroup().with(new BackgroundAction(localizer::update))
+                                .addSequential(action)
+                                .addSequential(new InstantAction(() -> System.out.println(localizer.estimateLocation())));
     }
 }

@@ -12,7 +12,7 @@ public class SimulatorManager
 {
 
     private static SimulatorManager instance;
-    Set<ScheduledAction> scheduledActions = new HashSet<>();
+    private Set<ScheduledAction> scheduledActions = new HashSet<>();
     private SimulatedStopwatch masterStopwatch = new SimulatedStopwatch(0.001);
     private long count = 0;
 
@@ -26,6 +26,11 @@ public class SimulatorManager
         return instance;
     }
 
+    public void remove(BaseAction baseAction)
+    {
+        scheduledActions.remove(baseAction);
+    }
+
     public ICopyableStopwatch generateStopwatch()
     {
         SimulatedStopwatch copy = masterStopwatch.copy();
@@ -33,7 +38,7 @@ public class SimulatorManager
         return copy;
     }
 
-    public void schedule(IAction action, int millisPeriod)
+    public void schedule(BaseAction action, long millisPeriod)
     {
         SimulatedStopwatch stopwatch = new SimulatedStopwatch(millisPeriod * 1E-3);
         scheduledActions.add(new ScheduledAction(action, millisPeriod, stopwatch));
@@ -63,13 +68,14 @@ public class SimulatorManager
             if(next.count++ % next.period == 0)
             {
                 next.simulatedStopwatch.progress();
-                IAction action = next.action;
+                BaseAction action = next.action;
                 if(!action.isFinished())
                 {
                     action.execute();
                 }
                 else
                 {
+                    action.getRunnables().forEach(Runnable::run);
                     iterator.remove();
                 }
             }
@@ -79,12 +85,12 @@ public class SimulatorManager
     private static class ScheduledAction implements Updateable
     {
 
-        private final IAction action;
-        private final int period;
+        private final BaseAction action;
+        private final long period;
         private final SimulatedStopwatch simulatedStopwatch;
         private int count = 0;
 
-        ScheduledAction(IAction action, int period, SimulatedStopwatch simulatedStopwatch)
+        ScheduledAction(BaseAction action, long period, SimulatedStopwatch simulatedStopwatch)
         {
             this.action = action;
             this.period = period;

@@ -1,6 +1,6 @@
 package com.team2502.ezauton.command;
 
-public class InstantAction implements IAction
+public class InstantAction extends BaseAction
 {
 
     private final Runnable runnable;

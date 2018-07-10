@@ -20,7 +20,6 @@ public class PPSimulatorTest
 {
 
     private static final double LATERAL_WHEEL_DIST = 4;
-    private static final double WHEEL_SIZE = 0.5;
 
     @Test
     public void testStraight()
@@ -73,7 +72,7 @@ public class PPSimulatorTest
         // Run the ppCommand and then kill the background task as it is no longer needed
         ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::kill));
 
-        SimulatorManager.getInstance().schedule(actionGroup, 50);
+        actionGroup.simulate(50);
 
         // run the simulator with a timeout of 100000 milliseconds (100 seconds)
         SimulatorManager.getInstance().run(100000);

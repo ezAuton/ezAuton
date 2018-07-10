@@ -1,54 +1,247 @@
 package com.team2502.ezauton.command;
 
-import com.team2502.ezauton.utils.IStopwatch;
+import com.team2502.ezauton.utils.ICopyableStopwatch;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class ActionGroup implements IAction
 {
-    List<IAction> actions;
-    private IStopwatch stopwatch;
+    private List<ActionWrapper> scheduledActions;
+    private List<Runnable> onFinish = new ArrayList<>();
 
+    private IAction lastSimulated;
+
+    private ICopyableStopwatch stopwatch;
+
+    /**
+     * Creates an ActionGroup comprised of sequential commands
+     * @param actions
+     */
     public ActionGroup(IAction... actions)
     {
-        this.actions = new ArrayList<>(Arrays.asList(actions));
-    }
-
-    @Override
-    public void init(IStopwatch stopwatch)
-    {
-        this.stopwatch = stopwatch;
-        if(!actions.isEmpty())
+        this.scheduledActions = new ArrayList<>();
+        for(IAction action : actions)
         {
-            stopwatch.reset();
-            actions.get(0).init(stopwatch);
+            this.scheduledActions.add(new ActionWrapper(action, Type.SEQUENTIAL));
         }
     }
 
-    @Override
-    public void execute()
+    public ActionGroup(List<ActionWrapper> scheduledActions)
     {
-        IAction action = actions.get(0);
-        if(!action.isFinished())
+        this.scheduledActions = scheduledActions;
+    }
+
+    public ActionGroup addSequential(IAction action)
+    {
+        this.scheduledActions.add(new ActionWrapper(action, Type.SEQUENTIAL));
+        return this;
+    }
+
+    public ActionGroup with(IAction action)
+    {
+        this.scheduledActions.add(new ActionWrapper(action, Type.WITH));
+        return this;
+    }
+
+    public ActionGroup addParallel(IAction action)
+    {
+        this.scheduledActions.add(new ActionWrapper(action, Type.PARALLEL));
+        return this;
+    }
+
+    @Override
+    public Command buildWPI()
+    {
+        CommandGroup commandGroup = new CommandGroup();
+        List<Command> withCommands = new ArrayList<>();
+
+        for(ActionWrapper scheduledAction : scheduledActions)
         {
-            action.execute();
-        }
-        else
-        {
-            actions.remove(0);
-            if(!actions.isEmpty())
+            IAction action = scheduledAction.getAction();
+            Command command = action.buildWPI();
+            Type type = scheduledAction.getType();
+
+            switch(type)
             {
-                stopwatch.reset();
-                actions.get(0).init(stopwatch);
+                case WITH:
+                    withCommands.add(command);
+                case PARALLEL:
+                    commandGroup.addParallel(command);
+                    break;
+                case SEQUENTIAL:
+                    commandGroup.addSequential(command);
+                    if(!withCommands.isEmpty())
+                    {
+                        InstantAction instantAction = new InstantAction(() -> withCommands.forEach(Command::cancel));
+                        commandGroup.addSequential(instantAction.buildWPI());
+                        withCommands.clear();
+                    }
+                    break;
             }
         }
+        InstantAction instantAction = new InstantAction(() -> onFinish.forEach(Runnable::run));
+        commandGroup.addSequential(instantAction.buildWPI());
+        return commandGroup;
     }
 
     @Override
-    public boolean isFinished()
+    public Thread buildThread(long millisPeriod)
     {
-        return actions.isEmpty();
+        return new Thread(() -> {
+            List<ActionWrapper> scheduledActions = new ArrayList<>(this.scheduledActions);
+            List<Thread> withCommands = new ArrayList<>();
+            while(!scheduledActions.isEmpty() && !Thread.currentThread().isInterrupted())
+            {
+                ActionWrapper currentAction = scheduledActions.get(0);
+
+                boolean broke = false;
+                if(currentAction.type == Type.WITH || currentAction.type == Type.PARALLEL)
+                {
+                    Iterator<ActionWrapper> iterator = scheduledActions.iterator();
+                    whileloop:
+                    while(iterator.hasNext())
+                    {
+                        ActionWrapper next = iterator.next();
+                        switch(next.type)
+                        {
+                            case WITH:
+                            case PARALLEL:
+                                Thread thread = next.getAction().buildThread(millisPeriod);
+                                iterator.remove();
+                                if(next.type == Type.WITH)
+                                {
+                                    withCommands.add(thread);
+                                }
+                                thread.start();
+                                break;
+                            case SEQUENTIAL:
+                                currentAction = next;
+                                broke = true;
+                                withCommands.clear();
+                                break whileloop;
+                        }
+                    }
+                    if(!broke)
+                    {
+                        break;
+                    }
+                }
+
+                Thread thread = currentAction.getAction().buildThread(millisPeriod);
+                thread.start();
+                try
+                {
+                    thread.join();
+                }
+                catch(InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                withCommands.forEach(Thread::interrupt);
+                scheduledActions.remove(0);
+
+                try
+                {
+                    Thread.sleep(millisPeriod);
+                }
+                catch(InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            onFinish.forEach(Runnable::run);
+        });
+
+    }
+
+    @Override
+    public void simulate(long millisPeriod)
+    {
+        List<ActionWrapper> scheduledActions = new ArrayList<>(this.scheduledActions);
+        while(!scheduledActions.isEmpty())
+        {
+            ActionWrapper currentAction = scheduledActions.get(0);
+
+            boolean broke = false;
+            if(currentAction.getType() == Type.PARALLEL)
+            {
+                Iterator<ActionWrapper> iterator = scheduledActions.iterator();
+                whileloop:
+                while(iterator.hasNext())
+                {
+                    ActionWrapper next = iterator.next();
+                    switch(next.type)
+                    {
+                        case PARALLEL:
+                        case WITH:
+                            next.getAction().simulate(millisPeriod);
+                            iterator.remove();
+                            break;
+                        case SEQUENTIAL:
+                            currentAction = next;
+                            broke = true;
+                            break whileloop;
+                    }
+                }
+                if(!broke)
+                {
+                    break;
+                }
+            }
+
+            IAction action = currentAction.getAction();
+            scheduledActions.remove(0);
+            action.onFinish(() -> new ActionGroup(scheduledActions).simulate(millisPeriod));
+            action.simulate(millisPeriod);
+        }
+        onFinish.forEach(Runnable::run);
+    }
+
+    @Override
+    public void removeSimulator()
+    {
+        if(lastSimulated != null)
+        {
+            lastSimulated.removeSimulator();
+        }
+    }
+
+    @Override
+    public void onFinish(Runnable onFinish)
+    {
+        this.onFinish.add(onFinish);
+    }
+
+    private static class ActionWrapper
+    {
+
+        private final Type type;
+        private final IAction action;
+
+        public ActionWrapper(IAction action, Type type)
+        {
+            this.type = type;
+            this.action = action;
+        }
+
+        public Type getType()
+        {
+            return type;
+        }
+
+        public IAction getAction()
+        {
+            return action;
+        }
+    }
+    public enum Type
+    {
+        PARALLEL,
+        SEQUENTIAL,
+        WITH
     }
 }
