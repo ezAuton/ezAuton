@@ -43,43 +43,50 @@ public class PPSimulatorTest
         test(waypoint1, waypoint2, waypoint3);
     }
 
-    private void test(PPWaypoint... waypoints)
-    {
-        PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
-        Path path = pathGenerator.generate(0.05);
+private void test(PPWaypoint... waypoints)
+{
+    PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
+    Path path = pathGenerator.generate(0.05);
 
-        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
+    PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
 
-        ICopyableStopwatch stopwatch = SimulatorManager.getInstance().generateStopwatch();
-        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, WHEEL_SIZE, stopwatch);
+    ICopyableStopwatch stopwatch = SimulatorManager.getInstance().generateStopwatch();
+    SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, stopwatch,14,0.3,16D);
 
-        StaticFrictionSimulatedMotor leftMotor = robot.getLeftMotor();
-        StaticFrictionSimulatedMotor rightMotor = robot.getRightMotor();
+    StaticFrictionSimulatedMotor leftMotor = robot.getLeftMotor();
+    StaticFrictionSimulatedMotor rightMotor = robot.getRightMotor();
 
-        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftMotor(), robot.getRightMotor(), robot);
-        locEstimator.reset();
+    TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftMotor(), robot.getRightMotor(), robot);
+    locEstimator.reset();
 
-        BackgroundAction backgroundAction = new BackgroundAction(locEstimator, leftMotor, rightMotor);
+    // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
+    BackgroundAction backgroundAction = new BackgroundAction(locEstimator, leftMotor, rightMotor);
 
-        SimulatorManager.getInstance().schedule(backgroundAction, 1);
+    SimulatorManager.getInstance().schedule(backgroundAction, 1);
 
-        ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
+    ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
-        TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
+    TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
 
-        PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+    PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-        ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::kill));
+    // Run the ppCommand and then kill the background task as it is no longer needed
+    ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::kill));
 
-        SimulatorManager.getInstance().schedule(actionGroup, 50);
-        SimulatorManager.getInstance().loopAll(100000);
+    SimulatorManager.getInstance().schedule(actionGroup, 50);
 
-        double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
-        Assert.assertEquals(0, leftWheelVelocity, 0.2D);
+    // run the simulator with a timeout of 100000 milliseconds (100 seconds)
+    SimulatorManager.getInstance().run(100000);
 
-        ImmutableVector finalLoc = locEstimator.estimateLocation();
-        approxEqual(waypoints[waypoints.length - 1].getLocation(), finalLoc, 0.2);
-    }
+    double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
+    Assert.assertEquals(0, leftWheelVelocity, 0.2D);
+
+    // The final location after the simulator
+    ImmutableVector finalLoc = locEstimator.estimateLocation();
+
+    // If the final loc is approximately equal to the last waypoint
+    approxEqual(waypoints[waypoints.length - 1].getLocation(), finalLoc, 0.2);
+}
 
     private void approxEqual(ImmutableVector a, ImmutableVector b, double epsilon)
     {

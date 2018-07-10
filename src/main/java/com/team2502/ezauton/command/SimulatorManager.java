@@ -14,7 +14,7 @@ public class SimulatorManager
     private static SimulatorManager instance;
     Set<ScheduledAction> scheduledActions = new HashSet<>();
     private SimulatedStopwatch masterStopwatch = new SimulatedStopwatch(0.001);
-    private int count = 0;
+    private long count = 0;
 
     public static SimulatorManager getInstance()
     {
@@ -33,28 +33,28 @@ public class SimulatorManager
         return copy;
     }
 
-    public void schedule(IAction action, int millisRepeat)
+    public void schedule(IAction action, int millisPeriod)
     {
-        SimulatedStopwatch stopwatch = new SimulatedStopwatch(millisRepeat * 1E-3);
-        scheduledActions.add(new ScheduledAction(action, millisRepeat, stopwatch));
+        SimulatedStopwatch stopwatch = new SimulatedStopwatch(millisPeriod * 1E-3);
+        scheduledActions.add(new ScheduledAction(action, millisPeriod, stopwatch));
         action.init(stopwatch);
     }
 
     /**
-     * @param timeout Max millis
+     * @param timeoutMillis Max millis
      */
-    public void loopAll(int timeout)
+    public void run(long timeoutMillis)
     {
         masterStopwatch.reset();
-        while(!scheduledActions.isEmpty() && count < timeout)
+        while(!scheduledActions.isEmpty() && count < timeoutMillis)
         {
             masterStopwatch.progress();
             count++;
-            loop();
+            runOnce();
         }
     }
 
-    public void loop()
+    public void runOnce()
     {
         Iterator<ScheduledAction> iterator = scheduledActions.iterator();
         while(iterator.hasNext())

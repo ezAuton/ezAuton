@@ -15,11 +15,18 @@ public class SimulatedTankRobot implements ITankRobotConstants
     private final StaticFrictionSimulatedMotor leftMotor;
     private final StaticFrictionSimulatedMotor rightMotor;
 
-    public SimulatedTankRobot(double lateralWheelDistance, double wheelSize, ICopyableStopwatch stopwatch)
+    /**
+     *
+     * @param lateralWheelDistance The lateral wheel distance between the wheels of the robot
+     * @param stopwatch The stopwatch that the simulated tank robot is using
+     * @param maxAccel The max acceleration of the motors
+     * @param minVel The minimum velocity the robot can continuously drive at (i.e. the robot cannot drive at 0.0001 ft/s)
+     */
+    public SimulatedTankRobot(double lateralWheelDistance, ICopyableStopwatch stopwatch, double maxAccel, double minVel, double maxVel)
     {
         // can accelerate 14 ft / s^2
-        leftMotor = new BoundedSFSimMotor(stopwatch.copy(), 14, 0.3, 16);
-        rightMotor = new BoundedSFSimMotor(stopwatch.copy(), 14, 0.3, 16);
+        leftMotor = new BoundedSFSimMotor(stopwatch.copy(), maxAccel, minVel, maxVel);
+        rightMotor = new BoundedSFSimMotor(stopwatch.copy(), maxAccel, minVel, maxVel);
         this.lateralWheelDistance = lateralWheelDistance;
     }
 

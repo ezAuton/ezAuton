@@ -11,7 +11,7 @@ public class SimulatorTest
     public void testStraight()
     {
         SimulatedStopwatch stopwatch = new SimulatedStopwatch(SimulatedTankRobot.NORM_DT);
-        SimulatedTankRobot robot = new SimulatedTankRobot(1, 0.2D, stopwatch);
+        SimulatedTankRobot robot = new SimulatedTankRobot(1, stopwatch,14,0.3,16);
         TankRobotEncoderEncoderEstimator encoderRotationEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftMotor(), robot.getRightMotor(), robot);
         encoderRotationEstimator.reset();
         for(int i = 0; i < 1000; i++)
