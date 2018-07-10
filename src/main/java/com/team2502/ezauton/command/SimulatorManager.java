@@ -13,7 +13,7 @@ public class SimulatorManager
 {
 
     private static SimulatorManager instance;
-    private SimulatedStopwatch masterStopwatch;
+    private SimulatedStopwatch masterStopwatch = new SimulatedStopwatch(0.001);
     private int count = 0;
 
     Set<ScheduledAction> scheduledActions = new HashSet<>();
@@ -24,7 +24,6 @@ public class SimulatorManager
         {
             instance = new SimulatorManager();
         }
-        instance.masterStopwatch = new SimulatedStopwatch(0.001);
 
         return instance;
     }
