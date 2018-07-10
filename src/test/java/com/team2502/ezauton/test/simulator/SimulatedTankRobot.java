@@ -1,19 +1,30 @@
 package com.team2502.ezauton.test.simulator;
 
-import com.team2502.ezauton.actuators.BoundedSFSimMotor;
-import com.team2502.ezauton.actuators.StaticFrictionSimulatedMotor;
+import com.team2502.ezauton.actuators.IVelocityMotor;
+import com.team2502.ezauton.actuators.implementations.BaseSimulatedMotor;
+import com.team2502.ezauton.actuators.implementations.BoundedVelocityProcessor;
+import com.team2502.ezauton.actuators.implementations.RampUpVelocityProcessor;
+import com.team2502.ezauton.actuators.implementations.StaticFrictionVelocityProcessor;
+import com.team2502.ezauton.localization.Updateable;
+import com.team2502.ezauton.localization.UpdateableGroup;
+import com.team2502.ezauton.localization.sensors.ITranslationalDistanceSensor;
 import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.utils.ICopyableStopwatch;
 
-public class SimulatedTankRobot implements ITankRobotConstants
+public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 {
 
     public static final double NORM_DT = 0.02D;
 
     private final double lateralWheelDistance;
 
-    private final StaticFrictionSimulatedMotor leftMotor;
-    private final StaticFrictionSimulatedMotor rightMotor;
+    private final IVelocityMotor leftMotor;
+    private final IVelocityMotor rightMotor;
+
+    private final BaseSimulatedMotor baseLeftSimulatedMotor;
+    private final BaseSimulatedMotor baseRightSimulatedMotor;
+
+    private UpdateableGroup toUpdate = new UpdateableGroup();
 
     /**
      *
@@ -24,18 +35,22 @@ public class SimulatedTankRobot implements ITankRobotConstants
      */
     public SimulatedTankRobot(double lateralWheelDistance, ICopyableStopwatch stopwatch, double maxAccel, double minVel, double maxVel)
     {
-        // can accelerate 14 ft / s^2
-        leftMotor = new BoundedSFSimMotor(stopwatch.copy(), maxAccel, minVel, maxVel);
-        rightMotor = new BoundedSFSimMotor(stopwatch.copy(), maxAccel, minVel, maxVel);
+        baseLeftSimulatedMotor = new BaseSimulatedMotor(stopwatch.copy());
+        this.leftMotor = buildMotor(baseLeftSimulatedMotor, stopwatch, maxAccel, minVel, maxVel);
+
+        baseRightSimulatedMotor = new BaseSimulatedMotor(stopwatch.copy());
+        this.rightMotor = buildMotor(baseRightSimulatedMotor,stopwatch,maxAccel,minVel,maxVel);
+
         this.lateralWheelDistance = lateralWheelDistance;
+
     }
 
-    public StaticFrictionSimulatedMotor getLeftMotor()
+    public IVelocityMotor getLeftMotor()
     {
         return leftMotor;
     }
 
-    public StaticFrictionSimulatedMotor getRightMotor()
+    public IVelocityMotor getRightMotor()
     {
         return rightMotor;
     }
@@ -46,8 +61,34 @@ public class SimulatedTankRobot implements ITankRobotConstants
         rightMotor.runVelocity(right);
     }
 
+    private IVelocityMotor buildMotor(BaseSimulatedMotor baseSimulatedMotor, ICopyableStopwatch stopwatch, double maxAccel, double minVel, double maxVel)
+    {
+        RampUpVelocityProcessor leftRampUpMotor = new RampUpVelocityProcessor(baseSimulatedMotor, stopwatch.copy(), maxAccel);
+        toUpdate.add(leftRampUpMotor);
+
+        StaticFrictionVelocityProcessor leftSF = new StaticFrictionVelocityProcessor(baseSimulatedMotor, leftRampUpMotor, minVel);
+        return new BoundedVelocityProcessor(leftSF, maxVel);
+    }
+
+    public ITranslationalDistanceSensor getLeftDistanceSensor()
+    {
+        return baseLeftSimulatedMotor;
+    }
+
+    public ITranslationalDistanceSensor getRightDistanceSensor()
+    {
+        return baseRightSimulatedMotor;
+    }
+
     public double getLateralWheelDistance()
     {
         return lateralWheelDistance;
+    }
+
+    @Override
+    public boolean update()
+    {
+        toUpdate.update();
+        return true;
     }
 }

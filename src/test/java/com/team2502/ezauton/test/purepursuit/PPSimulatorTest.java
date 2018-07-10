@@ -1,6 +1,7 @@
 package com.team2502.ezauton.test.purepursuit;
 
-import com.team2502.ezauton.actuators.StaticFrictionSimulatedMotor;
+import com.team2502.ezauton.actuators.IVelocityMotor;
+import com.team2502.ezauton.actuators.implementations.StaticFrictionVelocityProcessor;
 import com.team2502.ezauton.command.*;
 import com.team2502.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.team2502.ezauton.pathplanning.PP_PathGenerator;
@@ -53,14 +54,14 @@ private void test(PPWaypoint... waypoints)
     ICopyableStopwatch stopwatch = SimulatorManager.getInstance().generateStopwatch();
     SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, stopwatch,14,0.3,16D);
 
-    StaticFrictionSimulatedMotor leftMotor = robot.getLeftMotor();
-    StaticFrictionSimulatedMotor rightMotor = robot.getRightMotor();
+    IVelocityMotor leftMotor = robot.getLeftMotor();
+    IVelocityMotor rightMotor = robot.getRightMotor();
 
-    TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftMotor(), robot.getRightMotor(), robot);
+    TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftDistanceSensor(), robot.getRightDistanceSensor(), robot);
     locEstimator.reset();
 
     // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-    BackgroundAction backgroundAction = new BackgroundAction(locEstimator, leftMotor, rightMotor);
+    BackgroundAction backgroundAction = new BackgroundAction(locEstimator, robot);
 
     SimulatorManager.getInstance().schedule(backgroundAction, 1);
 

@@ -1,13 +1,27 @@
 package com.team2502.ezauton.localization;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class UpdateableGroup implements Updateable
 {
 
-    private final Updateable[] updateables;
+    private final List<Updateable> updateables;
 
     public UpdateableGroup(Updateable... updateables)
     {
-        this.updateables = updateables;
+        this.updateables = new ArrayList<>(Arrays.asList(updateables));
+    }
+
+    public void add(Updateable updateable)
+    {
+        updateables.add(updateable);
+    }
+
+    public void remove(Updateable updateable)
+    {
+        updateables.remove(updateable);
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.team2502.ezauton.test.simulator;
 
-import com.team2502.ezauton.actuators.InstantSimulatedMotor;
+import com.team2502.ezauton.actuators.implementations.BaseSimulatedMotor;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,7 +11,7 @@ public class SimulatedMotorTest
     public void testMotor()
     {
         SimulatedStopwatch stopwatch = new SimulatedStopwatch(1);
-        InstantSimulatedMotor motor = new InstantSimulatedMotor(stopwatch);
+        BaseSimulatedMotor motor = new BaseSimulatedMotor(stopwatch);
 
         Assert.assertEquals(0, motor.getPosition(), 1E-6);
         motor.runVelocity(1);

@@ -3,7 +3,9 @@ package com.team2502.ezauton.test.purepursuit;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2502.ezauton.actuators.IVelocityMotor;
-import com.team2502.ezauton.actuators.RampUpSimulatedMotor;
+import com.team2502.ezauton.actuators.implementations.BaseSimulatedMotor;
+import com.team2502.ezauton.actuators.implementations.BoundedVelocityProcessor;
+import com.team2502.ezauton.actuators.implementations.RampUpVelocityProcessor;
 import com.team2502.ezauton.command.BackgroundAction;
 import com.team2502.ezauton.command.PPCommand;
 import com.team2502.ezauton.helper.Paths;
@@ -19,6 +21,7 @@ import com.team2502.ezauton.pathplanning.purepursuit.PPWaypoint;
 import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
+import com.team2502.ezauton.utils.RealStopwatch;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class PPExamples
@@ -95,22 +98,28 @@ public class PPExamples
 
         // These RampUpSimulatedMotors provide a ramp up when setting a voltage. For example, if you immediately want 100% voltage the motor will actually slowly be set
         // From 0% to 100%. This smooth transition between voltage allows for easier localization as the relationship between voltage and velocity is predictable (and linear for most FRC motors)
-        RampUpSimulatedMotor leftMotor = RampUpSimulatedMotor.fromVolt(voltage -> leftTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPerSecond);
-        RampUpSimulatedMotor rightMotor = RampUpSimulatedMotor.fromVolt(voltage -> rightTalon.set(ControlMode.PercentOutput, voltage), maxRobotSpeed, maxAccelPerSecond);
+        BaseSimulatedMotor leftMotorBase = new BaseSimulatedMotor(new RealStopwatch());
+        RampUpVelocityProcessor leftRampUpMotor = new RampUpVelocityProcessor(leftMotorBase, new RealStopwatch(), maxAccelPerSecond);
+        BoundedVelocityProcessor leftMotor = new BoundedVelocityProcessor(leftRampUpMotor,maxRobotSpeed);
+
+        BaseSimulatedMotor rightMotorBase = new BaseSimulatedMotor(new RealStopwatch());
+        RampUpVelocityProcessor rightRampUpMotor = new RampUpVelocityProcessor(rightMotorBase, new RealStopwatch(), maxAccelPerSecond);
+        BoundedVelocityProcessor rightMotor = new BoundedVelocityProcessor(rightRampUpMotor,maxRobotSpeed);
 
         ITankRobotConstants constants = () -> 5;
 
-        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(leftMotor, rightMotor, constants);
+        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(leftMotorBase, rightMotorBase, constants);
 
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, constants);
 
         // Background task to update location and percent voltage applied to motors. Will run every 10ms.
-        Thread thread = new BackgroundAction(locEstimator, leftMotor, rightMotor).buildThread(10);
+        Thread thread = new BackgroundAction(locEstimator, leftRampUpMotor, rightRampUpMotor).buildThread(10);
         thread.start();
 
         // Command to start Pure Pursuit
         Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
     }
+
 }
