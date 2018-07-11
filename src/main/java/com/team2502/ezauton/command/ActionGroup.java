@@ -122,7 +122,6 @@ public class ActionGroup implements IAction
                             case SEQUENTIAL:
                                 currentAction = next;
                                 broke = true;
-                                withCommands.clear();
                                 break whileloop;
                         }
                     }
@@ -143,6 +142,7 @@ public class ActionGroup implements IAction
                     e.printStackTrace();
                 }
                 withCommands.forEach(Thread::interrupt);
+                withCommands.clear();
                 scheduledActions.remove(0);
 
                 try
@@ -165,7 +165,6 @@ public class ActionGroup implements IAction
         List<ActionWrapper> scheduledActions = new ArrayList<>(this.scheduledActions);
         ActionWrapper currentAction = scheduledActions.get(0);
 
-        boolean broke = false;
         Type type = currentAction.getType();
         ifblock:
         if(type == Type.PARALLEL || type == Type.WITH)
@@ -194,7 +193,8 @@ public class ActionGroup implements IAction
         scheduledActions.remove(0);
         if(!scheduledActions.isEmpty())
         {
-            action.onFinish(() -> new ActionGroup(scheduledActions).simulate(millisPeriod));
+            Runnable runnable = () -> new ActionGroup(scheduledActions).simulate(millisPeriod);
+            action.onFinish(runnable);
         }
         else
         {

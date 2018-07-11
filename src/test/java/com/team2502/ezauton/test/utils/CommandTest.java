@@ -47,12 +47,15 @@ public class CommandTest
         timedAction1.onFinish(() -> count.compareAndSet(3, 4));
 
         TimedAction timedAction2 = new TimedAction(3);
-        timedAction2.onFinish(count::incrementAndGet);
+        timedAction2.onFinish(()-> count.addAndGet(3));
+
+        TimedAction timedAction3 = new TimedAction(3);
+        timedAction3.onFinish(()-> count.addAndGet(3));
 
         ActionGroup actionGroup = new ActionGroup()
                 .addParallel(timedAction1)
                 .addSequential(timedAction2)
-                .addParallel(timedAction2);
+                .addParallel(timedAction3);
 
         actionGroup.simulate(20);
         SimulatorManager.getInstance().run(100_000);

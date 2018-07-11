@@ -49,7 +49,7 @@ public class BasicStopwatchTest
             {
                 e.printStackTrace();
             }
-            assertEquals(1, stopwatch.pop(), 5E-3); // Delta of 10 ms
+            assertEquals(1, stopwatch.pop(), 10E-3); // Delta of 10 ms
             assertEquals(0, stopwatch.read(), 1E-3); // Delta of 1 ms
         }).start();
     }

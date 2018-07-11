@@ -1,5 +1,6 @@
 package com.team2502.ezauton.command;
 
+import com.sun.corba.se.spi.orbutil.fsm.ActionBase;
 import com.team2502.ezauton.localization.Updateable;
 import com.team2502.ezauton.utils.ICopyableStopwatch;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
@@ -87,6 +88,11 @@ public class SimulatorManager
             }
         }
         finished.forEach(action -> action.getRunnables().forEach(Runnable::run));
+    }
+
+    protected void runOnceOnRemove(ActionBase actionBase, Runnable runnable)
+    {
+
     }
 
     public long getCount()

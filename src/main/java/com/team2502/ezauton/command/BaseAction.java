@@ -10,6 +10,7 @@ import java.util.List;
 public abstract class BaseAction implements IAction
 {
 
+    private boolean used = false;
     private ICopyableStopwatch stopwatch;
     private List<Runnable> runnables = new ArrayList<>();
 
@@ -33,6 +34,11 @@ public abstract class BaseAction implements IAction
     @Override
     public Command buildWPI()
     {
+        if(used)
+        {
+            throw new RuntimeException("Action already used!");
+        }
+        used = true;
         return new CommandCreator(this);
     }
 
@@ -47,6 +53,11 @@ public abstract class BaseAction implements IAction
     @Override
     public Thread buildThread(long millisPeriod)
     {
+        if(used)
+        {
+            throw new RuntimeException("Action already used!");
+        }
+        used = true;
         return new Thread(() -> {
             RealStopwatch stopwatch = new RealStopwatch();
             init(stopwatch);
@@ -75,6 +86,11 @@ public abstract class BaseAction implements IAction
     @Override
     public void simulate(long millisPeriod)
     {
+        if(used)
+        {
+            throw new RuntimeException("Action already used!");
+        }
+        used = true;
         SimulatorManager.getInstance().schedule(this, millisPeriod);
     }
 
@@ -83,4 +99,5 @@ public abstract class BaseAction implements IAction
     {
         SimulatorManager.getInstance().remove(this);
     }
+
 }
