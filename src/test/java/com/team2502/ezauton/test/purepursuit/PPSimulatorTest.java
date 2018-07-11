@@ -47,7 +47,7 @@ public class PPSimulatorTest
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
         Path path = pathGenerator.generate(0.05);
 
-        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
+        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
         ICopyableStopwatch stopwatch = SimulatorManager.getInstance().generateStopwatch();
         SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, stopwatch, 14, 0.3, 16D);
