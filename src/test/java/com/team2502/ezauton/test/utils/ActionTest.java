@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 
-public class CommandTest
+public class ActionTest
 {
     @Test
     public void testTimedAction()
@@ -67,19 +67,19 @@ public class CommandTest
     {
 
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        BaseAction timedAction1 = new TimedAction(5);
-        BaseAction timedAction2 = new TimedAction(10);
-        BaseAction timedAction3 = new TimedAction(7).onFinish(() -> {
-            if(!SimulatorManager.getInstance().remove(timedAction2))
+        BaseAction five = new TimedAction(5);
+        BaseAction ten = new TimedAction(10);
+        BaseAction seven = new TimedAction(7).onFinish(() -> {
+            if(!SimulatorManager.getInstance().remove(ten))
             {
                 atomicInteger.compareAndSet(0, 2);
             }
         });
 
         ActionGroup actionGroup = new ActionGroup()
-                .with(timedAction2)
-                .addParallel(timedAction3)
-                .addSequential(timedAction1);
+                .with(ten)
+                .addParallel(seven)
+                .addSequential(five);
 
         actionGroup.simulate(20);
         SimulatorManager.getInstance().run(100_000);
