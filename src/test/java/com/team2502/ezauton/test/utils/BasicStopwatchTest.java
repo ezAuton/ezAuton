@@ -23,7 +23,7 @@ public class BasicStopwatchTest
             {
                 e.printStackTrace();
             }
-            assertEquals(1000, stopwatch.read(), 7); // Delta of 5 ms
+            assertEquals(1, stopwatch.read(), 7E-3); // Delta of 5 ms
             try
             {
                 Thread.sleep(1000);
@@ -32,7 +32,7 @@ public class BasicStopwatchTest
             {
                 e.printStackTrace();
             }
-            assertEquals(2000, stopwatch.read(), 14); // Delta of 10 ms
+            assertEquals(2, stopwatch.read(), 14E-3); // Delta of 10 ms
         }).start();
     }
 
@@ -49,8 +49,8 @@ public class BasicStopwatchTest
             {
                 e.printStackTrace();
             }
-            assertEquals(1000, stopwatch.pop(), 5); // Delta of 10 ms
-            assertEquals(0, stopwatch.read(), 1); // Delta of 1 ms
+            assertEquals(1, stopwatch.pop(), 5E-3); // Delta of 10 ms
+            assertEquals(0, stopwatch.read(), 1E-3); // Delta of 1 ms
         }).start();
     }
 

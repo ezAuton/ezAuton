@@ -41,6 +41,7 @@ public class SimulatorManager
     public void schedule(BaseAction action, long millisPeriod)
     {
         SimulatedStopwatch stopwatch = new SimulatedStopwatch(millisPeriod * 1E-3);
+        stopwatch.reset();
         scheduledActions.add(new ScheduledAction(action, millisPeriod, stopwatch));
         action.init(stopwatch);
     }
@@ -51,8 +52,12 @@ public class SimulatorManager
     public void run(long timeoutMillis)
     {
         masterStopwatch.reset();
-        while(!scheduledActions.isEmpty() && count < timeoutMillis)
+        while(!scheduledActions.isEmpty())
         {
+            if(count > timeoutMillis)
+            {
+                throw new RuntimeException("Hit timeout!");
+            }
             masterStopwatch.progress();
             count++;
             runOnce();

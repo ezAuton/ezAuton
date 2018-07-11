@@ -2,7 +2,7 @@ package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.utils.ICopyableStopwatch;
 
-public abstract class TimedAction extends BaseAction
+public class TimedAction extends BaseAction
 {
 
     private final double time;
@@ -22,6 +22,7 @@ public abstract class TimedAction extends BaseAction
     @Override
     public boolean isFinished()
     {
-        return stopwatch.read() > time;
+        double read = stopwatch.read();
+        return read > time;
     }
 }

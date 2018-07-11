@@ -23,10 +23,7 @@ public abstract class BaseAction implements IAction
         return stopwatch;
     }
 
-    protected void execute()
-    {
-
-    }
+    protected void execute() {}
 
     protected abstract boolean isFinished();
 
@@ -78,7 +75,7 @@ public abstract class BaseAction implements IAction
     @Override
     public void simulate(long millisPeriod)
     {
-        SimulatorManager.getInstance().schedule(this,millisPeriod);
+        SimulatorManager.getInstance().schedule(this, millisPeriod);
     }
 
     @Override

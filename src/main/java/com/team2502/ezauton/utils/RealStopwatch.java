@@ -18,7 +18,7 @@ public class RealStopwatch implements ICopyableStopwatch
     @Override
     public double read() // returns milliseconds
     {
-        return (System.nanoTime() - lastTime) * 1E-6;
+        return (System.nanoTime() - lastTime) * 1E-9;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.team2502.ezauton.utils;
 
 /**
  * A handy stopwatch for recording time in seconds every time it is polled
+ *
  * @deprecated Use {@link ICopyableStopwatch}
  */
 public interface IStopwatch

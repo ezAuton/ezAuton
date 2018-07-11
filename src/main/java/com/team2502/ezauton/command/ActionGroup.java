@@ -218,6 +218,13 @@ public class ActionGroup implements IAction
         this.onFinish.add(onFinish);
     }
 
+    public enum Type
+    {
+        PARALLEL,
+        SEQUENTIAL,
+        WITH
+    }
+
     private static class ActionWrapper
     {
 
@@ -239,12 +246,5 @@ public class ActionGroup implements IAction
         {
             return action;
         }
-    }
-
-    public enum Type
-    {
-        PARALLEL,
-        SEQUENTIAL,
-        WITH
     }
 }

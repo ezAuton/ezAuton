@@ -70,7 +70,7 @@ public class PPSimulatorTest
         PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         // Run the ppCommand and then kill the background task as it is no longer needed
-        ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::kill), new InstantAction(()->System.out.println(SimulatorManager.getInstance().getCount()+"")));
+        ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::kill), new InstantAction(() -> System.out.println(SimulatorManager.getInstance().getCount() + "")));
 
         actionGroup.simulate(50);
 
