@@ -1,7 +1,5 @@
 package com.team2502.ezauton.command;
 
-import com.sun.corba.se.spi.orbutil.fsm.ActionBase;
-import com.team2502.ezauton.localization.Updateable;
 import com.team2502.ezauton.utils.ICopyableStopwatch;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 
@@ -27,9 +25,13 @@ public class SimulatorManager
         return instance;
     }
 
-    public void remove(BaseAction baseAction)
+    /**
+     * @param baseAction
+     * @return true if action removed
+     */
+    public boolean remove(BaseAction baseAction)
     {
-        scheduledActions.remove(baseAction);
+        return scheduledActions.removeIf(scheduledAction -> scheduledAction.action == baseAction);
     }
 
     public ICopyableStopwatch generateStopwatch()
@@ -90,17 +92,12 @@ public class SimulatorManager
         finished.forEach(action -> action.getRunnables().forEach(Runnable::run));
     }
 
-    protected void runOnceOnRemove(ActionBase actionBase, Runnable runnable)
-    {
-
-    }
-
     public long getCount()
     {
         return count;
     }
 
-    private static class ScheduledAction implements Updateable
+    private static class ScheduledAction
     {
 
         private final BaseAction action;
@@ -113,12 +110,6 @@ public class SimulatorManager
             this.action = action;
             this.period = period;
             this.simulatedStopwatch = simulatedStopwatch;
-        }
-
-        @Override
-        public boolean update()
-        {
-            return false;
         }
     }
 }

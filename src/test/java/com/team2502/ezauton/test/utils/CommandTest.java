@@ -47,10 +47,10 @@ public class CommandTest
         timedAction1.onFinish(() -> count.compareAndSet(3, 4));
 
         TimedAction timedAction2 = new TimedAction(3);
-        timedAction2.onFinish(()-> count.addAndGet(3));
+        timedAction2.onFinish(() -> count.addAndGet(3));
 
         TimedAction timedAction3 = new TimedAction(3);
-        timedAction3.onFinish(()-> count.addAndGet(3));
+        timedAction3.onFinish(() -> count.addAndGet(3));
 
         ActionGroup actionGroup = new ActionGroup()
                 .addParallel(timedAction1)
@@ -60,5 +60,29 @@ public class CommandTest
         actionGroup.simulate(20);
         SimulatorManager.getInstance().run(100_000);
         assertEquals(7, count.intValue());
+    }
+
+    @Test
+    public void testWith()
+    {
+
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        BaseAction timedAction1 = new TimedAction(5);
+        BaseAction timedAction2 = new TimedAction(10);
+        BaseAction timedAction3 = new TimedAction(7).onFinish(() -> {
+            if(!SimulatorManager.getInstance().remove(timedAction2))
+            {
+                atomicInteger.compareAndSet(0, 2);
+            }
+        });
+
+        ActionGroup actionGroup = new ActionGroup()
+                .with(timedAction2)
+                .addParallel(timedAction3)
+                .addSequential(timedAction1);
+
+        actionGroup.simulate(20);
+        SimulatorManager.getInstance().run(100_000);
+        assertEquals(2, atomicInteger.intValue());
     }
 }

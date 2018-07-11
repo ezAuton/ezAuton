@@ -78,9 +78,10 @@ public abstract class BaseAction implements IAction
     }
 
     @Override
-    public void onFinish(Runnable onFinish)
+    public BaseAction onFinish(Runnable onFinish)
     {
         runnables.add(onFinish);
+        return this;
     }
 
     @Override

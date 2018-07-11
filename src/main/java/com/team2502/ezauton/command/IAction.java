@@ -22,6 +22,6 @@ public interface IAction
      */
     void removeSimulator();
 
-    void onFinish(Runnable onFinish);
+    IAction onFinish(Runnable onFinish);
 
 }

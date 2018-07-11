@@ -165,6 +165,8 @@ public class ActionGroup implements IAction
         List<ActionWrapper> scheduledActions = new ArrayList<>(this.scheduledActions);
         ActionWrapper currentAction = scheduledActions.get(0);
 
+        List<IAction> withActions = new ArrayList<>();
+
         Type type = currentAction.getType();
         ifblock:
         if(type == Type.PARALLEL || type == Type.WITH)
@@ -179,6 +181,10 @@ public class ActionGroup implements IAction
                     case PARALLEL:
                     case WITH:
                         next.getAction().simulate(millisPeriod);
+                        if(next.type == Type.WITH)
+                        {
+                            withActions.add(next.action);
+                        }
                         iterator.remove();
                         break;
                     case SEQUENTIAL:
@@ -191,6 +197,7 @@ public class ActionGroup implements IAction
 
         IAction action = currentAction.getAction();
         scheduledActions.remove(0);
+        action.onFinish(() -> withActions.forEach(IAction::removeSimulator));
         if(!scheduledActions.isEmpty())
         {
             Runnable runnable = () -> new ActionGroup(scheduledActions).simulate(millisPeriod);
@@ -200,6 +207,7 @@ public class ActionGroup implements IAction
         {
             action.onFinish(() -> onFinish.forEach(Runnable::run));
         }
+
         action.simulate(millisPeriod);
     }
 
@@ -213,9 +221,10 @@ public class ActionGroup implements IAction
     }
 
     @Override
-    public void onFinish(Runnable onFinish)
+    public ActionGroup onFinish(Runnable onFinish)
     {
         this.onFinish.add(onFinish);
+        return this;
     }
 
     public enum Type
