@@ -19,6 +19,7 @@ public class ActionGroup implements IAction
 
     /**
      * Creates an ActionGroup comprised of sequential commands
+     *
      * @param actions
      */
     public ActionGroup(IAction... actions)
@@ -162,43 +163,44 @@ public class ActionGroup implements IAction
     public void simulate(long millisPeriod)
     {
         List<ActionWrapper> scheduledActions = new ArrayList<>(this.scheduledActions);
-        while(!scheduledActions.isEmpty())
-        {
-            ActionWrapper currentAction = scheduledActions.get(0);
+        ActionWrapper currentAction = scheduledActions.get(0);
 
-            boolean broke = false;
-            if(currentAction.getType() == Type.PARALLEL)
+        boolean broke = false;
+        Type type = currentAction.getType();
+        ifblock:
+        if(type == Type.PARALLEL || type == Type.WITH)
+        {
+            Iterator<ActionWrapper> iterator = scheduledActions.iterator();
+            whileloop:
+            while(iterator.hasNext())
             {
-                Iterator<ActionWrapper> iterator = scheduledActions.iterator();
-                whileloop:
-                while(iterator.hasNext())
+                ActionWrapper next = iterator.next();
+                switch(next.type)
                 {
-                    ActionWrapper next = iterator.next();
-                    switch(next.type)
-                    {
-                        case PARALLEL:
-                        case WITH:
-                            next.getAction().simulate(millisPeriod);
-                            iterator.remove();
-                            break;
-                        case SEQUENTIAL:
-                            currentAction = next;
-                            broke = true;
-                            break whileloop;
-                    }
-                }
-                if(!broke)
-                {
-                    break;
+                    case PARALLEL:
+                    case WITH:
+                        next.getAction().simulate(millisPeriod);
+                        iterator.remove();
+                        break;
+                    case SEQUENTIAL:
+                        currentAction = next;
+                        break ifblock;
                 }
             }
-
-            IAction action = currentAction.getAction();
-            scheduledActions.remove(0);
-            action.onFinish(() -> new ActionGroup(scheduledActions).simulate(millisPeriod));
-            action.simulate(millisPeriod);
+            return;
         }
-        onFinish.forEach(Runnable::run);
+
+        IAction action = currentAction.getAction();
+        scheduledActions.remove(0);
+        if(!scheduledActions.isEmpty())
+        {
+            action.onFinish(() -> new ActionGroup(scheduledActions).simulate(millisPeriod));
+        }
+        else
+        {
+            action.onFinish(() -> onFinish.forEach(Runnable::run));
+        }
+        action.simulate(millisPeriod);
     }
 
     @Override
@@ -238,6 +240,7 @@ public class ActionGroup implements IAction
             return action;
         }
     }
+
     public enum Type
     {
         PARALLEL,

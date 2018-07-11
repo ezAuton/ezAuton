@@ -62,6 +62,7 @@ public class SimulatorManager
     public void runOnce()
     {
         Iterator<ScheduledAction> iterator = scheduledActions.iterator();
+        Set<BaseAction> finished = new HashSet<>();
         while(iterator.hasNext())
         {
             ScheduledAction next = iterator.next();
@@ -75,11 +76,17 @@ public class SimulatorManager
                 }
                 else
                 {
-                    action.getRunnables().forEach(Runnable::run);
+                    finished.add(action);
                     iterator.remove();
                 }
             }
         }
+        finished.forEach(action -> action.getRunnables().forEach(Runnable::run));
+    }
+
+    public long getCount()
+    {
+        return count;
     }
 
     private static class ScheduledAction implements Updateable
