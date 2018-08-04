@@ -2,6 +2,9 @@ package com.team2502.ezauton.pathplanning.purepursuit;
 
 import com.team2502.ezauton.localization.ITankRobotVelocityEstimator;
 
+/**
+ * Data class regarding the lookahead. Takes
+ */
 public class LookaheadBounds implements ILookahead
 {
 
@@ -13,6 +16,15 @@ public class LookaheadBounds implements ILookahead
     private final double dSpeed;
     private final ITankRobotVelocityEstimator velocityEstimator;
 
+    /**
+     * Create some lookahead bounds
+     *
+     * @param minDistance       Minimum lookahead
+     * @param maxDistance       Maximum lookahead
+     * @param minSpeed          Minimum speed where lookahead is allowed to be dynamic
+     * @param maxSpeed          Maximum speed where lookahead is allowed to be dynamic
+     * @param velocityEstimator Estimator of the robot's velocity. Used to calculate lookahead based on current speed.
+     */
     public LookaheadBounds(double minDistance, double maxDistance, double minSpeed, double maxSpeed, ITankRobotVelocityEstimator velocityEstimator)
     {
         this.minDistance = minDistance;
@@ -23,6 +35,11 @@ public class LookaheadBounds implements ILookahead
         this.velocityEstimator = velocityEstimator;
     }
 
+    /**
+     * Based on the current spead as described by this.velocityEstimator, calculate a lookahead
+     *
+     * @return The lookahead to use
+     */
     @Override
     public double getLookahead()
     {

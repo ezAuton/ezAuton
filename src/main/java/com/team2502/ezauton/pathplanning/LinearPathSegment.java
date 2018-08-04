@@ -20,6 +20,15 @@ public abstract class LinearPathSegment implements IPathSegment
     private double length;
 //    private MotionProfile motionProfiles;
 
+    /**
+     * Create a LinearPathSegment
+     *
+     * @param from          Starting location
+     * @param to            Ending location
+     * @param finish        If this is the last path segment in the path
+     * @param beginning     If this is the first path segment in the path
+     * @param distanceStart How far along the path the starting location is (arclength)
+     */
     protected LinearPathSegment(ImmutableVector from, ImmutableVector to, boolean finish, boolean beginning, double distanceStart)
     {
 //        this.maxSpeed = maxSpeed;
@@ -39,12 +48,24 @@ public abstract class LinearPathSegment implements IPathSegment
     }
 
 
+    /**
+     * Get the point on the line segment that is the closest to the robot
+     *
+     * @param robotPos The position of the robot
+     * @return The point on the line segment that is the closest to the robot
+     */
     @Override
     public ImmutableVector getClosestPoint(ImmutableVector robotPos)
     {
         return MathUtils.Geometry.getClosestPointLineSegments(from, to, robotPos);
     }
 
+    /**
+     * Calculate how far along the path a point on the linesegment is
+     *
+     * @param linePos The point on the line
+     * @return How far it is along the line segment
+     */
     @Override
     public double getAbsoluteDistance(ImmutableVector linePos)
     {
@@ -72,6 +93,12 @@ public abstract class LinearPathSegment implements IPathSegment
         throw new ArithmeticException("Somehow dif has a dimension of 0.");
     }
 
+    /**
+     * Convert absolute distance (dist. along the path) to relative distance (dist. along this segment)
+     *
+     * @param absoluteDistance The absolute distance along the path
+     * @return The relative distance along this path segment
+     */
     public double getRelativeDistance(double absoluteDistance)
     {
         return absoluteDistance - distanceStart;
@@ -80,6 +107,12 @@ public abstract class LinearPathSegment implements IPathSegment
     @Override
     public abstract double getSpeed(double absoluteDistance);
 
+    /**
+     * Assert a point that is x distance along the whole path is in this path segment
+     *
+     * @param absoluteDistance How far the point is along the path
+     * @throws IllegalArgumentException
+     */
     private void checkDistance(double absoluteDistance)
     {
         if(!MathUtils.Algebra.bounded(distanceStart, absoluteDistance, distanceEnd))
@@ -88,6 +121,12 @@ public abstract class LinearPathSegment implements IPathSegment
         }
     }
 
+    /**
+     * Based on the relative distance of a point along this path segment, get the location of the point
+     *
+     * @param relativeDistance How far the point is along this path segment
+     * @return The aboslute location of the point
+     */
     @Override
     public ImmutableVector getPoint(double relativeDistance)
     {
@@ -97,10 +136,11 @@ public abstract class LinearPathSegment implements IPathSegment
     /**
      * Get the distance left squared
      *
-     * @param point a close point
-     * @return
+     * @param point A point on this path segment
+     * @return The distance left on the path segment, squared
      * @deprecated
      */
+    @Deprecated
     public double getDistanceLeft2(ImmutableVector point)
     {
         return to.sub(point).mag2();

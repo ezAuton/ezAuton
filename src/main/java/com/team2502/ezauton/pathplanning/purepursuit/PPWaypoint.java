@@ -13,6 +13,15 @@ public class PPWaypoint
     private final double acceleration;
     private final double deceleration;
 
+    /**
+     * Create a waypoint for Pure Pursuit to drive to
+     *
+     * @param location     Where the waypoint is, given that the Y axis is the forward axis
+     * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
+     * @param acceleration Maximum acceleration allowed to reach the target speed
+     * @param deceleration Maximum deceleration allowed to reach the target speed
+     */
+    //TODO: Confirm documentation is accurate
     public PPWaypoint(ImmutableVector location, double speed, double acceleration, double deceleration)
     {
         this.location = location;
@@ -24,12 +33,12 @@ public class PPWaypoint
     /**
      * A shortcut to making a 2D waypoint
      *
-     * @param x
-     * @param y
-     * @param speed
-     * @param acceleration
-     * @param deceleration
-     * @return
+     * @param x            X-coordinate for the location of this waypoint
+     * @param y            Y-coordinate for the location of this waypoint
+     * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
+     * @param acceleration Maximum acceleration allowed to reach the target speed
+     * @param deceleration Maximum deceleration allowed to reach the target speed
+     * @return A waypoint with the specified properties
      */
     public static PPWaypoint simple2D(double x, double y, double speed, double acceleration, double deceleration)
     {
@@ -56,13 +65,13 @@ public class PPWaypoint
      * ⠀⠀⠛⢿⣿⣿⣿⣿⣿⣿⡿⠟
      * ⠀⠀⠀⠀⠀⠉⠉⠉
      *
-     * @param x
-     * @param y
-     * @param z
-     * @param speed
-     * @param acceleration
-     * @param deceleration
-     * @return
+     * @param x            X-coordinate for the location of this waypoint
+     * @param y            Y-coordinate for the location of this waypoint
+     * @param z            Z-coordinate for the location of this waypoint
+     * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
+     * @param acceleration Maximum acceleration allowed to reach the target speed
+     * @param deceleration Maximum deceleration allowed to reach the target speed
+     * @return A waypoint with the specified properties
      */
     public static PPWaypoint simple3D(double x, double y, double z, double speed, double acceleration, double deceleration)
     {

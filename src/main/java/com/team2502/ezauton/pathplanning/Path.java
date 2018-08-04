@@ -27,6 +27,12 @@ public class Path
 
     private Path() {}
 
+    /**
+     * Create a path from multiple path segments
+     *
+     * @param pathSegments A List of IPathSegments
+     * @return A path consisting of these segments
+     */
     public static Path fromSegments(List<IPathSegment> pathSegments)
     {
         Path path = new Path();
@@ -37,11 +43,15 @@ public class Path
         return path;
     }
 
+    /**
+     * @return the total arclength of this path
+     */
     public double getLength()
     {
         return length;
     }
 
+    //TODO: Splines?
     //    public static Path fromPoints(List<? extends ImmutableVector> waypointList)
 //    {
 //        List<PathSegment> pathSegments = new ArrayList<>();
@@ -115,7 +125,9 @@ public class Path
 //    }
 
     /**
-     * @return If there are more segments
+     * Moves to the next path segment
+     *
+     * @return If there was a next path segment to progress to
      */
     public boolean moveNextSegment()
     {
@@ -193,14 +205,15 @@ public class Path
     //TODO: make this better
 
     /**
-     * @param distanceLeftSegment
-     * @param closestPointDist
-     * @param robotPos
-     * @return The PathSegments progressed
+     * @param distanceLeftSegment The distance left before we are on the next path segment
+     * @param closestPointDist    The distance to the closest point on the current path segment
+     * @param robotPos            The location of the robot
+     * @return The PathSegments that have been progressed
      */
     public List<IPathSegment> progressIfNeeded(double distanceLeftSegment, double closestPointDist, ImmutableVector robotPos)
     {
-
+        //TODO: Move magic number
+        // Move to the next segment if we are near the end of the current segment
         if(distanceLeftSegment < .16F)
         {
             if(moveNextSegment())
@@ -209,7 +222,8 @@ public class Path
             }
         }
 
-        // path segments 2 ft ahead
+        // For all paths 2 feet ahead of us, progress on the path if we can
+        //TODO: Move magic number
         List<IPathSegment> pathSegments = nextSegmentsInclusive(2);
         int i = segmentOnI;
         int j = 0;
@@ -226,12 +240,26 @@ public class Path
         return Collections.emptyList();
     }
 
+    /**
+     * Move to another path segment
+     *
+     * @param segmentOnI The index of the path segment
+     * @param segmentOn  The instance of the path segment
+     */
     public void moveSegment(int segmentOnI, IPathSegment segmentOn)
     {
         this.segmentOnI = segmentOnI;
         this.segmentOn = segmentOn;
     }
 
+    /**
+     * Check if we should progress to another segment
+     *
+     * @param segment              The instance of this "other" segment
+     * @param robotPos             The position of the robot
+     * @param currentSegmentCPDist The distance to the closest point on the current segment
+     * @return If we should progress to this "other" path segment
+     */
     public boolean shouldProgress(IPathSegment segment, ImmutableVector robotPos, double currentSegmentCPDist)
     {
         if(segment == null) // we are on the last segment... we cannot progress
@@ -241,7 +269,7 @@ public class Path
 
         ImmutableVector closestPoint = segment.getClosestPoint(robotPos);
         double nextClosestPointDistance = closestPoint.dist(robotPos);
-        // TODO: add 0.5 as constant
+        // TODO: Move magic number
         return currentSegmentCPDist > nextClosestPointDistance + 0.5F;
     }
 
@@ -255,7 +283,7 @@ public class Path
 
     /**
      * @param maxAheadDistance The distance to look ahead from the last segment
-     * @return
+     * @return The segments that lay on the path between our current position and maxAheadDistance from our current position. This result includes the current path segment.
      */
     public List<IPathSegment> nextSegmentsInclusive(double maxAheadDistance)
     {

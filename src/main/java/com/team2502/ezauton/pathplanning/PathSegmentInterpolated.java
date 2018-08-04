@@ -20,13 +20,13 @@ public class PathSegmentInterpolated extends LinearPathSegment
     private InterpolationMap speedInterpolator;
 
     /**
-     * @param from
-     * @param to
-     * @param finish
-     * @param beginning
-     * @param distanceStart
-     * @param speedStart
-     * @param speedStop
+     * @param from          Starting location of the path segment
+     * @param to            Ending location of the path segment
+     * @param finish        If this is the last path segment
+     * @param beginning     If this is the first path segment
+     * @param distanceStart Distance along the path from the beginning to <code>from</code>
+     * @param speedStart    Target speed to go at the start of the path
+     * @param speedStop     Target speed to go at the end of the path
      * @param dt            The difference in time should be extrapolated
      */
     protected PathSegmentInterpolated(ImmutableVector from, ImmutableVector to, boolean finish, boolean beginning, double distanceStart, double speedStart, double speedStop, double dt, double maxAccel, double maxDecel)
@@ -45,15 +45,22 @@ public class PathSegmentInterpolated extends LinearPathSegment
         return speedInterpolator;
     }
 
+    /**
+     * Build this.speedInterpolator
+     */
     private void extrap()
     {
         // You have probably seen: d_f = 1/2at^2 + vt + d_i
         // However, we are not having constant acceleration... so we need
 
+        // Make extrapolation for speed
         speedInterpolator = new InterpolationMap(getAbsoluteDistanceStart(), speedStart);
+
 
         double distance = getLength();
         double time = 0;
+
+        // Use kinematics equations built into the MotionState class to build speedInterpolator
         if(speedStart < speedStop) // accel
         {
             MotionState motionState = new MotionState(0, speedStart, maxAccel, 0);

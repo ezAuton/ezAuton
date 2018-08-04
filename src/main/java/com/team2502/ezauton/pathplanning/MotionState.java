@@ -9,6 +9,7 @@ import java.util.Set;
  * Contains the pose of the robot at a certain time and distance. This class provides useful tools
  * for extrapolating future/previous MotionStates based on distances/times.
  */
+//TODO: Make a subclass for the purposes of PP Logging, ala RC2018:PurePursuitFrame
 public class MotionState
 {
 
@@ -16,6 +17,7 @@ public class MotionState
     private final double speed;
     private final double acceleration;
     private final double time;
+
 
     public MotionState(double position, double speed, double acceleration, double time)
     {
@@ -56,6 +58,12 @@ public class MotionState
                                speed + acceleration * dt, acceleration, time);
     }
 
+    /**
+     * Return a copy of this object, but with a different acceleration value
+     *
+     * @param a The new acceleration value
+     * @return This, but with the different accel value
+     */
     public MotionState forAcceleration(double a)
     {
         return new MotionState(position, speed, a, time);

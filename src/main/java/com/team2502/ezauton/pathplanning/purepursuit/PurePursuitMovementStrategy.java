@@ -14,12 +14,20 @@ public class PurePursuitMovementStrategy
      * The path that we're driving on
      */
     private final Path path;
+
+    /**
+     * How close we need to be to the final waypoint for us to decide that we are finished
+     */
     private final double stopTolerance;
+
     private boolean isFinished = false;
 
 
     /**
      * Strategize your movement!
+     *
+     * @param path          The path to drive along
+     * @param stopTolerance How close we need to be to the final waypoint for us to decide that we are finished
      */
     public PurePursuitMovementStrategy(Path path, double stopTolerance)
     {
@@ -48,12 +56,12 @@ public class PurePursuitMovementStrategy
 
 
     /**
-     * @param loc
+     * @param loc       Current position of the robot
+     * @param lookahead Current lookahead as given by an ILookahead instance
      * @return The wanted pose of the robot at a certain location
      */
     public ImmutableVector update(ImmutableVector loc, double lookahead)
     {
-
         IPathSegment current = path.getCurrent();
         ImmutableVector closestPoint = path.getClosestPoint(loc);
         double currentDistance = current.getAbsoluteDistance(closestPoint);
