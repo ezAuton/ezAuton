@@ -5,5 +5,8 @@ package com.team2502.ezauton.robot;
  */
 public interface ITankRobotConstants extends IRobotConstants
 {
+    /**
+     * @return How far apart the left wheels are from the right wheels.
+     */
     double getLateralWheelDistance();
 }

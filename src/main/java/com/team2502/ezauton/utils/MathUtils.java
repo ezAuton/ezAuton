@@ -60,7 +60,13 @@ public final class MathUtils
     }
 
     /***
+     * Given a coordinate relative to the robot's position, calculate the curvature of the circle needed to get to the goal point
+     *
+     * @param relativeGoalPoint The relative coordinates of the goal point
+     *
      * @return The curvature (1/radius) to the goal point ... positive when CCW
+     *
+     * @see MathUtils.LinearAlgebra#absoluteToRelativeCoord(ImmutableVector, ImmutableVector, double)
      */
     public static double calculateCurvature(ImmutableVector relativeGoalPoint)
     {

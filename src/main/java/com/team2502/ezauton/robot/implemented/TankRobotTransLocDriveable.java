@@ -9,18 +9,31 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 
 /**
- * A robot that
+ * Describes the kinematics for a robot with a tank drivetrain
  */
 public class TankRobotTransLocDriveable implements TranslationalLocationDriveable
 {
 
+    /**
+     * The minimum curvature, below which we are driving on a straight line
+     */
     private static final double THRESHOLD_CURVATURE = 0.001F;
+
     private final IVelocityMotor leftMotor;
     private final IVelocityMotor rightMotor;
     private final ITranslationalLocationEstimator translationalLocationEstimator;
     private final IRotationalLocationEstimator rotationalLocationEstimator;
     private final ITankRobotConstants tankRobotConstants;
 
+    /**
+     * Describes the kinematics to drive a tank-drive robot along an arc to get to a goal point
+     *
+     * @param leftMotor                      The motor on the left side
+     * @param rightMotor                     The motor on the right side
+     * @param translationalLocationEstimator An estimator for our absolute location
+     * @param rotationalLocationEstimator    An estimator for our heading
+     * @param tankRobotConstants             A data class containing constants regarding the structure of the tank drive robot, such as lateral wheel distance
+     */
     public TankRobotTransLocDriveable(IVelocityMotor leftMotor, IVelocityMotor rightMotor, ITranslationalLocationEstimator translationalLocationEstimator, IRotationalLocationEstimator rotationalLocationEstimator, ITankRobotConstants tankRobotConstants)
     {
         this.leftMotor = leftMotor;
@@ -30,6 +43,13 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
         this.tankRobotConstants = tankRobotConstants;
     }
 
+    /**
+     * Move the robot to a target location. Ideally, this would be run continuously.
+     *
+     * @param speed The maximum speed of the robot
+     * @param loc   The absolute coordinates of the target location
+     * @return True
+     */
     @Override
     public boolean driveTowardTransLoc(double speed, ImmutableVector loc)
     {
@@ -41,9 +61,15 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
         double right = wheelVelocities.get(1);
         rightMotor.runVelocity(right);
 
-        return true; // always possible
+        return true; // always possible //TODO: Maybe sometimes return false?
     }
 
+    /**
+     * Drive the robot at a speed
+     *
+     * @param speed The target speed, where a positive value is forwards and a negative value is backwards
+     * @return True, it is always possible to drive straight
+     */
     @Override
     public boolean driveSpeed(double speed)
     {
@@ -52,6 +78,13 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
         return true;
     }
 
+    /**
+     * Calculate how to get to a target location given a maximum speed
+     *
+     * @param speed The maximum speed (not velocity) the robot is allowed to go
+     * @param loc   THe absolute coordinates of the goal point
+     * @return The wheel speeds in a vector where the 0th element is the left wheel speed and the 1st element is the right wheel speed
+     */
     private ImmutableVector getWheelVelocities(double speed, ImmutableVector loc)
     {
         ImmutableVector relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(loc, translationalLocationEstimator.estimateLocation(), rotationalLocationEstimator.estimateHeading());
@@ -70,7 +103,7 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
         {
             return new ImmutableVector(v_lMax, v_rMax);
         }
-        else // if we need to go in a circle
+        else // if we need to go in a circle, we should calculate the wheel velocities so we hit our target radius AND our target tangential speed
         {
 
             // Formula for differential drive radius of cricle
@@ -128,16 +161,16 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
                 }
             }
 
+            if(bestVector == null)
+            {
+                throw new NullPointerException("bestVector is null! (wtf)"); //TODO: More informative error message
+            }
 
             if(bestVector.get(0) < 0 && bestVector.get(1) < 0)
             {
                 System.err.println("Robot is going backwards!");
             }
 
-            if(bestVector == null)
-            {
-                throw new NullPointerException("bestVector is null! (wtf)");
-            }
 
         }
 

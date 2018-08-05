@@ -8,15 +8,19 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 public interface TranslationalLocationDriveable
 {
     /**
-     * @param speed
-     * @param loc
+     * Move the robot from our current location to a target location while respecting a maximum speed
+     *
+     * @param speed The maximum speed of the robot
+     * @param loc   The target location of the robot
      * @return If the movement is possible
      */
     boolean driveTowardTransLoc(double speed, ImmutableVector loc);
 
     /**
-     * @param speed
-     * @return Drive in any direction (normally straight) at a certain speed. Good for low speeds
+     * Drive in any direction (normally straight) at a certain speed. Good for low speeds
+     *
+     * @param speed How fast to go
+     * @return If the movement is possible
      */
     boolean driveSpeed(double speed);
 }
