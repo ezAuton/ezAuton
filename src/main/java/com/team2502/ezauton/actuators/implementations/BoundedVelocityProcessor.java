@@ -3,11 +3,20 @@ package com.team2502.ezauton.actuators.implementations;
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.actuators.VelocityProcessor;
 
+/**
+ * A velocity processor that makes the target motor respect a maximum speed
+ */
 public class BoundedVelocityProcessor extends VelocityProcessor
 {
 
     private final double maxSpeed;
 
+    /**
+     * Create a BoundedVelocityProcessor
+     *
+     * @param toApply  The motor to apply the processed velocity to
+     * @param maxSpeed The maximum speed that the motor will be allowed to run at.
+     */
     public BoundedVelocityProcessor(IVelocityMotor toApply, double maxSpeed)
     {
         super(toApply);
@@ -18,6 +27,10 @@ public class BoundedVelocityProcessor extends VelocityProcessor
         this.maxSpeed = maxSpeed;
     }
 
+    /**
+     * Run the motor at a target velocity, unless the velocity is larger than this motor's maximum velocity
+     * @param targetVelocity The speed to run the motor at
+     */
     @Override
     public void runVelocity(double targetVelocity)
     {

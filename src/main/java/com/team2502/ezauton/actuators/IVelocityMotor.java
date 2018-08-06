@@ -5,5 +5,9 @@ package com.team2502.ezauton.actuators;
  */
 public interface IVelocityMotor extends IMotor
 {
+    /**
+     * Run the motor at a certain velocity
+     * @param targetVelocity The speed to run the motor at
+     */
     void runVelocity(double targetVelocity);
 }
