@@ -1,14 +1,10 @@
-package com.team2502.ezauton.localization.sensors;
+package com.team2502.ezauton.wpilib.command;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.team2502.ezauton.localization.sensors.ICompass;
 
-/**
- * A Gyro utility class to turn specific libraries into more abstract representations which can be used
- * in ezAuton.
- */
 public class Gyros
 {
-
     public static ICompass fromNavx(AHRS navx)
     {
         return () -> {
@@ -21,6 +17,4 @@ public class Gyros
             return boundedAngle;
         };
     }
-
-
 }

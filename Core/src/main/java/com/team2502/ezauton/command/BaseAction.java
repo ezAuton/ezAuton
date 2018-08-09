@@ -2,7 +2,6 @@ package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.utils.ICopyableStopwatch;
 import com.team2502.ezauton.utils.RealStopwatch;
-import edu.wpi.first.wpilibj.command.Command;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +11,7 @@ import java.util.List;
  */
 public abstract class BaseAction implements IAction
 {
-
-    private boolean used = false;
+    protected boolean used = false;
     private ICopyableStopwatch stopwatch;
     private List<Runnable> runnables = new ArrayList<>();
 
@@ -41,20 +39,6 @@ public abstract class BaseAction implements IAction
      * @return Whether or not this IAction has finished
      */
     protected abstract boolean isFinished();
-
-    /**
-     * @return A WPILib command
-     */
-    @Override
-    public Command buildWPI()
-    {
-        if(used)
-        {
-            throw new RuntimeException("Action already used!");
-        }
-        used = true;
-        return new CommandCreator(this);
-    }
 
     public List<Runnable> getRunnables()
     {

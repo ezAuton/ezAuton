@@ -2,8 +2,12 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="Core_main" target="1.8" />
+      <module name="Core_test" target="1.8" />
       <module name="ezAuton_main" target="1.8" />
       <module name="ezAuton_test" target="1.8" />
+      <module name="WPILib_main" target="1.8" />
+      <module name="WPILib_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
