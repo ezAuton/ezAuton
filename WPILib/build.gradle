@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group 'com.team2502'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'lib'
+    }
+    maven {
+        url 'http://first.wpi.edu/FRC/roborio/maven/stable/'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile project(':Core')
+    compile 'edu.wpi.first.wpilibj:wpilibJavaFinal:0.1.0-SNAPSHOT'
+}

@@ -1,8 +1,6 @@
 package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.utils.ICopyableStopwatch;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,41 +50,6 @@ public class ActionGroup implements IAction
     {
         this.scheduledActions.add(new ActionWrapper(action, Type.PARALLEL));
         return this;
-    }
-
-    @Override
-    public Command buildWPI()
-    {
-        CommandGroup commandGroup = new CommandGroup();
-        List<Command> withCommands = new ArrayList<>();
-
-        for(ActionWrapper scheduledAction : scheduledActions)
-        {
-            IAction action = scheduledAction.getAction();
-            Command command = action.buildWPI();
-            Type type = scheduledAction.getType();
-
-            switch(type)
-            {
-                case WITH:
-                    withCommands.add(command);
-                case PARALLEL:
-                    commandGroup.addParallel(command);
-                    break;
-                case SEQUENTIAL:
-                    commandGroup.addSequential(command);
-                    if(!withCommands.isEmpty())
-                    {
-                        InstantAction instantAction = new InstantAction(() -> withCommands.forEach(Command::cancel));
-                        commandGroup.addSequential(instantAction.buildWPI());
-                        withCommands.clear();
-                    }
-                    break;
-            }
-        }
-        InstantAction instantAction = new InstantAction(() -> onFinish.forEach(Runnable::run));
-        commandGroup.addSequential(instantAction.buildWPI());
-        return commandGroup;
     }
 
     @Override
@@ -240,7 +203,7 @@ public class ActionGroup implements IAction
         WITH
     }
 
-    private static class ActionWrapper
+    protected static class ActionWrapper
     {
 
         private final Type type;
@@ -261,5 +224,10 @@ public class ActionGroup implements IAction
         {
             return action;
         }
+    }
+
+    public List<ActionWrapper> getScheduledActions()
+    {
+        return scheduledActions;
     }
 }

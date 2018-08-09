@@ -1,12 +1,28 @@
 package com.team2502.ezauton.utils;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * A handy stopwatch for recording time in seconds every time it is polled
  *
  * @deprecated Use {@link ICopyableStopwatch}
  */
-public interface IStopwatch
+public class Stopwatch
 {
+
+    private final IClock clock;
+    long millis = 0;
+
+    public Stopwatch(IClock clock)
+    {
+        this.clock = clock;
+    }
+
+    public void init()
+    {
+
+    }
+
     /**
      * Read and reset
      *
@@ -29,7 +45,10 @@ public interface IStopwatch
     /**
      * Reset without reading
      */
-    void reset();
+    void reset()
+    {
+
+    }
 
     /**
      * @return If this stopwatch is initialized
@@ -48,4 +67,11 @@ public interface IStopwatch
         reset();
         return true;
     }
+
+    /**
+     * Locks current thread for the time specified
+     * @param amount
+     * @param timeUnit
+     */
+    void wait(int amount, TimeUnit timeUnit);
 }

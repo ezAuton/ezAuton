@@ -4,6 +4,7 @@ import com.team2502.ezauton.localization.Updateable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Each time progress() is called, SimulatedStopwatch increases by dt
@@ -31,12 +32,7 @@ public class SimulatedStopwatch implements ICopyableStopwatch, Updateable
      */
     public void progress()
     {
-        related.forEach(SimulatedStopwatch::progress);
-        if(sum == -1)
-        {
-            sum = 0;
-        }
-        sum += dt;
+        progress(dt);
     }
 
     /**
@@ -50,6 +46,7 @@ public class SimulatedStopwatch implements ICopyableStopwatch, Updateable
             sum = 0;
         }
         sum += dt;
+
     }
 
     @Override
@@ -62,6 +59,13 @@ public class SimulatedStopwatch implements ICopyableStopwatch, Updateable
     public boolean isInit()
     {
         return sum != -1;
+    }
+
+
+    @Override
+    public void wait(int amount, TimeUnit timeUnit)
+    {
+
     }
 
     /**

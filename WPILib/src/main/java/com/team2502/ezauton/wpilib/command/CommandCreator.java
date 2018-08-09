@@ -1,5 +1,6 @@
-package com.team2502.ezauton.command;
+package com.team2502.ezauton.wpilib.command;
 
+import com.team2502.ezauton.command.BaseAction;
 import com.team2502.ezauton.utils.RealStopwatch;
 import edu.wpi.first.wpilibj.command.Command;
 
