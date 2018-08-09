@@ -163,6 +163,10 @@ public class ActionGroup implements IAction
     public void simulate(long millisPeriod)
     {
         List<ActionWrapper> scheduledActions = new ArrayList<>(this.scheduledActions);
+        if(scheduledActions.size() == 0)
+        {
+            return;
+        }
         ActionWrapper currentAction = scheduledActions.get(0);
 
         List<IAction> withActions = new ArrayList<>();
@@ -195,20 +199,22 @@ public class ActionGroup implements IAction
             return;
         }
 
-        IAction action = currentAction.getAction();
+        IAction currentSequential = currentAction.getAction();
         scheduledActions.remove(0);
-        action.onFinish(() -> withActions.forEach(IAction::removeSimulator));
-        if(!scheduledActions.isEmpty())
+
+        currentSequential.onFinish(() -> withActions.forEach(IAction::removeSimulator));
+        Runnable scheduleNextActions = () -> new ActionGroup(scheduledActions).simulate(millisPeriod);
+
+        currentSequential.onFinish(scheduleNextActions);
+
+        if(scheduledActions.stream().allMatch(actionWrapper ->
+                                                       actionWrapper.type == Type.WITH ||
+                                                       actionWrapper.type == Type.PARALLEL))
         {
-            Runnable runnable = () -> new ActionGroup(scheduledActions).simulate(millisPeriod);
-            action.onFinish(runnable);
-        }
-        else
-        {
-            action.onFinish(() -> onFinish.forEach(Runnable::run));
+            currentSequential.onFinish(() -> onFinish.forEach(Runnable::run));
         }
 
-        action.simulate(millisPeriod);
+        currentSequential.simulate(millisPeriod);
     }
 
     @Override
