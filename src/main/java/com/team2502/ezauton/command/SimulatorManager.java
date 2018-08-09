@@ -68,6 +68,7 @@ public class SimulatorManager
      */
     public void run(long timeoutMillis)
     {
+        count = 0;
         masterStopwatch.reset();
         while(!scheduledActions.isEmpty())
         {
