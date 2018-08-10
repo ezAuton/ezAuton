@@ -787,8 +787,8 @@ public final class MathUtils
         }
 
         /**
-         * @param distance The distance gone
-         * @param angle    Angle at which it is at
+         * @param distance The length of the vector
+         * @param angle    The angle of the vector
          * @return A vector in <x, y> form
          * @see ImmutableVector
          */

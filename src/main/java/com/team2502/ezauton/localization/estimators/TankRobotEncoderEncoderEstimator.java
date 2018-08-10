@@ -9,6 +9,11 @@ import com.team2502.ezauton.robot.ITankRobotConstants;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 
+//TODO: Better name
+
+/**
+ * Describes an object that can estimate the heading and absolute position of the robot solely using the encoders
+ */
 public class TankRobotEncoderEncoderEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, ITankRobotVelocityEstimator, Updateable
 {
 
@@ -21,6 +26,12 @@ public class TankRobotEncoderEncoderEstimator implements IRotationalLocationEsti
     private double heading = 0;
     private ImmutableVector location = ImmutableVector.origin(2);
 
+    /**
+     * Create a TankRobotEncoderEstimator
+     * @param left A reference to the encoder on the left side of the robot
+     * @param right A reference to the encoder on the right side of the robot
+     * @param tankRobot A reference to an object containing data about the structure of the drivetrain
+     */
     public TankRobotEncoderEncoderEstimator(ITranslationalDistanceSensor left, ITranslationalDistanceSensor right, ITankRobotConstants tankRobot)
     {
         this.left = left;
@@ -28,7 +39,10 @@ public class TankRobotEncoderEncoderEstimator implements IRotationalLocationEsti
         this.tankRobot = tankRobot;
     }
 
-    public void reset()
+    /**
+     * Reset the heading and position of the location estimator
+     */
+    public void reset() //TODO: Suggestion -- Have an IPoseEstimator that implements Updateable, IRotationalEstimator, ITranslationalLocationEstimator that also has a reset method
     {
         lastPosLeft = left.getPosition();
         lastPosRight = right.getPosition();
@@ -49,6 +63,10 @@ public class TankRobotEncoderEncoderEstimator implements IRotationalLocationEsti
         return location;
     }
 
+    /**
+     * Update the calculation for the current heading and position. Call this as frequently as possible to ensure optimal results
+     * @return True
+     */
     @Override
     public boolean update()
     {
@@ -71,6 +89,9 @@ public class TankRobotEncoderEncoderEstimator implements IRotationalLocationEsti
         return true;
     }
 
+    /**
+     * @return The current velocity vector of the robot in 2D space.
+     */
     @Override
     public ImmutableVector estimateAbsoluteVelocity()
     {
