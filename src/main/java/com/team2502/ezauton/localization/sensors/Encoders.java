@@ -13,8 +13,16 @@ public class Encoders
 
     public static final int CTRE_MAG_ENCODER = 4096;
 
-    public static IEncoder fromTalon(TalonSRX talonSRX, int unitsPerRev)
+    /**
+     * Create an IEncoder from a TalonSRX
+     * @param talonSRX A reference to the talon
+     * @param unitsPerRev The number of feet/meters/whatever travelled per revolution of the encoder
+     * @return A reference to an IEncoder
+     */
+    public static IEncoder fromTalon(TalonSRX talonSRX, int unitsPerRev) //TODO: Be able to handle cases when the talon has multiple sensors attached, so the selected sensor is not always the encoder
     {
+        //TODO: Suggestion -- Subclass TalonSRX and implement IEncoder with it
+        //TODO: Make the parameter use BaseMotorController to reduce redundancy
         IEncoder encoder = new IEncoder()
         {
             @Override
@@ -32,6 +40,12 @@ public class Encoders
         return fixRegEncoder(encoder, unitsPerRev);
     }
 
+    /**
+     * Create an IEncoder from a TalonSRX
+     * @param victorSPX A reference to the talon
+     * @param unitsPerRev The number of feet/meters/whatever travelled per revolution of the encoder
+     * @return A reference to an IEncoder
+     */
     public static IEncoder fromVictor(VictorSPX victorSPX, int unitsPerRev)
     {
         IEncoder encoder = new IEncoder()
@@ -56,9 +70,9 @@ public class Encoders
      * are two encoders on two different wheels, average(a,b) will return an encoder which will act as if it is in the
      * center of the robot and should be proportional to the tangential velocity of the robot.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a An encoder on one side of the robot
+     * @param b An encoder on the other side of the robot
+     * @return An encoder that returns the average result of the 2 other encoders
      */
     public static IEncoder average(IEncoder a, IEncoder b)
     {
@@ -78,6 +92,12 @@ public class Encoders
         };
     }
 
+    /**
+     * Make an IEncoder return distance units rather than revolutions
+     * @param hardwareEncoder A reference to the IEncoder to fix
+     * @param unitsPerRev     The number of distance units travelled per revolution
+     * @return                An IEncoder that returns distance units, not revolutions
+     */
     private static IEncoder fixRegEncoder(IEncoder hardwareEncoder, int unitsPerRev)
     {
         if(unitsPerRev <= 0)
@@ -96,11 +116,19 @@ public class Encoders
             public double getVelocity()
             {
                 // multiplying by 10 because velocity is in per 100ms by default
+                //TODO: This is not necessarily the case for non-CTRE motor controllers (see comment above for context)
                 return 10D * hardwareEncoder.getVelocity() / unitsPerRev;
             }
         };
     }
 
+    /**
+     * Create an encoder from a tachometer, which can only measure speed
+     *
+     * @param tachometer A reference to the ITachometer
+     * @param stopwatch  A device with which to measure time, either real or simulated
+     * @return An IEncoder
+     */
     public static IEncoder fromTachometer(ITachometer tachometer, IStopwatch stopwatch)
     {
         return new IEncoder()

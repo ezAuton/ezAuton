@@ -4,6 +4,7 @@ package com.team2502.ezauton.localization.sensors;
  * The combination of an encoder and a wheel. This allows to calculate translational distance. An encoder without
  * wheel specifications can only calculate revolutions.
  */
+//TODO: Perhaps redundant with Encoders#fixRegEncoder
 public class EncoderWheel implements ITranslationalDistanceSensor
 {
 
