@@ -34,4 +34,22 @@ public interface IClock
     {
         scheduleAt(getTime() + timeUnit.toMillis(dt), runnable);
     }
+
+    /**
+     * Locks current thread for specified time
+     *
+     * @param timeUnit
+     * @param dt
+     */
+    default void wait(TimeUnit timeUnit, long dt)
+    {
+        try
+        {
+            Thread.sleep(timeUnit.toMillis(dt));
+        }
+        catch(InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
 }

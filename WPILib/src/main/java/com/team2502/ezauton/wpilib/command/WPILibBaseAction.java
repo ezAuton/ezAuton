@@ -1,9 +1,9 @@
 package com.team2502.ezauton.wpilib.command;
 
-import com.team2502.ezauton.command.BaseAction;
+import com.team2502.ezauton.command.SimpleAction;
 import edu.wpi.first.wpilibj.command.Command;
 
-public abstract class WPILibBaseAction extends BaseAction implements IWPIAction
+public abstract class WPILibBaseAction extends SimpleAction implements IWPIAction
 {
 
         /**

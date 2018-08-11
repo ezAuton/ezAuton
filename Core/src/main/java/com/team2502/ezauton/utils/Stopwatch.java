@@ -1,11 +1,7 @@
 package com.team2502.ezauton.utils;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * A handy stopwatch for recording time in seconds every time it is polled
- *
- * @deprecated Use {@link ICopyable}
  */
 public class Stopwatch
 {
@@ -73,18 +69,5 @@ public class Stopwatch
         }
         reset();
         return true;
-    }
-
-    /**
-     * Locks current thread for the time specified
-     *
-     * @param amount
-     * @param timeUnit
-     *
-     * @throws InterruptedException
-     */
-    public void wait(int amount, TimeUnit timeUnit) throws InterruptedException
-    {
-        Thread.sleep(timeUnit.toMillis(amount));
     }
 }

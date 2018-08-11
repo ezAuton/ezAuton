@@ -1,23 +1,23 @@
 package com.team2502.ezauton.wpilib.command;
 
-import com.team2502.ezauton.command.BaseAction;
+import com.team2502.ezauton.command.SimpleAction;
 import com.team2502.ezauton.utils.RealStopwatch;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Creates a command from an {@link BaseAction}. This allows for abstraction and use of commands in simulators.
+ * Creates a command from an {@link SimpleAction}. This allows for abstraction and use of commands in simulators.
  */
 public class CommandCreator extends Command //TODO: Change name?
 {
 
-    private final BaseAction action;
+    private final SimpleAction action;
 
     /**
      * Create a command from a BaseAction
      *
      * @param action The action to run as a command
      */
-    public CommandCreator(BaseAction action)
+    public CommandCreator(SimpleAction action)
     {
         this.action = action;
     }
@@ -40,7 +40,7 @@ public class CommandCreator extends Command //TODO: Change name?
         boolean finished = action.isFinished();
         if(finished)
         {
-            action.getRunnables().forEach(Runnable::run);
+            action.getFinished().forEach(Runnable::run);
         }
         return finished;
     }

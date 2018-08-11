@@ -1,13 +1,14 @@
 package com.team2502.ezauton.command;
 
+import com.team2502.ezauton.utils.IClock;
+
 /**
  * Describes an action that terminates instantly after running once
  */
-public class InstantAction extends BaseAction
+public class InstantAction extends AbstractAction
 {
 
     private final Runnable runnable;
-    private boolean finished = false;
 
     /**
      * Create an InstantAction
@@ -20,15 +21,8 @@ public class InstantAction extends BaseAction
     }
 
     @Override
-    public void execute()
+    public void run(IClock clock)
     {
         runnable.run();
-        finished = true;
-    }
-
-    @Override
-    public boolean isFinished()
-    {
-        return finished;
     }
 }

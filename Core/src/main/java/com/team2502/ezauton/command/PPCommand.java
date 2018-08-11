@@ -8,10 +8,12 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.team2502.ezauton.robot.subsystems.TranslationalLocationDriveable;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * A Pure Pursuit command which can be used in simulation or as a WPILib Command
  */
-public class PPCommand extends BaseAction //TODO: Rename to PPAction
+public class PPCommand extends SimpleAction  // TODO: Rename to PPAction
 {
     private final PurePursuitMovementStrategy purePursuitMovementStrategy;
     private final ITranslationalLocationEstimator translationalLocationEstimator;
@@ -21,13 +23,16 @@ public class PPCommand extends BaseAction //TODO: Rename to PPAction
     /**
      * Create a PP Command
      *
+     * @param timeUnit                       The timeunit that period is in
+     * @param period                         How often to update estimated position, robot control, etc
      * @param purePursuitMovementStrategy    Our movement strategy.
      * @param translationalLocationEstimator An object that knows where we are on a 2D plane
      * @param lookahead                      An instance of {@link ILookahead} that can tell us how far along the path to look ahead
      * @param translationalLocationDriveable The drivetrain of the robot
      */
-    public PPCommand(PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable)
+    public PPCommand(TimeUnit timeUnit, long period, PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable)
     {
+        super(timeUnit, period);
         this.purePursuitMovementStrategy = purePursuitMovementStrategy;
         this.translationalLocationEstimator = translationalLocationEstimator;
         this.lookahead = lookahead;

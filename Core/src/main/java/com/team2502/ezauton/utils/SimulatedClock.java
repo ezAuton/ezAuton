@@ -21,9 +21,56 @@ public class SimulatedClock implements IClock
         setTime(time);
     }
 
-    public void addTime(long dt)
+    /**
+     * Add time in milliseconds
+     *
+     * @param dt millisecond increase
+     * @return The new time
+     */
+    public long addTime(long dt)
     {
-        setTime(time + dt);
+        setTime(getTime() + dt);
+        return getTime();
+    }
+
+    /**
+     * Add one millisecond and returns new value
+     *
+     * @return The new time
+     */
+    public long incAndGet()
+    {
+        return addTime(1);
+    }
+
+    /**
+     * Increment a certain amount of times
+     *
+     * @param times
+     */
+    public void incTimes(long times, long dt)
+    {
+        for(int i = 0; i < times; i++)
+        {
+            addTime(dt);
+        }
+    }
+
+    /**
+     * Increment a certain amount of times
+     *
+     * @param times
+     * @return
+     */
+    public void incTimes(long times)
+    {
+        incTimes(times, 1);
+    }
+
+    @Override
+    public long getTime()
+    {
+        return time;
     }
 
     public void setTime(long time)
@@ -41,12 +88,6 @@ public class SimulatedClock implements IClock
     }
 
     @Override
-    public long getTime()
-    {
-        return time;
-    }
-
-    @Override
     public void scheduleAt(long millis, Runnable runnable)
     {
         if(millis < getTime())
@@ -56,7 +97,8 @@ public class SimulatedClock implements IClock
         jobs.add(new Job(millis, runnable));
     }
 
-    private static class Job {
+    private static class Job
+    {
         private final long millis;
         private final Runnable runnable;
 

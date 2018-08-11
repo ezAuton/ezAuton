@@ -1,37 +1,50 @@
 package com.team2502.ezauton.command;
 
-import com.team2502.ezauton.utils.CopyableStopwatch;
+import com.team2502.ezauton.utils.IClock;
+import com.team2502.ezauton.utils.Stopwatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Describes an action that ends after a certain amount of time has elapsed
  */
-public class TimedAction extends BaseAction
+public class TimedAction extends SimpleAction
 {
 
-    private final double time;
-    private CopyableStopwatch stopwatch;
+    private final Runnable[] runnables;
+    private long millis;
+    private final Stopwatch stopwatch;
+
 
     /**
      * Create a TimedAction
      *
-     * @param time How many milliseconds to run for
+     * @param unit      The timeunit that period is in
+     * @param period    How often ro run the runnables
+     * @param clock     How we are keeping time
+     * @param runnables The runnables to run
      */
-    public TimedAction(double time)
+    public TimedAction(TimeUnit unit, long period, IClock clock, Runnable... runnables)
     {
-        this.time = time;
+        super(unit, period);
+        millis = unit.toMillis(period);
+        this.runnables = runnables;
+        stopwatch = new Stopwatch(clock);
+        stopwatch.resetIfNotInit();
+    }
+
+    protected void execute()
+    {
+        for(Runnable runnable : runnables)
+        {
+            runnable.run();
+        }
     }
 
 
     @Override
-    public void init(CopyableStopwatch stopwatch)
+    protected boolean isFinished()
     {
-        this.stopwatch = stopwatch;
+        return stopwatch.read() > millis;
     }
 
-    @Override
-    public boolean isFinished()
-    {
-        double read = stopwatch.read();
-        return read > time;
-    }
 }
