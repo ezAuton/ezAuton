@@ -6,7 +6,7 @@ import java.util.TimerTask;
 public class RealClock implements IClock
 {
     @Override
-    public long getSystemTime()
+    public long getTime()
     {
         return System.currentTimeMillis();
     }
@@ -21,6 +21,6 @@ public class RealClock implements IClock
             {
                 runnable.run();
             }
-        },millis-getSystemTime());
+        }, millis - getTime());
     }
 }

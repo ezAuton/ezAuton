@@ -11,7 +11,7 @@ public class Stopwatch
 {
 
     private final IClock clock;
-    long millis = 0;
+    long millis = -1;
 
     public Stopwatch(IClock clock)
     {
@@ -20,6 +20,7 @@ public class Stopwatch
 
     public void init()
     {
+        millis = clock.getTime();
 
     }
 
@@ -28,7 +29,7 @@ public class Stopwatch
      *
      * @return The value of the stopwatch
      */
-    default double pop()
+    double pop()
     {
         double readVal = read();
         reset();
@@ -40,25 +41,29 @@ public class Stopwatch
      *
      * @return The value of the stopwatch
      */
-    double read();
+    double read() {
+        return clock.getTime() - millis;
+    }
 
     /**
      * Reset without reading
      */
     void reset()
     {
-
+        millis = clock.getTime();
     }
 
     /**
      * @return If this stopwatch is initialized
      */
-    boolean isInit();
+    boolean isInit() {
+        return millis != -1;
+    }
 
     /**
      * @return If is not init
      */
-    default boolean resetIfNotInit()
+    boolean resetIfNotInit()
     {
         if(isInit())
         {
@@ -70,8 +75,14 @@ public class Stopwatch
 
     /**
      * Locks current thread for the time specified
+     *
      * @param amount
      * @param timeUnit
+     *
+     * @throws InterruptedException
      */
-    void wait(int amount, TimeUnit timeUnit);
+    void wait(int amount, TimeUnit timeUnit) throws InterruptedException
+    {
+        Thread.sleep(timeUnit.toMillis(amount));
+    }
 }
