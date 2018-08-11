@@ -2,19 +2,19 @@ package com.team2502.ezauton.actuators.implementations;
 
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.localization.sensors.ITranslationalDistanceSensor;
-import com.team2502.ezauton.utils.IStopwatch;
+import com.team2502.ezauton.utils.Stopwatch;
 
 /**
  * No ramp up.
  */
 public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanceSensor
 {
-    private final IStopwatch stopwatch;
+    private final Stopwatch stopwatch;
     protected double velocity = 0;
     private IVelocityMotor subscribed = null;
     private double position = 0;
 
-    public BaseSimulatedMotor(IStopwatch stopwatch)
+    public BaseSimulatedMotor(Stopwatch stopwatch)
     {
         this.stopwatch = stopwatch;
     }

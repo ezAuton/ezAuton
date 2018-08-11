@@ -1,6 +1,7 @@
 package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.utils.ICopyable;
+import com.team2502.ezauton.utils.SimulatedClock;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 
 import java.util.HashSet;
@@ -12,7 +13,7 @@ public class SimulatorManager
 
     private static SimulatorManager instance;
     private Set<ScheduledAction> scheduledActions = new HashSet<>();
-    private SimulatedStopwatch masterStopwatch = new SimulatedStopwatch(0.001);
+    private SimulatedStopwatch masterStopwatch = new SimulatedStopwatch(new SimulatedClock(), 0.001);
     private long count = 0;
 
     public static SimulatorManager getInstance()
@@ -43,7 +44,7 @@ public class SimulatorManager
 
     public void schedule(BaseAction action, long millisPeriod)
     {
-        SimulatedStopwatch stopwatch = new SimulatedStopwatch(millisPeriod * 1E-3);
+        SimulatedStopwatch stopwatch = new SimulatedStopwatch(new SimulatedClock(), millisPeriod * 1E-3);
         stopwatch.reset();
         scheduledActions.add(new ScheduledAction(action, millisPeriod, stopwatch));
         action.init(stopwatch);

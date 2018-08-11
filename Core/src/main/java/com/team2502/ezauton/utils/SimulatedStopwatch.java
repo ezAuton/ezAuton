@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Each time progress() is called, SimulatedStopwatch increases by dt
  */
-public class SimulatedStopwatch extends Stopwatch implements ICopyable, Updateable
+public class SimulatedStopwatch extends CopyableStopwatch implements Updateable
 {
 
     private final double dt;
@@ -29,7 +29,7 @@ public class SimulatedStopwatch extends Stopwatch implements ICopyable, Updateab
     }
 
     /**
-     * progress to next time step
+     * Make time move forward by dt milliseconds
      */
     public void progress()
     {
@@ -37,7 +37,9 @@ public class SimulatedStopwatch extends Stopwatch implements ICopyable, Updateab
     }
 
     /**
-     * progress to next time step
+     * Make time move forward by some number of milliseconds
+     *
+     * @param dt How many milliseconds to move forward
      */
     public void progress(double dt)
     {

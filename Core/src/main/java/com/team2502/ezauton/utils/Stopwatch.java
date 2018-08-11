@@ -29,7 +29,7 @@ public class Stopwatch
      *
      * @return The value of the stopwatch
      */
-    double pop()
+    public double pop()
     {
         double readVal = read();
         reset();
@@ -41,14 +41,15 @@ public class Stopwatch
      *
      * @return The value of the stopwatch
      */
-    double read() {
+    public double read()
+    {
         return clock.getTime() - millis;
     }
 
     /**
      * Reset without reading
      */
-    void reset()
+    public void reset()
     {
         millis = clock.getTime();
     }
@@ -56,14 +57,15 @@ public class Stopwatch
     /**
      * @return If this stopwatch is initialized
      */
-    boolean isInit() {
+    public boolean isInit()
+    {
         return millis != -1;
     }
 
     /**
      * @return If is not init
      */
-    boolean resetIfNotInit()
+    public boolean resetIfNotInit()
     {
         if(isInit())
         {
@@ -81,7 +83,7 @@ public class Stopwatch
      *
      * @throws InterruptedException
      */
-    void wait(int amount, TimeUnit timeUnit) throws InterruptedException
+    public void wait(int amount, TimeUnit timeUnit) throws InterruptedException
     {
         Thread.sleep(timeUnit.toMillis(amount));
     }

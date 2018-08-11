@@ -5,6 +5,10 @@ import java.util.TimerTask;
 
 public class RealClock implements IClock
 {
+    public static final RealClock CLOCK = new RealClock();
+
+    private RealClock() {}
+
     @Override
     public long getTime()
     {
