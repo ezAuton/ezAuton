@@ -3,41 +3,19 @@ package com.team2502.ezauton.utils;
 /**
  * A stopwatch that measures time in milliseconds
  */
-public class RealStopwatch implements ICopyableStopwatch
+@Deprecated //TODO: Delete -- Redundant with stopwatch ex
+public class RealStopwatch extends Stopwatch implements ICopyable
 {
-    /**
-     * Time in nanoseconds since last {@link RealStopwatch#reset()}
-     */
-    private long lastTime;
-
-    public RealStopwatch()
+    public RealStopwatch(IClock clock)
     {
-        lastTime = System.nanoTime();
-    }
-
-    @Override
-    public double read() // returns milliseconds
-    {
-        return (System.nanoTime() - lastTime) * 1E-9;
-    }
-
-    @Override
-    public void reset()
-    {
-        lastTime = System.nanoTime();
-    }
-
-    @Override
-    public boolean isInit()
-    {
-        return lastTime != -1;
+        super(clock);
     }
 
     @Override
     public RealStopwatch copy()
     {
-        RealStopwatch realStopwatch = new RealStopwatch();
-        realStopwatch.lastTime = lastTime;
+        RealStopwatch realStopwatch = new RealStopwatch((RealClock) clock);
+        realStopwatch.millis = millis;
         return realStopwatch;
     }
 }

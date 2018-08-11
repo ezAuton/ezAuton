@@ -1,6 +1,6 @@
 package com.team2502.ezauton.command;
 
-import com.team2502.ezauton.utils.ICopyableStopwatch;
+import com.team2502.ezauton.utils.ICopyable;
 
 /**
  * Describes an action that ends after a certain amount of time has elapsed
@@ -9,7 +9,7 @@ public class TimedAction extends BaseAction
 {
 
     private final double time;
-    private ICopyableStopwatch stopwatch;
+    private ICopyable stopwatch;
 
     /**
      * Create a TimedAction
@@ -23,7 +23,7 @@ public class TimedAction extends BaseAction
 
 
     @Override
-    public void init(ICopyableStopwatch stopwatch)
+    public void init(ICopyable stopwatch)
     {
         this.stopwatch = stopwatch;
     }

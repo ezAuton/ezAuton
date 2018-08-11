@@ -1,6 +1,6 @@
 package com.team2502.ezauton.command;
 
-import com.team2502.ezauton.utils.ICopyableStopwatch;
+import com.team2502.ezauton.utils.ICopyable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +16,7 @@ public class ActionGroup implements IAction
 
     private IAction lastSimulated;
 
-    private ICopyableStopwatch stopwatch;
+    private ICopyable stopwatch;
 
     /**
      * Creates an ActionGroup comprised of sequential commands

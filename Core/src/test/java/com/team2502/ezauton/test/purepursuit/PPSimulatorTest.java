@@ -12,7 +12,7 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import com.team2502.ezauton.test.simulator.SimulatedTankRobot;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
-import com.team2502.ezauton.utils.ICopyableStopwatch;
+import com.team2502.ezauton.utils.ICopyable;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -49,7 +49,7 @@ public class PPSimulatorTest
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
-        ICopyableStopwatch stopwatch = SimulatorManager.getInstance().generateStopwatch();
+        ICopyable stopwatch = SimulatorManager.getInstance().generateStopwatch();
         SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, stopwatch, 14, 0.3, 16D);
 
         IVelocityMotor leftMotor = robot.getLeftMotor();
