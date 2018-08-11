@@ -1,7 +1,7 @@
 package com.team2502.ezauton.localization.sensors;
 
 /**
- * A CCW rotational censor on [0,360) which is 0 when facing forward, 90 when facing west, ...
+ * A CCW rotational sensor on [0,360) which is 0 when facing forward, 90 when facing west, ...
  */
 //TODO: Better name?
 public interface ICompass extends ISensor

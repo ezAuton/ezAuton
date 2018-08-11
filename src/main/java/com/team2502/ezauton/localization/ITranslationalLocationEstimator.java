@@ -5,6 +5,7 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 /**
  * An interface for any class trying to estimate our location
  */
+//TODO: Suggestion -- Rename to ILocationEstimator to reduce redundancy in the name -- rm
 public interface ITranslationalLocationEstimator
 {
     /**

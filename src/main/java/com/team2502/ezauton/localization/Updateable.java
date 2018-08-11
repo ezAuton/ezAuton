@@ -6,7 +6,7 @@ package com.team2502.ezauton.localization;
 public interface Updateable
 {
     /**
-     * @return If could update
+     * @return If could update successfully
      */
     boolean update();
 }

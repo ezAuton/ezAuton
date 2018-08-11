@@ -11,13 +11,22 @@ import com.team2502.ezauton.utils.MathUtils;
  * However, this is generally very inaccurate and should instead be done by combining this with
  * {@link TankRobotEncoderEncoderEstimator}
  */
+
+/**
+ * Describes an IRotationalLocationEstimator that uses a compass/compass-like sensor (like the gyro on the navX) to estimate the
+ * robot's current heading
+ */
 public class CompassLocationEstimator implements IRotationalLocationEstimator
 {
     private final ICompass compass;
+
+    //TODO: Delete?
     double initHeading = 0;
 
     /**
-     * Make a new estimator for our angle
+     * Create a new CompassLocationEstimator
+     *
+     * @param compass A reference to the compass to use to estimate the robot's heading
      */
     public CompassLocationEstimator(ICompass compass)
     {

@@ -3,7 +3,7 @@ package com.team2502.ezauton.localization;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
 /**
- * Interface for any class that will estimate position details of our robot
+ * Interface for any class that knows how fast the wheels on either side of the robot are going, given that the robot has a tank drivetrain
  */
 public interface ITankRobotVelocityEstimator
 {
