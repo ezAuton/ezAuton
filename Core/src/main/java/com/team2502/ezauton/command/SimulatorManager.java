@@ -1,6 +1,6 @@
 package com.team2502.ezauton.command;
 
-import com.team2502.ezauton.utils.ICopyableStopwatch;
+import com.team2502.ezauton.utils.ICopyable;
 import com.team2502.ezauton.utils.SimulatedStopwatch;
 
 import java.util.HashSet;
@@ -34,7 +34,7 @@ public class SimulatorManager
         return scheduledActions.removeIf(scheduledAction -> scheduledAction.action == baseAction);
     }
 
-    public ICopyableStopwatch generateStopwatch()
+    public ICopyable generateStopwatch()
     {
         SimulatedStopwatch copy = masterStopwatch.copy();
         copy.reset();

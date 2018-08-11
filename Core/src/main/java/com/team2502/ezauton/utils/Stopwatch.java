@@ -5,13 +5,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * A handy stopwatch for recording time in seconds every time it is polled
  *
- * @deprecated Use {@link ICopyableStopwatch}
+ * @deprecated Use {@link ICopyable}
  */
 public class Stopwatch
 {
 
-    private final IClock clock;
-    long millis = -1;
+    protected final IClock clock;
+    protected long millis = -1;
 
     public Stopwatch(IClock clock)
     {

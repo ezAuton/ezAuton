@@ -9,15 +9,16 @@ import java.util.concurrent.TimeUnit;
 /**
  * Each time progress() is called, SimulatedStopwatch increases by dt
  */
-public class SimulatedStopwatch implements ICopyableStopwatch, Updateable
+public class SimulatedStopwatch extends Stopwatch implements ICopyable, Updateable
 {
 
     private final double dt;
     Set<SimulatedStopwatch> related = new HashSet<>();
     double sum = -1;
 
-    public SimulatedStopwatch(double dt)
+    public SimulatedStopwatch(SimulatedClock clock, double dt)
     {
+        super(clock);
         this.dt = dt;
     }
 
@@ -74,7 +75,7 @@ public class SimulatedStopwatch implements ICopyableStopwatch, Updateable
     @Override
     public SimulatedStopwatch copy()
     {
-        SimulatedStopwatch simulatedStopwatch = new SimulatedStopwatch(dt);
+        SimulatedStopwatch simulatedStopwatch = new SimulatedStopwatch((SimulatedClock) clock, dt);
         simulatedStopwatch.sum = sum;
 
         related.add(simulatedStopwatch);

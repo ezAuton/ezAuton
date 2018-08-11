@@ -1,12 +1,12 @@
 package com.team2502.ezauton.command;
 
-import com.team2502.ezauton.utils.ICopyableStopwatch;
+import com.team2502.ezauton.utils.ICopyable;
 
 public class TimedAction extends BaseAction
 {
 
     private final double time;
-    private ICopyableStopwatch stopwatch;
+    private ICopyable stopwatch;
 
     public TimedAction(double time)
     {
@@ -14,7 +14,7 @@ public class TimedAction extends BaseAction
     }
 
     @Override
-    public void init(ICopyableStopwatch stopwatch)
+    public void init(ICopyable stopwatch)
     {
         this.stopwatch = stopwatch;
     }

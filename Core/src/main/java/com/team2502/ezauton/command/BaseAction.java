@@ -1,6 +1,6 @@
 package com.team2502.ezauton.command;
 
-import com.team2502.ezauton.utils.ICopyableStopwatch;
+import com.team2502.ezauton.utils.ICopyable;
 import com.team2502.ezauton.utils.RealStopwatch;
 
 import java.util.ArrayList;
@@ -9,15 +9,15 @@ import java.util.List;
 public abstract class BaseAction implements IAction
 {
     protected boolean used = false;
-    private ICopyableStopwatch stopwatch;
+    private ICopyable stopwatch;
     private List<Runnable> runnables = new ArrayList<>();
 
-    protected void init(ICopyableStopwatch stopwatch)
+    protected void init(ICopyable stopwatch)
     {
         this.stopwatch = stopwatch;
     }
 
-    public ICopyableStopwatch getStopwatch()
+    public ICopyable getStopwatch()
     {
         return stopwatch;
     }
