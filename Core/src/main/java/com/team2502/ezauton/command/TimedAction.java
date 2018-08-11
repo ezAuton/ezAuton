@@ -1,28 +1,32 @@
 package com.team2502.ezauton.command;
 
-import com.team2502.ezauton.utils.CopyableStopwatch;
+import com.team2502.ezauton.utils.IClock;
 
-public class TimedAction extends BaseAction
+import java.util.concurrent.TimeUnit;
+
+public class TimedAction extends AbstractAction
 {
 
-    private final double time;
-    private CopyableStopwatch stopwatch;
+    private final Runnable[] runnables;
+    private long millis;
 
-    public TimedAction(double time)
+    public TimedAction(TimeUnit unit, long value, Runnable... runnables)
     {
-        this.time = time;
+        millis = unit.toMillis(value);
+        this.runnables = runnables;
     }
 
     @Override
-    public void init(CopyableStopwatch stopwatch)
+    public void run(IClock clock)
     {
-        this.stopwatch = stopwatch;
-    }
-
-    @Override
-    public boolean isFinished()
-    {
-        double read = stopwatch.read();
-        return read > time;
+        clock.wait(TimeUnit.MILLISECONDS, millis);
+        if(isStopped())
+        {
+            return;
+        }
+        for(Runnable runnable : runnables)
+        {
+            runnable.run();
+        }
     }
 }

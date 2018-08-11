@@ -2,14 +2,16 @@ package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.localization.Updateable;
 
-public class BackgroundAction extends BaseAction
+import java.util.concurrent.TimeUnit;
+
+public class BackgroundAction extends SimpleAction
 {
 
     private final Updateable[] updateables;
-    private boolean killed = false;
 
-    public BackgroundAction(Updateable... updateables)
+    public BackgroundAction(TimeUnit timeUnit, long period, Updateable... updateables)
     {
+        super(timeUnit, period);
         this.updateables = updateables;
     }
 
@@ -23,18 +25,8 @@ public class BackgroundAction extends BaseAction
     }
 
     @Override
-    public boolean isFinished()
+    protected boolean isFinished()
     {
-        return killed;
-    }
-
-    public boolean isKilled()
-    {
-        return killed;
-    }
-
-    public void kill()
-    {
-        this.killed = true;
+        return false;
     }
 }

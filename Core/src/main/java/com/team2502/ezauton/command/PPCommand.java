@@ -8,18 +8,21 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.team2502.ezauton.robot.subsystems.TranslationalLocationDriveable;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * A Pure Pursuit command which can be used in simulation or as a WPILib Command
  */
-public class PPCommand extends BaseAction
+public class PPCommand extends SimpleAction
 {
     private final PurePursuitMovementStrategy purePursuitMovementStrategy;
     private final ITranslationalLocationEstimator translationalLocationEstimator;
     private final ILookahead lookahead;
     private final TranslationalLocationDriveable translationalLocationDriveable;
 
-    public PPCommand(PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable)
+    public PPCommand(TimeUnit timeUnit, long period, PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable)
     {
+        super(timeUnit, period);
         this.purePursuitMovementStrategy = purePursuitMovementStrategy;
         this.translationalLocationEstimator = translationalLocationEstimator;
         this.lookahead = lookahead;

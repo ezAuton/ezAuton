@@ -1,10 +1,11 @@
 package com.team2502.ezauton.command;
 
-public class InstantAction extends BaseAction
+import com.team2502.ezauton.utils.IClock;
+
+public class InstantAction extends AbstractAction
 {
 
     private final Runnable runnable;
-    private boolean finished = false;
 
     public InstantAction(Runnable runnable)
     {
@@ -12,15 +13,8 @@ public class InstantAction extends BaseAction
     }
 
     @Override
-    public void execute()
+    public void run(IClock clock)
     {
         runnable.run();
-        finished = true;
-    }
-
-    @Override
-    public boolean isFinished()
-    {
-        return finished;
     }
 }

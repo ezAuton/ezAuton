@@ -49,7 +49,7 @@ public class PPSimulatorTest
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
-        ICopyable stopwatch = SimulatorManager.getInstance().generateStopwatch();
+        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
         SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, stopwatch, 14, 0.3, 16D);
 
         IVelocityMotor leftMotor = robot.getLeftMotor();
@@ -61,7 +61,7 @@ public class PPSimulatorTest
         // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
         BackgroundAction backgroundAction = new BackgroundAction(locEstimator, robot);
 
-        SimulatorManager.getInstance().schedule(backgroundAction, 1);
+        Simulation.getInstance().schedule(backgroundAction, 1);
 
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
@@ -70,12 +70,12 @@ public class PPSimulatorTest
         PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         // Run the ppCommand and then kill the background task as it is no longer needed
-        ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::kill), new InstantAction(() -> System.out.println(SimulatorManager.getInstance().getCount() + "")));
+        ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::kill), new InstantAction(() -> System.out.println(Simulation.getInstance().getCount() + "")));
 
         actionGroup.simulate(50);
 
         // run the simulator with a timeout of 100000 milliseconds (100 seconds)
-        SimulatorManager.getInstance().run(100000);
+        Simulation.getInstance().run(100000);
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
         Assert.assertEquals(0, leftWheelVelocity, 0.2D);
