@@ -4,17 +4,17 @@ package com.team2502.ezauton.utils;
  * A stopwatch that measures time in milliseconds
  */
 @Deprecated //TODO: Delete -- Redundant with stopwatch ex
-public class RealStopwatch extends Stopwatch implements ICopyable
+public class RealStopwatch extends CopyableStopwatch
 {
-    public RealStopwatch(IClock clock)
+    public RealStopwatch()
     {
-        super(clock);
+        super(RealClock.CLOCK);
     }
 
     @Override
     public RealStopwatch copy()
     {
-        RealStopwatch realStopwatch = new RealStopwatch((RealClock) clock);
+        RealStopwatch realStopwatch = new RealStopwatch();
         realStopwatch.millis = millis;
         return realStopwatch;
     }

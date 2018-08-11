@@ -2,14 +2,14 @@ package com.team2502.ezauton.actuators.implementations;
 
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.localization.sensors.ITranslationalDistanceSensor;
-import com.team2502.ezauton.utils.IStopwatch;
+import com.team2502.ezauton.utils.Stopwatch;
 
 /**
  * Describes a simulated motor with an encoder. The motor has infinite acceleration
  */
 public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanceSensor
 {
-    private final IStopwatch stopwatch;
+    private final Stopwatch stopwatch;
     protected double velocity = 0;
     private IVelocityMotor subscribed = null;
     private double position = 0;
@@ -19,7 +19,7 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
      *
      * @param stopwatch An instance of IStopwatch. Can either be simulated or real.
      */
-    public BaseSimulatedMotor(IStopwatch stopwatch)
+    public BaseSimulatedMotor(Stopwatch stopwatch)
     {
         this.stopwatch = stopwatch;
     }

@@ -1,6 +1,8 @@
 package com.team2502.ezauton.command;
 
+import com.team2502.ezauton.utils.CopyableStopwatch;
 import com.team2502.ezauton.utils.ICopyable;
+import com.team2502.ezauton.utils.RealClock;
 import com.team2502.ezauton.utils.RealStopwatch;
 
 import java.util.ArrayList;
@@ -12,20 +14,20 @@ import java.util.List;
 public abstract class BaseAction implements IAction
 {
     protected boolean used = false;
-    private ICopyable stopwatch;
+    private CopyableStopwatch stopwatch;
     private List<Runnable> runnables = new ArrayList<>();
-
+    
     /**
      * Initialize this BaseAction. Runs once.
      *
      * @param stopwatch The stopwatch we should use to keep track of time
      */
-    protected void init(ICopyable stopwatch)
+    protected void init(CopyableStopwatch stopwatch)
     {
         this.stopwatch = stopwatch;
     }
 
-    public ICopyable getStopwatch()
+    public CopyableStopwatch getStopwatch()
     {
         return stopwatch;
     }

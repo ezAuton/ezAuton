@@ -3,7 +3,7 @@ package com.team2502.ezauton.actuators.implementations;
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.actuators.VelocityProcessor;
 import com.team2502.ezauton.localization.Updateable;
-import com.team2502.ezauton.utils.IStopwatch;
+import com.team2502.ezauton.utils.Stopwatch;
 
 /**
  * A velocity processor where the motor has a maximum accceleration
@@ -12,7 +12,7 @@ public class RampUpVelocityProcessor extends VelocityProcessor implements Update
 {
 
     private final double maxAccel;
-    private final IStopwatch accelStopwatch;
+    private final Stopwatch accelStopwatch;
     private double lastVelocity = 0;
     private double targetVelocity;
 
@@ -23,7 +23,7 @@ public class RampUpVelocityProcessor extends VelocityProcessor implements Update
      * @param stopwatch     A stopwatch which will be used to calculate velocity from acceleration. Can be simulated or real.
      * @param maxAccel      The maximum acceleration of this motor.
      */
-    public RampUpVelocityProcessor(IVelocityMotor velocityMotor, IStopwatch stopwatch, double maxAccel)
+    public RampUpVelocityProcessor(IVelocityMotor velocityMotor, Stopwatch stopwatch, double maxAccel)
     {
         super(velocityMotor);
         accelStopwatch = stopwatch;

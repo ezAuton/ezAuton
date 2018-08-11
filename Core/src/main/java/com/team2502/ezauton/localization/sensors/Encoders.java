@@ -1,6 +1,6 @@
 package com.team2502.ezauton.localization.sensors;
 
-import com.team2502.ezauton.utils.IStopwatch;
+import com.team2502.ezauton.utils.Stopwatch;
 
 /**
  * A utility class to convert WPILib libraries (i.e. TalonSRX, VictorSPX) into more abstract
@@ -99,7 +99,7 @@ public class Encoders
         };
     }
 
-    public static IEncoder fromTachometer(ITachometer tachometer, IStopwatch stopwatch)
+    public static IEncoder fromTachometer(ITachometer tachometer, Stopwatch stopwatch)
     {
         return new IEncoder()
         {
