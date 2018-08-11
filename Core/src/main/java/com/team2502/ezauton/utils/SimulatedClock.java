@@ -26,11 +26,6 @@ public class SimulatedClock implements IClock
         setTime(time + dt);
     }
 
-    public long getTime()
-    {
-        return time;
-    }
-
     public void setTime(long time)
     {
         jobs.removeIf(job -> {
@@ -46,7 +41,7 @@ public class SimulatedClock implements IClock
     }
 
     @Override
-    public long getSystemTime()
+    public long getTime()
     {
         return time;
     }
