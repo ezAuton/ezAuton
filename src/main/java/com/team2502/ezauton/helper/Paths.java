@@ -4,8 +4,16 @@ import com.team2502.ezauton.pathplanning.PP_PathGenerator;
 import com.team2502.ezauton.pathplanning.Path;
 import com.team2502.ezauton.pathplanning.purepursuit.PPWaypoint;
 
+/**
+ * Class containing sample paths for Pure Pursuit
+ *
+ * This class only contains static members.
+ */
 public class Paths
 {
+    /**
+     * Describes a path 12 (ft? m?) long reaching a max velocity of 5 (ft/s? m/s?) with a max accel and decel of 3 (ft/s^2? m/s^2)
+     */
     public static Path STRAIGHT_12FT;
 
     static
