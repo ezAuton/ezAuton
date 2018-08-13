@@ -1,13 +1,15 @@
 package com.team2502.ezauton.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SimulatedClock implements IClock
 {
 
     private long time = 0;
 
-    private List<Job> jobs;
+    private List<Job> jobs = new ArrayList<>();
 
     public SimulatedClock() {}
 
@@ -34,6 +36,17 @@ public class SimulatedClock implements IClock
     }
 
     /**
+     * Adds time with units
+     *
+     * @param timeUnit
+     * @param value
+     */
+    public void addTime(TimeUnit timeUnit, long value)
+    {
+        addTime(timeUnit.toMillis(value));
+    }
+
+    /**
      * Add one millisecond and returns new value
      *
      * @return The new time
@@ -50,10 +63,20 @@ public class SimulatedClock implements IClock
      */
     public void incTimes(long times, long dt)
     {
+        long init = getTime();
+        long totalDt = times * dt;
         for(int i = 0; i < times; i++)
         {
-            addTime(dt);
+            if(!jobs.isEmpty())
+            {
+                addTime(dt);
+            }
+            else
+            {
+                break;
+            }
         }
+        setTime(init + totalDt);
     }
 
     /**

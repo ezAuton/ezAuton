@@ -12,9 +12,10 @@ import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import com.team2502.ezauton.test.simulator.SimulatedTankRobot;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
-import com.team2502.ezauton.utils.ICopyable;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 public class PPSimulatorTest
 {
@@ -49,8 +50,10 @@ public class PPSimulatorTest
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
-        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
-        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, stopwatch, 14, 0.3, 16D);
+//        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
+        Simulation simulation = new Simulation();
+
+        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getSimulatedClock(), 14, 0.3, 16D);
 
         IVelocityMotor leftMotor = robot.getLeftMotor();
         IVelocityMotor rightMotor = robot.getRightMotor();
@@ -59,23 +62,23 @@ public class PPSimulatorTest
         locEstimator.reset();
 
         // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(locEstimator, robot);
+        BackgroundAction backgroundAction = new BackgroundAction(TimeUnit.MILLISECONDS, 1, locEstimator, robot);
 
-        Simulation.getInstance().schedule(backgroundAction, 1);
+        simulation.add(backgroundAction);
 
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
 
-        PPCommand ppCommand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PPCommand ppCommand = new PPCommand(TimeUnit.MILLISECONDS, 50, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         // Run the ppCommand and then kill the background task as it is no longer needed
-        ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::kill), new InstantAction(() -> System.out.println(Simulation.getInstance().getCount() + "")));
+        ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::stop));
 
-        actionGroup.simulate(50);
+        simulation.add(actionGroup);
 
-        // run the simulator with a timeout of 100000 milliseconds (100 seconds)
-        Simulation.getInstance().run(100000);
+        // run the simulator with a timeout of 100 seconds
+        simulation.run(TimeUnit.SECONDS, 100);
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
         Assert.assertEquals(0, leftWheelVelocity, 0.2D);

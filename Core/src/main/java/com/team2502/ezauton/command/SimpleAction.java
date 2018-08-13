@@ -1,6 +1,7 @@
 package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.utils.IClock;
+import com.team2502.ezauton.utils.Stopwatch;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,6 +10,7 @@ public abstract class SimpleAction extends AbstractAction
 
     private final long periodMillis;
     private IClock clock;
+    private Stopwatch stopwatch;
 
     public SimpleAction(TimeUnit timeUnit, long period)
     {
@@ -25,6 +27,10 @@ public abstract class SimpleAction extends AbstractAction
     public void run(IClock clock)
     {
         this.clock = clock;
+
+        stopwatch = new Stopwatch(clock);
+        stopwatch.reset();
+
         init();
         do
         {
@@ -32,6 +38,11 @@ public abstract class SimpleAction extends AbstractAction
             clock.wait(TimeUnit.MILLISECONDS, periodMillis);
         }
         while(!isFinished() || isStopped());
+    }
+
+    public Stopwatch getStopwatch()
+    {
+        return stopwatch;
     }
 
     public IClock getClock()

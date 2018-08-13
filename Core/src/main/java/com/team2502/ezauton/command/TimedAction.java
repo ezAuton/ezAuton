@@ -14,7 +14,6 @@ public class TimedAction extends SimpleAction
     private long millis;
     private final Stopwatch stopwatch;
 
-
     /**
      * Create a TimedAction
      *

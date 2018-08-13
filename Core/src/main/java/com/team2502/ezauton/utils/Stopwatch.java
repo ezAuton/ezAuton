@@ -1,5 +1,7 @@
 package com.team2502.ezauton.utils;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * A handy stopwatch for recording time in seconds every time it is polled
  */
@@ -40,6 +42,11 @@ public class Stopwatch
     public double read()
     {
         return clock.getTime() - millis;
+    }
+
+    public double read(TimeUnit timeUnit)
+    {
+        return TimeUnit.MILLISECONDS.convert((long) read(), timeUnit);
     }
 
     /**
