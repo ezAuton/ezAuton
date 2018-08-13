@@ -41,7 +41,11 @@ public class Simulation
         simulatedClock.incTimes(timeoutMillis);
 
         // Need to wait until all threads are finished
-        ForkJoinPool.commonPool().awaitQuiescence(1, TimeUnit.SECONDS);
+        if(!ForkJoinPool.commonPool().awaitQuiescence(1, TimeUnit.SECONDS))
+        {
+            throw new RuntimeException("Simulator did not finish in a second.");
+        }
+
     }
 
     public void run(TimeUnit timeUnit, long value)

@@ -37,7 +37,7 @@ public abstract class SimpleAction extends AbstractAction
             execute();
             clock.wait(TimeUnit.MILLISECONDS, periodMillis);
         }
-        while(!isFinished() || isStopped());
+        while(!isFinished() && !isStopped());
     }
 
     public Stopwatch getStopwatch()

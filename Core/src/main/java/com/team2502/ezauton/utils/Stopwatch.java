@@ -34,6 +34,11 @@ public class Stopwatch
         return readVal;
     }
 
+    public IClock getClock()
+    {
+        return clock;
+    }
+
     /**
      * Read without resetting
      *
