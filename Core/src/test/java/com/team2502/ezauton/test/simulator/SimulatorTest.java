@@ -43,14 +43,16 @@ public class SimulatorTest
         AtomicInteger atomicInteger = new AtomicInteger(0);
         Simulation simulation = new Simulation();
         ActionGroup actionGroup = new ActionGroup();
-        DelayedAction delayedAction = new DelayedAction(TimeUnit.SECONDS, 1, atomicInteger::incrementAndGet);
+        DelayedAction delayedAction = new DelayedAction(TimeUnit.SECONDS, 1, ()->atomicInteger.compareAndSet(0,1));
         actionGroup.addSequential(delayedAction);
-        DelayedAction delayedAction2 = new DelayedAction(TimeUnit.SECONDS, 1, atomicInteger::incrementAndGet);
+        DelayedAction delayedAction2 = new DelayedAction(TimeUnit.MILLISECONDS, 10, ()->atomicInteger.compareAndSet(1,2));
+        DelayedAction delayedAction3 = new DelayedAction(TimeUnit.MILLISECONDS, 15, ()->atomicInteger.compareAndSet(2,3));
+        actionGroup.addParallel(delayedAction3);
         actionGroup.with(delayedAction2);
 
         simulation.add(actionGroup);
         simulation.run(TimeUnit.SECONDS, 100);
-        Assert.assertEquals(2, atomicInteger.get());
+        Assert.assertEquals(3, atomicInteger.get());
     }
 
 

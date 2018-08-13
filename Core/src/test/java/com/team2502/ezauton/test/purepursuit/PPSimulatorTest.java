@@ -62,7 +62,7 @@ public class PPSimulatorTest
         locEstimator.reset();
 
         // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(TimeUnit.MILLISECONDS, 1, locEstimator, robot);
+        BackgroundAction backgroundAction = new BackgroundAction(TimeUnit.MILLISECONDS, 20, locEstimator, robot);
 
         simulation.add(backgroundAction);
 
@@ -78,7 +78,7 @@ public class PPSimulatorTest
         simulation.add(actionGroup);
 
         // run the simulator with a timeout of 100 seconds
-        simulation.run(TimeUnit.SECONDS, 100);
+        simulation.run(TimeUnit.SECONDS, 5);
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
         Assert.assertEquals(0, leftWheelVelocity, 0.2D);

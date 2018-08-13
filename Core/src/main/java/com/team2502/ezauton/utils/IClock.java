@@ -48,14 +48,5 @@ public interface IClock
         Lock lock = new ReentrantLock();
         scheduleIn(timeUnit, dt, lock::unlock);
         lock.lock();
-
-        try
-        {
-            Thread.sleep(timeUnit.toMillis(dt));
-        }
-        catch(InterruptedException e)
-        {
-            e.printStackTrace();
-        }
     }
 }
