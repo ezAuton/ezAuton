@@ -1,6 +1,8 @@
 package com.team2502.ezauton.utils;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Describes a Clock. The clock can be real or simulated. The purpose of a clock is to support a {@link Stopwatch}
@@ -30,7 +32,7 @@ public interface IClock
      * @param dt       The quantity of time
      * @param runnable The thing that should happen
      */
-    default void scheduleAt(TimeUnit timeUnit, long dt, Runnable runnable)
+    default void scheduleIn(TimeUnit timeUnit, long dt, Runnable runnable)
     {
         scheduleAt(getTime() + timeUnit.toMillis(dt), runnable);
     }
@@ -43,6 +45,10 @@ public interface IClock
      */
     default void wait(TimeUnit timeUnit, long dt)
     {
+        Lock lock = new ReentrantLock();
+        scheduleIn(timeUnit, dt, lock::unlock);
+        lock.lock();
+
         try
         {
             Thread.sleep(timeUnit.toMillis(dt));

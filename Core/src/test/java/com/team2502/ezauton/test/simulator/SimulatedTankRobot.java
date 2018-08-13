@@ -9,7 +9,7 @@ import com.team2502.ezauton.localization.Updateable;
 import com.team2502.ezauton.localization.UpdateableGroup;
 import com.team2502.ezauton.localization.sensors.ITranslationalDistanceSensor;
 import com.team2502.ezauton.robot.ITankRobotConstants;
-import com.team2502.ezauton.utils.ICopyable;
+import com.team2502.ezauton.utils.IClock;
 
 public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 {
@@ -28,17 +28,17 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 
     /**
      * @param lateralWheelDistance The lateral wheel distance between the wheels of the robot
-     * @param stopwatch            The stopwatch that the simulated tank robot is using
+     * @param clock                The clock that the simulated tank robot is using
      * @param maxAccel             The max acceleration of the motors
      * @param minVel               The minimum velocity the robot can continuously drive at (i.e. the robot cannot drive at 0.0001 ft/s)
      */
-    public SimulatedTankRobot(double lateralWheelDistance, ICopyable stopwatch, double maxAccel, double minVel, double maxVel)
+    public SimulatedTankRobot(double lateralWheelDistance, IClock clock, double maxAccel, double minVel, double maxVel)
     {
-        baseLeftSimulatedMotor = new BaseSimulatedMotor(stopwatch.copy());
-        this.leftMotor = buildMotor(baseLeftSimulatedMotor, stopwatch, maxAccel, minVel, maxVel);
+        baseLeftSimulatedMotor = new BaseSimulatedMotor(clock);
+        this.leftMotor = buildMotor(baseLeftSimulatedMotor, clock, maxAccel, minVel, maxVel);
 
-        baseRightSimulatedMotor = new BaseSimulatedMotor(stopwatch.copy());
-        this.rightMotor = buildMotor(baseRightSimulatedMotor, stopwatch, maxAccel, minVel, maxVel);
+        baseRightSimulatedMotor = new BaseSimulatedMotor(clock);
+        this.rightMotor = buildMotor(baseRightSimulatedMotor, clock, maxAccel, minVel, maxVel);
 
         this.lateralWheelDistance = lateralWheelDistance;
 
@@ -60,9 +60,9 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
         rightMotor.runVelocity(right);
     }
 
-    private IVelocityMotor buildMotor(BaseSimulatedMotor baseSimulatedMotor, ICopyable stopwatch, double maxAccel, double minVel, double maxVel)
+    private IVelocityMotor buildMotor(BaseSimulatedMotor baseSimulatedMotor, IClock clock, double maxAccel, double minVel, double maxVel)
     {
-        RampUpVelocityProcessor leftRampUpMotor = new RampUpVelocityProcessor(baseSimulatedMotor, stopwatch.copy(), maxAccel);
+        RampUpVelocityProcessor leftRampUpMotor = new RampUpVelocityProcessor(baseSimulatedMotor, clock, maxAccel);
         toUpdate.add(leftRampUpMotor);
 
         StaticFrictionVelocityProcessor leftSF = new StaticFrictionVelocityProcessor(baseSimulatedMotor, leftRampUpMotor, minVel);

@@ -1,8 +1,8 @@
 package com.team2502.ezauton.test.utils;
 
 import com.team2502.ezauton.command.ActionGroup;
+import com.team2502.ezauton.command.DelayedAction;
 import com.team2502.ezauton.command.Simulation;
-import com.team2502.ezauton.command.TimedAction;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -18,13 +18,13 @@ public class ActionTest
     {
         AtomicInteger count = new AtomicInteger(0);
 
-        TimedAction five = new TimedAction(TimeUnit.SECONDS, 5);
+        DelayedAction five = new DelayedAction(TimeUnit.SECONDS, 5);
         five.onFinish(() -> count.compareAndSet(5, 7));
 
-        TimedAction three1 = new TimedAction(TimeUnit.SECONDS, 3);
+        DelayedAction three1 = new DelayedAction(TimeUnit.SECONDS, 3);
         three1.onFinish(() -> count.compareAndSet(0, 3));
 
-        TimedAction three2 = new TimedAction(TimeUnit.SECONDS, 3);
+        DelayedAction three2 = new DelayedAction(TimeUnit.SECONDS, 3);
         three2.onFinish(() -> count.compareAndSet(7, 8));
 
         ActionGroup actionGroup = new ActionGroup()
@@ -35,7 +35,7 @@ public class ActionTest
 
         Simulation simulation = new Simulation();
         simulation.add(actionGroup);
-        simulation.run(100_000);
+        simulation.run(TimeUnit.SECONDS, 100);
 
         assertEquals(8, count.intValue());
     }

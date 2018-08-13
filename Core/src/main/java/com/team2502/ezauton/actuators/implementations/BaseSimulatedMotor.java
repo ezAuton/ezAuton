@@ -2,6 +2,7 @@ package com.team2502.ezauton.actuators.implementations;
 
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.localization.sensors.ITranslationalDistanceSensor;
+import com.team2502.ezauton.utils.IClock;
 import com.team2502.ezauton.utils.Stopwatch;
 
 /**
@@ -14,9 +15,9 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
     private IVelocityMotor subscribed = null;
     private double position = 0;
 
-    public BaseSimulatedMotor(Stopwatch stopwatch)
+    public BaseSimulatedMotor(IClock clock)
     {
-        this.stopwatch = stopwatch;
+        this.stopwatch = new Stopwatch(clock);
     }
 
     public IVelocityMotor getSubscribed()

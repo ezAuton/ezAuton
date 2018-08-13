@@ -4,13 +4,13 @@ import com.team2502.ezauton.utils.IClock;
 
 import java.util.concurrent.TimeUnit;
 
-public class TimedAction extends AbstractAction
+public class DelayedAction extends AbstractAction
 {
 
     private final Runnable[] runnables;
     private long millis;
 
-    public TimedAction(TimeUnit unit, long value, Runnable... runnables)
+    public DelayedAction(TimeUnit unit, long value, Runnable... runnables)
     {
         millis = unit.toMillis(value);
         this.runnables = runnables;
