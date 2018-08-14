@@ -25,13 +25,24 @@ public class Stopwatch
     /**
      * Read and reset
      *
-     * @return The value of the stopwatch
+     * @return The value of the stopwatch (ms)
      */
     public double pop()
     {
         double readVal = read();
         reset();
         return readVal;
+    }
+
+    /**
+     * Read and reset
+     *
+     * @param timeUnit The time unit you would like to get the result in
+     * @return Value of stopwatch (in specified timeunit)
+     */
+    public double pop(TimeUnit timeUnit)
+    {
+        return pop() / timeUnit.toMillis(1);
     }
 
     public IClock getClock()
@@ -42,7 +53,7 @@ public class Stopwatch
     /**
      * Read without resetting
      *
-     * @return The value of the stopwatch
+     * @return The value of the stopwatch (ms)
      */
     public double read()
     {
@@ -51,7 +62,7 @@ public class Stopwatch
 
     public double read(TimeUnit timeUnit)
     {
-        return TimeUnit.MILLISECONDS.convert((long) read(), timeUnit);
+        return read() / timeUnit.toMillis(1);
     }
 
     /**
