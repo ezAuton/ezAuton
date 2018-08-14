@@ -11,5 +11,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Core_main" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:wpilibJavaFinal:0.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava:19.0" level="project" />
+    <orderEntry type="library" name="Gradle: openrio.mirror.third.kauailabs:navx-java:3.0.346" level="project" />
   </component>
 </module>
