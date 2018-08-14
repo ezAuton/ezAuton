@@ -19,7 +19,8 @@ public class RealClock implements IClock
     public void scheduleAt(long millis, Runnable runnable)
     {
         Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        timer.schedule(new TimerTask()
+        {
             @Override
             public void run()
             {

@@ -1,12 +1,12 @@
 package com.team2502.ezauton.command;
 
+import com.team2502.ezauton.utils.IClock;
 import com.team2502.ezauton.utils.ICopyable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class ActionGroup implements IAction
+public class ActionGroup extends AbstractAction
 {
     private List<ActionWrapper> scheduledActions;
     private List<Runnable> onFinish = new ArrayList<>();
@@ -53,139 +53,29 @@ public class ActionGroup implements IAction
     }
 
     @Override
-    public Thread buildThread(long millisPeriod)
+    public void run(IClock clock)
     {
-        return new Thread(() -> {
-            List<ActionWrapper> scheduledActions = new ArrayList<>(this.scheduledActions);
-            List<Thread> withCommands = new ArrayList<>();
-            while(!scheduledActions.isEmpty() && !Thread.currentThread().isInterrupted())
-            {
-                ActionWrapper currentAction = scheduledActions.get(0);
-
-                boolean broke = false;
-                if(currentAction.type == Type.WITH || currentAction.type == Type.PARALLEL)
-                {
-                    Iterator<ActionWrapper> iterator = scheduledActions.iterator();
-                    whileloop:
-                    while(iterator.hasNext())
-                    {
-                        ActionWrapper next = iterator.next();
-                        switch(next.type)
-                        {
-                            case WITH:
-                            case PARALLEL:
-                                Thread thread = next.getAction().buildThread(millisPeriod);
-                                iterator.remove();
-                                if(next.type == Type.WITH)
-                                {
-                                    withCommands.add(thread);
-                                }
-                                thread.start();
-                                break;
-                            case SEQUENTIAL:
-                                currentAction = next;
-                                broke = true;
-                                break whileloop;
-                        }
-                    }
-                    if(!broke)
-                    {
-                        break;
-                    }
-                }
-
-                Thread thread = currentAction.getAction().buildThread(millisPeriod);
-                thread.start();
-                try
-                {
-                    thread.join();
-                }
-                catch(InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-                withCommands.forEach(Thread::interrupt);
-                withCommands.clear();
-                scheduledActions.remove(0);
-
-                try
-                {
-                    Thread.sleep(millisPeriod);
-                }
-                catch(InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            onFinish.forEach(Runnable::run);
-        });
-
-    }
-
-    @Override
-    public void simulate(long millisPeriod)
-    {
-        List<ActionWrapper> scheduledActions = new ArrayList<>(this.scheduledActions);
-        if(scheduledActions.size() == 0)
-        {
-            return;
-        }
-        ActionWrapper currentAction = scheduledActions.get(0);
-
         List<IAction> withActions = new ArrayList<>();
-
-        Type type = currentAction.getType();
-        ifblock:
-        if(type == Type.PARALLEL || type == Type.WITH)
+        for(ActionWrapper scheduledAction : scheduledActions)
         {
-            Iterator<ActionWrapper> iterator = scheduledActions.iterator();
-            whileloop:
-            while(iterator.hasNext())
+            if(isStopped())
             {
-                ActionWrapper next = iterator.next();
-                switch(next.type)
-                {
-                    case PARALLEL:
-                    case WITH:
-                        next.getAction().simulate(millisPeriod);
-                        if(next.type == Type.WITH)
-                        {
-                            withActions.add(next.action);
-                        }
-                        iterator.remove();
-                        break;
-                    case SEQUENTIAL:
-                        currentAction = next;
-                        break ifblock;
-                }
+                return;
             }
-            return;
-        }
+            IAction action = scheduledAction.getAction();
 
-        IAction currentSequential = currentAction.getAction();
-        scheduledActions.remove(0);
-
-        currentSequential.onFinish(() -> withActions.forEach(IAction::removeSimulator));
-        Runnable scheduleNextActions = () -> new ActionGroup(scheduledActions).simulate(millisPeriod);
-
-        currentSequential.onFinish(scheduleNextActions);
-
-        if(scheduledActions.stream().allMatch(actionWrapper ->
-                                                       actionWrapper.type == Type.WITH ||
-                                                       actionWrapper.type == Type.PARALLEL))
-        {
-            currentSequential.onFinish(() -> onFinish.forEach(Runnable::run));
-        }
-
-        currentSequential.simulate(millisPeriod);
-    }
-
-    @Override
-    public void removeSimulator()
-    {
-        if(lastSimulated != null)
-        {
-            lastSimulated.removeSimulator();
+            switch(scheduledAction.getType())
+            {
+                case WITH:
+                    withActions.add(action);
+                case PARALLEL:
+                    new ThreadBuilder(action, clock).buildAndRun();
+                    break;
+                case SEQUENTIAL:
+                    action.run(clock);
+                    withActions.forEach(IAction::stop);
+                    withActions.clear();
+            }
         }
     }
 
@@ -194,6 +84,11 @@ public class ActionGroup implements IAction
     {
         this.onFinish.add(onFinish);
         return this;
+    }
+
+    public List<ActionWrapper> getScheduledActions()
+    {
+        return scheduledActions;
     }
 
     public enum Type
@@ -224,10 +119,5 @@ public class ActionGroup implements IAction
         {
             return action;
         }
-    }
-
-    public List<ActionWrapper> getScheduledActions()
-    {
-        return scheduledActions;
     }
 }

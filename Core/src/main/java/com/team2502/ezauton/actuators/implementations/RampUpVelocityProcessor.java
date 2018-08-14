@@ -3,6 +3,7 @@ package com.team2502.ezauton.actuators.implementations;
 import com.team2502.ezauton.actuators.IVelocityMotor;
 import com.team2502.ezauton.actuators.VelocityProcessor;
 import com.team2502.ezauton.localization.Updateable;
+import com.team2502.ezauton.utils.IClock;
 import com.team2502.ezauton.utils.Stopwatch;
 
 public class RampUpVelocityProcessor extends VelocityProcessor implements Updateable
@@ -13,10 +14,10 @@ public class RampUpVelocityProcessor extends VelocityProcessor implements Update
     private double lastVelocity = 0;
     private double targetVelocity;
 
-    public RampUpVelocityProcessor(IVelocityMotor velocityMotor, Stopwatch stopwatch, double maxAccel)
+    public RampUpVelocityProcessor(IVelocityMotor velocityMotor, IClock clock, double maxAccel)
     {
         super(velocityMotor);
-        accelStopwatch = stopwatch;
+        accelStopwatch = new Stopwatch(clock);
         this.maxAccel = maxAccel;
     }
 

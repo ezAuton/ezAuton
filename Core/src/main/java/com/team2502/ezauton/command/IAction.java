@@ -1,20 +1,29 @@
 package com.team2502.ezauton.command;
 
+import com.team2502.ezauton.utils.IClock;
+
+import java.util.List;
+
 public interface IAction
 {
+    /**
+     * Run the command given a clock
+     *
+     * @param clock The clock to run the action
+     */
+    void run(IClock clock);
+
+    void stop();
 
     /**
-     * @return A Thread which acts like a command but can be run faster
+     * Returns self and runs onFinish when finished. Should not overwrite previous runnables, but instead append to list of runnables to run when finished.
+     *
+     * @param onFinish
+     * @return
      */
-    Thread buildThread(long millisPeriod);
-
-    void simulate(long millisPeriod);
-
-    /**
-     * Remove from the simulator: note onFinish() Runnables will not be called
-     */
-    void removeSimulator();
-
     IAction onFinish(Runnable onFinish);
 
+    List<Runnable> getFinished();
+
 }
+

@@ -1,13 +1,15 @@
 package com.team2502.ezauton.utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SimulatedClock implements IClock
 {
 
     private long time = 0;
 
-    private List<Job> jobs;
+    private List<Job> jobs = new ArrayList<>();
 
     public SimulatedClock() {}
 
@@ -21,9 +23,77 @@ public class SimulatedClock implements IClock
         setTime(time);
     }
 
-    public void addTime(long dt)
+    /**
+     * Add time in milliseconds
+     *
+     * @param dt millisecond increase
+     * @return The new time
+     */
+    public long addTime(long dt)
     {
-        setTime(time + dt);
+        setTime(getTime() + dt);
+        return getTime();
+    }
+
+    /**
+     * Adds time with units
+     *
+     * @param timeUnit
+     * @param value
+     */
+    public void addTime(TimeUnit timeUnit, long value)
+    {
+        addTime(timeUnit.toMillis(value));
+    }
+
+    /**
+     * Add one millisecond and returns new value
+     *
+     * @return The new time
+     */
+    public long incAndGet()
+    {
+        return addTime(1);
+    }
+
+    /**
+     * Increment a certain amount of times
+     *
+     * @param times
+     */
+    public void incTimes(long times, long dt)
+    {
+        long init = getTime();
+        long totalDt = times * dt;
+        for(int i = 0; i < times; i++)
+        {
+            if(!jobs.isEmpty())
+            {
+                addTime(dt);
+            }
+            else
+            {
+                break;
+            }
+        }
+        setTime(init + totalDt);
+    }
+
+    /**
+     * Increment a certain amount of times
+     *
+     * @param times
+     * @return
+     */
+    public void incTimes(long times)
+    {
+        incTimes(times, 1);
+    }
+
+    @Override
+    public long getTime()
+    {
+        return time;
     }
 
     public void setTime(long time)
@@ -41,12 +111,6 @@ public class SimulatedClock implements IClock
     }
 
     @Override
-    public long getTime()
-    {
-        return time;
-    }
-
-    @Override
     public void scheduleAt(long millis, Runnable runnable)
     {
         if(millis < getTime())
@@ -56,7 +120,8 @@ public class SimulatedClock implements IClock
         jobs.add(new Job(millis, runnable));
     }
 
-    private static class Job {
+    private static class Job
+    {
         private final long millis;
         private final Runnable runnable;
 

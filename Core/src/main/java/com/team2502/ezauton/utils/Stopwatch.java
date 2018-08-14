@@ -4,8 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A handy stopwatch for recording time in seconds every time it is polled
- *
- * @deprecated Use {@link ICopyable}
  */
 public class Stopwatch
 {
@@ -36,6 +34,11 @@ public class Stopwatch
         return readVal;
     }
 
+    public IClock getClock()
+    {
+        return clock;
+    }
+
     /**
      * Read without resetting
      *
@@ -44,6 +47,11 @@ public class Stopwatch
     public double read()
     {
         return clock.getTime() - millis;
+    }
+
+    public double read(TimeUnit timeUnit)
+    {
+        return TimeUnit.MILLISECONDS.convert((long) read(), timeUnit);
     }
 
     /**
@@ -73,18 +81,5 @@ public class Stopwatch
         }
         reset();
         return true;
-    }
-
-    /**
-     * Locks current thread for the time specified
-     *
-     * @param amount
-     * @param timeUnit
-     *
-     * @throws InterruptedException
-     */
-    public void wait(int amount, TimeUnit timeUnit) throws InterruptedException
-    {
-        Thread.sleep(timeUnit.toMillis(amount));
     }
 }

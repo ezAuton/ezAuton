@@ -7,8 +7,10 @@ import com.team2502.ezauton.actuators.IVoltageMotor;
 import com.team2502.ezauton.actuators.implementations.BaseSimulatedMotor;
 import com.team2502.ezauton.actuators.implementations.BoundedVelocityProcessor;
 import com.team2502.ezauton.actuators.implementations.RampUpVelocityProcessor;
-import com.team2502.ezauton.utils.SimulatedStopwatch;
+import com.team2502.ezauton.utils.SimulatedClock;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -50,33 +52,33 @@ public class ActuatorsTest
         AtomicDouble velocity = new AtomicDouble();
         IVelocityMotor velocityMotor = velocity::set;
 
-        SimulatedStopwatch stopwatch = new SimulatedStopwatch(1);
+        SimulatedClock clock = new SimulatedClock();
 
-        RampUpVelocityProcessor velocityProcessor = new RampUpVelocityProcessor(velocityMotor, stopwatch, 1);
+        RampUpVelocityProcessor velocityProcessor = new RampUpVelocityProcessor(velocityMotor, clock, 1);
 
         velocityProcessor.runVelocity(2);
-        stopwatch.progress();
+        clock.addTime(TimeUnit.SECONDS, 1);
         velocityProcessor.update();
 
         assertEquals(1, velocity.doubleValue(), 1E-6);
 
-        stopwatch.progress();
+        clock.addTime(TimeUnit.SECONDS, 1);
         velocityProcessor.update();
 
         assertEquals(2, velocity.doubleValue(), 1E-6);
 
-        stopwatch.progress();
+        clock.addTime(TimeUnit.SECONDS, 1);
         velocityProcessor.update();
 
         assertEquals(2, velocity.doubleValue(), 1E-6);
 
         velocityProcessor.runVelocity(1);
-        stopwatch.progress(0.99D);
+        clock.addTime(TimeUnit.MILLISECONDS, 990);
         velocityProcessor.update();
         assertEquals(1.01D, velocity.doubleValue(), 1E-6);
 
         velocityProcessor.runVelocity(10);
-        stopwatch.progress(0.99D);
+        clock.addTime(TimeUnit.MILLISECONDS, 990);
         velocityProcessor.update();
         assertEquals(2D, velocity.doubleValue(), 1E-6);
         assertEquals(2D, velocityProcessor.getLastVelocity(), 1E-6);
@@ -116,29 +118,29 @@ public class ActuatorsTest
         AtomicDouble velocity = new AtomicDouble();
         IVelocityMotor velocityMotor = velocity::set;
 
-        SimulatedStopwatch stopwatch = new SimulatedStopwatch(1);
-        BaseSimulatedMotor simulatedMotor = new BaseSimulatedMotor(stopwatch);
+        SimulatedClock clock = new SimulatedClock();
+        BaseSimulatedMotor simulatedMotor = new BaseSimulatedMotor(clock);
 
         simulatedMotor.runVelocity(1);
-        stopwatch.progress(1);
+        clock.addTime(TimeUnit.SECONDS, 1);
 
         assertEquals(1, simulatedMotor.getPosition(), 1E-6);
         assertEquals(1, simulatedMotor.getVelocity(), 1E-6);
 
-        stopwatch.progress(1);
+        clock.addTime(TimeUnit.SECONDS, 1);
 
         assertEquals(2, simulatedMotor.getPosition(), 1E-6);
         assertEquals(1, simulatedMotor.getVelocity(), 1E-6);
 
         simulatedMotor.runVelocity(2);
 
-        stopwatch.progress(1);
+        clock.addTime(TimeUnit.SECONDS, 1);
 
         assertEquals(4, simulatedMotor.getPosition(), 1E-6);
 
         simulatedMotor.runVelocity(3);
 
-        stopwatch.progress(1);
+        clock.addTime(TimeUnit.SECONDS, 1);
 
         assertEquals(7, simulatedMotor.getPosition(), 1E-6);
 

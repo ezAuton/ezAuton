@@ -6,6 +6,8 @@ import com.team2502.ezauton.command.*;
 import com.team2502.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.team2502.ezauton.localization.sensors.ITranslationalDistanceSensor;
 
+import java.util.concurrent.TimeUnit;
+
 public class PhysicalTest
 {
     /**
@@ -21,13 +23,19 @@ public class PhysicalTest
     public static IAction testStraightVoltage(IVoltageMotor leftMotor, IVoltageMotor rightMotor, double voltage)
     {
         // run for 5 seconds
-        return new TimedAction(5)
+        return new SimpleAction(TimeUnit.MILLISECONDS, 20)
         {
             @Override
             public void execute()
             {
                 leftMotor.runVoltage(voltage);
                 rightMotor.runVoltage(voltage);
+            }
+
+            @Override
+            protected boolean isFinished()
+            {
+                return getStopwatch().read(TimeUnit.SECONDS) > 5;
             }
         };
     }
@@ -45,13 +53,19 @@ public class PhysicalTest
     public static IAction testStraightVelocity(IVelocityMotor leftMotor, IVelocityMotor rightMotor, double velocity)
     {
         // run for 5 seconds
-        return new TimedAction(5)
+        return new SimpleAction(TimeUnit.MILLISECONDS, 20)
         {
             @Override
             public void execute()
             {
                 leftMotor.runVelocity(velocity);
                 rightMotor.runVelocity(velocity);
+            }
+
+            @Override
+            protected boolean isFinished()
+            {
+                return getStopwatch().read(TimeUnit.SECONDS) > 5;
             }
         };
     }
@@ -72,7 +86,7 @@ public class PhysicalTest
         IAction action = testStraightVoltage(leftMotor, rightMotor, voltage);
         TankRobotEncoderEncoderEstimator localizer = new TankRobotEncoderEncoderEstimator(left, right, () -> lateralWheelDistance);
         localizer.reset();
-        return new ActionGroup().with(new BackgroundAction(localizer::update))
+        return new ActionGroup().with(new BackgroundAction(TimeUnit.MILLISECONDS, 50, localizer))
                                 .addSequential(action)
                                 .addSequential(new InstantAction(() -> System.out.println(localizer.estimateLocation())));
     }
