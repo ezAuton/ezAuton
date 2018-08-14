@@ -5,6 +5,7 @@ import com.team2502.ezauton.actuators.VelocityProcessor;
 import com.team2502.ezauton.localization.Updateable;
 import com.team2502.ezauton.utils.IClock;
 import com.team2502.ezauton.utils.Stopwatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A velocity processor where the motor has a maximum accceleration
@@ -46,11 +47,11 @@ public class RampUpVelocityProcessor extends VelocityProcessor implements Update
     {
         if(targetVelocity > lastVelocity)
         {
-            lastVelocity = Math.min(lastVelocity + maxAccel * accelStopwatch.pop(), targetVelocity); // TODO: make this better and use triangle integral + stopwatch
+            lastVelocity = Math.min(lastVelocity + maxAccel * accelStopwatch.pop(TimeUnit.SECONDS), targetVelocity); // TODO: make this better and use triangle integral + stopwatch
         }
         else
         {
-            lastVelocity = Math.max(lastVelocity - maxAccel * accelStopwatch.pop(), targetVelocity);
+            lastVelocity = Math.max(lastVelocity - maxAccel * accelStopwatch.pop(TimeUnit.SECONDS), targetVelocity);
         }
         getToApply().runVelocity(lastVelocity);
         return true;
