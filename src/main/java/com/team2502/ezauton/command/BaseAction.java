@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj.command.Command;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Describes an IAction with some boilerplate built in, such as a stopwatch
+ */
 public abstract class BaseAction implements IAction
 {
 
@@ -14,6 +17,11 @@ public abstract class BaseAction implements IAction
     private ICopyableStopwatch stopwatch;
     private List<Runnable> runnables = new ArrayList<>();
 
+    /**
+     * Initialize this BaseAction. Runs once.
+     *
+     * @param stopwatch The stopwatch we should use to keep track of time
+     */
     protected void init(ICopyableStopwatch stopwatch)
     {
         this.stopwatch = stopwatch;
@@ -24,8 +32,14 @@ public abstract class BaseAction implements IAction
         return stopwatch;
     }
 
+    /**
+     * Runs continually until isFinished returns true
+     */
     protected void execute() {}
 
+    /**
+     * @return Whether or not this IAction has finished
+     */
     protected abstract boolean isFinished();
 
     /**
@@ -77,6 +91,12 @@ public abstract class BaseAction implements IAction
         });
     }
 
+    /**
+     * Add something to do when finished
+     *
+     * @param onFinish The thing to do when finished
+     * @return this
+     */
     @Override
     public BaseAction onFinish(Runnable onFinish)
     {
@@ -84,6 +104,10 @@ public abstract class BaseAction implements IAction
         return this;
     }
 
+    /**
+     * Simulate this action
+     * @param millisPeriod How often {@link BaseAction#execute()} should be called
+     */
     @Override
     public void simulate(long millisPeriod)
     {
@@ -95,6 +119,9 @@ public abstract class BaseAction implements IAction
         SimulatorManager.getInstance().schedule(this, millisPeriod);
     }
 
+    /**
+     * Stop simulating this action
+     */
     @Override
     public void removeSimulator()
     {

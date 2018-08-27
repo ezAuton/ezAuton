@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * Describes the singleton class SimulatorManager that manages simulated {@link IAction}s
+ */
 public class SimulatorManager
 {
 
@@ -26,7 +29,9 @@ public class SimulatorManager
     }
 
     /**
-     * @param baseAction
+     * Remove an action from the list of those that are scheduled to run
+     *
+     * @param baseAction The action to remove
      * @return true if action removed
      */
     public boolean remove(BaseAction baseAction)
@@ -34,6 +39,9 @@ public class SimulatorManager
         return scheduledActions.removeIf(scheduledAction -> scheduledAction.action == baseAction);
     }
 
+    /**
+     * @return A copy of the master stopwatch
+     */
     public ICopyableStopwatch generateStopwatch()
     {
         SimulatedStopwatch copy = masterStopwatch.copy();
@@ -41,6 +49,12 @@ public class SimulatorManager
         return copy;
     }
 
+    /**
+     * Schedule an action to be simulated at certain intervals
+     *
+     * @param action The action to simulate
+     * @param millisPeriod
+     */
     public void schedule(BaseAction action, long millisPeriod)
     {
         SimulatedStopwatch stopwatch = new SimulatedStopwatch(millisPeriod * 1E-3);

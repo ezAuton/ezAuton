@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Describes a group of multiple IActions which itself is also an IAction
+ */
 public class ActionGroup implements IAction
 {
     private List<ActionWrapper> scheduledActions;
@@ -20,7 +23,7 @@ public class ActionGroup implements IAction
     /**
      * Creates an ActionGroup comprised of sequential commands
      *
-     * @param actions
+     * @param actions The actions to run in sequence
      */
     public ActionGroup(IAction... actions)
     {
@@ -31,29 +34,56 @@ public class ActionGroup implements IAction
         }
     }
 
+    /**
+     * Creates an Action Group comprised of different kinds of commands (i.e sequential, parallel, with)
+     *
+     * @param scheduledActions The ActionWrappers to run
+     */
     public ActionGroup(List<ActionWrapper> scheduledActions)
     {
         this.scheduledActions = scheduledActions;
     }
 
+    /**
+     * Add a sequential Action to the actions that we will run
+     *
+     * @param action The Action to run
+     * @return this
+     */
     public ActionGroup addSequential(IAction action)
     {
         this.scheduledActions.add(new ActionWrapper(action, Type.SEQUENTIAL));
         return this;
     }
 
+    /**
+     * Add a daemonic Action to the actions that we will run. It will run in parallel with another action, except it wil end at the same time as the other action.
+     *
+     * @param action The Action to run
+     * @return this
+     */
     public ActionGroup with(IAction action)
     {
         this.scheduledActions.add(new ActionWrapper(action, Type.WITH));
         return this;
     }
 
+    /**
+     * Add a parallel Action to the actions that we will run. It will run in parallel and will end in its own time.
+     *
+     * @param action The action to run
+     * @return this
+     */
     public ActionGroup addParallel(IAction action)
     {
         this.scheduledActions.add(new ActionWrapper(action, Type.PARALLEL));
         return this;
     }
 
+    /**
+     * Create a CommandGroup from this ActionGroup
+     * @return The CommandGroup
+     */
     @Override
     public Command buildWPI()
     {
@@ -89,6 +119,12 @@ public class ActionGroup implements IAction
         return commandGroup;
     }
 
+    /**
+     * Create a Thread from this Action group
+     *
+     * @param millisPeriod How often the the thread will loop
+     * @return The thread, ready to start.
+     */
     @Override
     public Thread buildThread(long millisPeriod)
     {
@@ -159,6 +195,11 @@ public class ActionGroup implements IAction
 
     }
 
+    /**
+     * Simulate the execution of this action group
+     *
+     * @param millisPeriod How often to loop
+     */
     @Override
     public void simulate(long millisPeriod)
     {
@@ -220,6 +261,13 @@ public class ActionGroup implements IAction
         }
     }
 
+
+    /**
+     * Add something to run when finished
+     *
+     * @param onFinish The thing to run
+     * @return this
+     */
     @Override
     public ActionGroup onFinish(Runnable onFinish)
     {
@@ -227,13 +275,32 @@ public class ActionGroup implements IAction
         return this;
     }
 
+    /**
+     * Provides a way to describe the concurrency of an action
+     */
     public enum Type
     {
+        /**
+         * Runs in parallel to everything else.
+         */
         PARALLEL,
+
+        /**
+         * Runs sequentially. Only one sequential action can be running at a time
+         */
         SEQUENTIAL,
+
+        /**
+         * Runs in parallel to everything else, but will end when the current sequential action ends.
+         */
         WITH
     }
 
+    /**
+     * Describes a wrapper class for IAction that also contains the concurrency level
+     *
+     * @see Type
+     */
     private static class ActionWrapper
     {
 

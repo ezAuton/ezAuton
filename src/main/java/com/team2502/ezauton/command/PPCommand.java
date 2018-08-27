@@ -11,13 +11,21 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 /**
  * A Pure Pursuit command which can be used in simulation or as a WPILib Command
  */
-public class PPCommand extends BaseAction
+public class PPCommand extends BaseAction //TODO: Rename to PPAction
 {
     private final PurePursuitMovementStrategy purePursuitMovementStrategy;
     private final ITranslationalLocationEstimator translationalLocationEstimator;
     private final ILookahead lookahead;
     private final TranslationalLocationDriveable translationalLocationDriveable;
 
+    /**
+     * Create a PP Command
+     *
+     * @param purePursuitMovementStrategy    Our movement strategy.
+     * @param translationalLocationEstimator An object that knows where we are on a 2D plane
+     * @param lookahead                      An instance of {@link ILookahead} that can tell us how far along the path to look ahead
+     * @param translationalLocationDriveable The drivetrain of the robot
+     */
     public PPCommand(PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable)
     {
         this.purePursuitMovementStrategy = purePursuitMovementStrategy;
@@ -29,8 +37,10 @@ public class PPCommand extends BaseAction
     @Override
     public void execute()
     {
+        // Find out where to drive to
         ImmutableVector loc = translationalLocationEstimator.estimateLocation();
         ImmutableVector goalPoint = purePursuitMovementStrategy.update(loc, lookahead.getLookahead());
+
         Path path = purePursuitMovementStrategy.getPath();
         IPathSegment current = path.getCurrent();
         ImmutableVector closestPoint = current.getClosestPoint(loc);

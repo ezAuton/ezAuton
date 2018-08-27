@@ -2,6 +2,9 @@ package com.team2502.ezauton.command;
 
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * Describes an IAction, which can be thought of as a Command that can be run in a unit test
+ */
 public interface IAction
 {
 
