@@ -1,5 +1,7 @@
 package com.team2502.ezauton.command;
 
+import com.team2502.ezauton.utils.FastClock;
+import com.team2502.ezauton.utils.IClock;
 import com.team2502.ezauton.utils.SimulatedClock;
 
 import java.util.ArrayList;
@@ -10,15 +12,16 @@ import java.util.concurrent.TimeUnit;
 public class Simulation
 {
 
-    private final SimulatedClock simulatedClock;
+    private final IClock simulatedClock;
+    private final static double scaleFactor = 10; // Simulations will run 10x as fast as real life
     private List<IAction> actions = new ArrayList<>();
 
     public Simulation()
     {
-        simulatedClock = new SimulatedClock();
+        simulatedClock = new FastClock(scaleFactor);
     }
 
-    public SimulatedClock getSimulatedClock()
+    public IClock getSimulatedClock()
     {
         return simulatedClock;
     }
@@ -34,16 +37,12 @@ public class Simulation
      */
     public void run(long timeoutMillis)
     {
-        simulatedClock.init();
-
         actions.forEach(action -> new ThreadBuilder(action, simulatedClock).buildAndRun());
-
-        simulatedClock.incTimes(timeoutMillis);
 
         // Need to wait until all threads are finished
         if(!ForkJoinPool.commonPool().awaitQuiescence(1, TimeUnit.SECONDS))
         {
-            throw new RuntimeException("Simulator did not finish in a second.");
+            throw new RuntimeException("Simulator did not finish in a second."  );
         }
 
     }

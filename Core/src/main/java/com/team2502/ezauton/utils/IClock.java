@@ -18,7 +18,7 @@ public interface IClock
     /**
      * Schedule an activity to run some amount of time in the future
      *
-     * @param millis   The amount of milliseconds to be run in the future
+     * @param millis   The timestamp at which the runnable should be run
      * @param runnable The thing to run
      */
     void scheduleAt(long millis, Runnable runnable);
