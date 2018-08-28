@@ -2,7 +2,7 @@ package com.team2502.ezauton.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class SimulatedClock implements IClock
 {
@@ -107,17 +107,35 @@ public class SimulatedClock implements IClock
             return false;
         });
 
+        notifyAll();
         this.time = time;
     }
 
+    /**
+     * @deprecated Does not currently return a Future
+     * @param millis   The amount of milliseconds to be run in the future
+     * @param runnable The thing to run
+     * @return
+     */
     @Override
-    public void scheduleAt(long millis, Runnable runnable)
+    public Future<?> scheduleAt(long millis, Runnable runnable)
     {
         if(millis < getTime())
         {
             throw new IllegalArgumentException("You are scheduling a task for before the current time!");
         }
         jobs.add(new Job(millis, runnable));
+        return null;
+    }
+
+    @Override
+    public void sleep(TimeUnit timeUnit, long dt) throws InterruptedException
+    {
+        long startTime = getTime();
+        while(startTime + timeUnit.toMillis(dt) < getTime())
+        {
+            wait();
+        }
     }
 
     private static class Job

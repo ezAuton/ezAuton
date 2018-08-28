@@ -1,8 +1,8 @@
 package com.team2502.ezauton.test.utils;
 
 import com.team2502.ezauton.command.Simulation;
-import com.team2502.ezauton.utils.FastClock;
 import com.team2502.ezauton.utils.Stopwatch;
+import com.team2502.ezauton.utils.TimeWarpedClock;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class FastClockTest
     @Test
     public void testFastClock()
     {
-        FastClock clock = new FastClock(10);
+        TimeWarpedClock clock = new TimeWarpedClock(10);
 
         Stopwatch stopwatch = new Stopwatch(clock);
 
@@ -42,7 +42,7 @@ public class FastClockTest
 
         List<Number> expectedNums = Arrays.asList(1000, 2000, 3000, 4000, 5000);
 
-        FastClock clock = new FastClock(10);
+        TimeWarpedClock clock = new TimeWarpedClock(10);
         List<Number> nums = new ArrayList<>();
 
         // schedule tasks to run at 1000 ms, 2000 ms, 3000 ms, 4000 ms, 5000 ms

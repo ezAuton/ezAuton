@@ -1,7 +1,8 @@
 package com.team2502.ezauton.wpilib.command;
 
+import com.team2502.ezauton.command.IAction;
 import com.team2502.ezauton.command.SimpleAction;
-import com.team2502.ezauton.utils.RealStopwatch;
+import com.team2502.ezauton.command.ThreadBuilder;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -10,9 +11,12 @@ import edu.wpi.first.wpilibj.command.Command;
 public class CommandCreator extends Command
 {
 
-    private final SimpleAction action;
+    private final IAction action;
+    private Thread thread;
+    private boolean finished = false;
 
-    public CommandCreator(SimpleAction action)
+
+    public CommandCreator(IAction action)
     {
         this.action = action;
     }
@@ -20,23 +24,30 @@ public class CommandCreator extends Command
     @Override
     protected void initialize()
     {
-        action.init(new RealStopwatch());
+        thread = new ThreadBuilder(action).build();
+        action.onFinish(()->finished = true);
     }
 
     @Override
     protected void execute()
-    {
-        action.execute();
-    }
+    {}
 
     @Override
     protected boolean isFinished()
     {
-        boolean finished = action.isFinished();
-        if(finished)
-        {
-            action.getRunnables().forEach(Runnable::run);
-        }
         return finished;
+    }
+
+    @Override
+    protected void end()
+    {
+        action.end();
+        thread.interrupt();
+    }
+
+    @Override
+    protected void interrupted()
+    {
+        thread.stop();
     }
 }

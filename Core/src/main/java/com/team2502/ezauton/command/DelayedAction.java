@@ -19,7 +19,15 @@ public class DelayedAction extends AbstractAction
     @Override
     public void run(IClock clock)
     {
-        clock.wait(TimeUnit.MILLISECONDS, millis);
+        try
+        {
+            clock.sleep(TimeUnit.MILLISECONDS, millis);
+        }
+        catch(InterruptedException e)
+        {
+            return;
+        }
+
         if(isStopped())
         {
             return;

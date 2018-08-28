@@ -53,7 +53,7 @@ public class PPSimulatorTest
 //        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
         Simulation simulation = new Simulation();
 
-        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getSimulatedClock(), 14, 0.3, 16D);
+        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getClock(), 14, 0.3, 16D);
 
         IVelocityMotor leftMotor = robot.getLeftMotor();
         IVelocityMotor rightMotor = robot.getRightMotor();
@@ -73,7 +73,7 @@ public class PPSimulatorTest
         PPCommand ppCommand = new PPCommand(TimeUnit.MILLISECONDS, 50, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         // Run the ppCommand and then kill the background task as it is no longer needed
-        ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::stop));
+        ActionGroup actionGroup = new ActionGroup(ppCommand, new InstantAction(backgroundAction::end));
 
         simulation.add(actionGroup);
 

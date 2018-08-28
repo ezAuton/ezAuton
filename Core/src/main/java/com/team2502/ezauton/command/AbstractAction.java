@@ -17,7 +17,7 @@ public abstract class AbstractAction implements IAction
     }
 
     @Override
-    public void stop()
+    public void end()
     {
         stopped = true;
     }
