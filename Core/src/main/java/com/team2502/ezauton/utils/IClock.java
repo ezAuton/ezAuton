@@ -1,5 +1,8 @@
 package com.team2502.ezauton.utils;
 
+import com.team2502.ezauton.command.IAction;
+
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,7 +24,7 @@ public interface IClock
      * @param millis   The amount of milliseconds to be run in the future
      * @param runnable The thing to run
      */
-    void scheduleAt(long millis, Runnable runnable);
+    Future<?> scheduleAt(long millis, Runnable runnable);
 
     /**
      * Schedule a runnable to be run `dt` `timeUnit`s in the future
@@ -32,9 +35,14 @@ public interface IClock
      * @param dt       The quantity of time
      * @param runnable The thing that should happen
      */
-    default void scheduleIn(TimeUnit timeUnit, long dt, Runnable runnable)
+    default Future<?> scheduleIn(TimeUnit timeUnit, long dt, Runnable runnable)
     {
-        scheduleAt(getTime() + timeUnit.toMillis(dt), runnable);
+        return scheduleAt(getTime() + timeUnit.toMillis(dt), runnable);
+    }
+
+    default Future<?> scheduleNow(Runnable runnable)
+    {
+        return scheduleAt(getTime(),runnable);
     }
 
     /**
@@ -43,10 +51,5 @@ public interface IClock
      * @param timeUnit
      * @param dt
      */
-    default void wait(TimeUnit timeUnit, long dt)
-    {
-        Lock lock = new ReentrantLock();
-        scheduleIn(timeUnit, dt, lock::unlock);
-        lock.lock();
-    }
+    void sleep(TimeUnit timeUnit, long dt) throws InterruptedException;
 }

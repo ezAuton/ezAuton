@@ -1,6 +1,6 @@
 package com.team2502.ezauton.command;
 
-import com.team2502.ezauton.utils.SimulatedClock;
+import com.team2502.ezauton.utils.TimeWarpedClock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,17 +10,24 @@ import java.util.concurrent.TimeUnit;
 public class Simulation
 {
 
-    private final SimulatedClock simulatedClock;
+    private final double speed;
+    private final TimeWarpedClock timeWarpedClock;
     private List<IAction> actions = new ArrayList<>();
+
+    public Simulation(double speed)
+    {
+        this.speed = speed;
+        timeWarpedClock = new TimeWarpedClock(speed);
+    }
 
     public Simulation()
     {
-        simulatedClock = new SimulatedClock();
+        this(1);
     }
 
-    public SimulatedClock getSimulatedClock()
+    public TimeWarpedClock getClock()
     {
-        return simulatedClock;
+        return timeWarpedClock;
     }
 
     public Simulation add(IAction action)
@@ -29,27 +36,16 @@ public class Simulation
         return this;
     }
 
-    /**
-     * @param timeoutMillis Max millis
-     */
-    public void run(long timeoutMillis)
+    public void run(TimeUnit timeUnit, long timeout)
     {
-        simulatedClock.init();
+        timeWarpedClock.setStartTime(System.currentTimeMillis());
 
-        actions.forEach(action -> new ThreadBuilder(action, simulatedClock).buildAndRun());
+        actions.forEach(action -> new ThreadBuilder(action,timeWarpedClock).buildAndRun());
 
-        simulatedClock.incTimes(timeoutMillis);
-
-        // Need to wait until all threads are finished
-        if(!ForkJoinPool.commonPool().awaitQuiescence(1, TimeUnit.SECONDS))
+        if(ForkJoinPool.commonPool().awaitQuiescence(timeout, timeUnit))
         {
             throw new RuntimeException("Simulator did not finish in a second.");
         }
 
-    }
-
-    public void run(TimeUnit timeUnit, long value)
-    {
-        run(timeUnit.toMillis(value));
     }
 }
