@@ -1,8 +1,8 @@
 package com.team2502.ezauton.command;
 
-import com.team2502.ezauton.utils.FastClock;
+
 import com.team2502.ezauton.utils.IClock;
-import com.team2502.ezauton.utils.SimulatedClock;
+import com.team2502.ezauton.utils.TimeWarpedClock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,18 +12,25 @@ import java.util.concurrent.TimeUnit;
 public class Simulation
 {
 
-    private final IClock simulatedClock;
-    private final static double scaleFactor = 10; // Simulations will run 10x as fast as real life
+    private final double speed;
+    private final TimeWarpedClock timeWarpedClock;
     private List<IAction> actions = new ArrayList<>();
+
+    public Simulation(double speed)
+    {
+        this.speed = speed;
+        timeWarpedClock = new TimeWarpedClock(speed);
+    }
 
     public Simulation()
     {
-        simulatedClock = new FastClock(scaleFactor);
+        this(1);
     }
 
-    public IClock getSimulatedClock()
+
+    public IClock getClock()
     {
-        return simulatedClock;
+        return timeWarpedClock;
     }
 
     public Simulation add(IAction action)
@@ -32,23 +39,16 @@ public class Simulation
         return this;
     }
 
-    /**
-     * @param timeoutMillis Max millis
-     */
-    public void run(long timeoutMillis)
+    public void run(TimeUnit timeUnit, long timeout)
     {
-        actions.forEach(action -> new ThreadBuilder(action, simulatedClock).buildAndRun());
+        timeWarpedClock.setStartTime(System.currentTimeMillis());
 
-        // Need to wait until all threads are finished
-        if(!ForkJoinPool.commonPool().awaitQuiescence(1, TimeUnit.SECONDS))
+        actions.forEach(action -> new ThreadBuilder(action,timeWarpedClock).buildAndRun());
+
+        if(ForkJoinPool.commonPool().awaitQuiescence(timeout, timeUnit))
         {
             throw new RuntimeException("Simulator did not finish in a second."  );
         }
 
-    }
-
-    public void run(TimeUnit timeUnit, long value)
-    {
-        run(timeUnit.toMillis(value));
     }
 }

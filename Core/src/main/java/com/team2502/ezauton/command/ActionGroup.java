@@ -105,7 +105,7 @@ public class ActionGroup extends AbstractAction
                     break;
                 case SEQUENTIAL:
                     action.run(clock);
-                    withActions.forEach(IAction::stop);
+                    withActions.forEach(IAction::end);
                     withActions.clear();
             }
         }

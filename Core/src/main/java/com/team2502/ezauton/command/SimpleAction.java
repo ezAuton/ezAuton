@@ -35,7 +35,14 @@ public abstract class SimpleAction extends AbstractAction
         do
         {
             execute();
-            clock.wait(TimeUnit.MILLISECONDS, periodMillis);
+            try
+            {
+                clock.sleep(TimeUnit.MILLISECONDS, periodMillis);
+            }
+            catch(InterruptedException e)
+            {
+                return;
+            }
         }
         while(!isFinished() && !isStopped());
     }

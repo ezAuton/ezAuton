@@ -1,7 +1,8 @@
 package com.team2502.ezauton.wpilib.command;
 
+import com.team2502.ezauton.command.IAction;
 import com.team2502.ezauton.command.SimpleAction;
-import com.team2502.ezauton.utils.RealStopwatch;
+import com.team2502.ezauton.command.ThreadBuilder;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -11,9 +12,11 @@ public class CommandCreator extends Command //TODO: Change name?
 {
 
     private final SimpleAction action;
+    private Thread thread;
+    private boolean finished = false;
 
     /**
-     * Create a command from a BaseAction
+     * Create a command from a SimpleAction
      *
      * @param action The action to run as a command
      */
@@ -25,7 +28,8 @@ public class CommandCreator extends Command //TODO: Change name?
     @Override
     protected void initialize()
     {
-        action.init(new RealStopwatch());
+        thread = new ThreadBuilder(action).build();
+        action.onFinish(()->finished = true);
     }
 
     @Override
@@ -48,12 +52,14 @@ public class CommandCreator extends Command //TODO: Change name?
     @Override
     protected void end()
     {
-
+        action.end();
+        thread.stop();
     }
 
     @Override
     protected void interrupted()
     {
         end();
+        thread.interrupt();
     }
 }

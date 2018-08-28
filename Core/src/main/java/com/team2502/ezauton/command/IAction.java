@@ -16,7 +16,10 @@ public interface IAction
      */
     void run(IClock clock);
 
-    void stop();
+    /**
+     * End the action peacefully
+     */
+    void end();
 
     /**
      * Returns self and runs onFinish when finished. Should not overwrite previous runnables, but instead append to list of runnables to run when finished.
