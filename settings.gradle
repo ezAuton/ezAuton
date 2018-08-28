@@ -1,4 +1,6 @@
 rootProject.name = 'ezAuton'
 include 'Core'
 include 'WPILib'
+include 'Simulator'
+include 'Recorder'
 

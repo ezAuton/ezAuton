@@ -5,6 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Core.iml" filepath="$PROJECT_DIR$/.idea/modules/Core.iml" group="Core" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Core/Core_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Core/Core_main.iml" group="Core" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Core/Core_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Core/Core_test.iml" group="Core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Recorder.iml" filepath="$PROJECT_DIR$/.idea/modules/Recorder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Simulator/Recorder_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Simulator/Recorder_main.iml" group="Simulator" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Simulator/Recorder_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Simulator/Recorder_test.iml" group="Simulator" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/WPILib.iml" filepath="$PROJECT_DIR$/.idea/modules/WPILib.iml" group="WPILib" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/WPILib/WPILib_main.iml" filepath="$PROJECT_DIR$/.idea/modules/WPILib/WPILib_main.iml" group="WPILib" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/WPILib/WPILib_test.iml" filepath="$PROJECT_DIR$/.idea/modules/WPILib/WPILib_test.iml" group="WPILib" />
