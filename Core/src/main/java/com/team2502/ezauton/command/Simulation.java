@@ -44,7 +44,7 @@ public class Simulation
 
         actions.forEach(action -> new ThreadBuilder(action,timeWarpedClock).buildAndRun());
 
-        if(ForkJoinPool.commonPool().awaitQuiescence(timeout, timeUnit))
+        if(!ForkJoinPool.commonPool().awaitQuiescence(timeout, timeUnit))
         {
             throw new RuntimeException("Simulator did not finish in a second."  );
         }
