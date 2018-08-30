@@ -35,13 +35,14 @@ public class CommandCreator extends Command //TODO: Change name?
     @Override
     protected void execute()
     {
-        action.execute();
+        //TODO: Fix publicity of SimpleAction#execute or location of CommandCreator such that the following line of code compiles
+//        action.execute();
     }
 
     @Override
     protected boolean isFinished()
     {
-        boolean finished = action.isFinished();
+//        boolean finished = action.isFinished();
         if(finished)
         {
             action.getFinished().forEach(Runnable::run);
