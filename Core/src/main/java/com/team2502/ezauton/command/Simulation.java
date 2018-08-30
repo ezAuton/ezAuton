@@ -1,7 +1,6 @@
 package com.team2502.ezauton.command;
 
 
-import com.team2502.ezauton.utils.IClock;
 import com.team2502.ezauton.utils.TimeWarpedClock;
 
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ public class Simulation
 
     private final double speed;
     private final TimeWarpedClock timeWarpedClock;
+
     private List<IAction> actions = new ArrayList<>();
 
     public Simulation(double speed)
@@ -27,8 +27,7 @@ public class Simulation
         this(1);
     }
 
-
-    public IClock getClock()
+    public TimeWarpedClock getClock()
     {
         return timeWarpedClock;
     }

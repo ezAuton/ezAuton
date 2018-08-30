@@ -30,6 +30,7 @@ public class DelayedAction extends AbstractAction
         {
             return;
         }
+
         if(isStopped())
         {
             return;

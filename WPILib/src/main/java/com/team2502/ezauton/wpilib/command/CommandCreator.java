@@ -60,7 +60,7 @@ public class CommandCreator extends Command //TODO: Change name?
     @Override
     protected void interrupted()
     {
-        end();
+        action.end();
         thread.interrupt();
     }
 }

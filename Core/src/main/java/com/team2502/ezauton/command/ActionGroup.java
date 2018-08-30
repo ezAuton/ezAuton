@@ -6,6 +6,7 @@ import com.team2502.ezauton.utils.ICopyable;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Describes a group of multiple IActions which itself is also an IAction
  */
@@ -110,7 +111,6 @@ public class ActionGroup extends AbstractAction
             }
         }
     }
-
 
     /**
      * Add something to run when finished

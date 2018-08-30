@@ -28,7 +28,7 @@ public class SimulatorTest
     {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         Simulation simulation = new Simulation();
-        TimedAction delayedAction = new TimedAction(TimeUnit.SECONDS, 1, () -> atomicBoolean.set(true));
+        DelayedAction delayedAction = new DelayedAction(TimeUnit.SECONDS, 1, () -> atomicBoolean.set(true));
         simulation.add(delayedAction);
         simulation.run(TimeUnit.SECONDS, 100);
         Assert.assertTrue(atomicBoolean.get());

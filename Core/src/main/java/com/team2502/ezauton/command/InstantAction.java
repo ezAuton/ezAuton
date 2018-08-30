@@ -3,7 +3,7 @@ package com.team2502.ezauton.command;
 import com.team2502.ezauton.utils.IClock;
 
 /**
- * Describes an action that terminates instantly after running once
+ * Describes an action that runs instantly
  */
 public class InstantAction extends AbstractAction
 {
@@ -13,7 +13,7 @@ public class InstantAction extends AbstractAction
     /**
      * Create an InstantAction
      *
-     * @param runnable The thing to do
+     * @param runnable The thing to run
      */
     public InstantAction(Runnable runnable)
     {
