@@ -41,13 +41,14 @@ public class TimeWarpedClock implements IClock
     @Override
     public long getTime()
     {
-        return (long) ((System.currentTimeMillis() - speed) * speed + startTime);
+        long dt = System.currentTimeMillis() - startTime;
+        return (long) (dt * speed);
     }
 
     @Override
     public Future<?> scheduleAt(long millis, Runnable runnable)
     {
-        return realClock.scheduleIn(TimeUnit.MILLISECONDS, (long) ((millis - getTime()) / speed), runnable);
+        return realClock.scheduleIn(TimeUnit.MILLISECONDS, (long) ((millis) / speed), runnable);
     }
 
     @Override
