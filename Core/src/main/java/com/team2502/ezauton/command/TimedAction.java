@@ -12,23 +12,19 @@ public class TimedAction extends SimpleAction
 
     private final Runnable[] runnables;
     private long millis;
-    private final Stopwatch stopwatch;
 
     /**
      * Create a TimedAction
      *
      * @param unit      The timeunit that period is in
      * @param period    How often ro run the runnables
-     * @param clock     How we are keeping time
      * @param runnables The runnables to run
      */
-    public TimedAction(TimeUnit unit, long period, IClock clock, Runnable... runnables)
+    public TimedAction(TimeUnit unit, long period, Runnable... runnables)
     {
         super(unit, period);
         millis = unit.toMillis(period);
         this.runnables = runnables;
-        stopwatch = new Stopwatch(clock);
-        stopwatch.resetIfNotInit();
     }
 
     protected void execute()
@@ -43,7 +39,7 @@ public class TimedAction extends SimpleAction
     @Override
     protected boolean isFinished()
     {
-        return stopwatch.read() > millis;
+        return this.stopwatch != null && this.stopwatch.read() > millis;
     }
 
 }

@@ -8,9 +8,9 @@ import java.util.concurrent.TimeUnit;
 public abstract class SimpleAction extends AbstractAction
 {
 
-    private final long periodMillis;
-    private IClock clock;
-    private Stopwatch stopwatch;
+    protected final long periodMillis;
+    protected IClock clock;
+    protected Stopwatch stopwatch;
 
     public SimpleAction(TimeUnit timeUnit, long period)
     {
