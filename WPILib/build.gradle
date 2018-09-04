@@ -18,10 +18,14 @@ repositories {
     maven {
         url 'http://www.kauailabs.com/maven2'
     }
+    maven {
+        url 'http://first.wpi.edu/FRC/roborio/maven/release/'
+    }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile project(':Core')
     compile 'edu.wpi.first.wpilibj:wpilibJavaFinal:0.1.0-SNAPSHOT'
+    compile 'com.kauailabs.navx.frc:navx_frc:3.0.324'
 }
