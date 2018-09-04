@@ -98,24 +98,27 @@ public class SimulatedClock implements IClock
 
     public void setTime(long time)
     {
-        jobs.removeIf(job -> {
-            if(job.getMillis() < time)
-            {
-                job.getRunnable().run();
-                return true;
-            }
-            return false;
-        });
+        synchronized(this)
+        {
+            jobs.removeIf(job -> {
+                if(job.getMillis() < time)
+                {
+                    job.getRunnable().run();
+                    return true;
+                }
+                return false;
+            });
 
-        notifyAll();
-        this.time = time;
+            notifyAll();
+            this.time = time;
+        }
     }
 
     /**
-     * @deprecated Does not currently return a Future
      * @param millis   The amount of milliseconds to be run in the future
      * @param runnable The thing to run
      * @return
+     * @deprecated Does not currently return a Future
      */
     @Override
     public Future<?> scheduleAt(long millis, Runnable runnable)
