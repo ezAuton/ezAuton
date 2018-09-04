@@ -24,7 +24,7 @@ public class Simulation
 
     public Simulation()
     {
-        this(1);
+        this(1000);
     }
 
     public TimeWarpedClock getClock()
