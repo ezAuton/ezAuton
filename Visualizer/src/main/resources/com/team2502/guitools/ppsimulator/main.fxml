@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import java.net.URL?>
+<SplitPane xmlns:fx="http://javafx.com/fxml/1" dividerPositions="0.33333" xmlns="http://javafx.com/javafx/8.0.121"
+           fx:controller="com.team2502.guitools.ppsimulator.Controller">
+    <GridPane minHeight="492" prefHeight="492.0" maxHeight="984" minWidth="443.0" prefWidth="443.0" maxWidth="443.0">
+        <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"/>
+            <ColumnConstraints halignment="CENTER"/>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
+            <RowConstraints valignment="CENTER" vgrow="NEVER"/> <!--Only has separators-->
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <children>
+
+            <Label text="Select CSV" GridPane.columnIndex="0"/>
+            <Separator orientation="VERTICAL" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="Select Starting position" GridPane.columnIndex="2"/>
+
+            <ChoiceBox fx:id="fileChooser" prefWidth="150.0" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Separator orientation="VERTICAL" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <ChoiceBox fx:id="posChooser" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+            <Separator orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Separator orientation="HORIZONTAL" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <Label GridPane.columnIndex="0" GridPane.rowIndex="3">Time Elapsed</Label>
+            <Label fx:id="timeElapsed" GridPane.columnIndex="2" GridPane.rowIndex="3">0 seconds</Label>
+
+            <Label GridPane.columnIndex="0" GridPane.rowIndex="4">Rate</Label>
+            <Slider fx:id="rateSlider" majorTickUnit="0.2" max="1.0" minorTickCount="2" showTickLabels="true"
+                    showTickMarks="true" value="1.0" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+
+
+            <Label text="Lookahead" GridPane.rowIndex="5"/>
+            <Label fx:id="lookahead" text="0 feet" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+
+            <Label text="Distance to Closest Point" GridPane.rowIndex="6"/>
+            <Label fx:id="dCP" text="0 feet" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+
+            <Button onMouseClicked="#animateSquareKeyframe" GridPane.columnIndex="1" GridPane.rowIndex="7">Start!
+            </Button>
+
+
+        </children>
+    </GridPane>
+    <AnchorPane id="backdrop" fx:id="backdrop" minHeight="492" prefHeight="492.0" maxHeight="984.0" minWidth="443"
+                prefWidth="443.0" maxWidth="886.0">
+        <children>
+
+            <Line fx:id="currentPathLine" stroke="black" strokeWidth="3.0"/>
+
+            <Rectangle fx:id="robot" arcHeight="1" arcWidth="1" fill="DODGERBLUE" height="2.416" stroke="BLACK"
+                       strokeType="INSIDE" width="3"/>
+
+            <Path fx:id="robotPath" layoutX="0" layoutY="0" stroke="#0000003f">
+                <elements>
+                    <!--<MoveTo x="100.0" y="150.0" />-->
+                    <!--<LineTo x="160.0" y="170.0" />-->
+                </elements>
+            </Path>
+
+            <Path fx:id="waypointPath" layoutX="0" layoutY="0">
+                <elements>
+                    <!--<MoveTo x="100.0" y="150.0" />-->
+                    <!--<LineTo x="160.0" y="170.0" />-->
+                </elements>
+            </Path>
+
+            <!--<Circle fx:id="lookahead" fill="#ffffff00" radius="10.0" stroke="black" strokeType="INSIDE" />-->
+            <Circle fx:id="goalPoint" fill="red" radius="3.0" stroke="black" strokeType="INSIDE"/>
+            <Circle fx:id="robotPoint" fill="white" radius="3.0" stroke="black" strokeType="INSIDE"/>
+            <Circle fx:id="closestPoint" fill="lawngreen" radius="3.0" stroke="black" strokeType="INSIDE"/>
+
+            <Circle fx:id="constantCurvature" fill="#ffffff00" radius="3.0" stroke="saddlebrown" strokeType="INSIDE"/>
+            <Line fx:id="constantCurvatureLine" stroke="saddlebrown" visible="false"/>
+
+        </children>
+        <stylesheets>
+            <URL value="@application.css"/>
+        </stylesheets>
+    </AnchorPane>
+</SplitPane>

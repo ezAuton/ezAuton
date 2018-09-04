@@ -1,0 +1,10 @@
+# The location of the csv's with robot data, relative to the project root
+# The files inside this directory should be created using ./gradlew test
+csvPath=outPaths
+
+rate = .2
+
+
+# Center pos originX: 206/443
+# Left Pos originX: 38/443
+# Right pos originX: 358/443

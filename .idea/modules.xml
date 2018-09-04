@@ -5,6 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Core.iml" filepath="$PROJECT_DIR$/.idea/modules/Core.iml" group="Core" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Core/Core_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Core/Core_main.iml" group="Core" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Core/Core_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Core/Core_test.iml" group="Core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Visualizer/Visualizer.iml" filepath="$PROJECT_DIR$/.idea/modules/Visualizer/Visualizer.iml" group="Visualizer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Visualizer/Visualizer_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Visualizer/Visualizer_main.iml" group="Visualizer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Visualizer/Visualizer_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Visualizer/Visualizer_test.iml" group="Visualizer" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/WPILib.iml" filepath="$PROJECT_DIR$/.idea/modules/WPILib.iml" group="WPILib" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/WPILib/WPILib_main.iml" filepath="$PROJECT_DIR$/.idea/modules/WPILib/WPILib_main.iml" group="WPILib" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/WPILib/WPILib_test.iml" filepath="$PROJECT_DIR$/.idea/modules/WPILib/WPILib_test.iml" group="WPILib" />
