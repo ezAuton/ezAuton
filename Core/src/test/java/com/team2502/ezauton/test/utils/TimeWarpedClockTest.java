@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class FastClockTest
+public class TimeWarpedClockTest
 {
     @Test
     public void testFastClock()
@@ -73,11 +73,11 @@ public class FastClockTest
 
     }
 
-    @Test
-    public void testFastClockSim()
-    {
-        Simulation sim = new Simulation();
-
-
-    }
+//    @Test
+//    public void testFastClockSim()
+//    {
+//        Simulation sim = new Simulation();
+//
+//
+//    }
 }
