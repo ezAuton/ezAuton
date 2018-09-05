@@ -40,9 +40,6 @@ public class Main extends Application
             System.out.println(fieldWidth * H_TO_W_RATIO);
         });
 
-//        primaryStage.heightProperty().addListener((heightProp, oldHeight, newHeight) -> {
-//            primaryStage.setWidth(newHeight.doubleValue() * W_TO__H_RATIO + IMGHEIGHT);
-//        });
         primaryStage.show();
     }
 }
