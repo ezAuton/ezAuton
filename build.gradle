@@ -42,6 +42,12 @@ sourceSets {
     }
 }
 
+test {
+    testLogging {
+        events "failed"
+        exceptionFormat "short"
+    }
+}
 
 check.dependsOn jacocoTestReport
 
