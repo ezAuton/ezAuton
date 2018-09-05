@@ -101,11 +101,14 @@ public class ActionGroup extends AbstractAction
             {
                 case WITH:
                     withActions.add(action);
+
                 case PARALLEL:
                     new ThreadBuilder(action, clock).buildAndRun();
                     break;
                 case SEQUENTIAL:
                     action.run(clock);
+                    action.getFinished().forEach(Runnable::run);
+
                     withActions.forEach(IAction::end);
                     withActions.clear();
             }
@@ -115,13 +118,13 @@ public class ActionGroup extends AbstractAction
     /**
      * Add something to run when finished
      *
-     * @param onFinish The thing to run
+     * @param runnable The thing to run
      * @return this
      */
     @Override
-    public ActionGroup onFinish(Runnable onFinish)
+    public ActionGroup onFinish(Runnable runnable)
     {
-        this.onFinish.add(onFinish);
+        super.onFinish(runnable);
         return this;
     }
 

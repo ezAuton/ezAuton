@@ -38,14 +38,23 @@ public class SimulatorTest
     public void testActionGroup()
     {
         AtomicInteger atomicInteger = new AtomicInteger(0);
-        Simulation simulation = new Simulation();
+
+        Simulation simulation = new Simulation(10);
         ActionGroup actionGroup = new ActionGroup();
-        DelayedAction delayedAction = new DelayedAction(TimeUnit.SECONDS, 1, ()->atomicInteger.compareAndSet(0, 1));
-        actionGroup.addSequential(delayedAction);
-        DelayedAction delayedAction2 = new DelayedAction(TimeUnit.MILLISECONDS, 10, ()->atomicInteger.compareAndSet(1,2));
-        DelayedAction delayedAction3 = new DelayedAction(TimeUnit.MILLISECONDS, 15, ()->atomicInteger.compareAndSet(2,3));
-        actionGroup.addParallel(delayedAction3);
-        actionGroup.with(delayedAction2);
+
+        DelayedAction delayedAction = new DelayedAction(TimeUnit.SECONDS, 1, ()->atomicInteger.compareAndSet(2, 3));
+        delayedAction.onFinish(() -> System.out.println("1 done"));
+
+        DelayedAction delayedAction2 = new DelayedAction(TimeUnit.MILLISECONDS, 10, ()->atomicInteger.compareAndSet(0,1));
+        delayedAction2.onFinish(() -> System.out.println("2 done"));
+
+        DelayedAction delayedAction3 = new DelayedAction(TimeUnit.MILLISECONDS, 150, ()->atomicInteger.compareAndSet(1,2));
+        delayedAction3.onFinish(() -> System.out.println("3 done"));
+
+        //TODO: Order matters? See github #35
+        actionGroup.addParallel(delayedAction3); // second
+        actionGroup.with(delayedAction2); // first
+        actionGroup.addSequential(delayedAction); // last
 
         simulation.add(actionGroup);
         simulation.run(TimeUnit.SECONDS, 100);

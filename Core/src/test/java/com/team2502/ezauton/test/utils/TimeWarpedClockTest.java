@@ -1,5 +1,6 @@
 package com.team2502.ezauton.test.utils;
 
+import com.team2502.ezauton.command.DelayedAction;
 import com.team2502.ezauton.command.Simulation;
 import com.team2502.ezauton.utils.Stopwatch;
 import com.team2502.ezauton.utils.TimeWarpedClock;
@@ -8,6 +9,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.assertEquals;
 
@@ -73,11 +76,22 @@ public class TimeWarpedClockTest
 
     }
 
-//    @Test
-//    public void testFastClockSim()
-//    {
-//        Simulation sim = new Simulation();
-//
-//
-//    }
+    @Test
+    public void testFastClockWait()
+    {
+        AtomicLong time = new AtomicLong(0);
+
+        int speed = 100000;
+        Simulation sim = new Simulation(speed);
+
+        // 1000 fake seconds * 1 real sec / `1000 fake secs = 1 real sec
+        sim.add(new DelayedAction(TimeUnit.SECONDS, speed, () -> time.set(System.currentTimeMillis())));
+        long init = System.currentTimeMillis();
+        sim.run(TimeUnit.SECONDS, 10);
+
+        System.out.println("time.get - init = " + (time.get() - init));
+
+        assertEquals(1000, time.get() - init, 100);
+
+    }
 }

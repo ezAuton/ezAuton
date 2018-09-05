@@ -9,10 +9,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:athena:2017.3.1" level="project" />
-    <orderEntry type="library" name="Gradle: com.kauailabs.navx.frc:navx_frc:3.0.324" level="project" />
     <orderEntry type="module" module-name="Core_main" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:wpilibJavaFinal:0.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: com.kauailabs.navx.frc:navx_frc:3.0.324" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:19.0" level="project" />
     <orderEntry type="library" name="Gradle: com.kauailabs.navx:navx:3.0.324" level="project" />
+    <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibj:athena:2017.3.1" level="project" />
   </component>
 </module>

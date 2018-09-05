@@ -38,6 +38,12 @@ public class Simulation
         return this;
     }
 
+    /**
+     * Run your simulation
+     *
+     * @param timeUnit The timeunit that the timeout is in
+     * @param timeout  The amoount of <b>real</b> time that you want your simulation to cap out at.
+     */
     public void run(TimeUnit timeUnit, long timeout)
     {
         timeWarpedClock.setStartTime(System.currentTimeMillis());
