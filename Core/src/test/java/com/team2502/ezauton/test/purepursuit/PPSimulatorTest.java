@@ -83,6 +83,9 @@ public class PPSimulatorTest
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
         Assert.assertEquals(0, leftWheelVelocity, 0.2D);
 
+        double rightWheelVelocity = locEstimator.getRightTranslationalWheelVelocity();
+        Assert.assertEquals(0, rightWheelVelocity, 0.2D);
+
         // The final location after the simulator
         ImmutableVector finalLoc = locEstimator.estimateLocation();
 
