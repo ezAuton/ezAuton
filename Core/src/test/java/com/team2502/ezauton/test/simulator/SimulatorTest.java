@@ -48,7 +48,7 @@ public class SimulatorTest
         DelayedAction delayedAction2 = new DelayedAction(TimeUnit.MILLISECONDS, 10, ()->atomicInteger.compareAndSet(0,1));
         delayedAction2.onFinish(() -> System.out.println("2 done"));
 
-        DelayedAction delayedAction3 = new DelayedAction(TimeUnit.MILLISECONDS, 150, ()->atomicInteger.compareAndSet(1,2));
+        DelayedAction delayedAction3 = new DelayedAction(TimeUnit.MILLISECONDS, 500, ()->atomicInteger.compareAndSet(1,2));
         delayedAction3.onFinish(() -> System.out.println("3 done"));
 
         //TODO: Order matters? See github #35

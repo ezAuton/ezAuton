@@ -17,7 +17,7 @@ public class TimedAction extends SimpleAction
      * Create a TimedAction
      *
      * @param unit      The timeunit that period is in
-     * @param period    How often ro run the runnables
+     * @param period    How long to (repeatedly) run the runnables for
      * @param runnables The runnables to run
      */
     public TimedAction(TimeUnit unit, long period, Runnable... runnables)

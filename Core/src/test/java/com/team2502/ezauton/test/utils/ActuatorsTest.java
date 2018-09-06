@@ -112,6 +112,13 @@ public class ActuatorsTest
 
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testBoundedVelocityProcessorNegMaxSpeed()
+    {
+        AtomicDouble velocity = new AtomicDouble(0);
+        new BoundedVelocityProcessor(velocity::set, -10);
+    }
+
     @Test
     public void testBaseSimulatedMotor()
     {
