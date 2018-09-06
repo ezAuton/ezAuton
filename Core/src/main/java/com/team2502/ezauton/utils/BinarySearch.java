@@ -14,33 +14,39 @@ public class BinarySearch<T> //TODO test
 
     private final List<T> list;
     int searchIndex;
-    int dif;
+    int left;
+    int right;
+//    int dif;
 
     public BinarySearch(List<T> list)
     {
         this.list = list;
         searchIndex = list.size() / 2;
-        dif = searchIndex / 2;
+        left = 0;
+        right = list.size() - 1;
+//        dif = searchIndex / 2;
     }
 
     public T search(Search<T> search)
     {
-
-        while(dif > 0)
+        int m;
+        while(left <= right)
         {
-            T t = list.get(searchIndex);
+            m = (int) Math.floor((double) (left + right) / 2);
+
+            T t = list.get(m);
             SearchEntryResult accept = search.accept(t);
             switch(accept)
             {
                 case LOW:
-                    searchIndex += dif;
+                    left = m + 1;
                     break;
                 case HIGH:
-                    searchIndex -= dif;
+                    right = m - 1;
+                    break;
                 case CORRECT:
                     return t;
             }
-            dif /= 2;
         }
         return null;
     }
