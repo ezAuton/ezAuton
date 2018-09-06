@@ -3,6 +3,10 @@ package com.team2502.ezauton.test.math;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class ImmutableVectorTest
@@ -13,6 +17,21 @@ public class ImmutableVectorTest
     public void testWrongSize()
     {
         new ImmutableVector(1, 1).assertSize(1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCollectionWrongSize()
+    {
+        ImmutableVector oddOneOut = new ImmutableVector(Arrays.asList(1D, 2D, 3D, 4D, 5D));
+
+        List<ImmutableVector> vectors = new ArrayList<>();
+        for(int i = 0; i < 5; i++)
+        {
+            vectors.add(new ImmutableVector(1, 2, 3, 4));
+        }
+        vectors.add(oddOneOut);
+
+        ImmutableVector.assertSameDim(vectors);
     }
 
     @Test
@@ -50,5 +69,24 @@ public class ImmutableVectorTest
     public void testHashCode()
     {
         assertTrue(ImmutableVector.of(3, 4).hashCode() == ImmutableVector.of(3, 4).hashCode());
+    }
+
+    @Test
+    public void testDist()
+    {
+        assertEquals(Math.sqrt(2), new ImmutableVector(1, 1).dist(new ImmutableVector(0, 0)), 1E-5);
+        assertEquals(2, new ImmutableVector(1, 1).dist2(new ImmutableVector(0, 0)), 1E-5);
+    }
+
+    @Test
+    public void testTruncate()
+    {
+        assertEquals(new ImmutableVector(1, 1, 1), new ImmutableVector(1, 1, 1, 2, 2, 2).truncateElement(2));
+    }
+
+    @Test
+    public void testAssertSameDim()
+    {
+        ImmutableVector.assertSameDim(Arrays.asList(new ImmutableVector(1, 1, 1), new ImmutableVector(1, 2, 3), new ImmutableVector(0, 0, 0)));
     }
 }

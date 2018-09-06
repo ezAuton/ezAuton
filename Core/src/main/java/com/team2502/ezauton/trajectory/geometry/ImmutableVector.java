@@ -177,6 +177,12 @@ public class ImmutableVector
         return applyOperator(other, (first, second) -> first / second);
     }
 
+    /**
+     * Remove instances of a number from a vector
+     *
+     * @param toTruncate The number to remove
+     * @return A new vector that does not have instances of that number
+     */
     public ImmutableVector truncateElement(double toTruncate)
     {
         List<Double> toReturn = new ArrayList<>(getDimension());
@@ -184,7 +190,7 @@ public class ImmutableVector
         {
             if(toTruncate != element)
             {
-                toReturn.add(toTruncate);
+                toReturn.add(element);
             }
         }
         return new ImmutableVector(toReturn);
