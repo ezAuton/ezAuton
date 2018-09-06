@@ -11,10 +11,10 @@ import static org.junit.Assert.assertNotEquals;
 public class LineTest
 {
     private final double DELTA = 1e-5;
-    private MathUtils.Geometry.Line horizontal = new MathUtils.Geometry.Line(new ImmutableVector(0, 0), new ImmutableVector(1, 0));
-    private MathUtils.Geometry.Line vertical = new MathUtils.Geometry.Line(new ImmutableVector(0, 0), new ImmutableVector(0, 1));
-    private MathUtils.Geometry.Line diag = new MathUtils.Geometry.Line(new ImmutableVector(0, 0), new ImmutableVector(1, 1));
-    private MathUtils.Geometry.Line otherDiag = new MathUtils.Geometry.Line(new ImmutableVector(0, 0), new ImmutableVector(-1, 1));
+    private MathUtils.Geometry.LineR2 horizontal = new MathUtils.Geometry.LineR2(new ImmutableVector(0, 0), new ImmutableVector(1, 0));
+    private MathUtils.Geometry.LineR2 vertical = new MathUtils.Geometry.LineR2(new ImmutableVector(0, 0), new ImmutableVector(0, 1));
+    private MathUtils.Geometry.LineR2 diag = new MathUtils.Geometry.LineR2(new ImmutableVector(0, 0), new ImmutableVector(1, 1));
+    private MathUtils.Geometry.LineR2 otherDiag = new MathUtils.Geometry.LineR2(new ImmutableVector(0, 0), new ImmutableVector(-1, 1));
 
     @Test
     public void testEvaluateY()
@@ -32,7 +32,7 @@ public class LineTest
             double by = (Math.random() - 0.5) * 20;
             ImmutableVector b = new ImmutableVector(bx, by);
 
-            MathUtils.Geometry.Line line = new MathUtils.Geometry.Line(a, b);
+            MathUtils.Geometry.LineR2 line = new MathUtils.Geometry.LineR2(a, b);
 
             assertEquals(line.evaluateY(ax), ay, DELTA);
             assertEquals(line.evaluateY(bx), by, DELTA);
@@ -58,8 +58,8 @@ public class LineTest
             double cy = (Math.random() - 0.5) * 20;
             ImmutableVector c = new ImmutableVector(cx, cy);
 
-            MathUtils.Geometry.Line lineAB = new MathUtils.Geometry.Line(a, b);
-            MathUtils.Geometry.Line lineBC = new MathUtils.Geometry.Line(b, c);
+            MathUtils.Geometry.LineR2 lineAB = new MathUtils.Geometry.LineR2(a, b);
+            MathUtils.Geometry.LineR2 lineBC = new MathUtils.Geometry.LineR2(b, c);
 
             assertEquals(b, lineAB.intersection(lineBC));
             assertEquals(b, lineBC.intersection(lineAB));

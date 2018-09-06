@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class CSVBuilder implements CSVAble
 {
 
-    StringBuilder stringBuilder = new StringBuilder();
+    private StringBuilder stringBuilder = new StringBuilder();
 
     public static void main(String[] args)
     {

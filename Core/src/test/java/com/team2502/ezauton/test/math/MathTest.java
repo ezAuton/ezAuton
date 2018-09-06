@@ -385,8 +385,8 @@ public class MathTest
 
         vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[2][0], testCases[2][1], robotPos), testCases[2][1]);
 
-        MathUtils.Geometry.Line segment = new MathUtils.Geometry.Line(testCases[3][0], testCases[3][1]);
-        MathUtils.Geometry.Line perp = segment.getPerp(robotPos);
+        MathUtils.Geometry.LineR2 segment = new MathUtils.Geometry.LineR2(testCases[3][0], testCases[3][1]);
+        MathUtils.Geometry.LineR2 perp = segment.getPerp(robotPos);
         vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[3][0], testCases[3][1], robotPos), segment.intersection(perp));
 
 

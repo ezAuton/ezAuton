@@ -756,9 +756,9 @@ public final class MathUtils
 
             double dPerp;
 
-            Line lineSegment = new Line(linea, lineb);
+            LineR2 lineSegment = new LineR2(linea, lineb);
 
-            Line linePerp = lineSegment.getPerp(robotPos);
+            LineR2 linePerp = lineSegment.getPerp(robotPos);
 
             ImmutableVector intersect = linePerp.intersection(lineSegment);
 
@@ -840,7 +840,7 @@ public final class MathUtils
 //            return getCircleLineIntersectionPoint(line.a, line.b, center, radius);
 //        }
 
-        public static class Line implements Integrable
+        public static class LineR2 implements Integrable
         {
             final double slope;
             final double y_intercept;
@@ -854,7 +854,7 @@ public final class MathUtils
             final ImmutableVector a;
             final ImmutableVector b;
 
-            public Line(ImmutableVector a, ImmutableVector b)
+            public LineR2(ImmutableVector a, ImmutableVector b)
             {
                 x1 = a.get(0);
                 x2 = b.get(0);
@@ -901,7 +901,7 @@ public final class MathUtils
                 return integrate(x1, x2);
             }
 
-            public Line getPerp(ImmutableVector point)
+            public LineR2 getPerp(ImmutableVector point)
             {
                 double perpSlope;
                 if(Double.isNaN(slope))
@@ -912,10 +912,10 @@ public final class MathUtils
                 {
                     perpSlope = -1 / slope;
                 }
-                return new Line(point, new ImmutableVector(point.get(0) + 1, (float) (point.get(1) + perpSlope)));
+                return new LineR2(point, new ImmutableVector(point.get(0) + 1, (float) (point.get(1) + perpSlope)));
             }
 
-            public ImmutableVector intersection(Line other)
+            public ImmutableVector intersection(LineR2 other)
             {
                 if(other.slope == slope)
                 {
