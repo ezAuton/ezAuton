@@ -7,13 +7,13 @@ import java.io.Serializable;
  */
 public class RobotState implements Serializable
 {
-    private final int x;
-    private final int y;
+    private final double x;
+    private final double y;
 
     private final float heading;
 
-    private final int robotWidth;
-    private final int robotHeight;
+    private final double robotWidth;
+    private final double robotLength;
 
     /**
      * An immutable
@@ -23,21 +23,21 @@ public class RobotState implements Serializable
      * @param robotWidth The width of the robot in feet (the x-component of the robot)
      * @param robotLength The height of the robot in feet (the y-component of the robot)
      */
-    public RobotState(int x, int y, float heading, int robotWidth, int robotLength)
+    public RobotState(double x, double y, float heading, double robotWidth, double robotLength)
     {
         this.x = x;
         this.y = y;
         this.heading = heading;
         this.robotWidth = robotWidth;
-        this.robotHeight = robotLength;
+        this.robotLength = robotLength;
     }
 
-    public int getX()
+    public double getX()
     {
         return x;
     }
 
-    public int getY()
+    public double getY()
     {
         return y;
     }
@@ -47,13 +47,13 @@ public class RobotState implements Serializable
         return heading;
     }
 
-    public int getRobotWidth()
+    public double getRobotWidth()
     {
         return robotWidth;
     }
 
-    public int getRobotHeight()
+    public double getRobotLength()
     {
-        return robotHeight;
+        return robotLength;
     }
 }
