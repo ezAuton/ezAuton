@@ -9,12 +9,15 @@ import com.team2502.ezauton.pathplanning.purepursuit.ILookahead;
 import com.team2502.ezauton.pathplanning.purepursuit.LookaheadBounds;
 import com.team2502.ezauton.pathplanning.purepursuit.PPWaypoint;
 import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import com.team2502.ezauton.recorder.RecordFrame;
+import com.team2502.ezauton.recorder.Recorder;
 import com.team2502.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import com.team2502.ezauton.test.simulator.SimulatedTankRobot;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class PPSimulatorTest
@@ -61,8 +64,15 @@ public class PPSimulatorTest
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftDistanceSensor(), robot.getRightDistanceSensor(), robot);
         locEstimator.reset();
 
+        Recorder recorder = new Recorder();
+
+
         // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(TimeUnit.MILLISECONDS, 20, locEstimator, robot);
+        BackgroundAction backgroundAction = new BackgroundAction(TimeUnit.MILLISECONDS, 20, locEstimator, robot,() -> {
+            RecordFrame from = RecordFrame.from(path, locEstimator, locEstimator, 3, 5, simulation.getClock());
+            recorder.add(from);
+            return true;
+        });
 
         simulation.add(backgroundAction);
 
@@ -77,8 +87,11 @@ public class PPSimulatorTest
 
         simulation.add(actionGroup);
 
-        // run the simulator with a timeout of 100 seconds
-        simulation.run(TimeUnit.SECONDS, 5);
+        // run the simulator with a timeout of 20 seconds
+        simulation.run(TimeUnit.SECONDS, 20);
+
+        File file = new File("goright.txt");
+        recorder.save(file);
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
         Assert.assertEquals(0, leftWheelVelocity, 0.2D);

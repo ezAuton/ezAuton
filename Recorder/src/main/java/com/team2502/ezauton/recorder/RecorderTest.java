@@ -1,32 +1,34 @@
 package com.team2502.ezauton.recorder;
 
-import java.io.*;
-import java.util.Collections;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class RecorderTest
 {
     public static void main(String[] args) throws IOException, ClassNotFoundException
     {
-        Recorder recorder = new Recorder();
-        Colour colour = new Colour(0, 0, 0, 1);
-        RobotState robotState = new RobotState(0, 0, 0, 2, 3);
+//        Recorder recorder = new Recorder();
+//        Colour colour = new Colour(0, 0, 0, 1);
+//        RobotState robotState = new RobotState(0, 0, 0, 2, 3);
 
-        RecordFrame recordFrame = new RecordFrame(Collections.emptyList(), colour, robotState);
+//        List<RobotState> robotStates = Arrays.asList(new RobotState(1, 2, 3, 4, 5), new RobotState(0, 23, 1, 6, 8), new RobotState(123, 4, 127, 3, 1));
 
-        recorder.add(recordFrame);
-        recorder.add(recordFrame);
-        recorder.add(recordFrame);
-        recorder.add(recordFrame);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+//        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(robotStates);
+
+//        System.out.println(json);
 
         File file = new File("test.txt");
 
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-        outputStream.writeObject(recorder);
-
-        FileInputStream fileInputStream = new FileInputStream(file);
-        ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
-        Recorder readObject= ((Recorder) inputStream.readObject());
-        System.out.println(readObject.getRecordFrames().get(0).getTime());
+//        RobotState[] states = objectMapper.readValue(json, RobotState[].class);
+//        for(RobotState state : states)
+//        {
+//            System.out.println(state);
+//        }
     }
 }

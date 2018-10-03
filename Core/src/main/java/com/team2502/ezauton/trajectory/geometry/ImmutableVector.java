@@ -1,5 +1,6 @@
 package com.team2502.ezauton.trajectory.geometry;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,7 +9,7 @@ import java.util.List;
 /**
  * An n-dimensional, immutable vector.
  */
-public class ImmutableVector
+public class ImmutableVector implements Serializable
 {
 
     private final double[] elements;

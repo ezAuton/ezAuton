@@ -2,10 +2,11 @@ package com.team2502.ezauton.pathplanning;
 
 import com.team2502.ezauton.pathplanning.purepursuit.PPWaypoint;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PP_PathGenerator
+public class PP_PathGenerator implements Serializable
 {
 
     private final PPWaypoint[] ppWaypoints;

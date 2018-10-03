@@ -11,14 +11,11 @@ public abstract class LinearPathSegment implements IPathSegment
     private final ImmutableVector from;
     private final ImmutableVector to;
     private final boolean finish;
-    private final ImmutableVector differenceVec;
     private final boolean beginning;
     private final double distanceStart;
     private final double distanceEnd;
     private final ImmutableVector dPos;
-    //    private final double maxSpeed;
     private double length;
-//    private MotionProfile motionProfiles;
 
     /**
      * Create a LinearPathSegment
@@ -35,7 +32,7 @@ public abstract class LinearPathSegment implements IPathSegment
         this.finish = finish;
         this.from = from;
         this.to = to;
-        differenceVec = to.sub(from);
+//        differenceVec = to.sub(from);
         this.length = this.from.dist(this.to);
         if(MathUtils.epsilonEquals(0, length))
         {

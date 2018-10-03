@@ -3,6 +3,7 @@ package com.team2502.ezauton.utils;
 import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  *
  * @author ritikmishra
  */
-public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrable //TODO: Remove redundant methods defined in HashMap, also maybe implements HashMap<Double, Double>?
+public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializable //TODO: Remove redundant methods defined in HashMap, also maybe extends HashMap<Double, Double>?
 {
 
     /**
