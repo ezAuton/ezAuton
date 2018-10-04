@@ -3,11 +3,8 @@ package com.team2502.ezauton.recorder;
 import javafx.animation.KeyFrame;
 import javafx.scene.layout.AnchorPane;
 
-public interface IRecording
+public interface ISubRecording
 {
-//    void init(JSONDa)
-//    void init(KeyFrame keyFrame)
-//    {
-//
-//    }
+    String getName();
+    String getJSON();
 }

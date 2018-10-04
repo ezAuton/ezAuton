@@ -4,12 +4,12 @@ public abstract class BaseDataProcessor implements IDataProcessor
 {
 
     private IEnvironment environment;
-    private String json;
+    private IData data;
 
     @Override
-    public void initData(String json)
+    public void initData(IData data)
     {
-        this.json = json;
+        this.data = data;
     }
 
     @Override
