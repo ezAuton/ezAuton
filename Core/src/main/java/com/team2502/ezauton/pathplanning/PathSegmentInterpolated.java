@@ -56,10 +56,6 @@ public class PathSegmentInterpolated extends LinearPathSegment
         // Make extrapolation for speed
         speedInterpolator = new InterpolationMap(getAbsoluteDistanceStart(), speedStart);
 
-
-        double distance = getLength();
-        double time = 0;
-
         // Use kinematics equations built into the MotionState class to build speedInterpolator
         if(speedStart < speedStop) // accel
         {

@@ -4,8 +4,10 @@ import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 import com.team2502.ezauton.utils.MathUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * A path is the conglomerate of several {@link IPathSegment}s, which are in turn made from two {@link ImmutableVector}s.
@@ -15,8 +17,6 @@ import java.util.List;
  */
 public class Path
 {
-
-    private static final double SEGMENTS_PER_UNIT = 2; // 2 segments per foot -> 6 inches per segment. Pretty reasonable resolution for a 2 foot long robot.
     private List<IPathSegment> pathSegments;
 
     private int segmentOnI = -1;
@@ -36,11 +36,16 @@ public class Path
     public static Path fromSegments(List<IPathSegment> pathSegments)
     {
         Path path = new Path();
-        path.pathSegments = pathSegments;
+        path.pathSegments = new ArrayList<>(pathSegments);
         IPathSegment last = pathSegments.get(pathSegments.size() - 1);
         path.length = last.getAbsoluteDistanceEnd();
         path.moveNextSegment();
         return path;
+    }
+
+    public static Path fromSegments(IPathSegment... pathSegments)
+    {
+        return fromSegments(Arrays.asList(pathSegments));
     }
 
     /**
@@ -50,79 +55,6 @@ public class Path
     {
         return length;
     }
-
-    //TODO: Splines?
-    //    public static Path fromPoints(List<? extends ImmutableVector> waypointList)
-//    {
-//        List<PathSegment> pathSegments = new ArrayList<>();
-//        double distance = 0;
-//        for(int i = 0; i < waypointList.size() - 1; i++)
-//        {
-//            ImmutableVector waypoint1 = waypointList.get(i);
-//            ImmutableVector waypoint2 = waypointList.get(i + 1);
-//            double length = waypoint1.dist(waypoint2);
-//            PathSegment pathSegment = new PathSegment(waypoint1, waypoint2, i == 0, i == waypointList.size() - 2, distance, distance += length, length);
-//            pathSegments.add(pathSegment);
-//        }
-//        return fromSegments(pathSegments);
-//    }
-
-//    public static Path fromSplinePoints(List<SplineWaypoint> waypointList)
-//    {
-//        List<Waypoint> interpolatedWaypoints = new ArrayList<>();
-//        double distance = 0;
-//        for(int i = 0; i < waypointList.size() - 1; i++)
-//        {
-//            SplineWaypoint waypoint1 = waypointList.get(i);
-//            Point waypoint1Slope = waypointList.get(i).getSlopeVec();
-//
-//            SplineWaypoint waypoint2 = waypointList.get(i + 1);
-//            Point waypoint2Slope = waypointList.get(i + 1).getSlopeVec();
-//
-//            double length = (double) SplinePathSegment.getArcLength(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope, 0, 1);
-//
-//            SplinePathSegment pathSegment = new SplinePathSegment(waypoint1, waypoint2, waypoint1Slope, waypoint2Slope,i == 0, i == waypointList.size() - 2, distance, distance += length, length);
-//            int interpolatedSegNum = (int) (SEGMENTS_PER_UNIT * pathSegment.getLength());
-//
-//            InterpolationMap maxVel = new InterpolationMap(0D, (double) waypoint1.getMaxVelocity());
-//            final double maxSpeedWaypoint2 = waypoint2.getMaxVelocity();
-//            if(maxSpeedWaypoint2 < 0)
-//            {
-//                throw new IllegalArgumentException("Somehow, maxSpeed is less than 0 for this waypoint: " + waypoint2.toString());
-//            }
-//            maxVel.put(1D, (double) maxSpeedWaypoint2);
-//
-//            InterpolationMap maxAccel = new InterpolationMap(0D, (double) waypoint1.getMaxAccel());
-//            maxAccel.put(1D, (double) waypoint2.getMaxAccel());
-//
-//            InterpolationMap maxDecel = new InterpolationMap(0D, (double) waypoint1.getMaxDeccel());
-//            maxDecel.put(1D, (double) waypoint2.getMaxDeccel());
-//
-//            for(int j = 0; j < interpolatedSegNum; j++)
-//            {
-//                double t = (double) j / interpolatedSegNum;
-//                ImmutableVector2f loc = pathSegment.get(t);
-//                final double maxSpeed = maxVel.get(t).doubleValue();
-//                if(maxSpeed < 0)
-//                {
-//                    throw new IllegalArgumentException("Max speed is negative!");
-//                }
-//                Waypoint waypoint = new Waypoint(loc, maxSpeed, maxAccel.get(t).doubleValue(), maxDecel.get(t).doubleValue(), j == 0 ? waypoint1.getCommands() : null);
-//                interpolatedWaypoints.add(waypoint);
-//            }
-//        }
-//        return fromPoints(interpolatedWaypoints);
-//    }
-
-//    public static Path fromPoints(ImmutableVector... points)
-//    {
-//        return fromPoints(Arrays.asList(points));
-//    }
-
-//    public static Path fromSplinePoints(SplineWaypoint... points)
-//    {
-//        return fromSplinePoints(Arrays.asList(points));
-//    }
 
     /**
      * Moves to the next path segment
@@ -348,22 +280,4 @@ public class Path
         path.robotLocationClosestPoint = robotLocationClosestPoint;
         return path;
     }
-
-//    public List<Waypoint> getWaypoints()
-//    {
-//        List<Waypoint> ret = new ArrayList<>();
-//        for(PathSegment segment : pathSegments)
-//        {
-//            if(segment.getFrom().getClass().equals(Waypoint.class))
-//            {
-//                ret.add((Waypoint) segment.getFrom());
-//            }
-//        }
-//
-//        if(pathSegments.get(pathSegments.size() - 1).getTo().getClass().equals(Waypoint.class))
-//        {
-//            ret.add((Waypoint) pathSegments.get(pathSegments.size() - 1).getTo());
-//        }
-//        return ret;
-//    }
 }

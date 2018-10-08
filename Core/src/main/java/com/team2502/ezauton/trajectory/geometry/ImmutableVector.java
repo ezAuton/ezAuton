@@ -59,6 +59,11 @@ public class ImmutableVector implements Serializable
         }
     }
 
+    public ImmutableVector norm()
+    {
+        return div(mag());
+    }
+
     /**
      * @param size The dimension of the vector.
      * @return
@@ -194,6 +199,11 @@ public class ImmutableVector implements Serializable
     public ImmutableVector mul(double scalar)
     {
         return mul(of(scalar, getDimension()));
+    }
+
+    public ImmutableVector div(double scalar)
+    {
+        return mul(1D/scalar);
     }
 
     /**
