@@ -1,6 +1,7 @@
 package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.utils.IClock;
+import com.team2502.ezauton.utils.RealClock;
 
 import java.util.List;
 
@@ -31,5 +32,12 @@ public interface IAction
 
     List<Runnable> getFinished();
 
+    /**
+     * A helper method to schedule a real-time task. If you want other ways to schedule the action see {@link ThreadBuilder} or {@link Simulation}.
+     */
+    default void schedule()
+    {
+        new ThreadBuilder(this, RealClock.CLOCK).buildAndRun();
+    }
 }
 
