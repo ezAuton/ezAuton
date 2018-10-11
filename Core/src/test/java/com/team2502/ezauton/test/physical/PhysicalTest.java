@@ -86,8 +86,8 @@ public class PhysicalTest
         IAction action = testStraightVoltage(leftMotor, rightMotor, voltage);
         TankRobotEncoderEncoderEstimator localizer = new TankRobotEncoderEncoderEstimator(left, right, () -> lateralWheelDistance);
         localizer.reset();
-        return new ActionGroup().with(new QuickBackgroundAction(TimeUnit.MILLISECONDS, 50, localizer))
+        return new ActionGroup().with(new BackgroundAction(TimeUnit.MILLISECONDS, 50, localizer))
                                 .addSequential(action)
-                                .addSequential(new QuickAction(() -> System.out.println(localizer.estimateLocation())));
+                                .addSequential(new BaseAction(() -> System.out.println(localizer.estimateLocation())));
     }
 }

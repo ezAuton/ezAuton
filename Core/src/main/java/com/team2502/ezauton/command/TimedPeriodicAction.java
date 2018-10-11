@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Describes an action that ends after a certain amount of time has elapsed
  */
-public class TimedQuickBackgroundAction extends QuickBackgroundAction
+public class TimedPeriodicAction extends PeriodicAction
 {
 
     private long durationMillis;
@@ -17,14 +17,12 @@ public class TimedQuickBackgroundAction extends QuickBackgroundAction
      * @param period       How long to (repeatedly) run the runnables for
      * @param durationUnit
      * @param duration     The timeunit that period is
-     * @param updateables
      */
-    public TimedQuickBackgroundAction(TimeUnit periodUnit, long period, TimeUnit durationUnit, long duration, Updateable... updateables)
+    public TimedPeriodicAction(TimeUnit periodUnit, long period, TimeUnit durationUnit, long duration, Updateable... updateables)
     {
         super(periodUnit, period, updateables);
         durationMillis = durationUnit.toMillis(duration);
     }
-
 
     @Override
     protected boolean isFinished()

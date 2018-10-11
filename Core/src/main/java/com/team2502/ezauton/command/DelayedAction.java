@@ -7,18 +7,38 @@ import java.util.concurrent.TimeUnit;
 /**
  * Describes an action that waits a certain amount of time before running
  */
-public class QuickDelayedAction extends BaseAction
+public class DelayedAction extends BaseAction
 {
 
-    private final Runnable[] runnables;
+    private Runnable runnable;
     private long millis;
 
-    public QuickDelayedAction(TimeUnit unit, long value, Runnable... runnables)
+    public DelayedAction(TimeUnit unit, long value)
     {
         millis = unit.toMillis(value);
-        this.runnables = runnables;
     }
 
+    public DelayedAction(TimeUnit unit, long value, Runnable runnable)
+    {
+        this(unit,value);
+        this.runnable = runnable;
+    }
+
+    /**
+     * Called after delay is done
+     */
+    public void onTimeUp(IClock clock)
+    {
+        if(runnable != null)
+        {
+            runnable.run();
+        }
+    }
+
+    /**
+     * Do not override!
+     * @param clock
+     */
     @Override
     public void run(IClock clock)
     {
@@ -35,9 +55,6 @@ public class QuickDelayedAction extends BaseAction
         {
             return;
         }
-        for(Runnable runnable : runnables)
-        {
-            runnable.run();
-        }
+        onTimeUp(clock);
     }
 }

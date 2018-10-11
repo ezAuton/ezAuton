@@ -33,10 +33,30 @@ public class ActionGroup extends BaseAction
         return actionGroup;
     }
 
+
+    public static Runnable mergeRunnablesSequential(Runnable... runnables)
+    {
+        return () -> Arrays.stream(runnables).forEach(Runnable::run);
+    }
+
+    public static ActionGroup ofSequentials(Runnable... runnables)
+    {
+        ActionGroup actionGroup = new ActionGroup();
+        Arrays.stream(runnables).map(BaseAction::new).forEach(actionGroup::addSequential);
+        return actionGroup;
+    }
+
     public static ActionGroup ofParallels(IAction... actions)
     {
         ActionGroup actionGroup = new ActionGroup();
         Arrays.stream(actions).forEach(actionGroup::addParallel);
+        return actionGroup;
+    }
+
+    public static ActionGroup ofParallels(Runnable... runnables)
+    {
+        ActionGroup actionGroup = new ActionGroup();
+        Arrays.stream(runnables).map(BaseAction::new).forEach(actionGroup::addParallel);
         return actionGroup;
     }
 
@@ -50,7 +70,7 @@ public class ActionGroup extends BaseAction
         this.scheduledActions = new LinkedList<>(Arrays.asList(scheduledActions));
     }
 
-    public ActionGroup(){}
+    public ActionGroup() {}
 
     /**
      * Add a sequential Action to the actions that we will run

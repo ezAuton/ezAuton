@@ -62,7 +62,7 @@ public class PPSimulatorTest
         locEstimator.reset();
 
         // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        QuickBackgroundAction backgroundAction = new QuickBackgroundAction(TimeUnit.MILLISECONDS, 20, locEstimator, robot);
+        BackgroundAction backgroundAction = new BackgroundAction(TimeUnit.MILLISECONDS, 20, locEstimator, robot);
 
         simulation.add(backgroundAction);
 
@@ -73,7 +73,7 @@ public class PPSimulatorTest
         PPCommand ppCommand = new PPCommand(TimeUnit.MILLISECONDS, 50, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         // Run the ppCommand and then kill the background task as it is no longer needed
-        ActionGroup actionGroup = new ActionGroup(ppCommand, new QuickAction(backgroundAction::end));
+        ActionGroup actionGroup = new ActionGroup(ppCommand, new BaseAction(backgroundAction::end));
 
         simulation.add(actionGroup);
 
