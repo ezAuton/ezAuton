@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * A Pure Pursuit command which can be used in simulation or as a WPILib Command
  */
-public class PPCommand extends SimpleAction  // TODO: Rename to PPAction
+public class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
 {
     private final PurePursuitMovementStrategy purePursuitMovementStrategy;
     private final ITranslationalLocationEstimator translationalLocationEstimator;

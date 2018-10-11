@@ -12,7 +12,8 @@ public class RealClock implements IClock
     private final ScheduledExecutorService executorService;
 
 
-    protected RealClock() {
+    protected RealClock()
+    {
         executorService = Executors.newSingleThreadScheduledExecutor();
     }
 
@@ -28,11 +29,12 @@ public class RealClock implements IClock
         Instant scheduleTime = Instant.ofEpochMilli(millis);
         Instant now = Instant.now();
 
-        if (scheduleTime.isBefore(now)) {
+        if(scheduleTime.isBefore(now))
+        {
             throw new IllegalArgumentException("You are scheduling a task for before the current time!");
         }
 
-        return executorService.schedule(runnable,scheduleTime.toEpochMilli()-now.toEpochMilli(),TimeUnit.MILLISECONDS);
+        return executorService.schedule(runnable, scheduleTime.toEpochMilli() - now.toEpochMilli(), TimeUnit.MILLISECONDS);
     }
 
     @Override

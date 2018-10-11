@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Describes an action that waits a certain amount of time before running
  */
-public class DelayedAction extends AbstractAction
+public class DelayedAction extends BaseAction
 {
 
     private final Runnable[] runnables;

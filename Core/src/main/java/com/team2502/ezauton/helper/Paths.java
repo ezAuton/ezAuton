@@ -6,7 +6,7 @@ import com.team2502.ezauton.pathplanning.purepursuit.PPWaypoint;
 
 /**
  * Class containing sample paths for Pure Pursuit
- *
+ * <p>
  * This class only contains static members.
  */
 public class Paths

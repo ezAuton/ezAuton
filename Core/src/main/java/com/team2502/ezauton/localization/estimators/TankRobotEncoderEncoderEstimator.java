@@ -28,8 +28,9 @@ public class TankRobotEncoderEncoderEstimator implements IRotationalLocationEsti
 
     /**
      * Create a TankRobotEncoderEstimator
-     * @param left A reference to the encoder on the left side of the robot
-     * @param right A reference to the encoder on the right side of the robot
+     *
+     * @param left      A reference to the encoder on the left side of the robot
+     * @param right     A reference to the encoder on the right side of the robot
      * @param tankRobot A reference to an object containing data about the structure of the drivetrain
      */
     public TankRobotEncoderEncoderEstimator(ITranslationalDistanceSensor left, ITranslationalDistanceSensor right, ITankRobotConstants tankRobot)
@@ -65,6 +66,7 @@ public class TankRobotEncoderEncoderEstimator implements IRotationalLocationEsti
 
     /**
      * Update the calculation for the current heading and position. Call this as frequently as possible to ensure optimal results
+     *
      * @return True
      */
     @Override

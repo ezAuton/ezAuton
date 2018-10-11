@@ -48,11 +48,11 @@ public class Simulation
     {
         timeWarpedClock.setStartTime(System.currentTimeMillis());
 
-        actions.forEach(action -> new ThreadBuilder(action,timeWarpedClock).buildAndRun());
+        actions.forEach(action -> new ThreadBuilder(action, timeWarpedClock).buildAndRun());
 
         if(!ForkJoinPool.commonPool().awaitQuiescence(timeout, timeUnit))
         {
-            throw new RuntimeException("Simulator did not finish in a second."  );
+            throw new RuntimeException("Simulator did not finish in a second.");
         }
 
     }

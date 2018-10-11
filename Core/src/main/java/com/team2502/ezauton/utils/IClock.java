@@ -1,11 +1,7 @@
 package com.team2502.ezauton.utils;
 
-import com.team2502.ezauton.command.IAction;
-
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Describes a Clock. The clock can be real or simulated. The purpose of a clock is to support a {@link Stopwatch}
@@ -42,7 +38,7 @@ public interface IClock
 
     default Future<?> scheduleNow(Runnable runnable)
     {
-        return scheduleAt(getTime(),runnable);
+        return scheduleAt(getTime(), runnable);
     }
 
     /**

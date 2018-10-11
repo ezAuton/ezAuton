@@ -9,6 +9,7 @@ import com.team2502.ezauton.utils.MathUtils;
 
 //TODO: test
 //TODO: Better name
+
 /**
  * Describes an Updateable object that can track the location and heading of the robot
  */
@@ -26,6 +27,7 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator, I
 
     /**
      * Create an EncoderRotationEstimator
+     *
      * @param rotationalLocationEstimator An object that can estimate our current heading
      * @param distanceSensor              An encoder or encoder-like object.
      */
@@ -73,6 +75,7 @@ public class EncoderRotationEstimator implements IRotationalLocationEstimator, I
 
     /**
      * Update the calculation for the current heading and position. Call this as frequently as possible to ensure optimal results
+     *
      * @return True
      */
     @Override

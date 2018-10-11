@@ -18,11 +18,13 @@ public class RobotMotionFrame implements Serializable
 
     /**
      * Create a RobotMotionFrame
+     *
      * @param robotPos           The position of the robot
      * @param tangentialVelocity The tangential velocity of the robot
      * @param heading            The heading of the robot
      */
-    public RobotMotionFrame(ImmutableVector robotPos, double tangentialVelocity, double heading)    {
+    public RobotMotionFrame(ImmutableVector robotPos, double tangentialVelocity, double heading)
+    {
 
         this.robotX = robotPos.get(0);
         this.robotY = robotPos.get(1);

@@ -41,6 +41,7 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
 
     /**
      * Change the motor to which the velocity will be applied
+     *
      * @param subscribed The new motor instance
      */
     public void setSubscribed(IVelocityMotor subscribed)
@@ -64,7 +65,7 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
     @Override
     public double getPosition()
     {
-        position += velocity * stopwatch.pop(TimeUnit.SECONDS) ; // Convert millis to seconds
+        position += velocity * stopwatch.pop(TimeUnit.SECONDS); // Convert millis to seconds
         return position;
     }
 

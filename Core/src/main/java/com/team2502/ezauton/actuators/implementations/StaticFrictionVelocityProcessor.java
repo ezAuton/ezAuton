@@ -17,8 +17,8 @@ public class StaticFrictionVelocityProcessor extends VelocityProcessor
      * Create a StaticFrictionVelocityProcessor
      *
      * @param distanceSensor An encoder
-     * @param toApply The motor to apply the processed velocity to
-     * @param minVelMove The minimum velocity to move the motor
+     * @param toApply        The motor to apply the processed velocity to
+     * @param minVelMove     The minimum velocity to move the motor
      */
     public StaticFrictionVelocityProcessor(ITranslationalDistanceSensor distanceSensor, IVelocityMotor toApply, double minVelMove)
     {
@@ -29,6 +29,7 @@ public class StaticFrictionVelocityProcessor extends VelocityProcessor
 
     /**
      * Run the motor at the target velocity, unless the target velocity is too small and we are not moving
+     *
      * @param targetVelocity The speed to run the motor at
      */
     @Override

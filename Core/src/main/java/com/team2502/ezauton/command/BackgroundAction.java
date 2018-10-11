@@ -4,7 +4,7 @@ import com.team2502.ezauton.localization.Updateable;
 
 import java.util.concurrent.TimeUnit;
 
-public class BackgroundAction extends SimpleAction
+public class BackgroundAction extends PeriodicAction
 {
 
     private final Updateable[] updateables;

@@ -1,26 +1,25 @@
 package com.team2502.ezauton.wpilib.command;
 
-import com.team2502.ezauton.command.IAction;
-import com.team2502.ezauton.command.SimpleAction;
+import com.team2502.ezauton.command.PeriodicAction;
 import com.team2502.ezauton.command.ThreadBuilder;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Creates a command from an {@link SimpleAction}. This allows for abstraction and use of commands in simulators.
+ * Creates a command from an {@link PeriodicAction}. This allows for abstraction and use of commands in simulators.
  */
 public class CommandCreator extends Command //TODO: Change name?
 {
 
-    private final SimpleAction action;
+    private final PeriodicAction action;
     private Thread thread;
     private boolean finished = false;
 
     /**
-     * Create a command from a SimpleAction
+     * Create a command from a PeriodicAction
      *
      * @param action The action to run as a command
      */
-    public CommandCreator(SimpleAction action)
+    public CommandCreator(PeriodicAction action)
     {
         this.action = action;
     }
@@ -35,7 +34,7 @@ public class CommandCreator extends Command //TODO: Change name?
     @Override
     protected void execute()
     {
-        //TODO: Fix publicity of SimpleAction#execute or location of CommandCreator such that the following line of code compiles
+        //TODO: Fix publicity of PeriodicAction#execute or location of CommandCreator such that the following line of code compiles
 //        action.execute();
     }
 

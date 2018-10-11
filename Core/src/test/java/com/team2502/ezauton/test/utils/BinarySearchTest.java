@@ -1,7 +1,6 @@
 package com.team2502.ezauton.test.utils;
 
 import com.team2502.ezauton.utils.BinarySearch;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -11,6 +10,8 @@ import static org.junit.Assert.assertEquals;
 
 public class BinarySearchTest
 {
+    List<Integer> sortedIntegers = Arrays.asList(1, 3, 7, 8, 13, 18);
+
     private BinarySearch.Search<Integer> searchFor(int waldo)
     {
         return integer -> {
@@ -25,8 +26,6 @@ public class BinarySearchTest
             return BinarySearch.SearchEntryResult.CORRECT;
         };
     }
-
-    List<Integer> sortedIntegers = Arrays.asList(1, 3, 7, 8, 13, 18);
 
     @Test
     public void testBinarySearch()

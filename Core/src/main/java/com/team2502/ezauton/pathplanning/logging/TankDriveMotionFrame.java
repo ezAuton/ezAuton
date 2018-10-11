@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 /**
  * Data class that describes the position and velocity of a tank-drive robot at a particular time. Useful in conjunction with visualization tools to figure out what's wrong
- *
  */
 public class TankDriveMotionFrame extends RobotMotionFrame implements Serializable
 {
@@ -19,13 +18,13 @@ public class TankDriveMotionFrame extends RobotMotionFrame implements Serializab
     /**
      * Create a TankDriveMotionFrame
      *
-     * @param robotPos           Position of the robot
-     * @param leftVel            Velocity of the left wheel(s)
-     * @param rightVel           Velocity of the right wheel(s)
-     * @param leftPos            Position of the left encoder
-     * @param rightPos           Position of the right encoder
-     * @param radius             Radius of the robot motion circle
-     * @param circleCenter       Center of the robot motion circle
+     * @param robotPos     Position of the robot
+     * @param leftVel      Velocity of the left wheel(s)
+     * @param rightVel     Velocity of the right wheel(s)
+     * @param leftPos      Position of the left encoder
+     * @param rightPos     Position of the right encoder
+     * @param radius       Radius of the robot motion circle
+     * @param circleCenter Center of the robot motion circle
      */
     public TankDriveMotionFrame(ImmutableVector robotPos, double leftVel, double rightVel, double heading, double leftPos, double rightPos, double radius, ImmutableVector circleCenter)
     {

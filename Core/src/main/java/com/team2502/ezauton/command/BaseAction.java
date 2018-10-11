@@ -3,7 +3,7 @@ package com.team2502.ezauton.command;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractAction implements IAction
+public abstract class BaseAction implements IAction
 {
 
     private List<Runnable> toRun = new ArrayList<>();

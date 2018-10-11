@@ -1,23 +1,16 @@
 package com.team2502.ezauton.command;
 
 import com.team2502.ezauton.utils.IClock;
-import com.team2502.ezauton.utils.ICopyable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
  * Describes a group of multiple IActions which itself is also an IAction
  */
-public class ActionGroup extends AbstractAction
+public class ActionGroup extends BaseAction
 {
-    private List<ActionWrapper> scheduledActions;
-    private List<Runnable> onFinish = new ArrayList<>();
-
-    private IAction lastSimulated;
-
-    private ICopyable stopwatch;
+    private Queue<ActionWrapper> scheduledActions;
 
     /**
      * Creates an ActionGroup comprised of sequential commands
@@ -26,7 +19,7 @@ public class ActionGroup extends AbstractAction
      */
     public ActionGroup(IAction... actions)
     {
-        this.scheduledActions = new ArrayList<>();
+        this.scheduledActions = new LinkedList<>();
         for(IAction action : actions)
         {
             this.scheduledActions.add(new ActionWrapper(action, Type.SEQUENTIAL));
@@ -38,9 +31,9 @@ public class ActionGroup extends AbstractAction
      *
      * @param scheduledActions The ActionWrappers to run
      */
-    public ActionGroup(List<ActionWrapper> scheduledActions)
+    public ActionGroup(ActionWrapper... scheduledActions)
     {
-        this.scheduledActions = scheduledActions;
+        this.scheduledActions = new LinkedList<>(Arrays.asList(scheduledActions));
     }
 
     /**

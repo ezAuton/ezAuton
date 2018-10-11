@@ -23,7 +23,7 @@ public class PhysicalTest
     public static IAction testStraightVoltage(IVoltageMotor leftMotor, IVoltageMotor rightMotor, double voltage)
     {
         // run for 5 seconds
-        return new SimpleAction(TimeUnit.MILLISECONDS, 20)
+        return new PeriodicAction(TimeUnit.MILLISECONDS, 20)
         {
             @Override
             public void execute()
@@ -53,7 +53,7 @@ public class PhysicalTest
     public static IAction testStraightVelocity(IVelocityMotor leftMotor, IVelocityMotor rightMotor, double velocity)
     {
         // run for 5 seconds
-        return new SimpleAction(TimeUnit.MILLISECONDS, 20)
+        return new PeriodicAction(TimeUnit.MILLISECONDS, 20)
         {
             @Override
             public void execute()

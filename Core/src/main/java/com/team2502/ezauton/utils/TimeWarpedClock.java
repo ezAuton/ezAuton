@@ -4,7 +4,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
- *  A clock based off of Real Clock that is warped
+ * A clock based off of Real Clock that is warped
  */
 public class TimeWarpedClock implements IClock
 {
@@ -18,16 +18,6 @@ public class TimeWarpedClock implements IClock
         this.speed = speed;
     }
 
-
-    /**
-     * Sets the start time in milliseconds
-     * @param startTime
-     */
-    public void setStartTime(long startTime)
-    {
-        this.startTime = startTime;
-    }
-
     public double getSpeed()
     {
         return speed;
@@ -36,6 +26,16 @@ public class TimeWarpedClock implements IClock
     public long getStartTime()
     {
         return startTime;
+    }
+
+    /**
+     * Sets the start time in milliseconds
+     *
+     * @param startTime
+     */
+    public void setStartTime(long startTime)
+    {
+        this.startTime = startTime;
     }
 
     @Override
