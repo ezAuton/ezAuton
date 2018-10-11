@@ -22,7 +22,8 @@ public class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
 
     /**
      * Create a PP Command
-     *  @param period                         How often to update estimated position, robot control, etc
+     *
+     * @param period                         How often to update estimated position, robot control, etc
      * @param timeUnit                       The timeunit that period is in
      * @param purePursuitMovementStrategy    Our movement strategy.
      * @param translationalLocationEstimator An object that knows where we are on a 2D plane

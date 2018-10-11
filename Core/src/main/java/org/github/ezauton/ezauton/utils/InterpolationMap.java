@@ -1,7 +1,7 @@
 package org.github.ezauton.ezauton.utils;
 
-import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
 import java.util.*;
 import java.util.stream.Collectors;

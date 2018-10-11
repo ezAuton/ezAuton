@@ -17,6 +17,7 @@ public abstract class PeriodicAction extends BaseAction
 
     /**
      * An action which runs at recurring intervals
+     *
      * @param period
      * @param timeUnit
      * @param updateables
@@ -29,12 +30,12 @@ public abstract class PeriodicAction extends BaseAction
 
     protected void init() {}
 
-    protected void execute() {
+    protected void execute()
+    {
         Arrays.stream(updateables).forEach(Updateable::update);
     }
 
     protected abstract boolean isFinished();
-
 
 
     @Override

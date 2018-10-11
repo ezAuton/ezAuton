@@ -1,8 +1,8 @@
 package org.github.ezauton.ezauton.test.physical;
 
+import org.github.ezauton.ezauton.action.*;
 import org.github.ezauton.ezauton.actuators.IVelocityMotor;
 import org.github.ezauton.ezauton.actuators.IVoltageMotor;
-import org.github.ezauton.ezauton.action.*;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import org.github.ezauton.ezauton.localization.sensors.ITranslationalDistanceSensor;
 

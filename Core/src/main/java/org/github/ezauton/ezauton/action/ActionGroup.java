@@ -36,7 +36,8 @@ public class ActionGroup extends BaseAction
         this.scheduledActions = new LinkedList<>(Arrays.asList(scheduledActions));
     }
 
-    public ActionGroup() {
+    public ActionGroup()
+    {
         this.scheduledActions = new LinkedList<>();
     }
 
