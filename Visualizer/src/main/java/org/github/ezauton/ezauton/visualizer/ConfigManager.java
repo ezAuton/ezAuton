@@ -1,4 +1,4 @@
-package com.team2502.guitools.ppsimulator;
+package org.github.ezauton.ezauton.visualizer;
 
 import java.io.File;
 import java.io.IOException;

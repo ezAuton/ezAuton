@@ -1,4 +1,4 @@
-package com.team2502.guitools.ppsimulator;
+package org.github.ezauton.ezauton.visualizer;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

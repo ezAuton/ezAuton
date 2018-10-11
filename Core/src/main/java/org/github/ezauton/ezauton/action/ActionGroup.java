@@ -84,6 +84,7 @@ public class ActionGroup extends BaseAction
     public ActionGroup addSequential(IAction action)
     {
         this.scheduledActions.add(new ActionWrapper(action, Type.SEQUENTIAL));
+
         return this;
     }
 

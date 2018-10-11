@@ -1,7 +1,7 @@
-package com.team2502.ezauton.wpilib.command;
+package org.github.ezauton.ezauton.wpilib.command;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.team2502.ezauton.localization.sensors.ICompass;
+import org.github.ezauton.ezauton.localization.sensors.ICompass;
 
 public class Gyros
 {

@@ -5,7 +5,7 @@
 <?import javafx.scene.shape.*?>
 <?import java.net.URL?>
 <SplitPane xmlns:fx="http://javafx.com/fxml/1" dividerPositions="0.33333" xmlns="http://javafx.com/javafx/8.0.121"
-           fx:controller="com.team2502.guitools.ppsimulator.Controller">
+           fx:controller="org.github.ezauton.ezauton.visualizer.Controller">
     <GridPane minHeight="492" prefHeight="492.0" maxHeight="984" minWidth="443.0" prefWidth="443.0" maxWidth="443.0">
         <columnConstraints>
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"/>
