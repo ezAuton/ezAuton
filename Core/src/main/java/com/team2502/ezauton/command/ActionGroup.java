@@ -26,6 +26,20 @@ public class ActionGroup extends BaseAction
         }
     }
 
+    public static ActionGroup ofSequentials(IAction... actions)
+    {
+        ActionGroup actionGroup = new ActionGroup();
+        Arrays.stream(actions).forEach(actionGroup::addSequential);
+        return actionGroup;
+    }
+
+    public static ActionGroup ofParallels(IAction... actions)
+    {
+        ActionGroup actionGroup = new ActionGroup();
+        Arrays.stream(actions).forEach(actionGroup::addParallel);
+        return actionGroup;
+    }
+
     /**
      * Creates an Action Group comprised of different kinds of commands (i.e sequential, parallel, with)
      *
@@ -35,6 +49,8 @@ public class ActionGroup extends BaseAction
     {
         this.scheduledActions = new LinkedList<>(Arrays.asList(scheduledActions));
     }
+
+    public ActionGroup(){}
 
     /**
      * Add a sequential Action to the actions that we will run
