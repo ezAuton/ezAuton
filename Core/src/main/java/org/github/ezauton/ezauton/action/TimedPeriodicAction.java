@@ -24,6 +24,38 @@ public class TimedPeriodicAction extends PeriodicAction
         durationMillis = durationUnit.toMillis(duration);
     }
 
+    /**
+     * @param period       How long to (repeatedly) run the runnables for
+     * @param periodUnit
+     * @param duration     The timeunit that period is
+     * @param durationUnit
+     */
+    public TimedPeriodicAction(long period, TimeUnit periodUnit, long duration, TimeUnit durationUnit)
+    {
+        super(period, periodUnit);
+        durationMillis = durationUnit.toMillis(duration);
+    }
+
+    /**
+     * @param duration     The timeunit that period is
+     * @param durationUnit
+     */
+    public TimedPeriodicAction(long duration, TimeUnit durationUnit, Updateable... updateables)
+    {
+        super(updateables);
+        durationMillis = durationUnit.toMillis(duration);
+    }
+
+    /**
+     * @param duration     The timeunit that period is
+     * @param durationUnit
+     */
+    public TimedPeriodicAction(long duration, TimeUnit durationUnit)
+    {
+        super();
+        durationMillis = durationUnit.toMillis(duration);
+    }
+
     @Override
     protected boolean isFinished()
     {

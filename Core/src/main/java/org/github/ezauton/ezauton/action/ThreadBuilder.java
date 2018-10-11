@@ -100,6 +100,7 @@ public class ThreadBuilder
         public void run()
         {
             action.run(clock);
+            action.end();
             action.getFinished().forEach(Runnable::run);
         }
     }

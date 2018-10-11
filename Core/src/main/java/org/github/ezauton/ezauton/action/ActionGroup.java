@@ -57,7 +57,7 @@ public class ActionGroup extends BaseAction
     public static ActionGroup ofSequentials(Runnable... runnables)
     {
         ActionGroup actionGroup = new ActionGroup();
-        Arrays.stream(runnables).map(BaseAction::new).forEach(actionGroup::addSequential);
+        Arrays.stream(runnables).forEach(actionGroup::addSequential);
         return actionGroup;
     }
 
@@ -71,7 +71,7 @@ public class ActionGroup extends BaseAction
     public static ActionGroup ofParallels(Runnable... runnables)
     {
         ActionGroup actionGroup = new ActionGroup();
-        Arrays.stream(runnables).map(BaseAction::new).forEach(actionGroup::addParallel);
+        Arrays.stream(runnables).forEach(actionGroup::addParallel);
         return actionGroup;
     }
 
@@ -89,6 +89,19 @@ public class ActionGroup extends BaseAction
     }
 
     /**
+     * Add a sequential Action to the actions that we will run
+     *
+     * @param runnable The Action to run
+     * @return this
+     */
+    public ActionGroup addSequential(Runnable runnable)
+    {
+        this.scheduledActions.add(new ActionWrapper(new BaseAction(runnable), Type.SEQUENTIAL));
+
+        return this;
+    }
+
+    /**
      * Add a daemonic Action to the actions that we will run. It will run in parallel with another action, except it wil end at the same time as the other action.
      *
      * @param action The Action to run
@@ -101,6 +114,18 @@ public class ActionGroup extends BaseAction
     }
 
     /**
+     * Add a daemonic Action to the actions that we will run. It will run in parallel with another action, except it wil end at the same time as the other action.
+     *
+     * @param runnable The Runnable to run
+     * @return this
+     */
+    public ActionGroup with(Runnable runnable)
+    {
+        this.scheduledActions.add(new ActionWrapper(new BaseAction(runnable), Type.WITH));
+        return this;
+    }
+
+    /**
      * Add a parallel Action to the actions that we will run. It will run in parallel and will end in its own time.
      *
      * @param action The action to run
@@ -109,6 +134,18 @@ public class ActionGroup extends BaseAction
     public ActionGroup addParallel(IAction action)
     {
         this.scheduledActions.add(new ActionWrapper(action, Type.PARALLEL));
+        return this;
+    }
+
+    /**
+     * Add a parallel Action to the actions that we will run. It will run in parallel and will end in its own time.
+     *
+     * @param runnable The Runnable to run
+     * @return this
+     */
+    public ActionGroup addParallel(Runnable runnable)
+    {
+        this.scheduledActions.add(new ActionWrapper(new BaseAction(runnable), Type.PARALLEL));
         return this;
     }
 

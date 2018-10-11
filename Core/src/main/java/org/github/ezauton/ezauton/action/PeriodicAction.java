@@ -28,11 +28,28 @@ public abstract class PeriodicAction extends BaseAction
         this.updateables = updateables;
     }
 
+    /**
+     * Creates a PeriodicAction with a 20 ms period.
+     * @param updateables
+     */
+    public PeriodicAction(Updateable... updateables)
+    {
+        this(20, TimeUnit.MILLISECONDS, updateables);
+    }
+
+    public PeriodicAction()
+    {
+        this(20, TimeUnit.MILLISECONDS);
+    }
+
     protected void init() {}
 
     protected void execute()
     {
-        Arrays.stream(updateables).forEach(Updateable::update);
+        if(updateables != null)
+        {
+            Arrays.stream(updateables).forEach(Updateable::update);
+        }
     }
 
     protected abstract boolean isFinished();
