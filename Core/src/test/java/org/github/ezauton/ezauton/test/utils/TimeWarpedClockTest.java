@@ -85,9 +85,9 @@ public class TimeWarpedClockTest
         Simulation sim = new Simulation(speed);
 
         // 1000 fake seconds * 1 real sec / `1000 fake secs = 1 real sec
-        sim.add(new DelayedAction(TimeUnit.SECONDS, speed, () -> time.set(System.currentTimeMillis())));
+        sim.add(new DelayedAction(speed, TimeUnit.SECONDS, () -> time.set(System.currentTimeMillis())));
         long init = System.currentTimeMillis();
-        sim.run(TimeUnit.SECONDS, 10);
+        sim.run(10, TimeUnit.SECONDS);
 
         System.out.println("time.get - init = " + (time.get() - init));
 

@@ -39,10 +39,10 @@ public class SimulatedClock implements IClock
     /**
      * Adds time with units
      *
-     * @param timeUnit
      * @param value
+     * @param timeUnit
      */
-    public void addTime(TimeUnit timeUnit, long value)
+    public void addTime(long value, TimeUnit timeUnit)
     {
         addTime(timeUnit.toMillis(value));
     }
@@ -133,7 +133,7 @@ public class SimulatedClock implements IClock
     }
 
     @Override
-    public void sleep(TimeUnit timeUnit, long dt) throws InterruptedException
+    public void sleep(long dt, TimeUnit timeUnit) throws InterruptedException
     {
         long startTime = getTime();
         while(startTime + timeUnit.toMillis(dt) < getTime())

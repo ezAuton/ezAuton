@@ -57,28 +57,28 @@ public class ActuatorsTest
         RampUpVelocityProcessor velocityProcessor = new RampUpVelocityProcessor(velocityMotor, clock, 1);
 
         velocityProcessor.runVelocity(2);
-        clock.addTime(TimeUnit.SECONDS, 1);
+        clock.addTime(1, TimeUnit.SECONDS);
         velocityProcessor.update();
 
         assertEquals(1, velocity.doubleValue(), 1E-6);
 
-        clock.addTime(TimeUnit.SECONDS, 1);
+        clock.addTime(1, TimeUnit.SECONDS);
         velocityProcessor.update();
 
         assertEquals(2, velocity.doubleValue(), 1E-6);
 
-        clock.addTime(TimeUnit.SECONDS, 1);
+        clock.addTime(1, TimeUnit.SECONDS);
         velocityProcessor.update();
 
         assertEquals(2, velocity.doubleValue(), 1E-6);
 
         velocityProcessor.runVelocity(1);
-        clock.addTime(TimeUnit.MILLISECONDS, 990);
+        clock.addTime(990, TimeUnit.MILLISECONDS);
         velocityProcessor.update();
         assertEquals(1.01D, velocity.doubleValue(), 1E-6);
 
         velocityProcessor.runVelocity(10);
-        clock.addTime(TimeUnit.MILLISECONDS, 990);
+        clock.addTime(990, TimeUnit.MILLISECONDS);
         velocityProcessor.update();
         assertEquals(2D, velocity.doubleValue(), 1E-6);
         assertEquals(2D, velocityProcessor.getLastVelocity(), 1E-6);
@@ -129,25 +129,25 @@ public class ActuatorsTest
         BaseSimulatedMotor simulatedMotor = new BaseSimulatedMotor(clock);
 
         simulatedMotor.runVelocity(1);
-        clock.addTime(TimeUnit.SECONDS, 1);
+        clock.addTime(1, TimeUnit.SECONDS);
 
         assertEquals(1, simulatedMotor.getPosition(), 1E-6);
         assertEquals(1, simulatedMotor.getVelocity(), 1E-6);
 
-        clock.addTime(TimeUnit.SECONDS, 1);
+        clock.addTime(1, TimeUnit.SECONDS);
 
         assertEquals(2, simulatedMotor.getPosition(), 1E-6);
         assertEquals(1, simulatedMotor.getVelocity(), 1E-6);
 
         simulatedMotor.runVelocity(2);
 
-        clock.addTime(TimeUnit.SECONDS, 1);
+        clock.addTime(1, TimeUnit.SECONDS);
 
         assertEquals(4, simulatedMotor.getPosition(), 1E-6);
 
         simulatedMotor.runVelocity(3);
 
-        clock.addTime(TimeUnit.SECONDS, 1);
+        clock.addTime(1, TimeUnit.SECONDS);
 
         assertEquals(7, simulatedMotor.getPosition(), 1E-6);
 

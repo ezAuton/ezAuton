@@ -13,14 +13,14 @@ public class DelayedAction extends BaseAction
     private Runnable runnable;
     private long millis;
 
-    public DelayedAction(TimeUnit unit, long value)
+    public DelayedAction(long value, TimeUnit unit)
     {
         millis = unit.toMillis(value);
     }
 
-    public DelayedAction(TimeUnit unit, long value, Runnable runnable)
+    public DelayedAction(long value, TimeUnit unit, Runnable runnable)
     {
-        this(unit,value);
+        this(value, unit);
         this.runnable = runnable;
     }
 
@@ -44,7 +44,7 @@ public class DelayedAction extends BaseAction
     {
         try
         {
-            clock.sleep(TimeUnit.MILLISECONDS, millis);
+            clock.sleep(millis, TimeUnit.MILLISECONDS);
         }
         catch(InterruptedException e)
         {

@@ -5,7 +5,6 @@ import org.github.ezauton.ezauton.utils.TimeWarpedClock;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
 public class Simulation
@@ -41,13 +40,13 @@ public class Simulation
     /**
      * Run your simulation
      *
-     * @param timeUnit The timeunit that the timeout is in
      * @param timeout  The amoount of <b>real</b> time that you want your simulation to cap out at.
+     * @param timeUnit The timeunit that the timeout is in
      */
-    public void run(TimeUnit timeUnit, long timeout)
+    public void run(long timeout, TimeUnit timeUnit)
     {
         timeWarpedClock.setStartTime(System.currentTimeMillis());
 
-        actions.forEach(action -> new ThreadBuilder(action, timeWarpedClock).startAndWait(timeUnit, timeout));
+        actions.forEach(action -> new ThreadBuilder(action, timeWarpedClock).startAndWait(timeout, timeUnit));
     }
 }

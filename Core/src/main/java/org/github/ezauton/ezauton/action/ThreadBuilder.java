@@ -79,7 +79,7 @@ public class ThreadBuilder
         return start;
     }
 
-    public Thread startAndWait(TimeUnit unit, long maxTime)
+    public Thread startAndWait(long maxTime, TimeUnit unit)
     {
         Thread start = start();
         try

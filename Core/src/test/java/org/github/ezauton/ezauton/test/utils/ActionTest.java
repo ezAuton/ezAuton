@@ -20,7 +20,7 @@ public class ActionTest
         Simulation sim = new Simulation(10);
 
         int delay = 3;
-        DelayedAction action = new DelayedAction(TimeUnit.SECONDS, delay); // w
+        DelayedAction action = new DelayedAction(delay, TimeUnit.SECONDS); // w
         action.onFinish(() -> System.out.println("[testDelayedAction] The delayed action finished"));
 
         sim.add(action);
@@ -28,7 +28,7 @@ public class ActionTest
         Stopwatch stopwatch = new Stopwatch(RealClock.CLOCK);
 
         stopwatch.resetIfNotInit();
-        sim.run(TimeUnit.SECONDS, 2);
+        sim.run(2, TimeUnit.SECONDS);
         assertEquals(delay, stopwatch.pop(TimeUnit.SECONDS) * 10, 0.2);
     }
 
@@ -41,7 +41,7 @@ public class ActionTest
         count.compareAndSet(0, 1);
         assertEquals(1, count.get());
 
-        DelayedAction action = new DelayedAction(TimeUnit.SECONDS, 3, () -> count.compareAndSet(1, 3));
+        DelayedAction action = new DelayedAction(3, TimeUnit.SECONDS, () -> count.compareAndSet(1, 3));
         action.onFinish(() -> count.compareAndSet(3, 4));
         ActionGroup group = new ActionGroup()
                 .addSequential(action);
@@ -57,14 +57,14 @@ public class ActionTest
         AtomicInteger count = new AtomicInteger(0);
         count.compareAndSet(0, 1);
         assertEquals(1, count.get());
-        DelayedAction action = new DelayedAction(TimeUnit.SECONDS, 3);
+        DelayedAction action = new DelayedAction(3, TimeUnit.SECONDS);
         action.onFinish(() -> count.compareAndSet(1, 4));
         ActionGroup group = new ActionGroup()
                 .addSequential(action);
 
         Simulation sim = new Simulation(10);
         sim.add(group);
-        sim.run(TimeUnit.SECONDS, 3);
+        sim.run(3, TimeUnit.SECONDS);
         assertEquals(4, count.get());
 
     }
@@ -74,13 +74,13 @@ public class ActionTest
     {
         AtomicInteger count = new AtomicInteger(0);
 
-        DelayedAction two = new DelayedAction(TimeUnit.MILLISECONDS, 200);
+        DelayedAction two = new DelayedAction(200, TimeUnit.MILLISECONDS);
         two.onFinish(() -> {
             System.out.println("Two finished");
             count.compareAndSet(0, 2);
         });
 
-        DelayedAction three = new DelayedAction(TimeUnit.MILLISECONDS, 300);
+        DelayedAction three = new DelayedAction(300, TimeUnit.MILLISECONDS);
         two.onFinish(() -> {
             System.out.println("three finished");
             count.compareAndSet(2, 3);
@@ -97,7 +97,7 @@ public class ActionTest
 
                 });
 
-        new ThreadBuilder(group).startAndWait(TimeUnit.SECONDS, 1);
+        new ThreadBuilder(group).startAndWait(1, TimeUnit.SECONDS);
         assertEquals(4, count.get());
     }
 
@@ -106,15 +106,15 @@ public class ActionTest
     {
         AtomicInteger count = new AtomicInteger(0);
 
-        DelayedAction five = new DelayedAction(TimeUnit.SECONDS, 5); //then
+        DelayedAction five = new DelayedAction(5, TimeUnit.SECONDS); //then
         five.onFinish(() -> count.compareAndSet(3, 5));
         five.onFinish(() -> System.out.println("five finished"));
 
-        DelayedAction three1 = new DelayedAction(TimeUnit.SECONDS, 3); // first
+        DelayedAction three1 = new DelayedAction(3, TimeUnit.SECONDS); // first
         three1.onFinish(() -> count.compareAndSet(0, 3));
         three1.onFinish(() -> System.out.println("three1 finished"));
 
-        DelayedAction three2 = new DelayedAction(TimeUnit.SECONDS, 3); // last
+        DelayedAction three2 = new DelayedAction(3, TimeUnit.SECONDS); // last
         three2.onFinish(() -> count.compareAndSet(5, 8));
         three2.onFinish(() -> System.out.println("three2 finished"));
 
@@ -133,7 +133,7 @@ public class ActionTest
 
         Simulation simulation = new Simulation(10);
         simulation.add(actionGroup);
-        simulation.run(TimeUnit.SECONDS, 100);
+        simulation.run(100, TimeUnit.SECONDS);
 
         assertEquals(10, count.intValue());
     }
@@ -143,13 +143,13 @@ public class ActionTest
     {
         AtomicInteger count = new AtomicInteger(0);
 
-        DelayedAction two = new DelayedAction(TimeUnit.SECONDS, 2);
+        DelayedAction two = new DelayedAction(2, TimeUnit.SECONDS);
         two.onFinish(() -> {
             System.out.println("Two finished");
             count.compareAndSet(0, 2);
         });
 
-        DelayedAction three = new DelayedAction(TimeUnit.SECONDS, 3);
+        DelayedAction three = new DelayedAction(3, TimeUnit.SECONDS);
         two.onFinish(() -> {
             System.out.println("three finished");
             count.compareAndSet(2, 3);
@@ -168,7 +168,7 @@ public class ActionTest
 
         Simulation simulation = new Simulation();
         simulation.add(group);
-        simulation.run(TimeUnit.SECONDS, 100);
+        simulation.run(100, TimeUnit.SECONDS);
 
         assertEquals(4, count.get());
     }
@@ -177,13 +177,13 @@ public class ActionTest
     public void testWithActionGroup()
     {
         AtomicInteger counter = new AtomicInteger(0);
-        BackgroundAction actionA = new BackgroundAction(TimeUnit.MILLISECONDS, 20, () -> {
+        BackgroundAction actionA = new BackgroundAction(20, TimeUnit.MILLISECONDS, () -> {
             counter.incrementAndGet();
             return true;
         });
 
         int expectedValue = 40;
-        DelayedAction mainAction = new DelayedAction(TimeUnit.MILLISECONDS, 20 * expectedValue);
+        DelayedAction mainAction = new DelayedAction(20 * expectedValue, TimeUnit.MILLISECONDS);
 
         ActionGroup group = new ActionGroup()
                 .with(actionA)
@@ -192,7 +192,7 @@ public class ActionTest
         Simulation sim = new Simulation(10);
         sim.add(group);
 
-        sim.run(TimeUnit.SECONDS, 10);
+        sim.run(10, TimeUnit.SECONDS);
         System.out.println("counter = " + counter.get());
         assertEquals(expectedValue, counter.get(), expectedValue * (4F / 5F));
     }

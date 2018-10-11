@@ -23,7 +23,7 @@ public class PhysicalTest
     public static IAction testStraightVoltage(IVoltageMotor leftMotor, IVoltageMotor rightMotor, double voltage)
     {
         // run for 5 seconds
-        return new PeriodicAction(TimeUnit.MILLISECONDS, 20)
+        return new PeriodicAction(20, TimeUnit.MILLISECONDS)
         {
             @Override
             public void execute()
@@ -53,7 +53,7 @@ public class PhysicalTest
     public static IAction testStraightVelocity(IVelocityMotor leftMotor, IVelocityMotor rightMotor, double velocity)
     {
         // run for 5 seconds
-        return new PeriodicAction(TimeUnit.MILLISECONDS, 20)
+        return new PeriodicAction(20, TimeUnit.MILLISECONDS)
         {
             @Override
             public void execute()
@@ -86,7 +86,7 @@ public class PhysicalTest
         IAction action = testStraightVoltage(leftMotor, rightMotor, voltage);
         TankRobotEncoderEncoderEstimator localizer = new TankRobotEncoderEncoderEstimator(left, right, () -> lateralWheelDistance);
         localizer.reset();
-        return new ActionGroup().with(new BackgroundAction(TimeUnit.MILLISECONDS, 50, localizer))
+        return new ActionGroup().with(new BackgroundAction(50, TimeUnit.MILLISECONDS, localizer))
                                 .addSequential(action)
                                 .addSequential(new BaseAction(() -> System.out.println(localizer.estimateLocation())));
     }

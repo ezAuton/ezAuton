@@ -17,11 +17,11 @@ public abstract class PeriodicAction extends BaseAction
 
     /**
      * An action which runs at recurring intervals
-     * @param timeUnit
      * @param period
+     * @param timeUnit
      * @param updateables
      */
-    public PeriodicAction(TimeUnit timeUnit, long period, Updateable... updateables)
+    public PeriodicAction(long period, TimeUnit timeUnit, Updateable... updateables)
     {
         this.periodMillis = timeUnit.toMillis(period);
         this.updateables = updateables;
@@ -51,7 +51,7 @@ public abstract class PeriodicAction extends BaseAction
             execute();
             try
             {
-                clock.sleep(TimeUnit.MILLISECONDS, periodMillis);
+                clock.sleep(periodMillis, TimeUnit.MILLISECONDS);
             }
             catch(InterruptedException e)
             {

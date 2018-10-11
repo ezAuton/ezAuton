@@ -22,17 +22,16 @@ public class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
 
     /**
      * Create a PP Command
-     *
+     *  @param period                         How often to update estimated position, robot control, etc
      * @param timeUnit                       The timeunit that period is in
-     * @param period                         How often to update estimated position, robot control, etc
      * @param purePursuitMovementStrategy    Our movement strategy.
      * @param translationalLocationEstimator An object that knows where we are on a 2D plane
      * @param lookahead                      An instance of {@link ILookahead} that can tell us how far along the path to look ahead
      * @param translationalLocationDriveable The drivetrain of the robot
      */
-    public PPCommand(TimeUnit timeUnit, long period, PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable)
+    public PPCommand(long period, TimeUnit timeUnit, PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable)
     {
-        super(timeUnit, period);
+        super(period, timeUnit);
         this.purePursuitMovementStrategy = purePursuitMovementStrategy;
         this.translationalLocationEstimator = translationalLocationEstimator;
         this.lookahead = lookahead;

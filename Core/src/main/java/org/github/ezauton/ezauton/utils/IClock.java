@@ -26,12 +26,11 @@ public interface IClock
      * Schedule a runnable to be run `dt` `timeUnit`s in the future
      * <p>
      * For example, of timeUnit is TimeUnit.MILLISECONDS and dt is 5, the runnable will be run 5 milliseconds in the future
-     *
+     *  @param dt       The quantity of time
      * @param timeUnit The timeunit that dt is in
-     * @param dt       The quantity of time
      * @param runnable The thing that should happen
      */
-    default Future<?> scheduleIn(TimeUnit timeUnit, long dt, Runnable runnable)
+    default Future<?> scheduleIn(long dt, TimeUnit timeUnit, Runnable runnable)
     {
         return scheduleAt(getTime() + timeUnit.toMillis(dt), runnable);
     }
@@ -44,8 +43,8 @@ public interface IClock
     /**
      * Locks current thread for specified time
      *
-     * @param timeUnit
      * @param dt
+     * @param timeUnit
      */
-    void sleep(TimeUnit timeUnit, long dt) throws InterruptedException;
+    void sleep(long dt, TimeUnit timeUnit) throws InterruptedException;
 }

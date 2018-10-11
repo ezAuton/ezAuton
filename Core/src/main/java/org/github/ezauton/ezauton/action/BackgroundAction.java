@@ -12,13 +12,13 @@ public class BackgroundAction extends PeriodicAction
      * instead of {@link Runnable}, as it is meant for tasks which do simple updates.
      * not update
      * tasks wh
-     * @param timeUnit
      * @param period
+     * @param timeUnit
      * @param updateables
      */
-    public BackgroundAction(TimeUnit timeUnit, long period, Updateable... updateables)
+    public BackgroundAction(long period, TimeUnit timeUnit, Updateable... updateables)
     {
-        super(timeUnit, period, updateables);
+        super(period, timeUnit, updateables);
     }
 
     @Override

@@ -18,15 +18,15 @@ public class SimulatedMotorTest
         Assert.assertEquals(0, motor.getPosition(), 1E-6);
         motor.runVelocity(1);
 
-        clock.addTime(TimeUnit.SECONDS, 1);
+        clock.addTime(1, TimeUnit.SECONDS);
         Assert.assertEquals(1, motor.getPosition(), 1E-6);
 
-        clock.addTime(TimeUnit.SECONDS, 1);
+        clock.addTime(1, TimeUnit.SECONDS);
         Assert.assertEquals(2, motor.getPosition(), 1E-6);
         motor.runVelocity(10);
         Assert.assertEquals(2, motor.getPosition(), 1E-6);
 
-        clock.addTime(TimeUnit.SECONDS, 1);
+        clock.addTime(1, TimeUnit.SECONDS);
         Assert.assertEquals(12, motor.getPosition(), 1E-6);
 
     }

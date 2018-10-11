@@ -48,11 +48,11 @@ public class TimeWarpedClock implements IClock
     @Override
     public Future<?> scheduleAt(long millis, Runnable runnable)
     {
-        return realClock.scheduleIn(TimeUnit.MILLISECONDS, (long) ((millis) / speed), runnable);
+        return realClock.scheduleIn((long) ((millis) / speed), TimeUnit.MILLISECONDS, runnable);
     }
 
     @Override
-    public void sleep(TimeUnit timeUnit, long dt) throws InterruptedException
+    public void sleep(long dt, TimeUnit timeUnit) throws InterruptedException
     {
         Thread.sleep((long) (timeUnit.toMillis(dt) / speed));
     }

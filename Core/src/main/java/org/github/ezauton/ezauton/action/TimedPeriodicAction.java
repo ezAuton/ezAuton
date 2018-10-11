@@ -13,14 +13,14 @@ public class TimedPeriodicAction extends PeriodicAction
     private long durationMillis;
 
     /**
-     * @param periodUnit
      * @param period       How long to (repeatedly) run the runnables for
-     * @param durationUnit
+     * @param periodUnit
      * @param duration     The timeunit that period is
+     * @param durationUnit
      */
-    public TimedPeriodicAction(TimeUnit periodUnit, long period, TimeUnit durationUnit, long duration, Updateable... updateables)
+    public TimedPeriodicAction(long period, TimeUnit periodUnit, long duration, TimeUnit durationUnit, Updateable... updateables)
     {
-        super(periodUnit, period, updateables);
+        super(period, periodUnit, updateables);
         durationMillis = durationUnit.toMillis(duration);
     }
 

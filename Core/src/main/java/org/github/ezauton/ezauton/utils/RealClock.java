@@ -38,7 +38,7 @@ public class RealClock implements IClock
     }
 
     @Override
-    public void sleep(TimeUnit timeUnit, long dt) throws InterruptedException
+    public void sleep(long dt, TimeUnit timeUnit) throws InterruptedException
     {
         Thread.sleep(timeUnit.toMillis(dt));
     }
