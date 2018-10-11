@@ -3,6 +3,9 @@ package com.team2502.ezauton.command;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The base implementation of an IAction.
+ */
 public abstract class BaseAction implements IAction
 {
 

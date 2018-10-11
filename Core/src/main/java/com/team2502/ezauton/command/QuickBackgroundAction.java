@@ -4,12 +4,12 @@ import com.team2502.ezauton.localization.Updateable;
 
 import java.util.concurrent.TimeUnit;
 
-public class BackgroundAction extends PeriodicAction
+public class QuickBackgroundAction extends PeriodicAction
 {
 
     private final Updateable[] updateables;
 
-    public BackgroundAction(TimeUnit timeUnit, long period, Updateable... updateables)
+    public QuickBackgroundAction(TimeUnit timeUnit, long period, Updateable... updateables)
     {
         super(timeUnit, period);
         this.updateables = updateables;

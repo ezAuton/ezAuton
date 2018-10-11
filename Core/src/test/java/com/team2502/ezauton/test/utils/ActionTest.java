@@ -20,7 +20,7 @@ public class ActionTest
         Simulation sim = new Simulation(10);
 
         int delay = 3;
-        DelayedAction action = new DelayedAction(TimeUnit.SECONDS, delay); // w
+        QuickDelayedAction action = new QuickDelayedAction(TimeUnit.SECONDS, delay); // w
         action.onFinish(() -> System.out.println("[testDelayedAction] The delayed action finished"));
 
         sim.add(action);
@@ -41,7 +41,7 @@ public class ActionTest
         count.compareAndSet(0, 1);
         assertEquals(1, count.get());
 
-        DelayedAction action = new DelayedAction(TimeUnit.SECONDS, 3, () -> count.compareAndSet(1, 3));
+        QuickDelayedAction action = new QuickDelayedAction(TimeUnit.SECONDS, 3, () -> count.compareAndSet(1, 3));
         action.onFinish(() -> count.compareAndSet(3, 4));
         ActionGroup group = new ActionGroup()
                 .addSequential(action);
@@ -57,7 +57,7 @@ public class ActionTest
         AtomicInteger count = new AtomicInteger(0);
         count.compareAndSet(0, 1);
         assertEquals(1, count.get());
-        DelayedAction action = new DelayedAction(TimeUnit.SECONDS, 3);
+        QuickDelayedAction action = new QuickDelayedAction(TimeUnit.SECONDS, 3);
         action.onFinish(() -> count.compareAndSet(1, 4));
         ActionGroup group = new ActionGroup()
                 .addSequential(action);
@@ -74,13 +74,13 @@ public class ActionTest
     {
         AtomicInteger count = new AtomicInteger(0);
 
-        DelayedAction two = new DelayedAction(TimeUnit.MILLISECONDS, 200);
+        QuickDelayedAction two = new QuickDelayedAction(TimeUnit.MILLISECONDS, 200);
         two.onFinish(() -> {
             System.out.println("Two finished");
             count.compareAndSet(0, 2);
         });
 
-        DelayedAction three = new DelayedAction(TimeUnit.MILLISECONDS, 300);
+        QuickDelayedAction three = new QuickDelayedAction(TimeUnit.MILLISECONDS, 300);
         two.onFinish(() -> {
             System.out.println("three finished");
             count.compareAndSet(2, 3);
@@ -108,15 +108,15 @@ public class ActionTest
     {
         AtomicInteger count = new AtomicInteger(0);
 
-        DelayedAction five = new DelayedAction(TimeUnit.SECONDS, 5); //then
+        QuickDelayedAction five = new QuickDelayedAction(TimeUnit.SECONDS, 5); //then
         five.onFinish(() -> count.compareAndSet(3, 5));
         five.onFinish(() -> System.out.println("five finished"));
 
-        DelayedAction three1 = new DelayedAction(TimeUnit.SECONDS, 3); // first
+        QuickDelayedAction three1 = new QuickDelayedAction(TimeUnit.SECONDS, 3); // first
         three1.onFinish(() -> count.compareAndSet(0, 3));
         three1.onFinish(() -> System.out.println("three1 finished"));
 
-        DelayedAction three2 = new DelayedAction(TimeUnit.SECONDS, 3); // last
+        QuickDelayedAction three2 = new QuickDelayedAction(TimeUnit.SECONDS, 3); // last
         three2.onFinish(() -> count.compareAndSet(5, 8));
         three2.onFinish(() -> System.out.println("three2 finished"));
 
@@ -145,13 +145,13 @@ public class ActionTest
     {
         AtomicInteger count = new AtomicInteger(0);
 
-        DelayedAction two = new DelayedAction(TimeUnit.SECONDS, 2);
+        QuickDelayedAction two = new QuickDelayedAction(TimeUnit.SECONDS, 2);
         two.onFinish(() -> {
             System.out.println("Two finished");
             count.compareAndSet(0, 2);
         });
 
-        DelayedAction three = new DelayedAction(TimeUnit.SECONDS, 3);
+        QuickDelayedAction three = new QuickDelayedAction(TimeUnit.SECONDS, 3);
         two.onFinish(() -> {
             System.out.println("three finished");
             count.compareAndSet(2, 3);
@@ -179,13 +179,13 @@ public class ActionTest
     public void testWithActionGroup()
     {
         AtomicInteger counter = new AtomicInteger(0);
-        BackgroundAction actionA = new BackgroundAction(TimeUnit.MILLISECONDS, 20, () -> {
+        QuickBackgroundAction actionA = new QuickBackgroundAction(TimeUnit.MILLISECONDS, 20, () -> {
             counter.incrementAndGet();
             return true;
         });
 
         int expectedValue = 40;
-        DelayedAction mainAction = new DelayedAction(TimeUnit.MILLISECONDS, 20 * expectedValue);
+        QuickDelayedAction mainAction = new QuickDelayedAction(TimeUnit.MILLISECONDS, 20 * expectedValue);
 
         ActionGroup group = new ActionGroup()
                 .with(actionA)
@@ -205,7 +205,7 @@ public class ActionTest
 //        AtomicLong count = new AtomicLong(0);
 //
 //        long expectedDTms = 3000;
-//        TimedBackgroundAction action = new TimedBackgroundAction(TimeUnit.MILLISECONDS, expectedDTms, () -> count.set(System.currentTimeMillis()));
+//        TimedQuickBackgroundAction action = new TimedQuickBackgroundAction(TimeUnit.MILLISECONDS, expectedDTms, () -> count.set(System.currentTimeMillis()));
 //
 //        Simulation sim = new Simulation(1);
 //        sim.add(action);

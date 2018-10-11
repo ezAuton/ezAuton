@@ -5,17 +5,17 @@ import com.team2502.ezauton.utils.IClock;
 /**
  * Describes an action that runs instantly
  */
-public class InstantAction extends BaseAction
+public class QuickAction extends BaseAction
 {
 
     private final Runnable runnable;
 
     /**
-     * Create an InstantAction
+     * Create an QuickAction
      *
      * @param runnable The thing to run
      */
-    public InstantAction(Runnable runnable)
+    public QuickAction(Runnable runnable)
     {
         this.runnable = runnable;
     }

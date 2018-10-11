@@ -7,13 +7,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * Describes an action that waits a certain amount of time before running
  */
-public class DelayedAction extends BaseAction
+public class QuickDelayedAction extends BaseAction
 {
 
     private final Runnable[] runnables;
     private long millis;
 
-    public DelayedAction(TimeUnit unit, long value, Runnable... runnables)
+    public QuickDelayedAction(TimeUnit unit, long value, Runnable... runnables)
     {
         millis = unit.toMillis(value);
         this.runnables = runnables;

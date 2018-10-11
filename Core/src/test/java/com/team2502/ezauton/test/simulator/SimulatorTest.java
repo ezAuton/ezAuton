@@ -1,8 +1,8 @@
 package com.team2502.ezauton.test.simulator;
 
 import com.team2502.ezauton.command.ActionGroup;
-import com.team2502.ezauton.command.DelayedAction;
-import com.team2502.ezauton.command.InstantAction;
+import com.team2502.ezauton.command.QuickDelayedAction;
+import com.team2502.ezauton.command.QuickAction;
 import com.team2502.ezauton.command.Simulation;
 import com.team2502.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.team2502.ezauton.utils.SimulatedClock;
@@ -21,7 +21,7 @@ public class SimulatorTest
     {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         Simulation simulation = new Simulation();
-        simulation.add(new InstantAction(() -> atomicBoolean.set(true)));
+        simulation.add(new QuickAction(() -> atomicBoolean.set(true)));
         simulation.run(TimeUnit.SECONDS, 100);
         Assert.assertTrue(atomicBoolean.get());
     }
@@ -31,7 +31,7 @@ public class SimulatorTest
     {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         Simulation simulation = new Simulation();
-        DelayedAction delayedAction = new DelayedAction(TimeUnit.SECONDS, 1, () -> atomicBoolean.set(true));
+        QuickDelayedAction delayedAction = new QuickDelayedAction(TimeUnit.SECONDS, 1, () -> atomicBoolean.set(true));
         simulation.add(delayedAction);
         simulation.run(TimeUnit.SECONDS, 100);
         Assert.assertTrue(atomicBoolean.get());
@@ -45,13 +45,13 @@ public class SimulatorTest
         Simulation simulation = new Simulation(10);
         ActionGroup actionGroup = new ActionGroup();
 
-        DelayedAction delayedAction = new DelayedAction(TimeUnit.SECONDS, 1, () -> atomicInteger.compareAndSet(2, 3));
+        QuickDelayedAction delayedAction = new QuickDelayedAction(TimeUnit.SECONDS, 1, () -> atomicInteger.compareAndSet(2, 3));
         delayedAction.onFinish(() -> System.out.println("1 done"));
 
-        DelayedAction delayedAction2 = new DelayedAction(TimeUnit.MILLISECONDS, 10, () -> atomicInteger.compareAndSet(0, 1));
+        QuickDelayedAction delayedAction2 = new QuickDelayedAction(TimeUnit.MILLISECONDS, 10, () -> atomicInteger.compareAndSet(0, 1));
         delayedAction2.onFinish(() -> System.out.println("2 done"));
 
-        DelayedAction delayedAction3 = new DelayedAction(TimeUnit.MILLISECONDS, 500, () -> atomicInteger.compareAndSet(1, 2));
+        QuickDelayedAction delayedAction3 = new QuickDelayedAction(TimeUnit.MILLISECONDS, 500, () -> atomicInteger.compareAndSet(1, 2));
         delayedAction3.onFinish(() -> System.out.println("3 done"));
 
         //TODO: Order matters? See github #35

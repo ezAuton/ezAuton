@@ -1,6 +1,6 @@
 package com.team2502.ezauton.test.utils;
 
-import com.team2502.ezauton.command.DelayedAction;
+import com.team2502.ezauton.command.QuickDelayedAction;
 import com.team2502.ezauton.command.Simulation;
 import com.team2502.ezauton.utils.Stopwatch;
 import com.team2502.ezauton.utils.TimeWarpedClock;
@@ -85,7 +85,7 @@ public class TimeWarpedClockTest
         Simulation sim = new Simulation(speed);
 
         // 1000 fake seconds * 1 real sec / `1000 fake secs = 1 real sec
-        sim.add(new DelayedAction(TimeUnit.SECONDS, speed, () -> time.set(System.currentTimeMillis())));
+        sim.add(new QuickDelayedAction(TimeUnit.SECONDS, speed, () -> time.set(System.currentTimeMillis())));
         long init = System.currentTimeMillis();
         sim.run(TimeUnit.SECONDS, 10);
 
