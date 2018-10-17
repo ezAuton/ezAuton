@@ -1,6 +1,9 @@
 package org.github.ezauton.ezauton.test.simulator;
 
-import org.github.ezauton.ezauton.action.*;
+import org.github.ezauton.ezauton.action.BackgroundAction;
+import org.github.ezauton.ezauton.action.PPCommand;
+import org.github.ezauton.ezauton.action.Simulation;
+import org.github.ezauton.ezauton.action.TimedPeriodicAction;
 import org.github.ezauton.ezauton.actuators.IVelocityMotor;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
@@ -10,17 +13,14 @@ import org.github.ezauton.ezauton.pathplanning.purepursuit.LookaheadBounds;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PPWaypoint;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import org.github.ezauton.ezauton.robot.implemented.TankRobotTransLocDriveable;
-import org.github.ezauton.ezauton.utils.IClock;
-import org.github.ezauton.ezauton.utils.RealClock;
-import org.github.ezauton.ezauton.utils.Stopwatch;
 import org.github.ezauton.ezauton.utils.TimeWarpedClock;
 import org.junit.Test;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 public class SimulatedTankBotTest
@@ -115,7 +115,13 @@ public class SimulatedTankBotTest
         System.out.println("rightpos = " + bot.getRightDistanceSensor().getPosition());
 
         System.out.println(locEstimator.estimateLocation());
-        BufferedWriter writer = new BufferedWriter(new FileWriter("/home/ritikm/log"));
+
+        String homeDir = System.getProperty("user.home");
+        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton","log.txt");
+
+        Files.createDirectories(filePath.getParent());
+
+        BufferedWriter writer = Files.newBufferedWriter(filePath);
         writer.write(bot.log.toString());
 
         writer.close();
