@@ -69,7 +69,7 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
         rightMotor.runVelocity(right);
     }
 
-    private IVelocityMotor buildMotor(BaseSimulatedMotor baseSimulatedMotor, IClock clock, double maxAccel, double minVel, double maxVel)
+    private BoundedVelocityProcessor buildMotor(BaseSimulatedMotor baseSimulatedMotor, IClock clock, double maxAccel, double minVel, double maxVel)
     {
         RampUpVelocityProcessor leftRampUpMotor = new RampUpVelocityProcessor(baseSimulatedMotor, clock, maxAccel);
         toUpdate.add(leftRampUpMotor);

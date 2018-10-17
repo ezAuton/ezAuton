@@ -17,7 +17,6 @@ import org.github.ezauton.ezauton.utils.TimeWarpedClock;
 import org.junit.Test;
 
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class SimulatedTankBotTest
 {
     @Test
-    public void testStraight2() throws InterruptedException, IOException
+    public void testStraight2() throws IOException
     {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -4);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 1, 3, -4);
@@ -47,11 +46,9 @@ public class SimulatedTankBotTest
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(bot.getLeftDistanceSensor(), bot.getRightDistanceSensor(), bot);
         locEstimator.reset();
 
-        long startMs = System.currentTimeMillis();
-
         Simulation sim = new Simulation(10);
 
-        BackgroundAction action = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot, locEstimator, () -> {
+        BackgroundAction background = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot, locEstimator, () -> {
             if(bot.getLeftDistanceSensor().getVelocity() != 0)
             {
                 System.out.println("leftVelocity() = " + bot.getLeftDistanceSensor().getVelocity());
@@ -60,7 +57,7 @@ public class SimulatedTankBotTest
             return true;
         });
 
-        sim.add(action);
+        sim.add(background);
 
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
@@ -68,48 +65,13 @@ public class SimulatedTankBotTest
 
         PPCommand ppCommand = new PPCommand(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-        ppCommand.onFinish(action::end);
+        ppCommand.onFinish(background::end);
         ppCommand.onFinish(() -> bot.run(0, 0));
 
         sim.add(ppCommand);
 
-//        PeriodicAction action2 = new PeriodicAction(1, TimeUnit.MILLISECONDS, () -> {
-//            bot.run(3, 3);
-//            return true;
-//        })
-//        {
-//            @Override
-//            protected boolean isFinished()
-//            {
-//                return stopwatch.read(TimeUnit.MILLISECONDS) > 1900;
-//            }
-//        };
-//        sim.add(action2);
-//
-//        DelayedAction action3 = new DelayedAction(2, TimeUnit.SECONDS, () -> bot.run(0, 0));
-//        sim.add(action3);
 
         sim.run(12, TimeUnit.SECONDS);
-
-//
-//        bot.run(3, 3);
-//
-//        Stopwatch stopwatch = new Stopwatch(clock);
-//
-//        for(; stopwatch.read(TimeUnit.MILLISECONDS) < 2000; )
-//        {
-//            bot.update();
-//            clock.sleep(1, TimeUnit.MILLISECONDS);
-//        }
-//
-//        bot.run(0 ,0);
-//
-//        stopwatch.reset();
-//        for(; stopwatch.read(TimeUnit.MILLISECONDS) < 2000; )
-//        {
-//            bot.update();
-//            clock.sleep(1, TimeUnit.MILLISECONDS);
-//        }
 
         System.out.println("leftpos = " + bot.getLeftDistanceSensor().getPosition());
         System.out.println("rightpos = " + bot.getRightDistanceSensor().getPosition());

@@ -23,8 +23,6 @@ public class TimeWarpedClockTest
 
         Stopwatch stopwatch = new Stopwatch(clock);
 
-        long initMillis = System.currentTimeMillis();
-
         stopwatch.resetIfNotInit();
 
         try

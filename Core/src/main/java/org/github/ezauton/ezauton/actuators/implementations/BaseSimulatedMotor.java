@@ -58,7 +58,8 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
         {
             subscribed.runVelocity(targetVelocity);
         }
-        position += velocity * stopwatch.pop();
+        double popped = stopwatch.pop(TimeUnit.SECONDS);
+        position += velocity * popped;
         this.velocity = targetVelocity;
     }
 
