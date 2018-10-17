@@ -10,6 +10,9 @@ import org.github.ezauton.ezauton.localization.UpdateableGroup;
 import org.github.ezauton.ezauton.localization.sensors.ITranslationalDistanceSensor;
 import org.github.ezauton.ezauton.robot.ITankRobotConstants;
 import org.github.ezauton.ezauton.utils.IClock;
+import org.github.ezauton.ezauton.utils.Stopwatch;
+
+import java.util.concurrent.TimeUnit;
 
 public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 {
@@ -26,6 +29,9 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 
     private UpdateableGroup toUpdate = new UpdateableGroup();
 
+    private final Stopwatch stopwatch;
+    public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
+
     /**
      * @param lateralWheelDistance The lateral wheel distance between the wheels of the robot
      * @param clock                The clock that the simulated tank robot is using
@@ -34,6 +40,9 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
      */
     public SimulatedTankRobot(double lateralWheelDistance, IClock clock, double maxAccel, double minVel, double maxVel)
     {
+        stopwatch = new Stopwatch(clock);
+        stopwatch.init();
+
         baseLeftSimulatedMotor = new BaseSimulatedMotor(clock);
         this.leftMotor = buildMotor(baseLeftSimulatedMotor, clock, maxAccel, minVel, maxVel);
 
@@ -87,6 +96,7 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
     @Override
     public boolean update()
     {
+        log.append(stopwatch.read(TimeUnit.SECONDS)).append(", ").append(baseLeftSimulatedMotor.getVelocity()).append(", ").append(baseRightSimulatedMotor.getVelocity()).append("\n");
         toUpdate.update();
         return true;
     }

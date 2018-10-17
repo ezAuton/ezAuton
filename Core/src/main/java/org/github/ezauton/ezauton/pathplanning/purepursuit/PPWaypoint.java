@@ -97,4 +97,15 @@ public class PPWaypoint
     {
         return deceleration;
     }
+
+    @Override
+    public String toString()
+    {
+        return "PPWaypoint{" +
+               "location=" + location +
+               ", speed=" + speed +
+               ", acceleration=" + acceleration +
+               ", deceleration=" + deceleration +
+               '}';
+    }
 }

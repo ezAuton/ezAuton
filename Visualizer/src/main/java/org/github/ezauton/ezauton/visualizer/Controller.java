@@ -159,8 +159,11 @@ public class Controller implements Initializable
     public Controller()
     {
         // Read the config file in the resources folder and initialize values appropriately
-        configManager = new ConfigManager("/home/ritikm/Robotics/ezAuton/Visualizer/src/main/resources/com/team2502/guitools/ppsimulator/config");
+        // FIXME Hardcoded path >:(
+        configManager = new ConfigManager("/home/ritikm/Robotics/ezAuton/Visualizer/src/main/resources/org/github/ezauton/ezauton/visualizer/config");
+//        configManager = new ConfigManager(getClass().getResource("config").toExternalForm());
         configManager.load();
+
     }
 
     private static void printWaypointsNicely(double[][] waypoints)

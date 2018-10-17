@@ -51,8 +51,10 @@ public class PPSimulatorTest
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
 //        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
+        // Not a problem
         Simulation simulation = new Simulation();
 
+        // Might be a problem
         SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getClock(), 14, 0.3, 16D);
 
         IVelocityMotor leftMotor = robot.getLeftMotor();
