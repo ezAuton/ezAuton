@@ -23,7 +23,12 @@ public class Simulation
 
     public Simulation()
     {
-        this(1000);
+        this(1);
+    }
+
+    public double getSpeed()
+    {
+        return speed;
     }
 
     public TimeWarpedClock getClock()

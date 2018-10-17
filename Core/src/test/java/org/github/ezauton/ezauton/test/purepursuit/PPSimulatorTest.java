@@ -63,30 +63,30 @@ public class PPSimulatorTest
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftDistanceSensor(), robot.getRightDistanceSensor(), robot);
         locEstimator.reset();
 
-        // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator, robot);
-
-        simulation.add(backgroundAction);
-
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
 
-        PPCommand ppCommand = new PPCommand(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+
+        // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
+        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator, robot);
 
         // Run the ppCommand and then kill the background task as it is no longer needed
-        ActionGroup actionGroup = new ActionGroup(ppCommand, new BaseAction(backgroundAction::end));
+        ActionGroup actionGroup = ActionGroup.ofSequentials(ppCommand, new BaseAction(backgroundAction::end));
 
-        simulation.add(actionGroup);
+        simulation
+                .add(backgroundAction)
+                .add(actionGroup);
 
         // run the simulator with a timeout of 100 seconds
-        simulation.run(5, TimeUnit.SECONDS);
+        simulation.run(10, TimeUnit.SECONDS);
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
-        Assert.assertEquals(0, leftWheelVelocity, 0.2D);
+        Assert.assertEquals("left wheel velocity", 0, leftWheelVelocity, 0.2D);
 
         double rightWheelVelocity = locEstimator.getRightTranslationalWheelVelocity();
-        Assert.assertEquals(0, rightWheelVelocity, 0.2D);
+        Assert.assertEquals("right wheel velocity", 0, rightWheelVelocity, 0.2D);
 
         // The final location after the simulator
         ImmutableVector finalLoc = locEstimator.estimateLocation();
@@ -101,7 +101,7 @@ public class PPSimulatorTest
         double[] aElements = a.getElements();
         for(int i = 0; i < aElements.length; i++)
         {
-            Assert.assertEquals(aElements[i], bElements[i], epsilon);
+            Assert.assertEquals("vector["+i+"]",aElements[i], bElements[i], epsilon);
         }
     }
 }
