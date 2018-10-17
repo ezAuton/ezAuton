@@ -52,7 +52,7 @@ public class PPSimulatorTest
 
 //        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
         // Not a problem
-        Simulation simulation = new Simulation();
+        Simulation simulation = new Simulation(1);
 
         // Might be a problem
         SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getClock(), 14, 0.3, 16D);
@@ -69,13 +69,15 @@ public class PPSimulatorTest
 
         PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
+        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
         // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator, robot);
+        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator);
 
         // Run the ppCommand and then kill the background task as it is no longer needed
         ActionGroup actionGroup = ActionGroup.ofSequentials(ppCommand, new BaseAction(backgroundAction::end));
 
         simulation
+                .add(updateKinematics)
                 .add(backgroundAction)
                 .add(actionGroup);
 
