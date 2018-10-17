@@ -4,7 +4,7 @@ import javafx.animation.KeyFrame;
 
 public interface IDataProcessor
 {
-    void initData(IRecording data);
+//    void initData(IRecording data);
 
     void initEnvironment(IEnvironment environment);
 

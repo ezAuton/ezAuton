@@ -4,13 +4,13 @@ public abstract class BaseDataProcessor implements IDataProcessor
 {
 
     private IEnvironment environment;
-    private IData data;
-
-    @Override
-    public void initData(IData data)
-    {
-        this.data = data;
-    }
+//    private IData data;
+//
+//    @Override
+//    public void initData(IData data)
+//    {
+//        this.data = data;
+//    }
 
     @Override
     public void initEnvironment(IEnvironment environment)

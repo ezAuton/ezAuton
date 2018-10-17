@@ -1,30 +1,54 @@
 package com.team2502.ezauton.recorder;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class Recording
+public class Recording implements ISubRecording
 {
+    @JsonProperty("recordingData")
+    private Map<String, ISubRecording> recordingMap = new HashMap<>();
 
-    Map<String,ISubRecording> recordingMap = new HashMap<>();
+    @JsonProperty("name")
+    private String name;
 
-    void add(ISubRecording subRecording)
+    private static int recordingCounter = 0;
+
+    public Recording()
     {
-        Optional.ofNullable(subRecording).ifPresent(r -> recordingMap.put(r.getName(),r));
+        name = "Recording_" + recordingCounter++;
     }
 
-    String getJSON()
+    public Recording(ISubRecording... recordings)
     {
-        recordingMap.entrySet()
-                    .forEach(entry -> {
-
-                    });
+        this("Recording_" + recordingCounter++, recordings);
     }
-//    /**
-//     *
-//     * @param name The name of the recording
-//     * @return The JSON for that recording
-//     */
-//    String getJSON(String name);
+
+    public Recording(String name, ISubRecording... recordings)
+    {
+        this.name = name;
+        for(ISubRecording recording : recordings)
+        {
+            recordingMap.put(recording.getName(), recording);
+        }
+    }
+
+    public void addSubRecording(ISubRecording subRecording)
+    {
+        Optional.ofNullable(subRecording).ifPresent(r -> recordingMap.put(r.getName(), r));
+    }
+
+    @Override
+    public String getName()
+    {
+        return null;
+    }
+
+    @Override
+    public String getJSON()
+    {
+        return JsonUtils.toStringUnchecked(this);
+    }
 }

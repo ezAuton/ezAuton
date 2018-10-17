@@ -21,6 +21,10 @@ public class PurePursuitMovementStrategy
     private final double stopTolerance;
 
     private boolean isFinished = false;
+    private ImmutableVector latestClosestPoint;
+    private double latestDCP;
+    private double latestLookahead;
+    private ImmutableVector latestGoalPoint;
 
 
     /**
@@ -62,14 +66,16 @@ public class PurePursuitMovementStrategy
      */
     public ImmutableVector update(ImmutableVector loc, double lookahead)
     {
+        latestLookahead = lookahead;
         IPathSegment current = path.getCurrent();
-        ImmutableVector closestPoint = path.getClosestPoint(loc);
-        double currentDistance = current.getAbsoluteDistance(closestPoint);
+        latestClosestPoint = path.getClosestPoint(loc);
+        double currentDistance = current.getAbsoluteDistance(latestClosestPoint);
         double distanceLeftSegment = current.getAbsoluteDistanceEnd() - currentDistance;
-        double cpDist = closestPoint.dist(loc);
+        latestDCP = latestClosestPoint.dist(loc);
+
         if(distanceLeftSegment < 0)
         {
-            if(path.progressIfNeeded(distanceLeftSegment, cpDist, loc).size() != 0)
+            if(path.progressIfNeeded(distanceLeftSegment, latestDCP, loc).size() != 0)
             {
                 return update(loc, lookahead);
             }
@@ -85,8 +91,9 @@ public class PurePursuitMovementStrategy
 //            return null;
         }
 
-        path.progressIfNeeded(distanceLeftSegment, cpDist, loc);
-        return calculateAbsoluteGoalPoint(distanceLeftSegment, lookahead);
+        path.progressIfNeeded(distanceLeftSegment, latestDCP, loc);
+        latestGoalPoint = calculateAbsoluteGoalPoint(distanceLeftSegment, lookahead);
+        return latestGoalPoint;
     }
 
     public Path getPath()
@@ -97,5 +104,25 @@ public class PurePursuitMovementStrategy
     public boolean isFinished()
     {
         return isFinished;
+    }
+
+    public double getLatestLookahead()
+    {
+        return latestLookahead;
+    }
+
+    public ImmutableVector getClosestPoint()
+    {
+        return latestClosestPoint;
+    }
+
+    public ImmutableVector getGoalPoint()
+    {
+        return latestGoalPoint;
+    }
+
+    public double getDCP()
+    {
+        return latestDCP;
     }
 }

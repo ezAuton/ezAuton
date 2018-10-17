@@ -2,6 +2,9 @@ package com.team2502.ezauton.recorder;
 
 import java.io.Serializable;
 
+
+// FIXME redundant with {@link java.awt.Color}
+
 public class Colour implements Serializable
 {
     private final double r,g,b,opacity;
