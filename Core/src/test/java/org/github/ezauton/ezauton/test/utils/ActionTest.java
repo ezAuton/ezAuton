@@ -177,24 +177,31 @@ public class ActionTest
     public void testWithActionGroup()
     {
         AtomicInteger counter = new AtomicInteger(0);
-        BackgroundAction actionA = new BackgroundAction(20, TimeUnit.MILLISECONDS, () -> {
+
+        BackgroundAction actionA = new BackgroundAction(20, TimeUnit.MILLISECONDS);
+
+        actionA.addUpdateable(() -> {
             counter.incrementAndGet();
             return true;
         });
 
+        actionA.setPeriodDelayAfterExecution(false);
+
         int expectedValue = 40;
+
         DelayedAction mainAction = new DelayedAction(20 * expectedValue, TimeUnit.MILLISECONDS);
 
         ActionGroup group = new ActionGroup()
                 .with(actionA)
                 .addSequential(mainAction);
 
-        Simulation sim = new Simulation(10);
+        Simulation sim = new Simulation(1);
+
         sim.add(group);
 
         sim.run(10, TimeUnit.SECONDS);
         System.out.println("counter = " + counter.get());
-        assertEquals(expectedValue, counter.get(), expectedValue * (4F / 5F));
+        assertEquals(expectedValue, counter.get(), expectedValue * (19F / 20F));
     }
 
     @Test // TODO: add
