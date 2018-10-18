@@ -1,8 +1,8 @@
 package com.team2502.ezauton.utils;
 
-import com.team2502.ezauton.pathplanning.IPathSegment;
-import com.team2502.ezauton.pathplanning.LinearPathSegment;
-import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
+import org.github.ezauton.ezauton.pathplanning.IPathSegment;
+import org.github.ezauton.ezauton.pathplanning.LinearPathSegment;
+import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
 import java.util.ArrayList;
 import java.util.List;

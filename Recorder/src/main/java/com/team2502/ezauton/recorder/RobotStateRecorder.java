@@ -1,9 +1,9 @@
 package com.team2502.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.team2502.ezauton.localization.IRotationalLocationEstimator;
-import com.team2502.ezauton.localization.ITranslationalLocationEstimator;
-import com.team2502.ezauton.utils.IClock;
+import org.github.ezauton.ezauton.localization.IRotationalLocationEstimator;
+import org.github.ezauton.ezauton.localization.ITranslationalLocationEstimator;
+import org.github.ezauton.ezauton.utils.IClock;
 
 import java.util.concurrent.TimeUnit;
 

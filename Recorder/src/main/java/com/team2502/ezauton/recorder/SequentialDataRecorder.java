@@ -2,9 +2,9 @@ package com.team2502.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.team2502.ezauton.localization.Updateable;
-import com.team2502.ezauton.utils.IClock;
-import com.team2502.ezauton.utils.Stopwatch;
+import org.github.ezauton.ezauton.localization.Updateable;
+import org.github.ezauton.ezauton.utils.IClock;
+import org.github.ezauton.ezauton.utils.Stopwatch;
 
 import java.util.ArrayList;
 import java.util.Arrays;

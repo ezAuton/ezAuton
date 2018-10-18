@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+archivesBaseName = "${parent.name}-${project.name}"
+
 group 'com.team2502'
 version '1.0-SNAPSHOT'
 
@@ -9,6 +11,12 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+jar {
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }   
 }
 
 dependencies {

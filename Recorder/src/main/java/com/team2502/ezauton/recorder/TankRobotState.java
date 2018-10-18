@@ -1,7 +1,7 @@
 package com.team2502.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
+import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
 public class TankRobotState extends RobotState
 {
