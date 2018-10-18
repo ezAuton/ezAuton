@@ -34,7 +34,7 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotState>
         this("RobotStateRecorder_" + instanceCounter++, clock, posEstimator, rotEstimator, width, length);
     }
 
-    public RobotStateRecorder(){}
+    private RobotStateRecorder(){}
 
     @Override
     public boolean checkForNewData()

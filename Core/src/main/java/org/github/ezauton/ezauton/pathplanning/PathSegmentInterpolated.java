@@ -12,11 +12,11 @@ import org.github.ezauton.ezauton.utils.InterpolationMap;
 public class PathSegmentInterpolated extends LinearPathSegment
 {
 
-    private final double speedStart;
-    private final double speedStop;
-    private final double dt;
-    private final double maxAccel;
-    private final double maxDecel;
+    private double speedStart;
+    private double speedStop;
+    private double dt;
+    private double maxAccel;
+    private double maxDecel;
     private InterpolationMap speedInterpolator;
 
     /**
@@ -39,6 +39,8 @@ public class PathSegmentInterpolated extends LinearPathSegment
         this.maxDecel = maxDecel;
         extrap();
     }
+
+    private PathSegmentInterpolated() {}
 
     public InterpolationMap getSpeedInterpolator()
     {

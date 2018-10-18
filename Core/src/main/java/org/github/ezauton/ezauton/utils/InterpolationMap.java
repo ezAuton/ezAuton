@@ -51,6 +51,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
         }
     }
 
+    private InterpolationMap() {}
+
     /**
      * @return A sorted table
      */

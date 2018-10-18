@@ -34,7 +34,7 @@ public class TankRobotState extends RobotState
         this.rightPos = rightPos;
     }
 
-    public TankRobotState() {}
+    private TankRobotState() {}
 
     public double getLeftVel()
     {

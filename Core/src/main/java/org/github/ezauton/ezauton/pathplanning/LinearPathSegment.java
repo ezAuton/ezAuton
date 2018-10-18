@@ -8,13 +8,13 @@ import org.github.ezauton.ezauton.utils.MathUtils;
  */
 public abstract class LinearPathSegment implements IPathSegment
 {
-    private final ImmutableVector from;
-    private final ImmutableVector to;
-    private final boolean finish;
-    private final boolean beginning;
-    private final double distanceStart;
-    private final double distanceEnd;
-    private final ImmutableVector dPos;
+    private ImmutableVector from;
+    private ImmutableVector to;
+    private boolean finish;
+    private boolean beginning;
+    private double distanceStart;
+    private double distanceEnd;
+    private ImmutableVector dPos;
     private double length;
 
     /**
@@ -44,6 +44,7 @@ public abstract class LinearPathSegment implements IPathSegment
         dPos = to.sub(from);
     }
 
+    protected LinearPathSegment() {}
 
     /**
      * Get the point on the line segment that is the closest to the robot

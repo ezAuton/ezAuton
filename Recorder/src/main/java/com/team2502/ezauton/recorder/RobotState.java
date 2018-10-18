@@ -41,7 +41,7 @@ public class RobotState extends SequentialDataFrame implements Serializable
         this.robotLength = robotLength;
     }
 
-    public RobotState() {}
+    protected RobotState() {}
 
     public double getTime()
     {

@@ -91,8 +91,12 @@ public class RecorderTest
 
         BufferedWriter writer = Files.newBufferedWriter(filePath);
 //        writer.write(bot.log.toString())
-        writer.write(recording.toJson());
+        String json = recording.toJson();
+        writer.write(json);
 
         writer.close();
+
+        Recording rec = JsonUtils.toObject(Recording.class, json);
+
     }
 }

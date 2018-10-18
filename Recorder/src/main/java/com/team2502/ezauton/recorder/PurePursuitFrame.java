@@ -4,11 +4,11 @@ import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
 public class PurePursuitFrame extends SequentialDataFrame
 {
-    private final double lookahead;
-    private final ImmutableVector closestPoint;
-    private final ImmutableVector goalPoint;
-    private final double dCP;
-    private final int currentSegmentIndex;
+    private double lookahead;
+    private ImmutableVector closestPoint;
+    private ImmutableVector goalPoint;
+    private double dCP;
+    private int currentSegmentIndex;
 
     public PurePursuitFrame(double time, double lookahead, ImmutableVector closestPoint, ImmutableVector goalPoint, double dCP, int currentSegmentIndex)
     {
@@ -20,6 +20,8 @@ public class PurePursuitFrame extends SequentialDataFrame
         this.dCP = dCP;
         this.currentSegmentIndex = currentSegmentIndex;
     }
+
+    private PurePursuitFrame() {}
 
     public double getLookahead()
     {

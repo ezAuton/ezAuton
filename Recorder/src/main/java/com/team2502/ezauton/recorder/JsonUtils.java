@@ -21,6 +21,7 @@ public class JsonUtils
         // dates should be serialized using ISO pattern
         objectMapper.setDateFormat(new ISO8601DateFormat());
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.enableDefaultTyping();
     }
 
     /**
@@ -64,7 +65,7 @@ public class JsonUtils
         catch(IOException e)
         {
             // TODO: throw a more appropriate unchecked exception here
-            throw new RuntimeException("invalid json", e);
+            throw new RuntimeException("problem!!!!", e);
         }
     }
 }
