@@ -43,10 +43,7 @@ public class ModernSimulatedClock implements IClock, ISimulation
                 ThreadBuilder threadBuilder = new ThreadBuilder(action, ModernSimulatedClock.this);
                 threadBuilder.start();
 
-                synchronized(this)
-                {
-                    waitForBreak();
-                }
+                waitForBreak();
             }
 
             while(!latchMap.isEmpty())
@@ -60,10 +57,7 @@ public class ModernSimulatedClock implements IClock, ISimulation
                 for(CountDownLatch countDownLatch : countDownLatches)
                 {
                     countDownLatch.countDown();
-                    synchronized(this)
-                    {
-                        waitForBreak();
-                    }
+                    waitForBreak();
                 }
             }
         }
