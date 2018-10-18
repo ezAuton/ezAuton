@@ -1,12 +1,16 @@
-package org.github.ezauton.ezauton.action;
+package org.github.ezauton.ezauton.action.simulation;
 
 
+import org.github.ezauton.ezauton.action.IAction;
+import org.github.ezauton.ezauton.action.ThreadBuilder;
+import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.utils.TimeWarpedClock;
 
 import java.util.*;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class Simulation
+public class MultiThreadSimulation implements ISimulation
 {
 
     private final double speed;
@@ -14,13 +18,13 @@ public class Simulation
 
     private List<IAction> actions = new ArrayList<>();
 
-    public Simulation(double speed)
+    public MultiThreadSimulation(double speed)
     {
         this.speed = speed;
         timeWarpedClock = new TimeWarpedClock(speed);
     }
 
-    public Simulation()
+    public MultiThreadSimulation()
     {
         this(1);
     }
@@ -30,12 +34,14 @@ public class Simulation
         return speed;
     }
 
+    @Override
     public TimeWarpedClock getClock()
     {
         return timeWarpedClock;
     }
 
-    public Simulation add(IAction action)
+    @Override
+    public MultiThreadSimulation add(IAction action)
     {
         actions.add(action);
         return this;

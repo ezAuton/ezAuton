@@ -55,14 +55,14 @@ public class Stopwatch
      *
      * @return The value of the stopwatch (ms)
      */
-    public double read()
+    public long read()
     {
         return clock.getTime() - millis;
     }
 
-    public double read(TimeUnit timeUnit)
+    public long read(TimeUnit timeUnit)
     {
-        return read() / timeUnit.toMillis(1);
+        return TimeUnit.MILLISECONDS.convert(read(),timeUnit);
     }
 
     /**

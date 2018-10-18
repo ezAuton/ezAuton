@@ -1,6 +1,7 @@
 package org.github.ezauton.ezauton.test.purepursuit;
 
 import org.github.ezauton.ezauton.action.*;
+import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.actuators.IVelocityMotor;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
@@ -52,7 +53,7 @@ public class PPSimulatorTest
 
 //        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
         // Not a problem
-        Simulation simulation = new Simulation(1);
+        MultiThreadSimulation simulation = new MultiThreadSimulation(1);
 
         // Might be a problem
         SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getClock(), 14, 0.3, 16D);

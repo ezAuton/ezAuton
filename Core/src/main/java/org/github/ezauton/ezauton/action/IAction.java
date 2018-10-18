@@ -1,5 +1,6 @@
 package org.github.ezauton.ezauton.action;
 
+import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.utils.RealClock;
 
@@ -33,7 +34,7 @@ public interface IAction
     List<Runnable> getFinished();
 
     /**
-     * A helper method to schedule a real-time task. If you want other ways to schedule the action see {@link ThreadBuilder} or {@link Simulation}.
+     * A helper method to schedule a real-time task. If you want other ways to schedule the action see {@link ThreadBuilder} or {@link MultiThreadSimulation}.
      */
     default void schedule()
     {

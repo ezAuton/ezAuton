@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @deprecated old af and half-working. Use {@link org.github.ezauton.ezauton.action.simulation.ModernSimulatedClock}
+ */
 public class SimulatedClock implements IClock
 {
 

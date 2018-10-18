@@ -2,7 +2,7 @@ package org.github.ezauton.ezauton.test.simulator;
 
 import org.github.ezauton.ezauton.action.BackgroundAction;
 import org.github.ezauton.ezauton.action.PPCommand;
-import org.github.ezauton.ezauton.action.Simulation;
+import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.action.TimedPeriodicAction;
 import org.github.ezauton.ezauton.actuators.IVelocityMotor;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
@@ -46,7 +46,7 @@ public class SimulatedTankBotTest
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(bot.getLeftDistanceSensor(), bot.getRightDistanceSensor(), bot);
         locEstimator.reset();
 
-        Simulation sim = new Simulation(10);
+        MultiThreadSimulation sim = new MultiThreadSimulation(10);
 
         BackgroundAction background = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot, locEstimator, () -> {
             if(bot.getLeftDistanceSensor().getVelocity() != 0)
@@ -96,7 +96,7 @@ public class SimulatedTankBotTest
         TimeWarpedClock clock = new TimeWarpedClock(10);
         SimulatedTankRobot bot = new SimulatedTankRobot(0.2, clock, 3, -4, 4);
 
-        Simulation sim = new Simulation();
+        MultiThreadSimulation sim = new MultiThreadSimulation();
 
         sim.add(new TimedPeriodicAction(5, TimeUnit.SECONDS, () -> {
             bot.run(1, 1);

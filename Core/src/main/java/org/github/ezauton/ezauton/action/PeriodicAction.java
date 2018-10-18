@@ -4,12 +4,11 @@ import org.github.ezauton.ezauton.localization.Updateable;
 import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.utils.Stopwatch;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 public abstract class PeriodicAction extends BaseAction
 {
@@ -38,6 +37,17 @@ public abstract class PeriodicAction extends BaseAction
     {
         // Added because https://stackoverflow.com/a/9584671/4889030 is ugly
         updateables.add(updateable);
+        return this;
+    }
+
+    /**
+     * Added because https://stackoverflow.com/a/9584671/4889030 is ugly
+     * @param updateableFunc
+     * @return
+     */
+    public PeriodicAction addUpdateable(Function<PeriodicAction, Updateable> updateableFunc)
+    {
+        updateables.add(updateableFunc.apply(this));
         return this;
     }
 
@@ -82,13 +92,13 @@ public abstract class PeriodicAction extends BaseAction
         stopwatch = new Stopwatch(clock);
         stopwatch.reset();
 
-        Instant start = Instant.now();
+        long start = clock.getTime();
 
         init();
         do
         {
             execute();
-            Instant afterExecution = Instant.now();
+            long afterExecution = clock.getTime();
 
             long wait;
             if(isPeriodDelayAfterExecution())
@@ -97,7 +107,7 @@ public abstract class PeriodicAction extends BaseAction
             }
             else
             {
-                long millisTotal = Duration.between(start, afterExecution).toMillis();
+                long millisTotal = afterExecution - start;
 
                 timesRun++;
 
