@@ -29,15 +29,13 @@ public class PP_PathGenerator implements Serializable
             LinearPathSegment pathSegment;
             if(i == 0)
             {
-                pathSegment = new LinearPathSegment(from.getLocation(), to.getLocation(),
-                                                    i == ppWaypoints.length - 2, true, distance)
-                {
-                    @Override
-                    public double getSpeed(double absoluteDistance)
-                    {
-                        return from.getSpeed() == 0 ? to.getSpeed() : from.getSpeed();
-                    }
-                };
+                double beginningSpeed = from.getSpeed() == 0 ? to.getSpeed() : from.getSpeed();
+
+
+                pathSegment = new PathSegmentInterpolated(
+                        from.getLocation(), to.getLocation(), i == ppWaypoints.length - 2, false, distance,
+                        beginningSpeed, to.getSpeed(), dt,
+                        from.getAcceleration(), from.getDeceleration());
             }
             else
             {
