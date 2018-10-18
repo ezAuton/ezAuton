@@ -3,7 +3,7 @@ package org.github.ezauton.ezauton.test.simulator;
 import org.github.ezauton.ezauton.action.ActionGroup;
 import org.github.ezauton.ezauton.action.BaseAction;
 import org.github.ezauton.ezauton.action.DelayedAction;
-import org.github.ezauton.ezauton.action.Simulation;
+import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import org.github.ezauton.ezauton.utils.SimulatedClock;
 import org.junit.Assert;
@@ -20,7 +20,7 @@ public class SimulatorTest
     public void testSimpleAction()
     {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-        Simulation simulation = new Simulation();
+        MultiThreadSimulation simulation = new MultiThreadSimulation();
         simulation.add(new BaseAction(() -> atomicBoolean.set(true)));
         simulation.run(100, TimeUnit.SECONDS);
         Assert.assertTrue(atomicBoolean.get());
@@ -30,7 +30,7 @@ public class SimulatorTest
     public void testDelayedAction()
     {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-        Simulation simulation = new Simulation();
+        MultiThreadSimulation simulation = new MultiThreadSimulation();
         DelayedAction delayedAction = new DelayedAction(1, TimeUnit.SECONDS, () -> atomicBoolean.set(true));
         simulation.add(delayedAction);
         simulation.run(100, TimeUnit.SECONDS);
@@ -42,7 +42,7 @@ public class SimulatorTest
     {
         AtomicInteger atomicInteger = new AtomicInteger(0);
 
-        Simulation simulation = new Simulation(10);
+        MultiThreadSimulation simulation = new MultiThreadSimulation(10);
         ActionGroup actionGroup = new ActionGroup();
 
         DelayedAction delayedAction = new DelayedAction(1, TimeUnit.SECONDS, () -> atomicInteger.compareAndSet(2, 3));

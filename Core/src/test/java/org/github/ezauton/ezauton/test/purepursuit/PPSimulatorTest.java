@@ -1,6 +1,7 @@
 package org.github.ezauton.ezauton.test.purepursuit;
 
 import org.github.ezauton.ezauton.action.*;
+import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.actuators.IVelocityMotor;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
@@ -15,6 +16,10 @@ import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 public class PPSimulatorTest
@@ -51,8 +56,10 @@ public class PPSimulatorTest
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
 //        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
-        Simulation simulation = new Simulation();
+        // Not a problem
+        MultiThreadSimulation simulation = new MultiThreadSimulation(1);
 
+        // Might be a problem
         SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getClock(), 14, 0.3, 16D);
 
         IVelocityMotor leftMotor = robot.getLeftMotor();
@@ -61,36 +68,56 @@ public class PPSimulatorTest
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftDistanceSensor(), robot.getRightDistanceSensor(), robot);
         locEstimator.reset();
 
-        // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator, robot);
-
-        simulation.add(backgroundAction);
-
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
 
-        PPCommand ppCommand = new PPCommand(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+
+        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
+        // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
+        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator);
 
         // Run the ppCommand and then kill the background task as it is no longer needed
-        ActionGroup actionGroup = new ActionGroup(ppCommand, new BaseAction(backgroundAction::end));
+        ActionGroup actionGroup = ActionGroup.ofSequentials(ppCommand, new BaseAction(backgroundAction::end));
 
-        simulation.add(actionGroup);
+        simulation
+                .add(updateKinematics)
+                .add(backgroundAction)
+                .add(actionGroup);
 
-        // run the simulator with a timeout of 100 seconds
-        simulation.run(5, TimeUnit.SECONDS);
+        // run the simulator with a timeout of 20 seconds
+        simulation.run(10, TimeUnit.SECONDS);
+
+        // test
+        String homeDir = System.getProperty("user.home");
+        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.txt");
+
+        try
+        {
+            Files.createDirectories(filePath.getParent());
+            BufferedWriter writer = Files.newBufferedWriter(filePath);
+            writer.write(robot.log.toString());
+
+            writer.close();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
-        Assert.assertEquals(0, leftWheelVelocity, 0.2D);
+        Assert.assertEquals("left wheel velocity", 0, leftWheelVelocity, 0.5D);
 
         double rightWheelVelocity = locEstimator.getRightTranslationalWheelVelocity();
-        Assert.assertEquals(0, rightWheelVelocity, 0.2D);
+        Assert.assertEquals("right wheel velocity", 0, rightWheelVelocity, 0.5D);
 
         // The final location after the simulator
         ImmutableVector finalLoc = locEstimator.estimateLocation();
 
         // If the final loc is approximately equal to the last waypoint
         approxEqual(waypoints[waypoints.length - 1].getLocation(), finalLoc, 0.2);
+
     }
 
     private void approxEqual(ImmutableVector a, ImmutableVector b, double epsilon)
@@ -99,7 +126,7 @@ public class PPSimulatorTest
         double[] aElements = a.getElements();
         for(int i = 0; i < aElements.length; i++)
         {
-            Assert.assertEquals(aElements[i], bElements[i], epsilon);
+            Assert.assertEquals("vector["+i+"]",aElements[i], bElements[i], epsilon);
         }
     }
 }

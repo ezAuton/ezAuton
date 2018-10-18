@@ -8,24 +8,29 @@ import java.util.concurrent.TimeUnit;
  */
 public class TimeWarpedClock implements IClock
 {
-    private final double speed;
+    private final double speedMultiplier;
     private final RealClock realClock;
     private long startTime = 0;
 
-    public TimeWarpedClock(double speed)
+    public TimeWarpedClock(double speedMultiplier)
     {
         realClock = RealClock.CLOCK;
-        this.speed = speed;
+        this.speedMultiplier = speedMultiplier;
     }
 
     public double getSpeed()
     {
-        return speed;
+        return speedMultiplier;
     }
 
     public long getStartTime()
     {
         return startTime;
+    }
+
+    public void setStartTimeNow()
+    {
+        startTime = System.currentTimeMillis();
     }
 
     /**
@@ -42,18 +47,18 @@ public class TimeWarpedClock implements IClock
     public long getTime()
     {
         long dt = System.currentTimeMillis() - startTime;
-        return (long) (dt * speed);
+        return (long) (dt * speedMultiplier);
     }
 
     @Override
     public Future<?> scheduleAt(long millis, Runnable runnable)
     {
-        return realClock.scheduleIn((long) ((millis) / speed), TimeUnit.MILLISECONDS, runnable);
+        return realClock.scheduleIn((long) ((millis) / speedMultiplier), TimeUnit.MILLISECONDS, runnable);
     }
 
     @Override
     public void sleep(long dt, TimeUnit timeUnit) throws InterruptedException
     {
-        Thread.sleep((long) (timeUnit.toMillis(dt) / speed));
+        Thread.sleep((long) (timeUnit.toMillis(dt) / speedMultiplier));
     }
 }

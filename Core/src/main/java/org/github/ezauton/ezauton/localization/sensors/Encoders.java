@@ -2,6 +2,8 @@ package org.github.ezauton.ezauton.localization.sensors;
 
 import org.github.ezauton.ezauton.utils.Stopwatch;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * A utility class to convert WPILib libraries (i.e. TalonSRX, VictorSPX) into more abstract
  * representations which are used in ezAuton.
@@ -115,7 +117,7 @@ public class Encoders
             @Override
             public double getPosition()
             {
-                position += stopwatch.pop() * tachometer.getVelocity();
+                position += stopwatch.pop(TimeUnit.SECONDS) * tachometer.getVelocity();
                 return position;
             }
         };

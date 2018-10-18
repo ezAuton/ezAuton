@@ -1,10 +1,7 @@
 package org.github.ezauton.ezauton.utils;
 
 import java.time.Instant;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class RealClock implements IClock
 {
@@ -14,7 +11,7 @@ public class RealClock implements IClock
 
     protected RealClock()
     {
-        executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService = Executors.newScheduledThreadPool(1, Thread::new);
     }
 
     @Override

@@ -1,13 +1,16 @@
-package org.github.ezauton.ezauton.action;
+package org.github.ezauton.ezauton.action.simulation;
 
 
+import org.github.ezauton.ezauton.action.IAction;
+import org.github.ezauton.ezauton.action.ThreadBuilder;
+import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.utils.TimeWarpedClock;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class Simulation
+public class MultiThreadSimulation implements ISimulation
 {
 
     private final double speed;
@@ -15,23 +18,31 @@ public class Simulation
 
     private List<IAction> actions = new ArrayList<>();
 
-    public Simulation(double speed)
+    public MultiThreadSimulation(double speed)
     {
         this.speed = speed;
         timeWarpedClock = new TimeWarpedClock(speed);
+        timeWarpedClock.setStartTimeNow(); // TODO: kinda janky... but need it here to fix SimulatedTankRobot
     }
 
-    public Simulation()
+    public MultiThreadSimulation()
     {
-        this(1000);
+        this(1);
     }
 
+    public double getSpeed()
+    {
+        return speed;
+    }
+
+    @Override
     public TimeWarpedClock getClock()
     {
         return timeWarpedClock;
     }
 
-    public Simulation add(IAction action)
+    @Override
+    public MultiThreadSimulation add(IAction action)
     {
         actions.add(action);
         return this;
@@ -45,8 +56,8 @@ public class Simulation
      */
     public void run(long timeout, TimeUnit timeUnit)
     {
-        timeWarpedClock.setStartTime(System.currentTimeMillis());
-
         actions.forEach(action -> new ThreadBuilder(action, timeWarpedClock).startAndWait(timeout, timeUnit));
     }
+
+
 }

@@ -1,7 +1,7 @@
 package org.github.ezauton.ezauton.test.utils;
 
 import org.github.ezauton.ezauton.action.DelayedAction;
-import org.github.ezauton.ezauton.action.Simulation;
+import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.utils.Stopwatch;
 import org.github.ezauton.ezauton.utils.TimeWarpedClock;
 import org.junit.Test;
@@ -22,8 +22,6 @@ public class TimeWarpedClockTest
         TimeWarpedClock clock = new TimeWarpedClock(10);
 
         Stopwatch stopwatch = new Stopwatch(clock);
-
-        long initMillis = System.currentTimeMillis();
 
         stopwatch.resetIfNotInit();
 
@@ -82,7 +80,7 @@ public class TimeWarpedClockTest
         AtomicLong time = new AtomicLong(0);
 
         int speed = 100000;
-        Simulation sim = new Simulation(speed);
+        MultiThreadSimulation sim = new MultiThreadSimulation(speed);
 
         // 1000 fake seconds * 1 real sec / `1000 fake secs = 1 real sec
         sim.add(new DelayedAction(speed, TimeUnit.SECONDS, () -> time.set(System.currentTimeMillis())));

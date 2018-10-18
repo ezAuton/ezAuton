@@ -13,20 +13,6 @@ public class ActionGroup extends BaseAction
     private Queue<ActionWrapper> scheduledActions;
 
     /**
-     * Creates an ActionGroup comprised of sequential commands
-     *
-     * @param actions The actions to run in sequence
-     */
-    public ActionGroup(IAction... actions)
-    {
-        this();
-        for(IAction action : actions)
-        {
-            this.scheduledActions.add(new ActionWrapper(action, Type.SEQUENTIAL));
-        }
-    }
-
-    /**
      * Creates an Action Group comprised of different kinds of commands (i.e sequential, parallel, with)
      *
      * @param scheduledActions The ActionWrappers to run

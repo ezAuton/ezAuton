@@ -1,6 +1,7 @@
 package org.github.ezauton.ezauton.test.utils;
 
 import org.github.ezauton.ezauton.action.*;
+import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.utils.RealClock;
 import org.github.ezauton.ezauton.utils.Stopwatch;
 import org.github.ezauton.ezauton.utils.TimeWarpedClock;
@@ -17,7 +18,7 @@ public class ActionTest
     @Test
     public void testDelayedAction()
     {
-        Simulation sim = new Simulation(10);
+        MultiThreadSimulation sim = new MultiThreadSimulation(10);
 
         int delay = 3;
         DelayedAction action = new DelayedAction(delay, TimeUnit.SECONDS); // w
@@ -62,7 +63,7 @@ public class ActionTest
         ActionGroup group = new ActionGroup()
                 .addSequential(action);
 
-        Simulation sim = new Simulation(10);
+        MultiThreadSimulation sim = new MultiThreadSimulation(10);
         sim.add(group);
         sim.run(3, TimeUnit.SECONDS);
         assertEquals(4, count.get());
@@ -131,7 +132,7 @@ public class ActionTest
                     count.compareAndSet(8, 10);
                 });
 
-        Simulation simulation = new Simulation(10);
+        MultiThreadSimulation simulation = new MultiThreadSimulation(10);
         simulation.add(actionGroup);
         simulation.run(100, TimeUnit.SECONDS);
 
@@ -166,7 +167,7 @@ public class ActionTest
 
                 });
 
-        Simulation simulation = new Simulation();
+        MultiThreadSimulation simulation = new MultiThreadSimulation();
         simulation.add(group);
         simulation.run(100, TimeUnit.SECONDS);
 
@@ -177,24 +178,31 @@ public class ActionTest
     public void testWithActionGroup()
     {
         AtomicInteger counter = new AtomicInteger(0);
-        BackgroundAction actionA = new BackgroundAction(20, TimeUnit.MILLISECONDS, () -> {
+
+        BackgroundAction actionA = new BackgroundAction(20, TimeUnit.MILLISECONDS);
+
+        actionA.addUpdateable(() -> {
             counter.incrementAndGet();
             return true;
         });
 
+        actionA.setPeriodDelayAfterExecution(false);
+
         int expectedValue = 40;
+
         DelayedAction mainAction = new DelayedAction(20 * expectedValue, TimeUnit.MILLISECONDS);
 
         ActionGroup group = new ActionGroup()
                 .with(actionA)
                 .addSequential(mainAction);
 
-        Simulation sim = new Simulation(10);
+        MultiThreadSimulation sim = new MultiThreadSimulation(1);
+
         sim.add(group);
 
         sim.run(10, TimeUnit.SECONDS);
         System.out.println("counter = " + counter.get());
-        assertEquals(expectedValue, counter.get(), expectedValue * (4F / 5F));
+        assertEquals(expectedValue, counter.get(), expectedValue * (19F / 20F));
     }
 
     @Test // TODO: add
