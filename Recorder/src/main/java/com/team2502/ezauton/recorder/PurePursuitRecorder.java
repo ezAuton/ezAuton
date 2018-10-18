@@ -2,48 +2,42 @@ package com.team2502.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.team2502.ezauton.localization.Updateable;
 import com.team2502.ezauton.pathplanning.Path;
 import com.team2502.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
-import com.team2502.ezauton.robot.subsystems.TranslationalLocationDriveable;
 import com.team2502.ezauton.utils.IClock;
 import com.team2502.ezauton.utils.Stopwatch;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class PurePursuitRecorder<T extends TranslationalLocationDriveable> implements ISubRecording, Updateable
+public class PurePursuitRecorder extends SequentialDataRecorder<PurePursuitFrame>
 {
 
     // contains path data, lookahead + segment data
     @JsonProperty
-    private final Path path;
+    private Path path;
 
     @JsonIgnore
-    private final PurePursuitMovementStrategy strat;
-
-    @JsonProperty
-    private final List<PurePursuitFrame> frames = new ArrayList<>();
-
-    @JsonIgnore
-    private final Stopwatch stopwatch;
+    private PurePursuitMovementStrategy strat;
 
     private static int instanceCounter = 0;
-    private final String name;
+
     private int i = 0;
 
-    public PurePursuitRecorder(Path path, PurePursuitMovementStrategy strat, IClock clock, String name)
+    public PurePursuitRecorder(String name, IClock clock, Path path, PurePursuitMovementStrategy strat)
     {
+        super(name, clock);
         this.path = path;
         this.strat = strat;
-        this.stopwatch = new Stopwatch(clock);
-        this.name = name;
     }
 
-    public PurePursuitRecorder(Path path, PurePursuitMovementStrategy strat, IClock clock)
+    public PurePursuitRecorder(IClock clock, Path path, PurePursuitMovementStrategy strat)
     {
-        this(path, strat, clock, "PurePursuitRecorder_" + instanceCounter++);
+        this("PurePursuitRecorder_" + instanceCounter++, clock, path, strat);
+    }
+
+    public PurePursuitRecorder()
+    {
+        this.name = "PurePursuitRecorder_" + instanceCounter++;
     }
 
     public Path getPath()
@@ -51,36 +45,20 @@ public class PurePursuitRecorder<T extends TranslationalLocationDriveable> imple
         return path;
     }
 
-    @Override
-    public String getName()
-    {
-        return name;
-    }
 
     @Override
-    public String getJSON()
+    public boolean checkForNewData()
     {
-        return JsonUtils.toStringUnchecked(this);
-    }
-
-    @Override
-    public boolean update()
-    {
-        if (i++ == 0)
+        if(i++ == 0)
         {
             stopwatch.init();
         }
-        frames.add(new PurePursuitFrame(stopwatch.read(TimeUnit.SECONDS),
-                                        strat.getLatestLookahead(),
-                                        strat.getClosestPoint(),
-                                        strat.getGoalPoint(),
-                                        strat.getDCP(),
-                                        0));
+        dataFrames.add(new PurePursuitFrame(stopwatch.read(TimeUnit.SECONDS),
+                                            strat.getLatestLookahead(),
+                                            strat.getClosestPoint(),
+                                            strat.getGoalPoint(),
+                                            strat.getDCP(),
+                                            0));
         return true;
-    }
-
-    public List<PurePursuitFrame> getFrames()
-    {
-        return frames;
     }
 }

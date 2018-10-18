@@ -1,6 +1,8 @@
 package com.team2502.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.team2502.ezauton.localization.Updateable;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,6 +1,7 @@
 package com.team2502.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.team2502.ezauton.trajectory.geometry.ImmutableVector;
 
 public class TankRobotState extends RobotState
 {
@@ -16,9 +17,9 @@ public class TankRobotState extends RobotState
     @JsonProperty
     protected double rightPos;
 
-    public TankRobotState(double time, double x, double y, double heading, double robotWidth, double robotLength, double leftVel, double leftPos, double rightVel, double rightPos)
+    public TankRobotState(double time, ImmutableVector pos, double heading, double robotWidth, double robotLength, double leftVel, double leftPos, double rightVel, double rightPos)
     {
-        super(time, x, y, heading, robotWidth, robotLength);
+        super(time, pos, heading, robotWidth, robotLength);
         this.leftVel = leftVel;
         this.leftPos = leftPos;
         this.rightVel = rightVel;

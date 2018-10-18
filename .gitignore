@@ -27,12 +27,7 @@ eclipse
 *.launch
 
 # IntelliJ IDEA
-.idea/gradle.xml
-.idea/usage.statistics.xml
-# .idea/misc.xml
-.idea/uiDesigner.xml
-.idea/workspace.xml
-.idea/libraries
+.idea/
 
 *.eml
 *.iws
