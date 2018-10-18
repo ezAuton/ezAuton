@@ -1,7 +1,5 @@
 package org.github.ezauton.ezauton.utils;
 
-import org.github.ezauton.ezauton.action.IAction;
-
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 

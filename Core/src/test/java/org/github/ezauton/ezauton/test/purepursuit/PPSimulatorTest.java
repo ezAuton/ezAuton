@@ -16,6 +16,10 @@ import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 public class PPSimulatorTest
@@ -82,20 +86,38 @@ public class PPSimulatorTest
                 .add(backgroundAction)
                 .add(actionGroup);
 
-        // run the simulator with a timeout of 100 seconds
+        // run the simulator with a timeout of 20 seconds
         simulation.run(10, TimeUnit.SECONDS);
 
+        // test
+        String homeDir = System.getProperty("user.home");
+        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.txt");
+
+        try
+        {
+            Files.createDirectories(filePath.getParent());
+            BufferedWriter writer = Files.newBufferedWriter(filePath);
+            writer.write(robot.log.toString());
+
+            writer.close();
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
-        Assert.assertEquals("left wheel velocity", 0, leftWheelVelocity, 0.2D);
+        Assert.assertEquals("left wheel velocity", 0, leftWheelVelocity, 0.5D);
 
         double rightWheelVelocity = locEstimator.getRightTranslationalWheelVelocity();
-        Assert.assertEquals("right wheel velocity", 0, rightWheelVelocity, 0.2D);
+        Assert.assertEquals("right wheel velocity", 0, rightWheelVelocity, 0.5D);
 
         // The final location after the simulator
         ImmutableVector finalLoc = locEstimator.estimateLocation();
 
         // If the final loc is approximately equal to the last waypoint
         approxEqual(waypoints[waypoints.length - 1].getLocation(), finalLoc, 0.2);
+
     }
 
     private void approxEqual(ImmutableVector a, ImmutableVector b, double epsilon)

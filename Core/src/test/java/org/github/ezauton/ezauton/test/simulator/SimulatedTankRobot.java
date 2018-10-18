@@ -53,6 +53,8 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 
     }
 
+
+
     public IVelocityMotor getLeftMotor()
     {
         return leftMotor;
@@ -96,7 +98,8 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
     @Override
     public boolean update()
     {
-        log.append(stopwatch.read(TimeUnit.SECONDS)).append(", ").append(baseLeftSimulatedMotor.getVelocity()).append(", ").append(baseRightSimulatedMotor.getVelocity()).append("\n");
+        long read = stopwatch.read(TimeUnit.SECONDS);
+        log.append(read).append(", ").append(baseLeftSimulatedMotor.getVelocity()).append(", ").append(baseRightSimulatedMotor.getVelocity()).append("\n");
         toUpdate.update();
         return true;
     }

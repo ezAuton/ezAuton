@@ -22,6 +22,7 @@ public class MultiThreadSimulation implements ISimulation
     {
         this.speed = speed;
         timeWarpedClock = new TimeWarpedClock(speed);
+        timeWarpedClock.setStartTimeNow(); // TODO: kinda janky... but need it here to fix SimulatedTankRobot
     }
 
     public MultiThreadSimulation()
@@ -55,8 +56,6 @@ public class MultiThreadSimulation implements ISimulation
      */
     public void run(long timeout, TimeUnit timeUnit)
     {
-        timeWarpedClock.setStartTime(System.currentTimeMillis());
-
         actions.forEach(action -> new ThreadBuilder(action, timeWarpedClock).startAndWait(timeout, timeUnit));
     }
 
