@@ -58,7 +58,7 @@ public abstract class SequentialDataRecorder<T extends SequentialDataFrame> impl
     }
 
     @Override
-    public String getJSON()
+    public String toJson()
     {
         return JsonUtils.toStringUnchecked(this);
     }

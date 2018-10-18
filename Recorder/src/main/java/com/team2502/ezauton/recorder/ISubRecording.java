@@ -6,5 +6,5 @@ import javafx.scene.layout.AnchorPane;
 public interface ISubRecording
 {
     String getName();
-    String getJSON();
+    String toJson();
 }

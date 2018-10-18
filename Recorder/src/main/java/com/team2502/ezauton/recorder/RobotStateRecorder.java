@@ -20,18 +20,18 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotState>
 
     private static int instanceCounter = 0;
 
-    public RobotStateRecorder(String name, IClock clock, ITranslationalLocationEstimator posEstimator, IRotationalLocationEstimator rotEstimator, double width, double height)
+    public RobotStateRecorder(String name, IClock clock, ITranslationalLocationEstimator posEstimator, IRotationalLocationEstimator rotEstimator, double width, double length)
     {
         super(name, clock);
         this.posEstimator = posEstimator;
         this.rotEstimator = rotEstimator;
         this.width = width;
-        this.height = height;
+        this.height = length;
     }
 
-    public RobotStateRecorder(IClock clock, ITranslationalLocationEstimator posEstimator, IRotationalLocationEstimator rotEstimator, double width, double height)
+    public RobotStateRecorder(IClock clock, ITranslationalLocationEstimator posEstimator, IRotationalLocationEstimator rotEstimator, double width, double length)
     {
-        this("RobotStateRecorder_" + instanceCounter++, clock, posEstimator, rotEstimator, width, height);
+        this("RobotStateRecorder_" + instanceCounter++, clock, posEstimator, rotEstimator, width, length);
     }
 
     public RobotStateRecorder(){}

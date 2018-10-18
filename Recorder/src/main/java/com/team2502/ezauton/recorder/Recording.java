@@ -1,8 +1,7 @@
 package com.team2502.ezauton.recorder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.team2502.ezauton.localization.Updateable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,11 +44,11 @@ public class Recording implements ISubRecording
     @Override
     public String getName()
     {
-        return null;
+        return name;
     }
 
     @Override
-    public String getJSON()
+    public String toJson()
     {
         return JsonUtils.toStringUnchecked(this);
     }
