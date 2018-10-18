@@ -75,16 +75,16 @@ public class PPSimulatorTest
         PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
+
         // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
         BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator);
 
-        // Run the ppCommand and then kill the background task as it is no longer needed
-        ActionGroup actionGroup = ActionGroup.ofSequentials(ppCommand, new BaseAction(backgroundAction::end));
-
+        ActionGroup group = new ActionGroup()
+                .with(updateKinematics)
+                .with(backgroundAction)
+                .addSequential(ppCommand);
         simulation
-                .add(updateKinematics)
-                .add(backgroundAction)
-                .add(actionGroup);
+                .add(group);
 
         // run the simulator with a timeout of 20 seconds
         simulation.run(10, TimeUnit.SECONDS);
