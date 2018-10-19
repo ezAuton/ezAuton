@@ -1,5 +1,6 @@
 package com.team2502.ezauton.recorder;
 
+import org.github.ezauton.ezauton.action.ActionGroup;
 import org.github.ezauton.ezauton.action.BackgroundAction;
 import org.github.ezauton.ezauton.action.PPCommand;
 import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
@@ -14,7 +15,9 @@ import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementSt
 import org.github.ezauton.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import org.github.ezauton.ezauton.utils.TimeWarpedClock;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,8 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 public class RecorderTest
 {
-    public static void main(String[] args) throws IOException, ClassNotFoundException
+    public static void main(String[] args) throws IOException
     {
+
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -4);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 1, 3, -4);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 0, 3, -4);
@@ -32,71 +36,90 @@ public class RecorderTest
 
         Path path = pathGenerator.generate(0.05);
 
-        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 8);
+        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
-        TimeWarpedClock clock = new TimeWarpedClock(10);
-        SimulatedTankRobot bot = new SimulatedTankRobot(0.2, clock, 3, 0.2, 4);
+//        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
+        // Not a problem
+        MultiThreadSimulation simulation = new MultiThreadSimulation(1);
 
-        IVelocityMotor leftMotor = bot.getLeftMotor();
-        IVelocityMotor rightMotor = bot.getRightMotor();
+        // Might be a problem
+        SimulatedTankRobot robot = new SimulatedTankRobot(4, simulation.getClock(), 14, 0.3, 16D);
 
-        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(bot.getLeftDistanceSensor(), bot.getRightDistanceSensor(), bot);
+        IVelocityMotor leftMotor = robot.getLeftMotor();
+        IVelocityMotor rightMotor = robot.getRightMotor();
+
+        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftDistanceSensor(), robot.getRightDistanceSensor(), robot);
         locEstimator.reset();
 
-        MultiThreadSimulation sim = new MultiThreadSimulation(10);
+        ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
+
+        TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
+
+        PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         Recording recording = new Recording();
 
-        RobotStateRecorder posRec = new RobotStateRecorder("aaaaa", sim.getClock(), locEstimator, locEstimator, bot.getLateralWheelDistance(), 3);
-        PurePursuitRecorder  ppRec = new PurePursuitRecorder("bbbbb", sim.getClock(), path, ppMoveStrat);
+        RobotStateRecorder posRec = new RobotStateRecorder("aaaaa", simulation.getClock(), locEstimator, locEstimator, robot.getLateralWheelDistance(), 5);
+        PurePursuitRecorder  ppRec = new PurePursuitRecorder("bbbbb", simulation.getClock(), path, ppMoveStrat);
 
         recording.addSubRecording(posRec);
         recording.addSubRecording(ppRec);
 
-        BackgroundAction background = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot, locEstimator, posRec, ppRec, () -> {
-            if(bot.getLeftDistanceSensor().getVelocity() != 0)
-            {
-                System.out.println("leftVelocity() = " + bot.getLeftDistanceSensor().getVelocity());
-                System.out.println("rightVelocity() = " + bot.getRightDistanceSensor().getVelocity());
-            }
-            return true;
-        });
+        BackgroundAction ppRecAct = new BackgroundAction(20, TimeUnit.MILLISECONDS, ppRec);
+        BackgroundAction posRecAct = new BackgroundAction(20, TimeUnit.MILLISECONDS, posRec);
+        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
+
+        // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
+        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator);
+
+        ActionGroup group = new ActionGroup()
+                .with(updateKinematics)
+                .with(backgroundAction)
+                .with(ppRecAct)
+                .with(posRecAct)
+                .addSequential(ppCommand);
+        simulation
+                .add(group);
 
 
-        sim.add(background);
+        // run the simulator with a timeout of 20 seconds
+        simulation.run(10, TimeUnit.SECONDS);
 
-        ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
+        // Save PP Recording separately
+        {
+            String homeDir = System.getProperty("user.home");
+            java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log2.json");
 
-        TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, bot);
+            Files.createDirectories(filePath.getParent());
 
-        PPCommand ppCommand = new PPCommand(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+            BufferedWriter writer = Files.newBufferedWriter(filePath);
+            String json = ppRec.toJson();
 
-        ppCommand.onFinish(background::end);
-        ppCommand.onFinish(() -> bot.run(0, 0));
+            writer.write(json);
 
-        sim.add(ppCommand);
+            writer.close();
+
+            JsonUtils.toObject(PurePursuitRecorder.class, json);
+        }
+
+        // save recording
+        {
+            String homeDir = System.getProperty("user.home");
+            java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.json");
+
+            Files.createDirectories(filePath.getParent());
+
+            BufferedWriter writer = Files.newBufferedWriter(filePath);
+            String json = recording.toJson();
+
+            writer.write(json);
+
+            writer.close();
+
+            JsonUtils.toObject(Recording.class, json);
+        }
 
 
-        sim.run(12, TimeUnit.SECONDS);
-
-        System.out.println("leftpos = " + bot.getLeftDistanceSensor().getPosition());
-        System.out.println("rightpos = " + bot.getRightDistanceSensor().getPosition());
-
-        System.out.println(locEstimator.estimateLocation());
-
-        String homeDir = System.getProperty("user.home");
-        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.json");
-
-        Files.createDirectories(filePath.getParent());
-
-        BufferedWriter writer = Files.newBufferedWriter(filePath);
-//        writer.write(bot.log.toString())
-        String json = recording.toJson();
-        writer.write(json);
-
-        writer.close();
-
-        Recording rec = JsonUtils.toObject(Recording.class, json);
 
     }
 }
