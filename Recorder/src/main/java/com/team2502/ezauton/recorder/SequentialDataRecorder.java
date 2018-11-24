@@ -2,6 +2,7 @@ package com.team2502.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.github.ezauton.ezauton.localization.Updateable;
 import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.utils.Stopwatch;
@@ -14,6 +15,7 @@ import java.util.List;
  * Describes a recorder for data expressed through SequentialDataFrames. Useful for representing motion/robot state over time.
  * @param <T> The type of SequentialDataFrame this DataSequence contains.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class SequentialDataRecorder<T extends SequentialDataFrame> implements ISubRecording, Updateable
 {
     @JsonProperty("dataSequence")

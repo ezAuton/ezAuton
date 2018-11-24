@@ -21,7 +21,7 @@ public class JsonUtils
         // dates should be serialized using ISO pattern
         objectMapper.setDateFormat(new ISO8601DateFormat());
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.enableDefaultTyping();
+//        objectMapper.enableDefaultTyping();
     }
 
     /**
