@@ -1,4 +1,4 @@
-package com.team2502.ezauton.recorder;
+package org.github.ezauton.ezauton.recorder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

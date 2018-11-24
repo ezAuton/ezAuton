@@ -1,4 +1,4 @@
-package com.team2502.ezauton.recorder;
+package org.github.ezauton.ezauton.recorder.base;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;

@@ -1,5 +1,6 @@
-package com.team2502.ezauton.recorder;
+package org.github.ezauton.ezauton.recorder.base;
 
+import org.github.ezauton.ezauton.recorder.SequentialDataFrame;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
 public class PurePursuitFrame extends SequentialDataFrame

@@ -1,4 +1,4 @@
-package com.team2502.ezauton.recorder;
+package org.github.ezauton.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +8,6 @@ import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.utils.Stopwatch;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

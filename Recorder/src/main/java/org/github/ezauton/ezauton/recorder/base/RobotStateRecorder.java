@@ -1,6 +1,7 @@
-package com.team2502.ezauton.recorder;
+package org.github.ezauton.ezauton.recorder.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.github.ezauton.ezauton.recorder.SequentialDataRecorder;
 import org.github.ezauton.ezauton.localization.IRotationalLocationEstimator;
 import org.github.ezauton.ezauton.localization.ITranslationalLocationEstimator;
 import org.github.ezauton.ezauton.utils.IClock;

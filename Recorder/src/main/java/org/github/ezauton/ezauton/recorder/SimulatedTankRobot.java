@@ -1,4 +1,4 @@
-package com.team2502.ezauton.recorder;
+package org.github.ezauton.ezauton.recorder;
 
 import org.github.ezauton.ezauton.actuators.IVelocityMotor;
 import org.github.ezauton.ezauton.actuators.implementations.BaseSimulatedMotor;

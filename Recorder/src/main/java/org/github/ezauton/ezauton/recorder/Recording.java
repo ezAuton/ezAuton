@@ -1,6 +1,5 @@
-package com.team2502.ezauton.recorder;
+package org.github.ezauton.ezauton.recorder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
