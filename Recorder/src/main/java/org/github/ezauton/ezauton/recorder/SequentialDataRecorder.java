@@ -8,6 +8,7 @@ import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.utils.Stopwatch;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
  * @param <T> The type of SequentialDataFrame this DataSequence contains.
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
-public abstract class SequentialDataRecorder<T extends SequentialDataFrame> implements ISubRecording, Updateable
+public abstract class SequentialDataRecorder<T extends SequentialDataFrame> implements ISubRecording, Updateable, Iterable<T>
 {
     @JsonProperty("dataSequence")
     protected List<T> dataFrames;
@@ -90,6 +91,12 @@ public abstract class SequentialDataRecorder<T extends SequentialDataFrame> impl
             stopwatch.init();
         }
         return checkForNewData();
+    }
+
+    @Override
+    public Iterator<T> iterator()
+    {
+        return dataFrames.iterator();
     }
 
     /**

@@ -15,6 +15,7 @@ import org.github.ezauton.ezauton.pathplanning.purepursuit.LookaheadBounds;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PPWaypoint;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import org.github.ezauton.ezauton.robot.implemented.TankRobotTransLocDriveable;
+import org.github.ezauton.ezauton.utils.RealClock;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -64,8 +65,9 @@ public class RecorderTest
         recording.addSubRecording(posRec);
         recording.addSubRecording(ppRec);
 
-        BackgroundAction ppRecAct = new BackgroundAction(20, TimeUnit.MILLISECONDS, ppRec);
-        BackgroundAction posRecAct = new BackgroundAction(20, TimeUnit.MILLISECONDS, posRec);
+//        BackgroundAction ppRecAct = new BackgroundAction(20, TimeUnit.MILLISECONDS, ppRec);
+//        BackgroundAction posRecAct = new BackgroundAction(20, TimeUnit.MILLISECONDS, posRec);
+        BackgroundAction recAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, recording);
         BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
 
         // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
@@ -74,15 +76,14 @@ public class RecorderTest
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)
                 .with(backgroundAction)
-                .with(ppRecAct)
-                .with(posRecAct)
+//                .with(ppRecAct)
+                .with(recAction)
                 .addSequential(ppCommand);
-        simulation
-                .add(group);
+
 
 
         // run the simulator with a timeout of 20 seconds
-        simulation.run(10, TimeUnit.SECONDS);
+        group.run(RealClock.CLOCK);
 
         // Save PP Recording separately
         {

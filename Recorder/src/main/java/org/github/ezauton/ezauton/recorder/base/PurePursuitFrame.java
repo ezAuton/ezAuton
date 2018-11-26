@@ -48,4 +48,17 @@ public class PurePursuitFrame extends SequentialDataFrame
     {
         return currentSegmentIndex;
     }
+
+    @Override
+    public String toString()
+    {
+        final StringBuilder sb = new StringBuilder("PurePursuitFrame{");
+        sb.append("lookahead=").append(lookahead);
+        sb.append(", closestPoint=").append(closestPoint);
+        sb.append(", goalPoint=").append(goalPoint);
+        sb.append(", dCP=").append(dCP);
+        sb.append(", currentSegmentIndex=").append(currentSegmentIndex);
+        sb.append('}');
+        return sb.toString();
+    }
 }

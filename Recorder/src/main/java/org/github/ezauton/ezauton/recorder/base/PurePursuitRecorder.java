@@ -6,6 +6,7 @@ import org.github.ezauton.ezauton.recorder.SequentialDataRecorder;
 import org.github.ezauton.ezauton.pathplanning.Path;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import org.github.ezauton.ezauton.utils.IClock;
+import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -53,12 +54,18 @@ public class PurePursuitRecorder extends SequentialDataRecorder<PurePursuitFrame
         {
             stopwatch.init();
         }
-        dataFrames.add(new PurePursuitFrame(stopwatch.read(TimeUnit.SECONDS),
+        dataFrames.add(new PurePursuitFrame(stopwatch.read(TimeUnit.MILLISECONDS),
                                             strat.getLatestLookahead(),
                                             strat.getClosestPoint(),
                                             strat.getGoalPoint(),
                                             strat.getDCP(),
                                             0));
         return true;
+    }
+
+    @Override
+    public IDataProcessor createDataProcessor()
+    {
+        return new PurePursuitDataProcessor(this);
     }
 }
