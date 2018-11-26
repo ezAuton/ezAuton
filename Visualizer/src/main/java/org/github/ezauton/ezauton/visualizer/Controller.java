@@ -235,6 +235,11 @@ public class Controller implements Initializable
 //        return -ppY * spatialScaleFactor + originY + robot.getHeight() / 2;
     }
 
+    private void clear() {
+        tabPane.getTabs().clear();
+        backdrop.getChildren().clear();
+    }
+
     /**
      * Animate the robot following the path
      *
@@ -255,7 +260,7 @@ public class Controller implements Initializable
 
         // Scale our robot appropriately
 
-//        originY = backdrop.getHeight() - robot.getHeight();
+        originY = backdrop.getHeight();
 
 
         Interpolator interpolator;
@@ -268,8 +273,8 @@ public class Controller implements Initializable
             interpolator = Interpolator.DISCRETE;
         }
 
-        // Clear current tabs
-        tabPane.getTabs().clear();
+        // Clear everything
+        clear();
 
         for(Map.Entry<String, ISubRecording> entry : currentRecording.getRecordingMap().entrySet())
         {
