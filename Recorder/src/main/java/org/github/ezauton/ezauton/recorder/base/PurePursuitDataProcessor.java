@@ -3,6 +3,7 @@ package org.github.ezauton.ezauton.recorder.base;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -22,8 +23,8 @@ public class PurePursuitDataProcessor implements IDataProcessor
     private final PurePursuitRecorder ppRec;
     private double spatialScaleFactorX;
     private double spatialScaleFactorY;
-    private double originXFt;
-    private double originYFt;
+    private double originXPx;
+    private double originYPx;
 
     private Circle goalPoint;
     private Circle closestPoint;
@@ -31,6 +32,7 @@ public class PurePursuitDataProcessor implements IDataProcessor
     private Path waypointPath;
     private Label lookaheadLabel;
     private Label dcpLabel;
+    private double windowHeight;
 
     public PurePursuitDataProcessor(PurePursuitRecorder ppRec)
     {
@@ -46,12 +48,12 @@ public class PurePursuitDataProcessor implements IDataProcessor
 
     private double getX(double feetX)
     {
-        return feetX * spatialScaleFactorX + originXFt;
+        return feetX * spatialScaleFactorX + originXPx;
     }
 
     private double getY(double feetY)
     {
-        return -feetY * spatialScaleFactorY + originYFt;
+        return -feetY * spatialScaleFactorY + originYPx;
     }
 
     private ImmutableVector toPixels(ImmutableVector feet)
@@ -65,28 +67,38 @@ public class PurePursuitDataProcessor implements IDataProcessor
         this.spatialScaleFactorX = environment.getScaleFactorX();
         this.spatialScaleFactorY = environment.getScaleFactorY();
 
-        this.originXFt = environment.getOrigin().get(0);
-        this.originYFt = environment.getOrigin().get(1);
+        AnchorPane anchorPane = environment.getFieldAnchorPane();
+        windowHeight = anchorPane.getHeight();
 
-        waypointPath.getElements().add(new MoveTo(getX(originXFt), getY(originYFt)));
+        this.originXPx = environment.getOrigin().get(0);
+        this.originYPx = environment.getOrigin().get(1);
+
+        waypointPath.getElements().add(new MoveTo((originXPx), (originYPx)));
 
         for(IPathSegment segment : ppRec.getPath().getPathSegments())
         {
             ImmutableVector to = segment.getTo();
             double x = to.get(0);
             double y = to.get(1);
+            System.out.println("getX(x) = " + getX(x));
+            System.out.println("getY(y) = " + getY(y));
             waypointPath.getElements().add(new LineTo(getX(x), getY(y)));
         }
 
-        goalPoint.setCenterX(getX(originXFt));
-        goalPoint.setCenterX(getY(originYFt));
+        waypointPath.setStrokeWidth(1);
+        waypointPath.setStroke(Paint.valueOf("black"));
 
-        closestPoint.setCenterX(getX(originXFt));
-        closestPoint.setCenterX(getY(originYFt));
+        System.out.println("originXPx = " + originXPx);
+        System.out.println("originYPx = " + originYPx);
+        goalPoint.setCenterX((originXPx));
+        goalPoint.setCenterX((originYPx));
 
-        environment.getFieldAnchorPane().getChildren().add(closestPoint);
-        environment.getFieldAnchorPane().getChildren().add(goalPoint);
-        environment.getFieldAnchorPane().getChildren().add(waypointPath);
+        closestPoint.setCenterX((originXPx));
+        closestPoint.setCenterX((originYPx));
+
+        anchorPane.getChildren().add(closestPoint);
+        anchorPane.getChildren().add(goalPoint);
+        anchorPane.getChildren().add(waypointPath);
 
         GridPane dataGridPane = environment.getDataGridPane(ppRec.getName());
 
@@ -106,13 +118,12 @@ public class PurePursuitDataProcessor implements IDataProcessor
         for(PurePursuitFrame frame : ppRec.getDataFrames())
         {
             List<KeyValue> keyValues = new ArrayList<>();
-            System.out.println("frame = " + frame);
             double cpX, cpY, gpX, gpY;
 
             if(frame.getClosestPoint() != null)
             {
-                cpX = frame.getClosestPoint().get(0);
-                cpY = frame.getClosestPoint().get(1);
+                cpX = getX(frame.getClosestPoint().get(0));
+                cpY = getY(frame.getClosestPoint().get(1));
 
                 keyValues.add(new KeyValue(closestPoint.centerXProperty(), cpX, interpolator));
                 keyValues.add(new KeyValue(closestPoint.centerYProperty(), cpY, interpolator));
@@ -125,8 +136,8 @@ public class PurePursuitDataProcessor implements IDataProcessor
 
             if(frame.getGoalPoint() != null)
             {
-                gpX = frame.getGoalPoint().get(0);
-                gpY = frame.getGoalPoint().get(1);
+                gpX = getX(frame.getGoalPoint().get(0));
+                gpY = getY(frame.getGoalPoint().get(1));
 
                 keyValues.add(new KeyValue(goalPoint.centerXProperty(), gpX, interpolator));
                 keyValues.add(new KeyValue(goalPoint.centerYProperty(), gpY, interpolator));

@@ -299,21 +299,17 @@ public class Controller implements Initializable
                                    keyValArray
         ));
 
-        double lastTime = 0;
         System.out.println("keyValues = " + keyValues);
         while(keyValItr.hasNext())
         {
             Map.Entry<Double, List<KeyValue>> next = keyValItr.next();
-            double duration = next.getKey() - lastTime;
-            System.out.println("duration = " + duration);
-            lastTime = next.getKey();
 
             keyValList = next.getValue();
             keyValList.add(new KeyValue(timeElapsed.textProperty(), String.format("%.02f seconds", next.getKey() / 1000)));
             keyValArray = new KeyValue[keyValList.size()];
             keyValList.toArray(keyValArray);
 
-            keyFrames.add(new KeyFrame(Duration.millis(duration),
+            keyFrames.add(new KeyFrame(Duration.millis(next.getKey()),
                                        keyValArray
             ));
         }
