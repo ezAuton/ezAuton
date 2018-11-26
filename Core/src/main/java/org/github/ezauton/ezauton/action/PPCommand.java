@@ -69,7 +69,7 @@ public class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
     @Override
     public boolean isFinished()
     {
-        if(purePursuitMovementStrategy.isFinished() || getStopwatch().read(TimeUnit.SECONDS) > 5)
+        if(purePursuitMovementStrategy.isFinished())
         {
             translationalLocationDriveable.driveSpeed(0);
             return true;

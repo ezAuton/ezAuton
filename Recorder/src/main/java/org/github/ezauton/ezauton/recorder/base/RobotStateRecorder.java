@@ -55,7 +55,6 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotState>
     @Override
     public IDataProcessor createDataProcessor()
     {
-        //TODO: Implement
-        return null;
+        return new RobotStateDataProcessor(this);
     }
 }

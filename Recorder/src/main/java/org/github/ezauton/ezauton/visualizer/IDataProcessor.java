@@ -10,5 +10,5 @@ public interface IDataProcessor
 {
     void initEnvironment(IEnvironment environment);
 
-    Map<Double, List<KeyValue>> forKeyFrame(Interpolator interpolator);
+    Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator);
 }

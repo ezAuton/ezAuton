@@ -6,10 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
+import javafx.scene.shape.*;
 import org.github.ezauton.ezauton.pathplanning.IPathSegment;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.github.ezauton.ezauton.visualizer.IDataProcessor;
@@ -26,13 +23,14 @@ public class PurePursuitDataProcessor implements IDataProcessor
     private double originXPx;
     private double originYPx;
 
-    private Circle goalPoint;
-    private Circle closestPoint;
+    private final Circle goalPoint;
+    private final Circle closestPoint;
 
-    private Path waypointPath;
-    private Label lookaheadLabel;
-    private Label dcpLabel;
-    private double windowHeight;
+    private final Path waypointPath;
+    private final Label lookaheadLabel;
+    private final Label dcpLabel;
+    private final Label segmentIndexLabel;
+    private final Line currentSegmentLine;
 
     public PurePursuitDataProcessor(PurePursuitRecorder ppRec)
     {
@@ -43,6 +41,11 @@ public class PurePursuitDataProcessor implements IDataProcessor
 
         waypointPath = new Path();
 
+        currentSegmentLine = new Line(0, 0, 0, 0);
+
+        lookaheadLabel = new Label("0 feet");
+        dcpLabel = new Label("0 feet");
+        segmentIndexLabel = new Label("0");
     }
 
 
@@ -67,11 +70,10 @@ public class PurePursuitDataProcessor implements IDataProcessor
         this.spatialScaleFactorX = environment.getScaleFactorX();
         this.spatialScaleFactorY = environment.getScaleFactorY();
 
-        AnchorPane anchorPane = environment.getFieldAnchorPane();
-        windowHeight = anchorPane.getHeight();
-
         this.originXPx = environment.getOrigin().get(0);
         this.originYPx = environment.getOrigin().get(1);
+
+        AnchorPane anchorPane = environment.getFieldAnchorPane();
 
         waypointPath.getElements().add(new MoveTo((originXPx), (originYPx)));
 
@@ -80,38 +82,37 @@ public class PurePursuitDataProcessor implements IDataProcessor
             ImmutableVector to = segment.getTo();
             double x = to.get(0);
             double y = to.get(1);
-            System.out.println("getX(x) = " + getX(x));
-            System.out.println("getY(y) = " + getY(y));
             waypointPath.getElements().add(new LineTo(getX(x), getY(y)));
         }
 
         waypointPath.setStrokeWidth(1);
         waypointPath.setStroke(Paint.valueOf("black"));
 
-        System.out.println("originXPx = " + originXPx);
-        System.out.println("originYPx = " + originYPx);
         goalPoint.setCenterX((originXPx));
         goalPoint.setCenterX((originYPx));
 
         closestPoint.setCenterX((originXPx));
         closestPoint.setCenterX((originYPx));
 
+        currentSegmentLine.setStrokeWidth(3);
+        currentSegmentLine.setStroke(Paint.valueOf("orange"));
+
         anchorPane.getChildren().add(closestPoint);
         anchorPane.getChildren().add(goalPoint);
         anchorPane.getChildren().add(waypointPath);
+        anchorPane.getChildren().add(currentSegmentLine);
 
         GridPane dataGridPane = environment.getDataGridPane(ppRec.getName());
 
-        lookaheadLabel = new Label("0 feet");
+
         dataGridPane.addRow(0, new Label("Lookahead: "), lookaheadLabel);
 
-
-        dcpLabel = new Label("0 feet");
         dataGridPane.addRow(1, new Label("Distance to Closest Point: "), dcpLabel);
+        dataGridPane.addRow(2, new Label("Current segment number: "), segmentIndexLabel);
     }
 
     @Override
-    public Map<Double, List<KeyValue>> forKeyFrame(Interpolator interpolator)
+    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator)
     {
         Map<Double, List<KeyValue>> ret = new HashMap<>();
 
@@ -125,9 +126,22 @@ public class PurePursuitDataProcessor implements IDataProcessor
                 cpX = getX(frame.getClosestPoint().get(0));
                 cpY = getY(frame.getClosestPoint().get(1));
 
+                IPathSegment currentSegment = ppRec.getPath().getPathSegments().get(frame.getCurrentSegmentIndex());
+
+                double currentSegmentStartX = getX(currentSegment.getFrom().get(0));
+                double currentSegmentStartY = getY(currentSegment.getFrom().get(1));
+                double currentSegmentEndX = getX(currentSegment.getTo().get(0));
+                double currentSegmentEndY = getY(currentSegment.getTo().get(1));
+
+
                 keyValues.add(new KeyValue(closestPoint.centerXProperty(), cpX, interpolator));
                 keyValues.add(new KeyValue(closestPoint.centerYProperty(), cpY, interpolator));
                 keyValues.add(new KeyValue(closestPoint.visibleProperty(), true, interpolator));
+                keyValues.add(new KeyValue(currentSegmentLine.startXProperty(), currentSegmentStartX, interpolator));
+                keyValues.add(new KeyValue(currentSegmentLine.startYProperty(), currentSegmentStartY, interpolator));
+                keyValues.add(new KeyValue(currentSegmentLine.endXProperty(), currentSegmentEndX, interpolator));
+                keyValues.add(new KeyValue(currentSegmentLine.endYProperty(), currentSegmentEndY, interpolator));
+                keyValues.add(new KeyValue(segmentIndexLabel.textProperty(), String.valueOf(frame.getCurrentSegmentIndex())));
             }
             else
             {

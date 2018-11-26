@@ -12,7 +12,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.*;
 import javafx.util.Duration;
 import org.github.ezauton.ezauton.recorder.ISubRecording;
 import org.github.ezauton.ezauton.recorder.JsonUtils;
@@ -288,7 +287,7 @@ public class Controller implements Initializable
         IDataProcessor dataProcessor = currentRecording.createDataProcessor();
         IEnvironment env = getEnvironment();
         dataProcessor.initEnvironment(env);
-        List<Map.Entry<Double, List<KeyValue>>> keyValues = new ArrayList<>(dataProcessor.forKeyFrame(interpolator).entrySet());
+        List<Map.Entry<Double, List<KeyValue>>> keyValues = new ArrayList<>(dataProcessor.generateKeyValues(interpolator).entrySet());
 
         keyValues.sort(Comparator.comparing(Map.Entry::getKey));
 

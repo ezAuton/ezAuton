@@ -55,13 +55,6 @@
             <Slider fx:id="rateSlider" majorTickUnit="0.2" max="1.0" minorTickCount="2" showTickLabels="true"
                     showTickMarks="true" value="1.0" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
 
-
-            <Label text="Lookahead" GridPane.rowIndex="5"/>
-            <Label fx:id="lookahead" text="0 feet" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
-
-            <Label text="Distance to Closest Point" GridPane.rowIndex="6"/>
-            <Label fx:id="dCP" text="0 feet" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
-
             <Button onMouseClicked="#animateSquareKeyframe" GridPane.columnIndex="1" GridPane.rowIndex="7">Start!
             </Button>
 

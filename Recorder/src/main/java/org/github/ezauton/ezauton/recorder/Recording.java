@@ -2,7 +2,6 @@ package org.github.ezauton.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import org.github.ezauton.ezauton.localization.Updateable;
 import org.github.ezauton.ezauton.visualizer.IDataProcessor;
@@ -77,14 +76,14 @@ public class Recording implements ISubRecording, Updateable
             }
 
             @Override
-            public Map<Double, List<KeyValue>> forKeyFrame(Interpolator interpolator)
+            public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator)
             {
                 Map<Double, List<KeyValue>> ret = new HashMap<>();
                 for(IDataProcessor dataProcessor : childDataProcessors)
                 {
                     if(dataProcessor != null)
                     {
-                        Map<Double, List<KeyValue>> keyValMap = dataProcessor.forKeyFrame(interpolator);
+                        Map<Double, List<KeyValue>> keyValMap = dataProcessor.generateKeyValues(interpolator);
                         if(keyValMap != null)
                         {
                             for(Map.Entry<Double, List<KeyValue>> entry : keyValMap.entrySet())
