@@ -31,6 +31,8 @@ eclipse
 # IntelliJ IDEA
 .idea/**/*
 
+*.iml
+
 *.eml
 *.iws
 *.ipr

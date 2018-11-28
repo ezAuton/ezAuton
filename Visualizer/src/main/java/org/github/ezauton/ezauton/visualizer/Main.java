@@ -34,15 +34,12 @@ public class Main extends Application
 
         mainScene = new Scene(mainRoot);
         primaryStage.setScene(mainScene);
-        primaryStage.widthProperty().addListener((widthProp, oldWidth, newWidth) -> {
-            double fieldWidth = newWidth.doubleValue() - IMGWIDTH;
-            primaryStage.setHeight(fieldWidth * H_TO_W_RATIO);
-            System.out.println(fieldWidth * H_TO_W_RATIO);
-        });
-
-//        primaryStage.heightProperty().addListener((heightProp, oldHeight, newHeight) -> {
-//            primaryStage.setWidth(newHeight.doubleValue() * W_TO__H_RATIO + IMGHEIGHT);
+//        primaryStage.widthProperty().addListener((widthProp, oldWidth, newWidth) -> {
+//            double fieldWidth = newWidth.doubleValue() - IMGWIDTH;
+//            primaryStage.setHeight(fieldWidth * H_TO_W_RATIO);
+//            System.out.println(fieldWidth * H_TO_W_RATIO);
 //        });
+
         primaryStage.show();
     }
 }

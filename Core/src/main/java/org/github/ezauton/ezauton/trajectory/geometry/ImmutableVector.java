@@ -1,5 +1,9 @@
 package org.github.ezauton.ezauton.trajectory.geometry;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,10 +12,10 @@ import java.util.List;
 /**
  * An n-dimensional, immutable vector.
  */
-public class ImmutableVector
+public class ImmutableVector implements Serializable
 {
-
-    private final double[] elements;
+    @JsonProperty
+    private double[] elements;
 
     public ImmutableVector(double... x)
     {
@@ -26,6 +30,8 @@ public class ImmutableVector
             elements[i] = list.get(i);
         }
     }
+
+    public ImmutableVector() {}
 
     public static ImmutableVector of(double element, int size)
     {
@@ -56,6 +62,11 @@ public class ImmutableVector
                 vector.assertSize(initSize);
             }
         }
+    }
+
+    public ImmutableVector norm()
+    {
+        return div(mag());
     }
 
     /**
@@ -89,6 +100,7 @@ public class ImmutableVector
         }
     }
 
+    @JsonIgnore
     public int getDimension()
     {
         return elements.length;
@@ -199,6 +211,11 @@ public class ImmutableVector
     public ImmutableVector mul(double scalar)
     {
         return mul(of(scalar, getDimension()));
+    }
+
+    public ImmutableVector div(double scalar)
+    {
+        return mul(1D/scalar);
     }
 
     /**

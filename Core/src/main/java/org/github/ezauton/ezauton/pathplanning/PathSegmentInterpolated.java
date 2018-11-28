@@ -12,11 +12,11 @@ import org.github.ezauton.ezauton.utils.InterpolationMap;
 public class PathSegmentInterpolated extends LinearPathSegment
 {
 
-    private final double speedStart;
-    private final double speedStop;
-    private final double dt;
-    private final double maxAccel;
-    private final double maxDecel;
+    private double speedStart;
+    private double speedStop;
+    private double dt;
+    private double maxAccel;
+    private double maxDecel;
     private InterpolationMap speedInterpolator;
 
     /**
@@ -40,6 +40,8 @@ public class PathSegmentInterpolated extends LinearPathSegment
         extrap();
     }
 
+    private PathSegmentInterpolated() {}
+
     public InterpolationMap getSpeedInterpolator()
     {
         return speedInterpolator;
@@ -55,10 +57,6 @@ public class PathSegmentInterpolated extends LinearPathSegment
 
         // Make extrapolation for speed
         speedInterpolator = new InterpolationMap(getAbsoluteDistanceStart(), speedStart);
-
-
-        double distance = getLength();
-        double time = 0;
 
         // Use kinematics equations built into the MotionState class to build speedInterpolator
         if(speedStart < speedStop) // accel

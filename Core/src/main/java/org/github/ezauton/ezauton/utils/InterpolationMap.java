@@ -1,8 +1,10 @@
 package org.github.ezauton.ezauton.utils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,7 +16,7 @@ import java.util.stream.Collectors;
  *
  * @author ritikmishra
  */
-public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrable //TODO: Remove redundant methods defined in HashMap, also maybe implements HashMap<Double, Double>?
+public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializable //TODO: Remove redundant methods defined in HashMap, also maybe extends HashMap<Double, Double>?
 {
 
     /**
@@ -49,6 +51,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
             putAll(initTable);
         }
     }
+
+    private InterpolationMap() {}
 
     /**
      * @return A sorted table
@@ -121,6 +125,7 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
      * @throws IllegalArgumentException If the key does not extend Double
      */
     @Override
+    @JsonIgnore
     public Double get(Object key) throws IllegalArgumentException
     {
         if(key instanceof Number)
@@ -137,8 +142,12 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
      * @param key   The "x" value that you put in
      * @param value The "f(x)" value that you got out
      */
+    @Override
     public Double put(Double key, Double value)
     {
+        if(table == null) {
+            table = new HashMap<>();
+        }
         return table.put(key, value);
     }
 
@@ -162,6 +171,9 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     @Override
     public void putAll(Map<? extends Double, ? extends Double> m)
     {
+        if(table == null) {
+            table = new HashMap<>();
+        }
         table.putAll(m);
     }
 
@@ -207,6 +219,7 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
      * @param key The Double to evaluate "f(x)" at
      * @return The estimated value of "f(key)"
      */
+    @JsonIgnore
     public Double get(Double key)
     {
         Set<Double> keyset = table.keySet();
@@ -272,7 +285,7 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     @Override
     public double integrate(double a, double b)
     {
-        List<MathUtils.Geometry.Line> lines = new ArrayList<>();
+        List<MathUtils.Geometry.LineR2> lines = new ArrayList<>();
         double integralTotal = 0;
 
         List<Double> significantPoints = new ArrayList<>(keySet());
@@ -281,8 +294,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
 
         if(significantPoints.size() == 1)
         {
-            lines.add(new MathUtils.Geometry.Line(new ImmutableVector((float) a, get(a).floatValue()),
-                                                  new ImmutableVector((float) b, get(b).floatValue())));
+            lines.add(new MathUtils.Geometry.LineR2(new ImmutableVector((float) a, get(a).floatValue()),
+                                                    new ImmutableVector((float) b, get(b).floatValue())));
         }
         else
         {
@@ -300,8 +313,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
                     x2 = Math.min(b, x2);
 
                     // use "entire" line
-                    lines.add(new MathUtils.Geometry.Line(new ImmutableVector((float) x1, get(x1)),
-                                                          new ImmutableVector((float) x2, get(x2))));
+                    lines.add(new MathUtils.Geometry.LineR2(new ImmutableVector((float) x1, get(x1)),
+                                                            new ImmutableVector((float) x2, get(x2))));
                 }
             }
 
@@ -310,7 +323,7 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
         lines.sort(Comparator.comparingDouble(line -> line.x1));
 
 
-        for(MathUtils.Geometry.Line line : lines)
+        for(MathUtils.Geometry.LineR2 line : lines)
         {
             integralTotal += line.integrate();
         }

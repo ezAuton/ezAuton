@@ -19,6 +19,8 @@ public class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
     private final ITranslationalLocationEstimator translationalLocationEstimator;
     private final ILookahead lookahead;
     private final TranslationalLocationDriveable translationalLocationDriveable;
+    private double speedUsed;
+    private double absoluteDistanceUsed;
 
     /**
      * Create a PP Command
@@ -49,15 +51,25 @@ public class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
         Path path = purePursuitMovementStrategy.getPath();
         IPathSegment current = path.getCurrent();
         ImmutableVector closestPoint = current.getClosestPoint(loc);
-        double absoluteDistance = current.getAbsoluteDistance(closestPoint);
-        double speed = current.getSpeed(absoluteDistance);
-        translationalLocationDriveable.driveTowardTransLoc(speed, goalPoint);
+        absoluteDistanceUsed = current.getAbsoluteDistance(closestPoint);
+        speedUsed = current.getSpeed(absoluteDistanceUsed);
+        translationalLocationDriveable.driveTowardTransLoc(speedUsed, goalPoint);
+    }
+
+    public double getSpeedUsed()
+    {
+        return speedUsed;
+    }
+
+    public double getAbsoluteDistanceUsed()
+    {
+        return absoluteDistanceUsed;
     }
 
     @Override
     public boolean isFinished()
     {
-        if(purePursuitMovementStrategy.isFinished() || getStopwatch().read(TimeUnit.SECONDS) > 5)
+        if(purePursuitMovementStrategy.isFinished())
         {
             translationalLocationDriveable.driveSpeed(0);
             return true;

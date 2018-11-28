@@ -1,6 +1,8 @@
 package org.github.ezauton.ezauton.test.purepursuit;
 
-import org.github.ezauton.ezauton.action.*;
+import org.github.ezauton.ezauton.action.ActionGroup;
+import org.github.ezauton.ezauton.action.BackgroundAction;
+import org.github.ezauton.ezauton.action.PPCommand;
 import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.actuators.IVelocityMotor;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
@@ -86,6 +88,7 @@ public class PPSimulatorTest
         simulation
                 .add(group);
 
+
         // run the simulator with a timeout of 20 seconds
         simulation.run(10, TimeUnit.SECONDS);
 
@@ -126,7 +129,7 @@ public class PPSimulatorTest
         double[] aElements = a.getElements();
         for(int i = 0; i < aElements.length; i++)
         {
-            Assert.assertEquals("vector["+i+"]",aElements[i], bElements[i], epsilon);
+            Assert.assertEquals("vector[" + i + "]", aElements[i], bElements[i], epsilon);
         }
     }
 }

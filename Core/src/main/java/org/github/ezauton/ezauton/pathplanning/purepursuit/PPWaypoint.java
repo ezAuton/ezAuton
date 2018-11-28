@@ -2,10 +2,12 @@ package org.github.ezauton.ezauton.pathplanning.purepursuit;
 
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
+import java.io.Serializable;
+
 /**
  * Waypoint used in Pure Pursuit
  */
-public class PPWaypoint
+public class PPWaypoint implements Serializable
 {
 
     private final ImmutableVector location;

@@ -2,10 +2,11 @@ package org.github.ezauton.ezauton.pathplanning;
 
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PPWaypoint;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PP_PathGenerator
+public class PP_PathGenerator implements Serializable
 {
 
     private final PPWaypoint[] ppWaypoints;
@@ -28,15 +29,13 @@ public class PP_PathGenerator
             LinearPathSegment pathSegment;
             if(i == 0)
             {
-                pathSegment = new LinearPathSegment(from.getLocation(), to.getLocation(),
-                                                    i == ppWaypoints.length - 2, true, distance)
-                {
-                    @Override
-                    public double getSpeed(double absoluteDistance)
-                    {
-                        return from.getSpeed() == 0 ? to.getSpeed() : from.getSpeed();
-                    }
-                };
+                double beginningSpeed = from.getSpeed() == 0 ? to.getSpeed() : from.getSpeed();
+
+
+                pathSegment = new PathSegmentInterpolated(
+                        from.getLocation(), to.getLocation(), i == ppWaypoints.length - 2, false, distance,
+                        beginningSpeed, to.getSpeed(), dt,
+                        from.getAcceleration(), from.getDeceleration());
             }
             else
             {
