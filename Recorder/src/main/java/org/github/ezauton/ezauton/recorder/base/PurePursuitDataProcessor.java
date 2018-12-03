@@ -12,25 +12,26 @@ import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 import org.github.ezauton.ezauton.visualizer.IEnvironment;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PurePursuitDataProcessor implements IDataProcessor
 {
 
     private final PurePursuitRecorder ppRec;
-    private double spatialScaleFactorX;
-    private double spatialScaleFactorY;
-    private double originXPx;
-    private double originYPx;
-
     private final Circle goalPoint;
     private final Circle closestPoint;
-
     private final Path waypointPath;
     private final Label lookaheadLabel;
     private final Label dcpLabel;
     private final Label segmentIndexLabel;
     private final Line currentSegmentLine;
+    private double spatialScaleFactorX;
+    private double spatialScaleFactorY;
+    private double originXPx;
+    private double originYPx;
 
     public PurePursuitDataProcessor(PurePursuitRecorder ppRec)
     {

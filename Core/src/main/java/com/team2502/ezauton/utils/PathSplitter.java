@@ -24,6 +24,7 @@ public class PathSplitter
 
     /**
      * Note: used purely for data. There is no interpolation in these values and all data is stored.
+     *
      * @return
      */
     List<IPathSegment> calculateSegments()
@@ -65,7 +66,7 @@ public class PathSplitter
                 {
                     double minSpeed = pathSegment.getSpeed(getAbsoluteDistanceStart());
                     double maxSpeed = pathSegment.getSpeed(getAbsoluteDistanceEnd());
-                    avgSpeed = (minSpeed + maxSpeed)/2D;
+                    avgSpeed = (minSpeed + maxSpeed) / 2D;
                 }
 
                 @Override
@@ -74,7 +75,7 @@ public class PathSplitter
                     return avgSpeed;
                 }
             };
-            lengthOn+=ds;
+            lengthOn += ds;
             from = to;
             pathSegments.add(pathSegment);
         }

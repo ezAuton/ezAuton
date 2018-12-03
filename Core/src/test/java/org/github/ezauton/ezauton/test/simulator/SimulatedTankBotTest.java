@@ -2,8 +2,8 @@ package org.github.ezauton.ezauton.test.simulator;
 
 import org.github.ezauton.ezauton.action.BackgroundAction;
 import org.github.ezauton.ezauton.action.PPCommand;
-import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.action.TimedPeriodicAction;
+import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.actuators.IVelocityMotor;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
@@ -79,7 +79,7 @@ public class SimulatedTankBotTest
         System.out.println(locEstimator.estimateLocation());
 
         String homeDir = System.getProperty("user.home");
-        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton","log.txt");
+        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.txt");
 
         Files.createDirectories(filePath.getParent());
 

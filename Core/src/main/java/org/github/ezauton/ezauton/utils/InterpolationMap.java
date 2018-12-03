@@ -145,7 +145,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     @Override
     public Double put(Double key, Double value)
     {
-        if(table == null) {
+        if(table == null)
+        {
             table = new HashMap<>();
         }
         return table.put(key, value);
@@ -171,7 +172,8 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
     @Override
     public void putAll(Map<? extends Double, ? extends Double> m)
     {
-        if(table == null) {
+        if(table == null)
+        {
             table = new HashMap<>();
         }
         table.putAll(m);

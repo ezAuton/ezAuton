@@ -2,9 +2,9 @@ package org.github.ezauton.ezauton.recorder.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.github.ezauton.ezauton.recorder.SequentialDataRecorder;
 import org.github.ezauton.ezauton.pathplanning.Path;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import org.github.ezauton.ezauton.recorder.SequentialDataRecorder;
 import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 
@@ -13,15 +13,12 @@ import java.util.concurrent.TimeUnit;
 public class PurePursuitRecorder extends SequentialDataRecorder<PurePursuitFrame>
 {
 
+    private static int instanceCounter = 0;
     // contains path data, lookahead + segment data
     @JsonProperty
     private Path path;
-
     @JsonIgnore
     private PurePursuitMovementStrategy strat;
-
-    private static int instanceCounter = 0;
-
     private int i = 0;
 
     public PurePursuitRecorder(String name, IClock clock, Path path, PurePursuitMovementStrategy strat)

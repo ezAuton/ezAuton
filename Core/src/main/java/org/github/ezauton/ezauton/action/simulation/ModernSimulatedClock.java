@@ -22,69 +22,6 @@ public class ModernSimulatedClock implements IClock, ISimulation
 
     private InnerThread innerThread;
 
-    public class InnerThread extends Thread
-    {
-        public InnerThread()
-        {
-            super("Simulation Thread");
-        }
-
-        @Override
-        public synchronized void run()
-        {
-
-            for(IAction action : actions)
-            {
-                action.onFinish(() -> {
-                    actionBreak.set(true);
-                    notifyBreak();
-                });
-
-                ThreadBuilder threadBuilder = new ThreadBuilder(action, ModernSimulatedClock.this);
-                threadBuilder.start();
-
-                waitForBreak();
-            }
-
-            while(!latchMap.isEmpty())
-            {
-                Map.Entry<Long, Queue<CountDownLatch>> entry = latchMap.pollFirstEntry();
-
-                currentTime = entry.getKey();
-
-                Queue<CountDownLatch> countDownLatches = entry.getValue();
-
-                for(CountDownLatch countDownLatch : countDownLatches)
-                {
-                    countDownLatch.countDown();
-                    waitForBreak();
-                }
-            }
-        }
-
-        private void waitForBreak()
-        {
-            do
-            {
-                try
-                {
-                    wait();
-                }
-                catch(InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            while(!actionBreak.get());
-        }
-
-        public synchronized void notifyBreak()
-        {
-            actionBreak.set(true);
-            notifyAll();
-        }
-    }
-
     public ModernSimulatedClock()
     {
         innerThread = new InnerThread();
@@ -158,5 +95,68 @@ public class ModernSimulatedClock implements IClock, ISimulation
     public IClock getClock()
     {
         return this;
+    }
+
+    public class InnerThread extends Thread
+    {
+        public InnerThread()
+        {
+            super("Simulation Thread");
+        }
+
+        @Override
+        public synchronized void run()
+        {
+
+            for(IAction action : actions)
+            {
+                action.onFinish(() -> {
+                    actionBreak.set(true);
+                    notifyBreak();
+                });
+
+                ThreadBuilder threadBuilder = new ThreadBuilder(action, ModernSimulatedClock.this);
+                threadBuilder.start();
+
+                waitForBreak();
+            }
+
+            while(!latchMap.isEmpty())
+            {
+                Map.Entry<Long, Queue<CountDownLatch>> entry = latchMap.pollFirstEntry();
+
+                currentTime = entry.getKey();
+
+                Queue<CountDownLatch> countDownLatches = entry.getValue();
+
+                for(CountDownLatch countDownLatch : countDownLatches)
+                {
+                    countDownLatch.countDown();
+                    waitForBreak();
+                }
+            }
+        }
+
+        private void waitForBreak()
+        {
+            do
+            {
+                try
+                {
+                    wait();
+                }
+                catch(InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            while(!actionBreak.get());
+        }
+
+        public synchronized void notifyBreak()
+        {
+            actionBreak.set(true);
+            notifyAll();
+        }
     }
 }

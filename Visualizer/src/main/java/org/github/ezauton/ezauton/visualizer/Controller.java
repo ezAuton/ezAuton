@@ -215,8 +215,6 @@ public class Controller implements Initializable
             backdrop.setOnMouseClicked((j) -> {});
         }));
 
-//        List<File> listOfCSVs = getAllFilesInDirectory(configManager.getString("csvPath"));
-
         List<File> listOfCSVs = getAllFilesInDirectory(Paths.get(System.getProperty("user.home"), ".ezauton").toString());
         fileChooser.getItems().addAll(listOfCSVs);
         fileChooser.valueProperty().addListener((selectedProp, oldSelected, newSelected) -> {

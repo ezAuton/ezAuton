@@ -29,6 +29,7 @@ public interface IEnvironment
 
     /**
      * The scale-factor converts from feet to pixels. Use it to appropriately size your rectangles.
+     *
      * @return The scale-factor on the y-axis
      */
     double getScaleFactorY();

@@ -35,10 +35,11 @@ public class ConfigManager
         try
         {
             Files.lines(path)
-                 .filter(line -> line.trim().length() > 0 && line.trim().charAt(0) != '#')
-                 .map(line -> line.split("="))
-                 .filter(strings -> strings.length == 2)
-                 .forEach(strings -> values.put(strings[0].trim(), strings[1].trim()));
+                 .map(String::trim) // trim whitespace
+                 .filter(line -> line.length() > 0 && line.charAt(0) != '#') // Don't look at comments
+                 .map(line -> line.split("=")) // split up config key and value
+                 .filter(strings -> strings.length == 2) // if the resulting array (key,value), it is WRONG
+                 .forEach(strings -> values.put(strings[0], strings[1]));
         }
         catch(IOException e)
         {

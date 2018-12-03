@@ -62,7 +62,7 @@ public class Stopwatch
 
     public long read(TimeUnit timeUnit)
     {
-        return timeUnit.convert(read(),TimeUnit.MILLISECONDS);
+        return timeUnit.convert(read(), TimeUnit.MILLISECONDS);
     }
 
     /**

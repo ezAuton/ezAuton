@@ -51,9 +51,9 @@ public class JsonUtils
     /**
      * Turn JSON back into an object
      *
-     * @param clazz A Class<T> representing the type of object the JSON should become (e.g Banana.class)
+     * @param clazz   A Class<T> representing the type of object the JSON should become (e.g Banana.class)
      * @param jsonStr The JSON data
-     * @param <T> The type of object this data should become (e.g Banana)
+     * @param <T>     The type of object this data should become (e.g Banana)
      * @return An object of type T containing all the data that the JSON String did
      */
     public static <T> T toObject(Class<T> clazz, String jsonStr)

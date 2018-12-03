@@ -13,31 +13,30 @@ import java.util.List;
 
 /**
  * Describes a recorder for data expressed through SequentialDataFrames. Useful for representing motion/robot state over time.
+ *
  * @param <T> The type of SequentialDataFrame this DataSequence contains.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class SequentialDataRecorder<T extends SequentialDataFrame> implements ISubRecording, Updateable, Iterable<T>
 {
-    @JsonProperty("dataSequence")
-    protected List<T> dataFrames;
-
-    @JsonProperty
-    protected String name;
-
-    @JsonIgnore
-    protected Stopwatch stopwatch;
-
     @JsonIgnore
     private static int sequenceCounter = 0;
-
+    @JsonProperty("dataSequence")
+    protected List<T> dataFrames;
+    @JsonProperty
+    protected String name;
+    @JsonIgnore
+    protected Stopwatch stopwatch;
     @JsonIgnore
     private int i = 0;
 
-    public SequentialDataRecorder() {
+    public SequentialDataRecorder()
+    {
         this("DataSequence_" + sequenceCounter++);
     }
 
-    public SequentialDataRecorder(IClock clock) {
+    public SequentialDataRecorder(IClock clock)
+    {
         this("DataSequence_" + sequenceCounter++, clock);
     }
 
@@ -85,7 +84,8 @@ public abstract class SequentialDataRecorder<T extends SequentialDataFrame> impl
     }
 
     @Override
-    public boolean update() {
+    public boolean update()
+    {
         if(i++ == 0)
         {
             stopwatch.init();

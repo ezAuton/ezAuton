@@ -33,26 +33,9 @@ public abstract class PeriodicAction extends BaseAction
         this.updateables = new ArrayList<>(Arrays.asList(updateables));
     }
 
-    public PeriodicAction addUpdateable(Updateable updateable)
-    {
-        // Added because https://stackoverflow.com/a/9584671/4889030 is ugly
-        updateables.add(updateable);
-        return this;
-    }
-
-    /**
-     * Added because https://stackoverflow.com/a/9584671/4889030 is ugly
-     * @param updateableFunc
-     * @return
-     */
-    public PeriodicAction addUpdateable(Function<PeriodicAction, Updateable> updateableFunc)
-    {
-        updateables.add(updateableFunc.apply(this));
-        return this;
-    }
-
     /**
      * Creates a PeriodicAction with a 20 ms period.
+     *
      * @param updateables
      */
     public PeriodicAction(Updateable... updateables)
@@ -63,6 +46,25 @@ public abstract class PeriodicAction extends BaseAction
     public PeriodicAction()
     {
         this(20, TimeUnit.MILLISECONDS);
+    }
+
+    public PeriodicAction addUpdateable(Updateable updateable)
+    {
+        // Added because https://stackoverflow.com/a/9584671/4889030 is ugly
+        updateables.add(updateable);
+        return this;
+    }
+
+    /**
+     * Added because https://stackoverflow.com/a/9584671/4889030 is ugly
+     *
+     * @param updateableFunc
+     * @return
+     */
+    public PeriodicAction addUpdateable(Function<PeriodicAction, Updateable> updateableFunc)
+    {
+        updateables.add(updateableFunc.apply(this));
+        return this;
     }
 
     protected void init() {}
@@ -123,9 +125,9 @@ public abstract class PeriodicAction extends BaseAction
                     // TODO: probably should be an exception or a better way of displaying than this. (needs to be catchable though)
                     System.out.printf("The action is executing slower than the set period! milliseconds behind: %d\n", -wait);
                 }
-                else if (wait > 0)
+                else if(wait > 0)
                 {
-                    clock.sleep(wait,TimeUnit.MILLISECONDS);
+                    clock.sleep(wait, TimeUnit.MILLISECONDS);
                 }
             }
             catch(InterruptedException e)

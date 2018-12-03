@@ -28,11 +28,6 @@ public class TimeWarpedClock implements IClock
         return startTime;
     }
 
-    public void setStartTimeNow()
-    {
-        startTime = System.currentTimeMillis();
-    }
-
     /**
      * Sets the start time in milliseconds
      *
@@ -41,6 +36,11 @@ public class TimeWarpedClock implements IClock
     public void setStartTime(long startTime)
     {
         this.startTime = startTime;
+    }
+
+    public void setStartTimeNow()
+    {
+        startTime = System.currentTimeMillis();
     }
 
     @Override

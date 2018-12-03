@@ -11,13 +11,11 @@ import java.util.*;
 
 public class Recording implements ISubRecording, Updateable
 {
+    private static int recordingCounter = 0;
     @JsonProperty("recordingData")
     private Map<String, ISubRecording> recordingMap = new HashMap<>();
-
     @JsonProperty("name")
     private String name;
-
-    private static int recordingCounter = 0;
 
     public Recording()
     {

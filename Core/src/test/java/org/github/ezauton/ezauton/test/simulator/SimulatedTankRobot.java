@@ -26,11 +26,9 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 
     private final BaseSimulatedMotor baseLeftSimulatedMotor;
     private final BaseSimulatedMotor baseRightSimulatedMotor;
-
-    private UpdateableGroup toUpdate = new UpdateableGroup();
-
     private final Stopwatch stopwatch;
     public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
+    private UpdateableGroup toUpdate = new UpdateableGroup();
 
     /**
      * @param lateralWheelDistance The lateral wheel distance between the wheels of the robot
@@ -52,7 +50,6 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
         this.lateralWheelDistance = lateralWheelDistance;
 
     }
-
 
 
     public IVelocityMotor getLeftMotor()

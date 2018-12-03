@@ -3,11 +3,10 @@ package org.github.ezauton.ezauton.action.simulation;
 
 import org.github.ezauton.ezauton.action.IAction;
 import org.github.ezauton.ezauton.action.ThreadBuilder;
-import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.utils.TimeWarpedClock;
 
-import java.util.*;
-import java.util.concurrent.Future;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MultiThreadSimulation implements ISimulation

@@ -1,7 +1,5 @@
 package org.github.ezauton.ezauton.recorder;
 
-import org.github.ezauton.ezauton.recorder.base.PurePursuitRecorder;
-import org.github.ezauton.ezauton.recorder.base.RobotStateRecorder;
 import org.github.ezauton.ezauton.action.ActionGroup;
 import org.github.ezauton.ezauton.action.BackgroundAction;
 import org.github.ezauton.ezauton.action.PPCommand;
@@ -14,8 +12,9 @@ import org.github.ezauton.ezauton.pathplanning.purepursuit.ILookahead;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.LookaheadBounds;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PPWaypoint;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import org.github.ezauton.ezauton.recorder.base.PurePursuitRecorder;
+import org.github.ezauton.ezauton.recorder.base.RobotStateRecorder;
 import org.github.ezauton.ezauton.robot.implemented.TankRobotTransLocDriveable;
-import org.github.ezauton.ezauton.utils.RealClock;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -107,7 +106,6 @@ public class RecorderTest
 
             JsonUtils.toObject(Recording.class, json);
         }
-
 
 
     }

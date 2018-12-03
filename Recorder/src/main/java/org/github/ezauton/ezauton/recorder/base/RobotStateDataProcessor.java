@@ -3,12 +3,10 @@ package org.github.ezauton.ezauton.recorder.base;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
-import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 import org.github.ezauton.ezauton.visualizer.IEnvironment;
 

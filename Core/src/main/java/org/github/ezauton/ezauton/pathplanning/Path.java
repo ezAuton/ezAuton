@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * A path is the conglomerate of several {@link IPathSegment}s, which are in turn made from two {@link ImmutableVector}s.

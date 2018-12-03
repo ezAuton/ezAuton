@@ -8,11 +8,12 @@ import java.util.concurrent.TimeUnit;
 public interface ISimulation
 {
     /**
-     *
      * @param action
      * @return self
      */
     ISimulation add(IAction action);
+
     void run(long timeout, TimeUnit timeUnit);
+
     IClock getClock();
 }
