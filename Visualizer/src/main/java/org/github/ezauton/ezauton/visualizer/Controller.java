@@ -19,6 +19,7 @@ import org.github.ezauton.ezauton.recorder.Recording;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.github.ezauton.ezauton.utils.MathUtils;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -125,7 +126,31 @@ public class Controller implements Initializable
     {
         // Read the config file in the resources folder and initialize values appropriately
         // FIXME Hardcoded path >:(
-        configManager = new ConfigManager("/home/ritikm/Robotics/ezAuton/Visualizer/src/main/resources/org/github/ezauton/ezauton/visualizer/config");
+        String homeDir = System.getProperty("user.home");
+        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton","config","visualizer.config");
+
+        try
+        {
+            Files.createDirectories(filePath.getParent());
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            if(!Files.exists(filePath)) {
+                Files.createFile(filePath);
+            }
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+
+
+        configManager = new ConfigManager(filePath);
 //        configManager = new ConfigManager(getClass().getResource("config").toExternalForm());
         configManager.load();
 
