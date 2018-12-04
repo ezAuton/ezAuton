@@ -46,7 +46,7 @@ public class RecorderTest
         MultiThreadSimulation simulation = new MultiThreadSimulation(1);
 
         // Might be a problem
-        SimulatedTankRobot robot = new SimulatedTankRobot(1, simulation.getClock(), 14, 0.3, 16D);
+        SimulatedTankRobot robot = new SimulatedTankRobot(1, simulation.getClock(), 40, 0.3, 30D);
 
         IVelocityMotor leftMotor = robot.getLeftMotor();
         IVelocityMotor rightMotor = robot.getRightMotor();

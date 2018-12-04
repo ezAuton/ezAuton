@@ -19,7 +19,6 @@ import org.github.ezauton.ezauton.recorder.Recording;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.github.ezauton.ezauton.utils.MathUtils;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
