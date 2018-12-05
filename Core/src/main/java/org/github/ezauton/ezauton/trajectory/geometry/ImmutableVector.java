@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.DoubleStream;
 
 /**
  * An n-dimensional, immutable vector.
@@ -187,6 +188,17 @@ public class ImmutableVector implements Serializable
     public ImmutableVector div(ImmutableVector other)
     {
         return applyOperator(other, (first, second) -> first / second);
+    }
+
+    public DoubleStream stream()
+    {
+        return Arrays.stream(elements);
+    }
+
+    @JsonIgnore
+    public boolean isFinite()
+    {
+        return stream().allMatch(Double::isFinite);
     }
 
     /**

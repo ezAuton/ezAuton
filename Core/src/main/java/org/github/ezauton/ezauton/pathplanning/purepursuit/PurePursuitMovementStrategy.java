@@ -51,11 +51,14 @@ public class PurePursuitMovementStrategy
      */
     private ImmutableVector calculateAbsoluteGoalPoint(double distanceCurrentSegmentLeft, double lookAheadDistance)
     {
+        if(!Double.isFinite(distanceCurrentSegmentLeft)) throw new IllegalArgumentException("distanceCurrentSegmentLeft ("+distanceCurrentSegmentLeft+ ") must be finite");
         // The intersections with the path we are following and the circle around the robot of
         // radius lookAheadDistance. These intersections will determine the "goal point" we
         // will generate an arc to go to.
 
-        return path.getGoalPoint(distanceCurrentSegmentLeft, lookAheadDistance);
+        ImmutableVector goalPoint = path.getGoalPoint(distanceCurrentSegmentLeft, lookAheadDistance);
+        if(!goalPoint.isFinite()) throw  new IllegalStateException("Logic error. goal point "+goalPoint+" should be finite.");
+        return goalPoint;
     }
 
 
@@ -68,14 +71,23 @@ public class PurePursuitMovementStrategy
     {
         latestLookahead = lookahead;
         IPathSegment current = path.getCurrent();
-        latestClosestPoint = path.getClosestPoint(loc);
+
+        ImmutableVector currentClosestPoint = current.getClosestPoint(loc);
+        latestClosestPoint = path.getClosestPoint(loc); // why do we not get closest point on current line segment???
+
+        if(!latestClosestPoint.equals(currentClosestPoint))
+        {
+            path.bool = true;
+            ImmutableVector locAgain = path.getClosestPoint(loc);
+            throw new IllegalStateException("not equal closest points");
+        }
         double currentDistance = current.getAbsoluteDistance(latestClosestPoint);
         double distanceLeftSegment = current.getAbsoluteDistanceEnd() - currentDistance;
         latestDCP = latestClosestPoint.dist(loc);
 
         if(distanceLeftSegment < 0)
         {
-            if(path.progressIfNeeded(distanceLeftSegment, latestDCP, loc).size() != 0)
+            if(path.progressIfNeeded(distanceLeftSegment, latestDCP, loc).size() != 0) // progresses recursively until at right point
             {
                 return update(loc, lookahead);
             }

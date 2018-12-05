@@ -82,10 +82,13 @@ public abstract class LinearPathSegment implements IPathSegment
         ImmutableVector dif = linePos.sub(from);
         for(int i = 0; i < dif.getElements().length; i++)
         {
-            double element = dif.get(i);
-            if(element != 0)
+            double difElement = dif.get(i);
+            if(difElement != 0)
             {
-                double proportion = element / dPos.get(i);
+                double dPosElement = dPos.get(i);
+//                assert dPosElement != 0;
+//                if(dPos.get(i) == 0) throw new IllegalArgumentException("Point must be on the line!");
+                double proportion = difElement / dPosElement;
                 return getAbsoluteDistanceStart() + proportion * length;
             }
         }

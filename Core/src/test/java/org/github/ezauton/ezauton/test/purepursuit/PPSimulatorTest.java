@@ -22,12 +22,29 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class PPSimulatorTest
 {
 
     private static final double LATERAL_WHEEL_DIST = 4;
+
+    @Test
+    public void testLeftToRightScale()
+    {
+        PPWaypoint[] build = new PPWaypoint.Builder()
+                .add(0, 0, 16, 13, -12)
+                .add(0, 4, 16, 13, -12)
+                .add(-0.5, 8.589, 16, 13, -12)
+                .add(-0.5, 12.405, 16, 13, -12)
+                .add(-0.5, 17, 16, 13, -12)
+                .add(1.5, 19.4, 0, 13, -12)
+                .build();
+
+//        System.out.println(Arrays.toString(build));
+        test(build);
+    }
 
     @Test
     public void testStraight()
@@ -50,6 +67,10 @@ public class PPSimulatorTest
         test(waypoint1, waypoint2, waypoint3);
     }
 
+    /**
+     * Test the path with a robot max acceleration 14ft/s^2, min velocity 0.3ft/s, maxVelocity 16ft/s
+     * @param waypoints
+     */
     private void test(PPWaypoint... waypoints)
     {
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);

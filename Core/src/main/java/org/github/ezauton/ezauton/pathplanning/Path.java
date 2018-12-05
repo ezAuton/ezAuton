@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class Path
 {
+
+    public boolean bool = false;
     private List<IPathSegment> pathSegments;
 
     private int segmentOnI = -1;
@@ -79,10 +81,14 @@ public class Path
 
     public ImmutableVector getClosestPoint(ImmutableVector origin) // TODO: it might be better to not look purely at the current pathsegment and instead previous path segments
     {
-        if(this.robotLocationClosestPoint != null && MathUtils.epsilonEquals(this.robotLocationClosestPoint, origin))
-        {
-            return closestPoint;
-        }
+
+        // Commented out because if the PATH changes, this will not give the right result, even if the LOCATION is the same.
+        // TODO: figure out a way to put some type of cache back in
+//        if(this.robotLocationClosestPoint != null && MathUtils.epsilonEquals(this.robotLocationClosestPoint, origin))
+//        {
+            // ISSUE what if the path changed during this time!!!!!!!!! :o
+//            return closestPoint;
+//        }
 
         this.robotLocationClosestPoint = origin;
         IPathSegment current = getCurrent();

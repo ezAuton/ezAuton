@@ -3,12 +3,29 @@ package org.github.ezauton.ezauton.pathplanning.purepursuit;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Waypoint used in Pure Pursuit
  */
 public class PPWaypoint implements Serializable
 {
+
+    public static class Builder {
+        private List<PPWaypoint> waypointList = new ArrayList<>();
+
+        public Builder add(double x, double y, double speed, double acceleration, double deceleration)
+        {
+            PPWaypoint waypoint = PPWaypoint.simple2D(x, y, speed, acceleration, deceleration);
+            waypointList.add(waypoint);
+            return this;
+        }
+
+        public PPWaypoint[] build(){
+            return waypointList.toArray(new PPWaypoint[0]);
+        }
+    }
 
     private final ImmutableVector location;
     private final double speed;
@@ -44,6 +61,7 @@ public class PPWaypoint implements Serializable
      */
     public static PPWaypoint simple2D(double x, double y, double speed, double acceleration, double deceleration)
     {
+        if(deceleration > 0) throw new IllegalArgumentException("Deceleration cannot be positive!");
         return new PPWaypoint(new ImmutableVector(x, y), speed, acceleration, deceleration);
     }
 

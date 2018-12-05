@@ -53,6 +53,9 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
     @Override
     public boolean driveTowardTransLoc(double speed, ImmutableVector loc)
     {
+        if(loc.getDimension() != 2 ) throw new IllegalArgumentException("target location must be in R2");
+        if(!Double.isFinite(loc.get(0)) || !Double.isFinite(loc.get(1))) throw new IllegalArgumentException("target location "+loc+" must contain real, finite numbers");
+
         ImmutableVector wheelVelocities = getWheelVelocities(speed, loc);
 
         double left = wheelVelocities.get(0);
@@ -163,7 +166,8 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
 
             if(bestVector == null)
             {
-                throw new NullPointerException("bestVector is null! (wtf)"); //TODO: More informative error message
+                String s = "bestVector is null! input: {speed: " + speed + ", loc: " + loc + "}";
+                throw new NullPointerException(s); //TODO: More informative error message
             }
 
             if(bestVector.get(0) < 0 && bestVector.get(1) < 0)

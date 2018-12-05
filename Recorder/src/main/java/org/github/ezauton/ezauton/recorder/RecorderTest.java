@@ -15,6 +15,7 @@ import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementSt
 import org.github.ezauton.ezauton.recorder.base.PurePursuitRecorder;
 import org.github.ezauton.ezauton.recorder.base.RobotStateRecorder;
 import org.github.ezauton.ezauton.robot.implemented.TankRobotTransLocDriveable;
+import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -27,15 +28,19 @@ public class RecorderTest
     public static void main(String[] args) throws IOException
     {
 
-        PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 20, -40);
-        PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 8.589, 25, 20, -40);
-        PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 17, 25, 20, -40);
-        PPWaypoint waypoint4 = PPWaypoint.simple2D(2.454, 17.5, 25, 20, -40);
-        PPWaypoint waypoint5 = PPWaypoint.simple2D(15, 17.5, 3, 20, -40);
-        PPWaypoint waypoint6 = PPWaypoint.simple2D(21 - 0.16666667, 17.5, 3, 20, -40);
-        PPWaypoint waypoint7 = PPWaypoint.simple2D(17 - 0.16666667, 22, 0, 20, -40);
+        ImmutableVector immutableVector = new ImmutableVector(0,0);
+        immutableVector.isFinite();
 
-        PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoint1, waypoint2, waypoint3, waypoint4, waypoint5, waypoint6, waypoint7);
+        PPWaypoint[] build = new PPWaypoint.Builder()
+                .add(0, 0, 16, 13, -12)
+                .add(0, 4, 16, 13, -12)
+                .add(-0.5, 8.589, 16, 13, -12)
+                .add(-0.5, 12.405, 16, 13, -12)
+                .add(-0.5, 17, 16, 13, -12)
+                .add(1.5, 19.4, 0, 13, -12)
+                .build();
+
+        PP_PathGenerator pathGenerator = new PP_PathGenerator(build);
 
         Path path = pathGenerator.generate(0.05);
 
