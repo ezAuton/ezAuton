@@ -5,7 +5,7 @@ import org.github.ezauton.ezauton.localization.IRotationalLocationEstimator;
 import org.github.ezauton.ezauton.localization.ITranslationalLocationEstimator;
 import org.github.ezauton.ezauton.recorder.SequentialDataRecorder;
 import org.github.ezauton.ezauton.recorder.base.frame.RobotStateFrame;
-import org.github.ezauton.ezauton.visualizer.processor.RobotStateDataProcessor;
+//import org.github.ezauton.ezauton.visualizer.processor.RobotStateDataProcessor;
 import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 
@@ -51,9 +51,9 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotStateFrame>
         return true;
     }
 
-    @Override
-    public IDataProcessor createDataProcessor()
-    {
-        return new RobotStateDataProcessor(this);
-    }
+//    @Override
+//    public IDataProcessor createDataProcessor()
+//    {
+//        return new RobotStateDataProcessor(this);
+//    }
 }

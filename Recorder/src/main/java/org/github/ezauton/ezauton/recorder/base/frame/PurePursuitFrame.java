@@ -32,6 +32,8 @@ public class PurePursuitFrame extends SequentialDataFrame
         this.currentSegmentIndex = currentSegmentIndex;
     }
 
+    private PurePursuitFrame() {}
+
     public double getLookahead()
     {
         return lookahead;

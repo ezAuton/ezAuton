@@ -18,6 +18,7 @@ import org.github.ezauton.ezauton.recorder.JsonUtils;
 import org.github.ezauton.ezauton.recorder.Recording;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.github.ezauton.ezauton.utils.MathUtils;
+import org.github.ezauton.ezauton.visualizer.processor.factory.FactoryMap;
 
 import java.io.File;
 import java.io.IOException;
@@ -306,7 +307,8 @@ public class Controller implements Initializable
         }
 
         // Initialize data processors and whatnot
-        IDataProcessor dataProcessor = currentRecording.createDataProcessor();
+        FactoryMap factory = Main.getInstance().getFactory();
+        IDataProcessor dataProcessor = factory.getProcessor(currentRecording).orElseThrow(IllegalStateException::new);
         IEnvironment env = getEnvironment();
         dataProcessor.initEnvironment(env);
         List<Map.Entry<Double, List<KeyValue>>> keyValues = new ArrayList<>(dataProcessor.generateKeyValues(interpolator).entrySet());
