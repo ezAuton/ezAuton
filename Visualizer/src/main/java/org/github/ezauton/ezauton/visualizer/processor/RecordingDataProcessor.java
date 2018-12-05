@@ -3,8 +3,8 @@ package org.github.ezauton.ezauton.visualizer.processor;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
 import org.github.ezauton.ezauton.recorder.Recording;
-import org.github.ezauton.ezauton.visualizer.IDataProcessor;
-import org.github.ezauton.ezauton.visualizer.IEnvironment;
+import org.github.ezauton.ezauton.visualizer.util.IDataProcessor;
+import org.github.ezauton.ezauton.visualizer.util.IEnvironment;
 import org.github.ezauton.ezauton.visualizer.processor.factory.IDataProcessorFactory;
 
 import java.util.*;

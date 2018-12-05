@@ -9,9 +9,11 @@ import javafx.stage.Stage;
 import org.github.ezauton.ezauton.recorder.Recording;
 import org.github.ezauton.ezauton.recorder.base.PurePursuitRecorder;
 import org.github.ezauton.ezauton.recorder.base.RobotStateRecorder;
+import org.github.ezauton.ezauton.recorder.base.TankDriveableRecorder;
 import org.github.ezauton.ezauton.visualizer.processor.PurePursuitDataProcessor;
 import org.github.ezauton.ezauton.visualizer.processor.RecordingDataProcessor;
 import org.github.ezauton.ezauton.visualizer.processor.RobotStateDataProcessor;
+import org.github.ezauton.ezauton.visualizer.processor.TankDriveableDataProcessor;
 import org.github.ezauton.ezauton.visualizer.processor.factory.FactoryMap;
 import org.github.ezauton.ezauton.visualizer.processor.factory.IDataProcessorFactory;
 
@@ -44,6 +46,7 @@ public class Main extends Application
         instance = this;
         factory.register(PurePursuitRecorder.class, PurePursuitDataProcessor::new);
         factory.register(RobotStateRecorder.class, RobotStateDataProcessor::new);
+        factory.register(TankDriveableRecorder.class, TankDriveableDataProcessor::new);
         factory.register(Recording.class, t -> new RecordingDataProcessor(t, factory));
 
 

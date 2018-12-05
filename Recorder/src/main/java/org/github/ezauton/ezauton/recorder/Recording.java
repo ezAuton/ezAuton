@@ -1,13 +1,11 @@
 package org.github.ezauton.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyValue;
 import org.github.ezauton.ezauton.localization.Updateable;
-import org.github.ezauton.ezauton.visualizer.IDataProcessor;
-import org.github.ezauton.ezauton.visualizer.IEnvironment;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class Recording implements ISubRecording, Updateable
 {

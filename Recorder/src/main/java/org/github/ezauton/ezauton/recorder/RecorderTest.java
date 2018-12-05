@@ -14,6 +14,7 @@ import org.github.ezauton.ezauton.pathplanning.purepursuit.PPWaypoint;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import org.github.ezauton.ezauton.recorder.base.PurePursuitRecorder;
 import org.github.ezauton.ezauton.recorder.base.RobotStateRecorder;
+import org.github.ezauton.ezauton.recorder.base.TankDriveableRecorder;
 import org.github.ezauton.ezauton.robot.implemented.TankRobotTransLocDriveable;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
@@ -69,13 +70,12 @@ public class RecorderTest
 
         RobotStateRecorder posRec = new RobotStateRecorder("robotstate", simulation.getClock(), locEstimator, locEstimator, robot.getLateralWheelDistance(), 1.5);
         PurePursuitRecorder ppRec = new PurePursuitRecorder("pp", simulation.getClock(), path, ppMoveStrat);
-        PurePursuitRecorder tankRobotT = new PurePursuitRecorder("pp", simulation.getClock(), path, ppMoveStrat);
+        TankDriveableRecorder tankRobot = new TankDriveableRecorder("td", simulation.getClock(), tankRobotTransLocDriveable);
 
         recording.addSubRecording(posRec);
         recording.addSubRecording(ppRec);
+        recording.addSubRecording(tankRobot);
 
-//        BackgroundAction ppRecAct = new BackgroundAction(20, TimeUnit.MILLISECONDS, ppRec);
-//        BackgroundAction posRecAct = new BackgroundAction(20, TimeUnit.MILLISECONDS, posRec);
         BackgroundAction recAction = new BackgroundAction(10, TimeUnit.MILLISECONDS, recording);
         BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
 

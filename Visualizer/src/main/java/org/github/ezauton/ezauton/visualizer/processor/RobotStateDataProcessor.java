@@ -9,13 +9,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import org.github.ezauton.ezauton.recorder.base.frame.RobotStateFrame;
 import org.github.ezauton.ezauton.recorder.base.RobotStateRecorder;
-import org.github.ezauton.ezauton.visualizer.IDataProcessor;
-import org.github.ezauton.ezauton.visualizer.IEnvironment;
+import org.github.ezauton.ezauton.visualizer.util.IDataProcessor;
+import org.github.ezauton.ezauton.visualizer.util.IEnvironment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RobotStateDataProcessor implements IDataProcessor
 {

@@ -1,7 +1,7 @@
 package org.github.ezauton.ezauton.visualizer.processor.factory;
 
 import org.github.ezauton.ezauton.recorder.ISubRecording;
-import org.github.ezauton.ezauton.visualizer.IDataProcessor;
+import org.github.ezauton.ezauton.visualizer.util.IDataProcessor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +18,7 @@ public class FactoryMap implements IDataProcessorFactory
     public Optional<IDataProcessor> getProcessor(ISubRecording subRecording)
     {
         Function<ISubRecording, IDataProcessor> func = classMap.get(subRecording.getClass());
+        if(func == null) return Optional.empty();
         return Optional.ofNullable(func.apply(subRecording));
     }
 

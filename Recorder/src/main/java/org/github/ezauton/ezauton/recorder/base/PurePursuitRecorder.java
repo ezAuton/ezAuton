@@ -6,9 +6,7 @@ import org.github.ezauton.ezauton.pathplanning.Path;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import org.github.ezauton.ezauton.recorder.SequentialDataRecorder;
 import org.github.ezauton.ezauton.recorder.base.frame.PurePursuitFrame;
-//import org.github.ezauton.ezauton.visualizer.processor.PurePursuitDataProcessor;
 import org.github.ezauton.ezauton.utils.IClock;
-import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +35,7 @@ public class PurePursuitRecorder extends SequentialDataRecorder<PurePursuitFrame
 
     public PurePursuitRecorder()
     {
-        this.name = "PurePursuitRecorder_" + instanceCounter++;
+        super("PurePursuitRecorder_" + instanceCounter++);
     }
 
     public Path getPath()
@@ -61,10 +59,4 @@ public class PurePursuitRecorder extends SequentialDataRecorder<PurePursuitFrame
                                             0));
         return true;
     }
-
-//    @Override
-//    public IDataProcessor createDataProcessor()
-//    {
-//        return new PurePursuitDataProcessor(this);
-//    }
 }

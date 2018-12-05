@@ -11,8 +11,8 @@ import org.github.ezauton.ezauton.pathplanning.IPathSegment;
 import org.github.ezauton.ezauton.recorder.base.frame.PurePursuitFrame;
 import org.github.ezauton.ezauton.recorder.base.PurePursuitRecorder;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
-import org.github.ezauton.ezauton.visualizer.IDataProcessor;
-import org.github.ezauton.ezauton.visualizer.IEnvironment;
+import org.github.ezauton.ezauton.visualizer.util.IDataProcessor;
+import org.github.ezauton.ezauton.visualizer.util.IEnvironment;
 
 import java.util.ArrayList;
 import java.util.HashMap;

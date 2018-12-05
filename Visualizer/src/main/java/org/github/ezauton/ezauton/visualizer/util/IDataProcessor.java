@@ -1,4 +1,4 @@
-package org.github.ezauton.ezauton.visualizer;
+package org.github.ezauton.ezauton.visualizer.util;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;

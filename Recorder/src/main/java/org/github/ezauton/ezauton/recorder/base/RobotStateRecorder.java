@@ -5,9 +5,7 @@ import org.github.ezauton.ezauton.localization.IRotationalLocationEstimator;
 import org.github.ezauton.ezauton.localization.ITranslationalLocationEstimator;
 import org.github.ezauton.ezauton.recorder.SequentialDataRecorder;
 import org.github.ezauton.ezauton.recorder.base.frame.RobotStateFrame;
-//import org.github.ezauton.ezauton.visualizer.processor.RobotStateDataProcessor;
 import org.github.ezauton.ezauton.utils.IClock;
-import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -36,7 +34,9 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotStateFrame>
         this("RobotStateRecorder_" + instanceCounter++, clock, posEstimator, rotEstimator, width, length);
     }
 
-    private RobotStateRecorder() {}
+    private RobotStateRecorder() {
+        super();
+    }
 
     @Override
     public boolean checkForNewData()

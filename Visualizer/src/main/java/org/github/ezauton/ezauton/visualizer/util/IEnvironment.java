@@ -1,4 +1,4 @@
-package org.github.ezauton.ezauton.visualizer;
+package org.github.ezauton.ezauton.visualizer.util;
 
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
