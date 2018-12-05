@@ -46,7 +46,8 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotStateFrame>
                 posEstimator.estimateLocation(),
                 rotEstimator.estimateHeading(),
                 width,
-                height
+                height,
+                posEstimator.estimateAbsoluteVelocity()
         ));
         return true;
     }

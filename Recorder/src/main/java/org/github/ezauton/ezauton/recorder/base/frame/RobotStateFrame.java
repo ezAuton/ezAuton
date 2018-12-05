@@ -25,6 +25,9 @@ public class RobotStateFrame extends SequentialDataFrame implements Serializable
     @JsonProperty
     private double robotLength;
 
+    @JsonProperty
+    private ImmutableVector robotVelocity;
+
     /**
      * An immutable
      *
@@ -33,13 +36,14 @@ public class RobotStateFrame extends SequentialDataFrame implements Serializable
      * @param robotWidth  The width of the robot in feet (the x-component of the robot)
      * @param robotLength The height of the robot in feet (the y-component of the robot)
      */
-    public RobotStateFrame(double time, ImmutableVector pos, double heading, double robotWidth, double robotLength)
+    public RobotStateFrame(double time, ImmutableVector pos, double heading, double robotWidth, double robotLength, ImmutableVector robotVelocity)
     {
         super(time);
         this.pos = pos;
         this.heading = heading;
         this.robotWidth = robotWidth;
         this.robotLength = robotLength;
+        this.robotVelocity = robotVelocity;
     }
 
     protected RobotStateFrame() {}
@@ -62,6 +66,11 @@ public class RobotStateFrame extends SequentialDataFrame implements Serializable
     public double getRobotLength()
     {
         return robotLength;
+    }
+
+    public ImmutableVector getRobotVelocity()
+    {
+        return robotVelocity;
     }
 
     @Override

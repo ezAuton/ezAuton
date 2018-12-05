@@ -34,11 +34,13 @@ public class RecorderTest
 
         PPWaypoint[] build = new PPWaypoint.Builder()
                 .add(0, 0, 16, 13, -12)
-                .add(0, 4, 16, 13, -12)
-                .add(-0.5, 8.589, 16, 13, -12)
-                .add(-0.5, 12.405, 16, 13, -12)
-                .add(-0.5, 17, 16, 13, -12)
-                .add(1.5, 19.4, 0, 13, -12)
+                .add(0,9.8,16,13,-12)
+                .add(0,10,0,13,-12)
+//                .add(0, 4, 16, 13, -12)
+//                .add(-0.5, 8.589, 16, 13, -12)
+//                .add(-0.5, 12.405, 16, 13, -12)
+//                .add(-0.5, 17, 16, 13, -12)
+//                .add(1.5, 19.4, 0, 13, -12)
                 .build();
 
         PP_PathGenerator pathGenerator = new PP_PathGenerator(build);

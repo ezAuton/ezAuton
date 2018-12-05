@@ -18,9 +18,9 @@ public class TankRobotState extends RobotStateFrame
     @JsonProperty
     protected double rightPos;
 
-    public TankRobotState(double time, ImmutableVector pos, double heading, double robotWidth, double robotLength, double leftVel, double leftPos, double rightVel, double rightPos)
+    public TankRobotState(double time, ImmutableVector pos, double heading, double robotWidth, double robotLength, double leftVel, double leftPos, double rightVel, double rightPos, ImmutableVector absoluteVelocity)
     {
-        super(time, pos, heading, robotWidth, robotLength);
+        super(time, pos, heading, robotWidth, robotLength, absoluteVelocity);
         this.leftVel = leftVel;
         this.leftPos = leftPos;
         this.rightVel = rightVel;

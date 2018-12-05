@@ -3,6 +3,7 @@ package org.github.ezauton.ezauton.visualizer.processor;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -21,8 +22,7 @@ public class RobotStateDataProcessor implements IDataProcessor
 
     private Rectangle robot;
     private Circle posCircle;
-    private Label headingLabel;
-    private Label posLabel;
+    private Label headingLabel, posLabel, velocityLabel;
     private double spatialScaleFactorX;
     private double spatialScaleFactorY;
     private double originYPx;
@@ -70,13 +70,17 @@ public class RobotStateDataProcessor implements IDataProcessor
         // x y loc
         posLabel = new Label("(0, 0)");
 
+        velocityLabel = new Label("(0, 0)");
+
         robot.setFill(Paint.valueOf("cyan"));
         robot.setStroke(Paint.valueOf("black"));
         environment.getFieldAnchorPane().getChildren().add(0, robot);
         environment.getFieldAnchorPane().getChildren().add(posCircle);
 
-        environment.getDataGridPane(robotRec.getName()).addRow(0, new Label("Heading: "), headingLabel);
-        environment.getDataGridPane(robotRec.getName()).addRow(1, new Label("Position: "), posLabel);
+        GridPane dataGridPane = environment.getDataGridPane(robotRec.getName());
+        dataGridPane.addRow(0, new Label("Heading: "), headingLabel);
+        dataGridPane.addRow(1, new Label("Position: "), posLabel);
+        dataGridPane.addRow(2, new Label("Velocity: "), velocityLabel);
     }
 
     @Override
@@ -113,6 +117,7 @@ public class RobotStateDataProcessor implements IDataProcessor
                 keyValues.add(new KeyValue(posCircle.centerYProperty(), y, interpolator));
                 keyValues.add(new KeyValue(headingLabel.textProperty(), String.format("%.02f radians", heading)));
                 keyValues.add(new KeyValue(posLabel.textProperty(), String.format("(%.02f, %.02f)", frame.getPos().get(0), frame.getPos().get(1))));
+                keyValues.add(new KeyValue(velocityLabel.textProperty(), String.format("(%.02f, %.02f)", frame.getRobotVelocity().get(0), frame.getRobotVelocity().get(1))));
             }
             else
             {
