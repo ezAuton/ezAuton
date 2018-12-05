@@ -34,7 +34,8 @@ public class RealClock implements IClock
             throw new IllegalArgumentException("You are scheduling a task for before the current time!");
         }
 
-        return executorService.schedule(runnable, scheduleTime.toEpochMilli() - now.toEpochMilli(), TimeUnit.MILLISECONDS);
+        long dt = scheduleTime.toEpochMilli() - now.toEpochMilli();
+        return executorService.schedule(runnable, dt, TimeUnit.MILLISECONDS);
     }
 
     @Override

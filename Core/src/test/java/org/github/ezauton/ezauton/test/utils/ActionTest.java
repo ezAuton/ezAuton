@@ -50,7 +50,6 @@ public class ActionTest
         ActionGroup group = new ActionGroup()
                 .addSequential(action);
 
-        clock.setStartTime(System.currentTimeMillis());
         group.run(clock);
         assertEquals(4, count.get());
     }

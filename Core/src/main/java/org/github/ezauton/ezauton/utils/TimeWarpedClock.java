@@ -10,12 +10,20 @@ public class TimeWarpedClock implements IClock
 {
     private final double speedMultiplier;
     private final RealClock realClock;
-    private long startTime = 0;
+    private long startTime;
+    private long timeStartedAt;
 
-    public TimeWarpedClock(double speedMultiplier)
+    public TimeWarpedClock(double speedMultiplier, long startTime)
     {
         realClock = RealClock.CLOCK;
         this.speedMultiplier = speedMultiplier;
+        this.startTime = startTime;
+        timeStartedAt = System.currentTimeMillis();
+    }
+
+    public TimeWarpedClock(double speedMultiplier)
+    {
+        this(speedMultiplier, System.currentTimeMillis());
     }
 
     public double getSpeed()
@@ -28,32 +36,19 @@ public class TimeWarpedClock implements IClock
         return startTime;
     }
 
-    /**
-     * Sets the start time in milliseconds
-     *
-     * @param startTime
-     */
-    public void setStartTime(long startTime)
-    {
-        this.startTime = startTime;
-    }
-
-    public void setStartTimeNow()
-    {
-        startTime = System.currentTimeMillis();
-    }
-
     @Override
     public long getTime()
     {
-        long dt = System.currentTimeMillis() - startTime;
-        return (long) (dt * speedMultiplier);
+        long realDt = realClock.getTime() - timeStartedAt;
+        return (long) (realDt * speedMultiplier + startTime);
     }
 
     @Override
     public Future<?> scheduleAt(long millis, Runnable runnable)
     {
-        return realClock.scheduleIn((long) ((millis) / speedMultiplier), TimeUnit.MILLISECONDS, runnable);
+        double realDt = (millis - getTime()) / speedMultiplier;
+        System.out.println(realDt);
+        return realClock.scheduleIn((long) realDt, TimeUnit.MILLISECONDS, runnable);
     }
 
     @Override
