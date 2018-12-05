@@ -69,6 +69,7 @@ public class RecorderTest
 
         RobotStateRecorder posRec = new RobotStateRecorder("robotstate", simulation.getClock(), locEstimator, locEstimator, robot.getLateralWheelDistance(), 1.5);
         PurePursuitRecorder ppRec = new PurePursuitRecorder("pp", simulation.getClock(), path, ppMoveStrat);
+        PurePursuitRecorder tankRobotT = new PurePursuitRecorder("pp", simulation.getClock(), path, ppMoveStrat);
 
         recording.addSubRecording(posRec);
         recording.addSubRecording(ppRec);

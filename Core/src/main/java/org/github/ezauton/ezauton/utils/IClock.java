@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public interface IClock
 {
     /**
-     * @return The current time as read by the clock in milliseconds
+     * @return The current time as read by the clock in seconds
      */
     long getTime();
 

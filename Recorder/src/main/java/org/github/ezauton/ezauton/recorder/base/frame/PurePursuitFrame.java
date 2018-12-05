@@ -1,14 +1,24 @@
-package org.github.ezauton.ezauton.recorder.base;
+package org.github.ezauton.ezauton.recorder.base.frame;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.github.ezauton.ezauton.recorder.SequentialDataFrame;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
 public class PurePursuitFrame extends SequentialDataFrame
 {
+    @JsonProperty
     private double lookahead;
+
+    @JsonProperty
     private ImmutableVector closestPoint;
+
+    @JsonProperty
     private ImmutableVector goalPoint;
+
+    @JsonProperty
     private double dCP;
+
+    @JsonProperty
     private int currentSegmentIndex;
 
     public PurePursuitFrame(double time, double lookahead, ImmutableVector closestPoint, ImmutableVector goalPoint, double dCP, int currentSegmentIndex)

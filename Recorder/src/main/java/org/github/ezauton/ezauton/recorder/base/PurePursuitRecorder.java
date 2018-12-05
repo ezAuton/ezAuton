@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.github.ezauton.ezauton.pathplanning.Path;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import org.github.ezauton.ezauton.recorder.SequentialDataRecorder;
+import org.github.ezauton.ezauton.recorder.base.frame.PurePursuitFrame;
+//import org.github.ezauton.ezauton.visualizer.processor.PurePursuitDataProcessor;
 import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 
@@ -60,9 +62,9 @@ public class PurePursuitRecorder extends SequentialDataRecorder<PurePursuitFrame
         return true;
     }
 
-    @Override
-    public IDataProcessor createDataProcessor()
-    {
-        return new PurePursuitDataProcessor(this);
-    }
+//    @Override
+//    public IDataProcessor createDataProcessor()
+//    {
+//        return new PurePursuitDataProcessor(this);
+//    }
 }

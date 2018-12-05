@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.github.ezauton.ezauton.localization.IRotationalLocationEstimator;
 import org.github.ezauton.ezauton.localization.ITranslationalLocationEstimator;
 import org.github.ezauton.ezauton.recorder.SequentialDataRecorder;
+import org.github.ezauton.ezauton.recorder.base.frame.RobotStateFrame;
+//import org.github.ezauton.ezauton.visualizer.processor.RobotStateDataProcessor;
 import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 
 import java.util.concurrent.TimeUnit;
 
-public class RobotStateRecorder extends SequentialDataRecorder<RobotState>
+public class RobotStateRecorder extends SequentialDataRecorder<RobotStateFrame>
 {
 
     private static int instanceCounter = 0;
@@ -39,7 +41,7 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotState>
     @Override
     public boolean checkForNewData()
     {
-        dataFrames.add(new RobotState(
+        dataFrames.add(new RobotStateFrame(
                 stopwatch.read(TimeUnit.MILLISECONDS),
                 posEstimator.estimateLocation(),
                 rotEstimator.estimateHeading(),
@@ -49,9 +51,9 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotState>
         return true;
     }
 
-    @Override
-    public IDataProcessor createDataProcessor()
-    {
-        return new RobotStateDataProcessor(this);
-    }
+//    @Override
+//    public IDataProcessor createDataProcessor()
+//    {
+//        return new RobotStateDataProcessor(this);
+//    }
 }

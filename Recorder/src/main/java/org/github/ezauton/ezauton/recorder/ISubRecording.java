@@ -10,5 +10,5 @@ public interface ISubRecording
 
     String toJson();
 
-    IDataProcessor createDataProcessor();
+//    IDataProcessor createDataProcessor();
 }

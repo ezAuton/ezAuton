@@ -53,56 +53,6 @@ public class Recording implements ISubRecording, Updateable
         return JsonUtils.toStringUnchecked(this);
     }
 
-    @Override
-    public IDataProcessor createDataProcessor()
-    {
-        final List<IDataProcessor> childDataProcessors = new ArrayList<>();
-        recordingMap.values().forEach(r -> childDataProcessors.add(r.createDataProcessor()));
-
-        return new IDataProcessor()
-        {
-            @Override
-            public void initEnvironment(IEnvironment environment)
-            {
-                for(IDataProcessor d : childDataProcessors)
-                {
-                    if(d != null)
-                    {
-                        d.initEnvironment(environment);
-                    }
-                }
-            }
-
-            @Override
-            public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator)
-            {
-                Map<Double, List<KeyValue>> ret = new HashMap<>();
-                for(IDataProcessor dataProcessor : childDataProcessors)
-                {
-                    if(dataProcessor != null)
-                    {
-                        Map<Double, List<KeyValue>> keyValMap = dataProcessor.generateKeyValues(interpolator);
-                        if(keyValMap != null)
-                        {
-                            for(Map.Entry<Double, List<KeyValue>> entry : keyValMap.entrySet())
-                            {
-                                if(!ret.containsKey(entry.getKey())) // not contained
-                                {
-                                    ret.put(entry.getKey(), new ArrayList<>(entry.getValue()));
-                                }
-                                else
-                                { // contained
-                                    ret.get(entry.getKey()).addAll(entry.getValue());
-                                }
-                            }
-                        }
-                    }
-                }
-                return ret;
-            }
-        };
-    }
-
     public Map<String, ISubRecording> getRecordingMap()
     {
         return recordingMap;
