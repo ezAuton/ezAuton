@@ -1,4 +1,4 @@
-package org.github.ezauton.ezauton.recorder.base;
+package org.github.ezauton.ezauton.visualizer.processor;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
@@ -7,6 +7,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
+import org.github.ezauton.ezauton.recorder.base.frame.RobotStateFrame;
+import org.github.ezauton.ezauton.recorder.base.RobotStateRecorder;
 import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 import org.github.ezauton.ezauton.visualizer.IEnvironment;
 
@@ -18,7 +20,7 @@ import java.util.Map;
 public class RobotStateDataProcessor implements IDataProcessor
 {
     private final RobotStateRecorder robotRec;
-    private final List<RobotState> dataFrames;
+    private final List<RobotStateFrame> dataFrames;
 
     private Rectangle robot;
     private Circle posCircle;
@@ -58,8 +60,8 @@ public class RobotStateDataProcessor implements IDataProcessor
         this.originYPx = environment.getOrigin().get(1);
 
         // box for robot
-        robotWidthPx = (int) (dataFrames.get(0).robotWidth * spatialScaleFactorX);
-        robotLengthPx = (int) (dataFrames.get(0).robotLength * spatialScaleFactorY);
+        robotWidthPx = (int) (dataFrames.get(0).getRobotWidth() * spatialScaleFactorX);
+        robotLengthPx = (int) (dataFrames.get(0).getRobotLength() * spatialScaleFactorY);
         robot = new Rectangle(0, 0, robotWidthPx, robotLengthPx);
         posCircle = new Circle(3, Paint.valueOf("white"));
         posCircle.setStroke(Paint.valueOf("black"));
@@ -88,7 +90,7 @@ public class RobotStateDataProcessor implements IDataProcessor
         Rotate robotRotation = new Rotate();
         robot.getTransforms().add(robotRotation);
 
-        for(RobotState frame : robotRec.getDataFrames())
+        for(RobotStateFrame frame : robotRec.getDataFrames())
         {
             List<KeyValue> keyValues = new ArrayList<>();
             double x, y, heading;

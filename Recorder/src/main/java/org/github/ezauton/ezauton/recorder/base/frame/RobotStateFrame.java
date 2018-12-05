@@ -1,4 +1,4 @@
-package org.github.ezauton.ezauton.recorder.base;
+package org.github.ezauton.ezauton.recorder.base.frame;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.github.ezauton.ezauton.recorder.SequentialDataFrame;
@@ -11,19 +11,19 @@ import java.io.Serializable;
  * <p>
  * Generic drivetrain format
  */
-public class RobotState extends SequentialDataFrame implements Serializable
+public class RobotStateFrame extends SequentialDataFrame implements Serializable
 {
     @JsonProperty
-    protected ImmutableVector pos;
+    private ImmutableVector pos;
 
     @JsonProperty
-    protected double heading;
+    private double heading;
 
     @JsonProperty
-    protected double robotWidth;
+    private double robotWidth;
 
     @JsonProperty
-    protected double robotLength;
+    private double robotLength;
 
     /**
      * An immutable
@@ -33,7 +33,7 @@ public class RobotState extends SequentialDataFrame implements Serializable
      * @param robotWidth  The width of the robot in feet (the x-component of the robot)
      * @param robotLength The height of the robot in feet (the y-component of the robot)
      */
-    public RobotState(double time, ImmutableVector pos, double heading, double robotWidth, double robotLength)
+    public RobotStateFrame(double time, ImmutableVector pos, double heading, double robotWidth, double robotLength)
     {
         super(time);
         this.pos = pos;
@@ -42,7 +42,7 @@ public class RobotState extends SequentialDataFrame implements Serializable
         this.robotLength = robotLength;
     }
 
-    protected RobotState() {}
+    protected RobotStateFrame() {}
 
     public ImmutableVector getPos()
     {

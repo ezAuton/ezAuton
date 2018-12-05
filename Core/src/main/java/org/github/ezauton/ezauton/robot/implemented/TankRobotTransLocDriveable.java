@@ -24,6 +24,8 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
     private final ITranslationalLocationEstimator translationalLocationEstimator;
     private final IRotationalLocationEstimator rotationalLocationEstimator;
     private final ITankRobotConstants tankRobotConstants;
+    private double lastLeftTarget;
+    private double lastRightTarget;
 
     /**
      * Describes the kinematics to drive a tank-drive robot along an arc to get to a goal point
@@ -55,11 +57,12 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
     {
         ImmutableVector wheelVelocities = getWheelVelocities(speed, loc);
 
-        double left = wheelVelocities.get(0);
-        leftMotor.runVelocity(left);
+        lastLeftTarget = wheelVelocities.get(0);
 
-        double right = wheelVelocities.get(1);
-        rightMotor.runVelocity(right);
+        leftMotor.runVelocity(lastLeftTarget);
+
+        lastRightTarget = wheelVelocities.get(1);
+        rightMotor.runVelocity(lastRightTarget);
 
         return true; // always possible //TODO: Maybe sometimes return false?
     }
@@ -175,5 +178,15 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
         }
 
         return bestVector;
+    }
+
+    public double getLastLeftTarget()
+    {
+        return lastLeftTarget;
+    }
+
+    public double getLastRightTarget()
+    {
+        return lastRightTarget;
     }
 }

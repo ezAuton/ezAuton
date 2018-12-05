@@ -1,4 +1,4 @@
-package org.github.ezauton.ezauton.recorder.base;
+package org.github.ezauton.ezauton.visualizer.processor;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
@@ -8,6 +8,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.*;
 import org.github.ezauton.ezauton.pathplanning.IPathSegment;
+import org.github.ezauton.ezauton.recorder.base.frame.PurePursuitFrame;
+import org.github.ezauton.ezauton.recorder.base.PurePursuitRecorder;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.github.ezauton.ezauton.visualizer.IDataProcessor;
 import org.github.ezauton.ezauton.visualizer.IEnvironment;
