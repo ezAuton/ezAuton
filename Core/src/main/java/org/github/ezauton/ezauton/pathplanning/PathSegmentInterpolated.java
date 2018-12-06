@@ -56,7 +56,7 @@ public class PathSegmentInterpolated extends LinearPathSegment
         // However, we are not having constant acceleration... so we need
 
         // Make extrapolation for speed
-        speedInterpolator = new InterpolationMap(getAbsoluteDistanceStart(), speedStart);
+        speedInterpolator = new InterpolationMap(0D, speedStart);
 
         // Use kinematics equations built into the MotionState class to build speedInterpolator
         if(speedStart < speedStop) // accel
@@ -65,7 +65,15 @@ public class PathSegmentInterpolated extends LinearPathSegment
             while(motionState.getSpeed() < speedStop)
             {
                 motionState = motionState.extrapolateTime(motionState.getTime() + dt);
-                speedInterpolator.put(motionState.getPosition(), Math.min(speedStop, motionState.getSpeed()));
+                double position = motionState.getPosition();
+                if(position > getLength())
+                {
+                    double velLeft = speedStop - motionState.getSpeed();
+                    if(velLeft < 0) return;
+                    String msg = String.format("Acceleration value too low to execute trajectory from %s To: %s. Velocity needed: %.2f", getFrom(), getTo(), velLeft);
+                    throw new IllegalStateException(msg);
+                }
+                speedInterpolator.put(position, Math.min(speedStop, motionState.getSpeed()));
             }
         }
         else if(speedStart > speedStop) // decel
@@ -75,7 +83,15 @@ public class PathSegmentInterpolated extends LinearPathSegment
             while(motionState.getSpeed() < speedStart)
             {
                 motionState = motionState.extrapolateTime(motionState.getTime() - dt);
-                speedInterpolator.put(motionState.getPosition(), Math.min(speedStart, motionState.getSpeed()));
+                double position = motionState.getPosition();
+                if(position < 0)
+                {
+                    double velLeft = speedStart - motionState.getSpeed();
+                    if(velLeft < 0) return;
+                    String msg = String.format("Deceleration (magnitude) value too low to execute trajectory from %s to %s. Velocity needed: %.2f", getFrom(), getTo(), velLeft);
+                    throw new IllegalStateException(msg);
+                }
+                speedInterpolator.put(position, Math.min(speedStart, motionState.getSpeed()));
             }
         }
     }
