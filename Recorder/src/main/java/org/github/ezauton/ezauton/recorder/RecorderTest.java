@@ -32,22 +32,18 @@ public class RecorderTest
         ImmutableVector immutableVector = new ImmutableVector(0,0);
         immutableVector.isFinite();
 
-        PPWaypoint[] build = new PPWaypoint.Builder()
+        Path path = new PPWaypoint.Builder()
                 .add(0, 0, 16, 13, -12)
                 .add(0, 4, 16, 13, -12)
                 .add(-0.5, 8.589, 16, 13, -12)
                 .add(-0.5, 12.405, 13, 13, -12)
                 .add(-0.5, 17, 8.5, 13, -12)
                 .add(1.5, 19.4, 0, 13, -12)
-                .build();
-
-        PP_PathGenerator pathGenerator = new PP_PathGenerator(build);
-
-        Path path = pathGenerator.generate(0.05);
+                .buildPathGenerator()
+                .generate(0.05);
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
-//        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
         // Not a problem
         MultiThreadSimulation simulation = new MultiThreadSimulation(1);
 

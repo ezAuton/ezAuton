@@ -1,5 +1,6 @@
 package org.github.ezauton.ezauton.pathplanning.purepursuit;
 
+import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
 import java.io.Serializable;
@@ -22,8 +23,11 @@ public class PPWaypoint implements Serializable
             return this;
         }
 
-        public PPWaypoint[] build(){
+        public PPWaypoint[] buildArray(){
             return waypointList.toArray(new PPWaypoint[0]);
+        }
+        public PP_PathGenerator buildPathGenerator(){
+            return new PP_PathGenerator(buildArray());
         }
     }
 

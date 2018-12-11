@@ -22,7 +22,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class PPSimulatorTest
@@ -40,7 +39,7 @@ public class PPSimulatorTest
                 .add(-0.5, 12.405, 13, 13, -12)
                 .add(-0.5, 17, 8.5, 13, -12)
                 .add(1.5, 19.4, 0, 13, -12)
-                .build();
+                .buildArray();
 
 //        System.out.println(Arrays.toString(build));
         test(build);
