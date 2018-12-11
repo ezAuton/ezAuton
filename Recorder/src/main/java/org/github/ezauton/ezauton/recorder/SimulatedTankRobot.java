@@ -7,8 +7,11 @@ import org.github.ezauton.ezauton.actuators.implementations.RampUpVelocityProces
 import org.github.ezauton.ezauton.actuators.implementations.StaticFrictionVelocityProcessor;
 import org.github.ezauton.ezauton.localization.Updateable;
 import org.github.ezauton.ezauton.localization.UpdateableGroup;
+import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import org.github.ezauton.ezauton.localization.sensors.ITranslationalDistanceSensor;
 import org.github.ezauton.ezauton.robot.ITankRobotConstants;
+import org.github.ezauton.ezauton.robot.implemented.TankRobotTransLocDriveable;
+import org.github.ezauton.ezauton.robot.subsystems.TranslationalLocationDriveable;
 import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.utils.Stopwatch;
 
@@ -27,8 +30,10 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
     private final BaseSimulatedMotor baseLeftSimulatedMotor;
     private final BaseSimulatedMotor baseRightSimulatedMotor;
     private final Stopwatch stopwatch;
+    private final TankRobotTransLocDriveable defaultTranslationalLocationDriveable;
     public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
     private UpdateableGroup toUpdate = new UpdateableGroup();
+    private TankRobotEncoderEncoderEstimator defaultLocationEstimator;
 
     /**
      * @param lateralWheelDistance The lateral wheel distance between the wheels of the robot
@@ -49,7 +54,24 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 
         this.lateralWheelDistance = lateralWheelDistance;
 
+       this.defaultLocationEstimator = new TankRobotEncoderEncoderEstimator(getLeftDistanceSensor(), getRightDistanceSensor(), this);
+       this.defaultTranslationalLocationDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, defaultLocationEstimator, defaultLocationEstimator, this);
     }
+
+    /**
+     *
+     * @return A location estimator which automatically updates
+     */
+    public TankRobotEncoderEncoderEstimator getDefaultLocEstimator()
+    {
+        return defaultLocationEstimator;
+    }
+
+    public TankRobotTransLocDriveable getDefaultTransLocDriveable()
+    {
+        return defaultTranslationalLocationDriveable;
+    }
+
 
 
     public IVelocityMotor getLeftMotor()
@@ -98,6 +120,7 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
         long read = stopwatch.read(TimeUnit.SECONDS);
         log.append(read).append(", ").append(baseLeftSimulatedMotor.getVelocity()).append(", ").append(baseRightSimulatedMotor.getVelocity()).append("\n");
         toUpdate.update();
+        defaultLocationEstimator.update();
         return true;
     }
 }

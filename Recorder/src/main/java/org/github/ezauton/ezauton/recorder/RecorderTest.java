@@ -4,9 +4,7 @@ import org.github.ezauton.ezauton.action.ActionGroup;
 import org.github.ezauton.ezauton.action.BackgroundAction;
 import org.github.ezauton.ezauton.action.PPCommand;
 import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
-import org.github.ezauton.ezauton.actuators.IVelocityMotor;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
-import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
 import org.github.ezauton.ezauton.pathplanning.Path;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.ILookahead;
 import org.github.ezauton.ezauton.pathplanning.purepursuit.LookaheadBounds;
@@ -50,15 +48,12 @@ public class RecorderTest
         // Might be a problem
         SimulatedTankRobot robot = new SimulatedTankRobot(1, simulation.getClock(), 40, 0.3, 30D);
 
-        IVelocityMotor leftMotor = robot.getLeftMotor();
-        IVelocityMotor rightMotor = robot.getRightMotor();
-
-        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftDistanceSensor(), robot.getRightDistanceSensor(), robot);
+        TankRobotEncoderEncoderEstimator locEstimator = robot.getDefaultLocEstimator();
         locEstimator.reset();
 
         ILookahead lookahead = new LookaheadBounds(1, 7, 2, 10, locEstimator);
 
-        TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
+        TankRobotTransLocDriveable  tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
         PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
@@ -73,15 +68,11 @@ public class RecorderTest
         recording.addSubRecording(tankRobot);
 
         BackgroundAction recAction = new BackgroundAction(10, TimeUnit.MILLISECONDS, recording);
-        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
 
-        // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator);
+        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
 
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)
-                .with(backgroundAction)
-//                .with(ppRecAct)
                 .with(recAction)
                 .addSequential(ppCommand);
         simulation.add(group);
