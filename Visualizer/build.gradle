@@ -23,7 +23,6 @@ dependencies {
 task runvis(dependsOn: 'test', type: JavaExec) {
     main = 'org.github.ezauton.ezauton.visualizer.Main'
     classpath = sourceSets.main.runtimeClasspath
-    args 'gradle'
 }
 
 
