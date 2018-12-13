@@ -107,7 +107,7 @@ writer.close();
 ### Visualizer
 - Once you record, you can _play_ the recording as well. Built to be extendible, so you can implement your own 
 visualizer modules as well (use `ISubRecording` in the "Recording" module and `IDataProcessor` in the "Visualizer" module).
-- !(https://i.imgur.com/OCRWotR.gif)
+- ![Visualizer in Action](https://i.imgur.com/OCRWotR.gif)
  
 
 ## Examples
