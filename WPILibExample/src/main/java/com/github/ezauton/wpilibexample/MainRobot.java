@@ -1,9 +1,7 @@
 package com.github.ezauton.wpilibexample;
 
-import com.github.ezauton.wpilibexample.actions.ActionEverythingM8;
+import com.github.ezauton.wpilibexample.actions.ActionSimpleAuton;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import org.github.ezauton.ezauton.wpilib.command.CommandCreator;
 
 public class MainRobot extends IterativeRobot
 {
@@ -21,12 +19,12 @@ public class MainRobot extends IterativeRobot
     @Override
     public void autonomousInit()
     {
-        ActionEverythingM8 action = new ActionEverythingM8(robotData, drivetrainSubsystem);
+        ActionSimpleAuton action = new ActionSimpleAuton(robotData, drivetrainSubsystem);
 
         // way 1
         action.schedule();
 
         // way 2
-        Scheduler.getInstance().add(new CommandCreator(action));
+//        Scheduler.getInstance().add(new CommandCreator(action));
     }
 }

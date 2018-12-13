@@ -1,7 +1,6 @@
 package com.github.ezauton.wpilibexample.actions;
 
 import com.github.ezauton.wpilibexample.DrivetrainSubsystem;
-import org.github.ezauton.ezauton.action.PeriodicAction;
 import org.github.ezauton.ezauton.action.TimedPeriodicAction;
 
 import java.util.concurrent.TimeUnit;
