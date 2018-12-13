@@ -79,8 +79,6 @@ enum StartPos
 
 public class Controller implements Initializable
 {
-    private final ConfigManager configManager;
-
     @FXML
     public TabPane tabPane;
 
@@ -128,7 +126,7 @@ public class Controller implements Initializable
     {
         // Read the config file in the resources folder and initialize values appropriately
         String homeDir = System.getProperty("user.home");
-        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton","config","visualizer.config");
+        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "config", "visualizer.config");
 
         try
         {
@@ -141,7 +139,8 @@ public class Controller implements Initializable
 
         try
         {
-            if(!Files.exists(filePath)) {
+            if(!Files.exists(filePath))
+            {
                 Files.createFile(filePath);
             }
         }
@@ -149,11 +148,6 @@ public class Controller implements Initializable
         {
             e.printStackTrace();
         }
-
-
-        configManager = new ConfigManager(filePath);
-        configManager.load();
-
     }
 
     private static String getExtension(String fileName)
@@ -257,7 +251,8 @@ public class Controller implements Initializable
 //        return -ppY * spatialScaleFactor + originY + robot.getHeight() / 2;
     }
 
-    private void clear() {
+    private void clear()
+    {
         tabPane.getTabs().clear();
         backdrop.getChildren().clear();
     }
@@ -285,15 +280,7 @@ public class Controller implements Initializable
         originY = backdrop.getHeight();
 
 
-        Interpolator interpolator;
-        if(configManager.getDouble("rate") < 3D / 5D) // if we'll be playing at less than 30 fps
-        {
-            interpolator = Interpolator.EASE_BOTH;
-        }
-        else
-        {
-            interpolator = Interpolator.DISCRETE;
-        }
+        Interpolator interpolator = Interpolator.DISCRETE;
 
         // Clear everything
         clear();
