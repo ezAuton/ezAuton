@@ -22,9 +22,4 @@ public class ActionGoStraightVoltage extends TimedPeriodicAction
         subsystem.driveVolt(0.5,0.5);
     }
 
-    @Override
-    protected boolean isFinished() {
-        return false;
-    }
-
 }
