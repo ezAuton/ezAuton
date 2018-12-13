@@ -75,6 +75,7 @@ public class RecorderTest
                 .with(updateKinematics)
                 .with(recAction)
                 .addSequential(ppCommand);
+
         simulation.add(group);
 
 

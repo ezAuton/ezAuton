@@ -2,10 +2,10 @@ plugins {
     id 'java'
 }
 
-archivesBaseName = "${parent.name}-${project.name}"
-
 group 'com.team2502'
 version '1.0-SNAPSHOT'
+
+archivesBaseName = "${parent.name}-${project.name}"
 
 sourceCompatibility = 1.8
 

@@ -6,9 +6,9 @@ import org.github.ezauton.ezauton.action.ThreadBuilder;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Creates a action from an {@link PeriodicAction}. This allows for abstraction and use of commands in simulators.
+ * Creates a action from an {@link IAction}. This allows for abstraction and use of commands in simulators.
  */
-public class CommandCreator extends Command //TODO: Change name?
+public class CommandCreator extends Command
 {
 
     private final IAction action;
@@ -35,18 +35,12 @@ public class CommandCreator extends Command //TODO: Change name?
     @Override
     protected void execute()
     {
-        //TODO: Fix publicity of PeriodicAction#execute or location of CommandCreator such that the following line of code compiles
-//        action.execute();
+        // nothing to execute... everything is in the thread.
     }
 
     @Override
     protected boolean isFinished()
     {
-//        boolean finished = action.isFinished();
-        if(finished)
-        {
-            action.getFinished().forEach(Runnable::run);
-        }
         return finished;
     }
 

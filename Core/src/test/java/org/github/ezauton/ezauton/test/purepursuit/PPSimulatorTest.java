@@ -29,7 +29,7 @@ public class PPSimulatorTest
 
     private static final double LATERAL_WHEEL_DIST = 4;
 
-    @Test
+//    @Test
     public void testLeftToRightScale()
     {
         PPWaypoint[] build = new PPWaypoint.Builder()

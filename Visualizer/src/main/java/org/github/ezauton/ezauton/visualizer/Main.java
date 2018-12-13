@@ -15,7 +15,6 @@ import org.github.ezauton.ezauton.visualizer.processor.RecordingDataProcessor;
 import org.github.ezauton.ezauton.visualizer.processor.RobotStateDataProcessor;
 import org.github.ezauton.ezauton.visualizer.processor.TankDriveableDataProcessor;
 import org.github.ezauton.ezauton.visualizer.processor.factory.FactoryMap;
-import org.github.ezauton.ezauton.visualizer.processor.factory.IDataProcessorFactory;
 
 
 public class Main extends Application

@@ -19,9 +19,6 @@ import java.util.concurrent.TimeUnit;
 
 public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 {
-
-    public static final double NORM_DT = 0.02D;
-
     private final double lateralWheelDistance;
 
     private final IVelocityMotor leftMotor;
