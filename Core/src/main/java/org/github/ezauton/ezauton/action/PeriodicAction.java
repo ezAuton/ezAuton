@@ -87,7 +87,7 @@ public abstract class PeriodicAction extends BaseAction
     }
 
     @Override
-    public void run(IClock clock)
+    public final void run(IClock clock)
     {
         this.clock = clock;
 
