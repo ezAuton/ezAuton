@@ -111,7 +111,7 @@ visualizer modules as well (use `ISubRecording` in the "Recording" module and `I
  
 
 ## Examples
-ezAuton is not currently stable! If you are using the current _ezAuton_ library, your code might not work with most updated version a week later.
+Look at [unit tests](https://github.com/ezAuton/ezAuton/tree/master/Core/src/test/java/org/github/ezauton/ezauton/test) to get several documented examples on what is possible to do with ezAuton. Note ezAuton is **NOT STABLE**. We are still in a development stage, so we encourage you to contribute and test with your robot so we can get an official release as soon as possible.
 
 ### Tank robot Pure Pursuit no helpers
 This is code for encoder-encoder localization with a tank robot with no helper classes. The code is overly-verbose for most scenarios; it is usually not needed.
