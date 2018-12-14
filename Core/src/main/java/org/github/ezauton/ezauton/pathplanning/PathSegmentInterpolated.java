@@ -70,7 +70,7 @@ public class PathSegmentInterpolated extends LinearPathSegment
                 {
                     double velLeft = speedStop - motionState.getSpeed();
                     if(velLeft < 0) return;
-                    String msg = String.format("Acceleration value too low to execute trajectory from %s To: %s. Velocity needed: %.2f", getFrom(), getTo(), velLeft);
+                    String msg = String.format("Acceleration value too low to execute trajectory from %s To: %s. At max accelerate still needed to accelerate: %.2f", getFrom(), getTo(), velLeft);
                     throw new IllegalStateException(msg);
                 }
                 speedInterpolator.put(position, Math.min(speedStop, motionState.getSpeed()));
@@ -88,7 +88,7 @@ public class PathSegmentInterpolated extends LinearPathSegment
                 {
                     double velLeft = speedStart - motionState.getSpeed();
                     if(velLeft < 0) return;
-                    String msg = String.format("Deceleration (magnitude) value too low to execute trajectory from %s to %s. Velocity needed: %.2f", getFrom(), getTo(), velLeft);
+                    String msg = String.format("Deceleration (magnitude) value too low to execute trajectory from %s to %s. At max deceleration still needed to decelerate: %.2f", getFrom(), getTo(), velLeft);
                     throw new IllegalStateException(msg);
                 }
                 speedInterpolator.put(position, Math.min(speedStart, motionState.getSpeed()));
