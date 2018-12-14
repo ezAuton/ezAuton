@@ -12,12 +12,12 @@ def ROBOT_CLASS = "com.github.ezauton.wpilibexample.MainRobot"
 
 deploy {
     targets {
-        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
+        target("roborio", edu.wpi.first.gradlerio.frc.RoboRIO) {
             team = TEAM
             timeout = 15
         }
     }
-    artifacts { artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) { targets << "roborio" } }
+    artifacts { artifact('frcJava', edu.wpi.first.gradlerio.frc.FRCJavaArtifact) { targets << "roborio" } }
 }
 
 group 'com.github.ezauton'
@@ -28,6 +28,7 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "http://www.kauailabs.com/maven2/" }
 }
 
 dependencies {

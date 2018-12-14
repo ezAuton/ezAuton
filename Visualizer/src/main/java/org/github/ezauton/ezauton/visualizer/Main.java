@@ -19,12 +19,6 @@ import org.github.ezauton.ezauton.visualizer.processor.factory.FactoryMap;
 
 public class Main extends Application
 {
-    private static final double IMGWIDTH = 443;
-    private static final double IMGHEIGHT = 492;
-    private static final double W_TO__H_RATIO = IMGWIDTH / IMGHEIGHT;
-    private static final double H_TO_W_RATIO = 1 / W_TO__H_RATIO;
-    private Stage window;
-    private Scene mainScene;
     private static Main instance;
 
     public static Main getInstance()
@@ -50,7 +44,6 @@ public class Main extends Application
 
 
         // Keep a reference to the window
-        window = primaryStage;
 
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
 
@@ -61,13 +54,8 @@ public class Main extends Application
 
         // Display the window
 
-        mainScene = new Scene(mainRoot);
+        Scene mainScene = new Scene(mainRoot);
         primaryStage.setScene(mainScene);
-//        primaryStage.widthProperty().addListener((widthProp, oldWidth, newWidth) -> {
-//            double fieldWidth = newWidth.doubleValue() - IMGWIDTH;
-//            primaryStage.setHeight(fieldWidth * H_TO_W_RATIO);
-//            System.out.println(fieldWidth * H_TO_W_RATIO);
-//        });
 
         primaryStage.show();
     }

@@ -79,8 +79,6 @@ enum StartPos
 
 public class Controller implements Initializable
 {
-    private final ConfigManager configManager;
-
     @FXML
     public TabPane tabPane;
 
@@ -115,10 +113,9 @@ public class Controller implements Initializable
      */
     private double spatialScaleFactor;
 
-    private double initRobotHeight;
-    private double initRobotWidth;
     private Timeline timeline;
-    private ChangeListener<Number> listener;
+
+    private ChangeListener<Number> rateSliderListener;
 
     private Recording currentRecording;
 
@@ -128,7 +125,7 @@ public class Controller implements Initializable
     {
         // Read the config file in the resources folder and initialize values appropriately
         String homeDir = System.getProperty("user.home");
-        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton","config","visualizer.config");
+        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "config", "visualizer.config");
 
         try
         {
@@ -141,7 +138,8 @@ public class Controller implements Initializable
 
         try
         {
-            if(!Files.exists(filePath)) {
+            if(!Files.exists(filePath))
+            {
                 Files.createFile(filePath);
             }
         }
@@ -149,11 +147,6 @@ public class Controller implements Initializable
         {
             e.printStackTrace();
         }
-
-
-        configManager = new ConfigManager(filePath);
-        configManager.load();
-
     }
 
     private static String getExtension(String fileName)
@@ -245,19 +238,12 @@ public class Controller implements Initializable
 //        initRobotHeight = robot.getHeight();
     }
 
-    private double getX(double ppX)
-    {
-        return 0;
-//        return ppX * spatialScaleFactor + originX + robot.getWidth() / 2;
-    }
 
-    private double getY(double ppY)
+    /**
+     * Clear the tab pane to the right and the canvas with the field on it
+     */
+    private void clear()
     {
-        return 0;
-//        return -ppY * spatialScaleFactor + originY + robot.getHeight() / 2;
-    }
-
-    private void clear() {
         tabPane.getTabs().clear();
         backdrop.getChildren().clear();
     }
@@ -270,30 +256,20 @@ public class Controller implements Initializable
     @FXML
     private void animateSquareKeyframe(Event event)
     {
-
+        // must have a file and position
         if(fileChooser.getValue() == null || posChooser.getValue() == null)
         {
             System.out.println("Please select a file and position!");
             return;
         }
+
         // Animation works by interpolating key values between key frames
         // We store all our keyframes in this handy dandy list
         List<KeyFrame> keyFrames = new ArrayList<>();
 
-        // Scale our robot appropriately
-
         originY = backdrop.getHeight();
 
-
-        Interpolator interpolator;
-        if(configManager.getDouble("rate") < 3D / 5D) // if we'll be playing at less than 30 fps
-        {
-            interpolator = Interpolator.EASE_BOTH;
-        }
-        else
-        {
-            interpolator = Interpolator.DISCRETE;
-        }
+        Interpolator interpolator = Interpolator.DISCRETE;
 
         // Clear everything
         clear();
@@ -346,9 +322,9 @@ public class Controller implements Initializable
 
         // Create the animation
 
-        if(listener != null)
+        if(rateSliderListener != null)
         {
-            rateSlider.valueProperty().removeListener(listener);
+            rateSlider.valueProperty().removeListener(rateSliderListener);
         }
 
         if(timeline != null)
@@ -358,12 +334,12 @@ public class Controller implements Initializable
 
         timeline = new Timeline();
 
-        listener = (observable, oldValue, newValue) -> {
+        rateSliderListener = (observable, oldValue, newValue) -> {
             double value = newValue.doubleValue();
             actOnTimeline(timeline, value);
         };
 
-        rateSlider.valueProperty().addListener(listener);
+        rateSlider.valueProperty().addListener(rateSliderListener);
 
         // Loop it forever
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -422,6 +398,9 @@ public class Controller implements Initializable
         };
     }
 
+    /**
+     * Handles pausing/playing the timeline based on the rate slider
+     */
     private void actOnTimeline(Timeline timeline, double value)
     {
         if(MathUtils.epsilonEquals(0, value))
@@ -435,6 +414,12 @@ public class Controller implements Initializable
         }
     }
 
+    /**
+     * Loads a recording from a .json file
+     *
+     * @param jsonFile
+     * @throws IOException If the file cannot be read from
+     */
     private void loadRecording(File jsonFile) throws IOException
     {
         List<String> lines = Files.readAllLines(jsonFile.toPath());
@@ -443,7 +428,5 @@ public class Controller implements Initializable
         String json = fileContentsSb.toString();
 
         this.currentRecording = JsonUtils.toObject(Recording.class, json);
-
-
     }
 }
