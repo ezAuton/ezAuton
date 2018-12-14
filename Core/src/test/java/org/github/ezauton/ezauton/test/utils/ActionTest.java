@@ -5,15 +5,22 @@ import org.github.ezauton.ezauton.action.BackgroundAction;
 import org.github.ezauton.ezauton.action.DelayedAction;
 import org.github.ezauton.ezauton.action.ThreadBuilder;
 import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
+import org.github.ezauton.ezauton.localization.Updateable;
+import org.github.ezauton.ezauton.localization.UpdateableGroup;
 import org.github.ezauton.ezauton.utils.RealClock;
 import org.github.ezauton.ezauton.utils.Stopwatch;
 import org.github.ezauton.ezauton.utils.TimeWarpedClock;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ActionTest
 {
@@ -224,6 +231,30 @@ public class ActionTest
 //        assertEquals(expectedDTms, count.get() - initmillis, 50);
 
 
+    }
+
+    @Test
+    public void testUpdateableGroup()
+    {
+        List<Integer> list = new ArrayList<>();
+        Updateable one = () -> list.add(1);
+        Updateable two = () -> list.add(2);
+        Updateable three = () -> list.add(3);
+        Updateable four = () -> list.add(4);
+
+        UpdateableGroup group = new UpdateableGroup(one, two, three, four);
+        assertTrue(group.update());
+        assertEquals(list, Arrays.asList(1, 2, 3, 4));
+        list.clear();
+        group.remove(three);
+        assertTrue(group.update());
+        assertEquals(list, Arrays.asList(1,  2, 4));
+        list.clear();
+        group.remove(one);
+        group.remove(two);
+        group.remove(four);
+        assertFalse(group.update());
+        assertTrue(list.isEmpty());
     }
 
 }
