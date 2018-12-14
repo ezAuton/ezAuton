@@ -947,5 +947,77 @@ public final class MathUtils
 
             }
         }
+
+        public interface ParametricFunction
+        {
+            double DELTA = 1E-4;
+            double getX(double t);
+
+            double getY(double t);
+
+            default ImmutableVector get(double t)
+            {
+                return new ImmutableVector((float) getX(t), (float) getY(t));
+            }
+
+            default double getArcLength(double lowerBound, double upperBound)
+            {
+                return getArcLength(lowerBound, upperBound, DELTA);
+            }
+
+            default double getArcLength(double lowerBound, double upperBound, double delta)
+            {
+                double resultLength = 0;
+                double lastX = getX(lowerBound);
+                double lastY = getY(lowerBound);
+                for(double t = lowerBound + delta; t <= upperBound; t += delta)
+                {
+                    double x = getX(t);
+                    double y = getY(t);
+                    resultLength += Math.hypot(x - lastX, y - lastY);
+                    lastX = x;
+                    lastY = y;
+                }
+                return resultLength;
+            }
+
+            default double getT(ImmutableVector point, double lowerBound, double upperBound)
+            {
+                for(double t = lowerBound; t <= upperBound; t += DELTA)
+                {
+                    if(get(t).equals(point))
+                        return t;
+                }
+                return Double.NaN;
+            }
+
+            default ImmutableVector fromArcLength(double arcLength)
+            {
+                return fromArcLength(0, arcLength, DELTA);
+            }
+            default ImmutableVector fromArcLength(double lowerBound, double arcLength)
+            {
+                return fromArcLength(lowerBound, arcLength, DELTA);
+            }
+
+            default ImmutableVector fromArcLength(double lowerBound, double arcLength, double delta)
+            {
+                double lastX = getX(lowerBound);
+                double lastY = getY(lowerBound);
+                double resultT = lowerBound;
+                for(double t = lowerBound + delta; arcLength >= 0; t += delta)
+                {
+                    double x = getX(t);
+                    double y = getY(t);
+                    arcLength -= Math.hypot(x - lastX, y - lastY);
+                    lastX = x;
+                    lastY = y;
+                    resultT = t;
+                }
+                return get(resultT);
+            }
+
+
+        }
     }
 }
