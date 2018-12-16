@@ -2,6 +2,7 @@
 # ezAuton
 A collection of tools to help with FRC autonomous for Java robots. 
 
+##  [Discord](https://discord.gg/M2Hyygm)
 ## Included
 
 #### Localization
