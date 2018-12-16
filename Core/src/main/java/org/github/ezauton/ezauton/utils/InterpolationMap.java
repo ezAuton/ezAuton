@@ -1,6 +1,5 @@
 package org.github.ezauton.ezauton.utils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
@@ -125,7 +124,6 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
      * @throws IllegalArgumentException If the key does not extend Double
      */
     @Override
-    @JsonIgnore
     public Double get(Object key) throws IllegalArgumentException
     {
         if(key instanceof Number)
@@ -221,7 +219,6 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
      * @param key The Double to evaluate "f(x)" at
      * @return The estimated value of "f(key)"
      */
-    @JsonIgnore
     public Double get(Double key)
     {
         Set<Double> keyset = table.keySet();

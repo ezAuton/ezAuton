@@ -2,7 +2,10 @@ package org.github.ezauton.ezauton.recorder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import org.github.ezauton.ezauton.serializers.InterpolationMapSerializer;
+import org.github.ezauton.ezauton.utils.InterpolationMap;
 
 import java.io.IOException;
 
@@ -15,6 +18,7 @@ public class JsonUtils
 {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
+    private static SimpleModule customSerializers = new SimpleModule();
 
     static
     {
@@ -22,6 +26,10 @@ public class JsonUtils
         objectMapper.setDateFormat(new ISO8601DateFormat());
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 //        objectMapper.enableDefaultTyping();
+
+        customSerializers.addSerializer(InterpolationMap.class, new InterpolationMapSerializer());
+
+        objectMapper.registerModule(customSerializers);
     }
 
     /**

@@ -87,7 +87,7 @@ public class RecorderTest
         // save recording
         {
             String homeDir = System.getProperty("user.home");
-            java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.json");
+            java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "loggy.json");
 
             Files.createDirectories(filePath.getParent());
 
