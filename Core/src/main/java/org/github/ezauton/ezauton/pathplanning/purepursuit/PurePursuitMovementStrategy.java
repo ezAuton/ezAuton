@@ -77,7 +77,6 @@ public class PurePursuitMovementStrategy
 
         if(!latestClosestPoint.equals(currentClosestPoint))
         {
-            path.bool = true;
             ImmutableVector locAgain = path.getClosestPoint(loc);
             throw new IllegalStateException("not equal closest points");
         }

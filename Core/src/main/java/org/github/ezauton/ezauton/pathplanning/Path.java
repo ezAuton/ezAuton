@@ -1,8 +1,6 @@
 package org.github.ezauton.ezauton.pathplanning;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
-import org.github.ezauton.ezauton.utils.MathUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,8 +15,6 @@ import java.util.List;
  */
 public class Path
 {
-
-    public boolean bool = false;
     private List<IPathSegment> pathSegments;
 
     private int segmentOnI = -1;
@@ -244,13 +240,11 @@ public class Path
         return segments;
     }
 
-    @JsonIgnore
     public IPathSegment getCurrent()
     {
         return segmentOn;
     }
 
-    @JsonIgnore
     public IPathSegment getNext()
     {
         int nextSegmentI = segmentOnI + 1;
@@ -262,13 +256,11 @@ public class Path
         return nextSegment;
     }
 
-    @JsonIgnore
     public ImmutableVector getStart()
     {
         return pathSegments.get(0).getFrom();
     }
 
-    @JsonIgnore
     public ImmutableVector getEnd()
     {
         return pathSegments.get(pathSegments.size() - 1).getTo();
