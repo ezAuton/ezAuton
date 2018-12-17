@@ -1,8 +1,9 @@
-[![travis-ci](https://travis-ci.org/ezAuton/ezAuton.svg?branch=master)](https://travis-ci.org/ezAuton/ezAuton) [![codecov](https://codecov.io/gh/ezAuton/ezAuton/branch/master/graph/badge.svg?token=mDoht49dKM)](https://codecov.io/gh/ezAuton/ezAuton)
+[![travis-ci](https://travis-ci.org/ezAuton/ezAuton.svg?branch=master)](https://travis-ci.org/ezAuton/ezAuton) 
+[![codecov](https://codecov.io/gh/ezAuton/ezAuton/branch/master/graph/badge.svg?token=mDoht49dKM)](https://codecov.io/gh/ezAuton/ezAuton) 
+[![discord](https://img.shields.io/badge/chat-on%20discord-7289DA.svg?logo=discord&style=flat)](https://discord.gg/u8rmxxy)
 # ezAuton
 A collection of tools to help with FRC autonomous for Java robots. 
 
-##  [Discord](https://discord.gg/M2Hyygm)
 ## Included
 
 #### Localization
