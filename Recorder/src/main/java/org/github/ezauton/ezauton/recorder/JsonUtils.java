@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import org.github.ezauton.ezauton.serializers.ImmutableVectorSerializer;
 import org.github.ezauton.ezauton.serializers.InterpolationMapSerializer;
+import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.github.ezauton.ezauton.utils.InterpolationMap;
 
 import java.io.IOException;
@@ -28,6 +30,7 @@ public class JsonUtils
 //        objectMapper.enableDefaultTyping();
 
         customSerializers.addSerializer(InterpolationMap.class, new InterpolationMapSerializer());
+        customSerializers.addSerializer(ImmutableVector.class, new ImmutableVectorSerializer());
 
         objectMapper.registerModule(customSerializers);
     }
