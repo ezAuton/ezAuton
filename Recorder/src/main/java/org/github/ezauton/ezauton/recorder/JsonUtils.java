@@ -31,7 +31,6 @@ public class JsonUtils
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 //        objectMapper.enableDefaultTyping();
 
-        customSerializers.addSerializer(InterpolationMap.class, new InterpolationMapSerializer());
         customSerializers.addSerializer(ImmutableVector.class, new ImmutableVectorSerializer());
         customSerializers.addSerializer(IPathSegment.class, new IPathSegmentSerializer());
         customSerializers.addDeserializer(IPathSegment.class, new IPathSegmentDeserializer());

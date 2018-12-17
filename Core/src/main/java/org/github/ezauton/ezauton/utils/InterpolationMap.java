@@ -219,7 +219,7 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
      * @param key The Double to evaluate "f(x)" at
      * @return The estimated value of "f(key)"
      */
-    public Double get(Double key)
+    private Double get(Double key)
     {
         Set<Double> keyset = table.keySet();
 

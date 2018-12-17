@@ -26,17 +26,21 @@ public class ImmutableVectorSerializer extends StdSerializer<ImmutableVector>
     {
         try
         {
-            Field elementsField = ImmutableVector.class.getDeclaredField("elements");
-            elementsField.setAccessible(true);
-            double[] elements = (double[]) elementsField.get(value);
-
             jgen.writeStartObject();
             jgen.writeFieldName("elements");
             jgen.writeStartArray();
-            for(double val : elements)
-            {
-                jgen.writeNumber(val);
-            }
+
+            value.stream().forEach(n -> {
+                try
+                {
+                    jgen.writeNumber(n);
+                }
+                catch(IOException e)
+                {
+                    e.printStackTrace(); // TODO something more meaningful?
+                }
+            });
+
             jgen.writeEndArray();
             jgen.writeEndObject();
         }

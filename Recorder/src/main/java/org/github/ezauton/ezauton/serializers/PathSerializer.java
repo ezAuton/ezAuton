@@ -31,13 +31,8 @@ public class PathSerializer extends StdSerializer<Path>
     {
         try
         {
-            Field pathSegmentsField = Path.class.getDeclaredField("pathSegments");
-            Field lengthField = Path.class.getDeclaredField("length");
-            pathSegmentsField.setAccessible(true);
-            lengthField.setAccessible(true);
-
-            List<IPathSegment> pathSegments = (List<IPathSegment>) pathSegmentsField.get(value);
-            double length = (double) lengthField.get(value);
+            List<IPathSegment> pathSegments = value.getPathSegments();
+            double length = value.getLength();
 
             jgen.writeStartObject();
             jgen.writeFieldName("pathSegments");
