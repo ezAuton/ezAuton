@@ -1,6 +1,5 @@
 package org.github.ezauton.ezauton.pathplanning;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 
 import java.io.Serializable;
@@ -8,7 +7,6 @@ import java.io.Serializable;
 /**
  * A section of a path (usually linear) which has similar laws (i.e. same transition between two speeds).
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public interface IPathSegment extends Serializable
 {
     double getAbsoluteDistanceEnd();
