@@ -165,7 +165,7 @@ public class QuinticSpline implements MathUtils.Geometry.ParametricFunction
      * @param segments A list of path segments
      * @return An array of spline-shaped path segments
      */
-    public static PPWaypoint[] toPathSegments(List<QuinticSpline> splines, List<PPWaypoint> segments)
+    public static PPWaypoint[] toPathSegments(List<QuinticSpline> splines, List<? extends PPWaypoint> segments)
     {
         boolean isError = false;
 

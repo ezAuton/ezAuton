@@ -8,10 +8,7 @@ import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncode
 import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
 import org.github.ezauton.ezauton.pathplanning.Path;
 import org.github.ezauton.ezauton.pathplanning.QuinticSpline;
-import org.github.ezauton.ezauton.pathplanning.purepursuit.ILookahead;
-import org.github.ezauton.ezauton.pathplanning.purepursuit.LookaheadBounds;
-import org.github.ezauton.ezauton.pathplanning.purepursuit.PPWaypoint;
-import org.github.ezauton.ezauton.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import org.github.ezauton.ezauton.pathplanning.purepursuit.*;
 import org.github.ezauton.ezauton.recorder.base.PurePursuitRecorder;
 import org.github.ezauton.ezauton.recorder.base.RobotStateRecorder;
 import org.github.ezauton.ezauton.recorder.base.TankDriveableRecorder;
@@ -36,27 +33,12 @@ public class RecorderTest2
         ImmutableVector immutableVector = new ImmutableVector(0,0);
         immutableVector.isFinite();
 
-        PPWaypoint waypoint1 = new PPWaypoint(new ImmutableVector(0, 0), 15, 13, -12);
-        PPWaypoint waypoint2 = new PPWaypoint(new ImmutableVector(20, 20), 30, 13, -12);
-        PPWaypoint waypoint3 = new PPWaypoint(new ImmutableVector(17.2, 12), 0, 13, -12);
-
-        QuinticSpline spline = new QuinticSpline(waypoint1.getLocation(), waypoint2.getLocation(), new ImmutableVector(0, 30), new ImmutableVector(-20, 0));
-        QuinticSpline spline2 = new QuinticSpline(waypoint2.getLocation(), waypoint3.getLocation(), new ImmutableVector(-20, 0), new ImmutableVector(0, -10));
-
-        PPWaypoint[] ppWaypoints = QuinticSpline.toPathSegments(Arrays.asList(spline, spline2), Arrays.asList(waypoint1, waypoint2, waypoint3));
-
-        Arrays.stream(ppWaypoints).forEach(System.out::println);
-        Path path = new PP_PathGenerator(ppWaypoints).generate(0.05);
-//
-//        Path path = new PPWaypoint.Builder()
-//                .add(0, 0, 16, 13, -12)
-//                .add(0, 4, 16, 13, -12)
-//                .add(-0.5, 8.589, 16, 13, -12)
-//                .add(-0.5, 12.405, 13, 13, -12)
-//                .add(-0.5, 17, 8.5, 13, -12)
-//                .add(1.5, 19.4, 0, 13, -12)
-//                .buildPathGenerator()
-//                .generate(0.05);
+        Path path = new SplinePPWaypoint.Builder()
+                .add(0, 0, 0, 30, 15, 13, -12)
+                .add(20, 20, -20, 0, 30, 13,-20)
+                .add(17.2, 12, 0, -10, 0, 13, -20)
+                .buildPathGenerator()
+                .generate(0.05);
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
