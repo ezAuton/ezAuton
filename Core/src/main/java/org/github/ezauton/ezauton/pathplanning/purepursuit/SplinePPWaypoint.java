@@ -3,6 +3,7 @@ package org.github.ezauton.ezauton.pathplanning.purepursuit;
 import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
 import org.github.ezauton.ezauton.pathplanning.QuinticSpline;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
+import org.github.ezauton.ezauton.utils.MathUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,13 +14,23 @@ import java.util.List;
  */
 public class SplinePPWaypoint extends PPWaypoint implements Serializable
 {
+
+    private static final double kTheta = 1.2;
+
     public static class Builder
     {
         private List<SplinePPWaypoint> waypointList = new ArrayList<>();
 
         public Builder add(double x, double y, double xPrime, double yPrime, double speed, double acceleration, double deceleration)
         {
-            SplinePPWaypoint waypoint = SplinePPWaypoint.simple2D(x, y, xPrime, yPrime, speed, acceleration, deceleration);
+            SplinePPWaypoint waypoint = new SplinePPWaypoint(new ImmutableVector(x, y), new ImmutableVector(xPrime, yPrime), speed, acceleration, deceleration);
+            waypointList.add(waypoint);
+            return this;
+        }
+
+        public Builder add(double x, double y, double theta, double speed, double acceleration, double deceleration)
+        {
+            SplinePPWaypoint waypoint = SplinePPWaypoint.simple2D(x, y, theta, speed, acceleration, deceleration);
             waypointList.add(waypoint);
             return this;
         }
@@ -33,7 +44,13 @@ public class SplinePPWaypoint extends PPWaypoint implements Serializable
                 {
                     SplinePPWaypoint prevWP = waypointList.get(i - 1);
                     SplinePPWaypoint thisWP = waypointList.get(i);
-                    splines.add(new QuinticSpline(prevWP.getLocation(), thisWP.getLocation(), prevWP.tanVec, thisWP.tanVec));
+                    ImmutableVector prevWpTanvec = prevWP.tanVec;
+
+                    if(MathUtils.epsilonEquals(prevWpTanvec.mag(), kTheta)) {
+                        prevWpTanvec = prevWP.tanVec.mul(prevWP.getLocation().dist(thisWP.getLocation()));
+                    }
+
+                    splines.add(new QuinticSpline(prevWP.getLocation(), thisWP.getLocation(), prevWpTanvec, thisWP.tanVec));
                 }
                 return new PP_PathGenerator(QuinticSpline.toPathSegments(splines, waypointList));
             }
@@ -62,22 +79,27 @@ public class SplinePPWaypoint extends PPWaypoint implements Serializable
         this.tanVec = tanVec;
     }
 
+    public SplinePPWaypoint(ImmutableVector location, double theta, double speed, double acceleration, double deceleration)
+    {
+        super(location, speed, acceleration, deceleration);
+        this.tanVec = new ImmutableVector(Math.cos(theta) * kTheta, Math.sin(theta) * kTheta);
+    }
+
     /**
      * A shortcut to making a 2D waypoint
      *
      * @param x            X-coordinate for the location of this waypoint
      * @param y            Y-coordinate for the location of this waypoint
-     * @param xPrime       X-component for vector tangent to the spline at this waypoint
-     * @param yPrime       Y-component for vector tangent to the spline at this waypoint
+     * @param theta        Angle that the robot should be at when it reaches this waypoint
      * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
      * @param acceleration Maximum acceleration allowed to reach the target speed
      * @param deceleration Maximum deceleration allowed to reach the target speed
      * @return A waypoint with the specified properties
      */
-    public static SplinePPWaypoint simple2D(double x, double y, double xPrime, double yPrime, double speed, double acceleration, double deceleration)
+    public static SplinePPWaypoint simple2D(double x, double y, double theta, double speed, double acceleration, double deceleration)
     {
         if(deceleration > 0) { throw new IllegalArgumentException("Deceleration cannot be positive!"); }
-        return new SplinePPWaypoint(new ImmutableVector(x, y), new ImmutableVector(xPrime, yPrime), speed, acceleration, deceleration);
+        return new SplinePPWaypoint(new ImmutableVector(x, y), theta, speed, acceleration, deceleration);
     }
 
     /**
@@ -103,14 +125,23 @@ public class SplinePPWaypoint extends PPWaypoint implements Serializable
      * @param x            X-coordinate for the location of this waypoint
      * @param y            Y-coordinate for the location of this waypoint
      * @param z            Z-coordinate for the location of this waypoint
+     * @param theta        Heading at this waypoint
+     * @param phi          Azimuth at this waypoint
      * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
      * @param acceleration Maximum acceleration allowed to reach the target speed
      * @param deceleration Maximum deceleration allowed to reach the target speed
      * @return A waypoint with the specified properties
+     *
+     * @see <a href="http://mathworld.wolfram.com/SphericalCoordinates.html">Spherical Coordinates</a>
      */
-    public static SplinePPWaypoint simple3D(double x, double y, double z, double xPrime, double yPrime, double zPrime, double speed, double acceleration, double deceleration)
+    public static SplinePPWaypoint simple3D(double x, double y, double z, double theta, double phi, double speed, double acceleration, double deceleration)
     {
-        return new SplinePPWaypoint(new ImmutableVector(x, y, z), new ImmutableVector(xPrime, yPrime, zPrime), speed, acceleration, deceleration);
+        ImmutableVector tanVec = new ImmutableVector(
+                kTheta * Math.sin(phi) * Math.cos(theta),
+                kTheta * Math.sin(phi) * Math.sin(theta),
+                kTheta * Math.cos(phi)
+        );
+        return new SplinePPWaypoint(new ImmutableVector(x, y, z), tanVec, speed, acceleration, deceleration);
     }
 
 

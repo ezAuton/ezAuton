@@ -1,6 +1,7 @@
 package org.github.ezauton.ezauton.pathplanning;
 
 import org.github.ezauton.ezauton.pathplanning.purepursuit.PPWaypoint;
+import org.github.ezauton.ezauton.pathplanning.purepursuit.SplinePPWaypoint;
 import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
 import org.github.ezauton.ezauton.utils.InterpolationMap;
 import org.github.ezauton.ezauton.utils.MathUtils;
@@ -87,6 +88,14 @@ public class QuinticSpline implements MathUtils.Geometry.ParametricFunction
         // p_0
         f = first;
 
+    }
+
+    public QuinticSpline(ImmutableVector first, ImmutableVector last, double firstTheta, double lastTheta) {
+        this(first,
+             last,
+             new ImmutableVector(Math.cos(firstTheta), Math.sin(firstTheta)).mul(1.2 * first.dist(last)),
+             new ImmutableVector(Math.cos(lastTheta), Math.sin(lastTheta)).mul(1.2 * first.dist(last))
+            );
     }
 
     public ImmutableVector getPoint(double relativeDistance)
