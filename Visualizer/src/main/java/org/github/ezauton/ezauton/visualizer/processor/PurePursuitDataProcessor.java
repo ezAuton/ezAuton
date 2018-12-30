@@ -97,7 +97,7 @@ public class PurePursuitDataProcessor implements IDataProcessor
         closestPoint.setCenterX((originXPx));
         closestPoint.setCenterX((originYPx));
 
-        currentSegmentLine.setStrokeWidth(3);
+        currentSegmentLine.setStrokeWidth(1);
         currentSegmentLine.setStroke(Paint.valueOf("orange"));
 
         anchorPane.getChildren().add(closestPoint);

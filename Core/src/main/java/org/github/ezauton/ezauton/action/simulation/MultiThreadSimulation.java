@@ -54,7 +54,12 @@ public class MultiThreadSimulation implements ISimulation
      */
     public void run(long timeout, TimeUnit timeUnit)
     {
-        actions.forEach(action -> new ThreadBuilder(action, timeWarpedClock).startAndWait(timeout, timeUnit));
+        List<Thread> threads = new ArrayList<>();
+        for(IAction action : actions)
+        {
+            threads.add(new ThreadBuilder(action, timeWarpedClock).startAndWait(timeout, timeUnit));
+        }
+        threads.forEach(Thread::interrupt);
     }
 
 

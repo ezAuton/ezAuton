@@ -1,8 +1,6 @@
 package org.github.ezauton.ezauton.test.simulator;
 
-import org.github.ezauton.ezauton.action.ActionGroup;
-import org.github.ezauton.ezauton.action.BaseAction;
-import org.github.ezauton.ezauton.action.DelayedAction;
+import org.github.ezauton.ezauton.action.*;
 import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import org.github.ezauton.ezauton.utils.SimulatedClock;
@@ -79,5 +77,30 @@ public class SimulatorTest
             clock.incAndGet();
         }
         System.out.println("encoderRotationEstimator = " + encoderRotationEstimator.estimateLocation());
+    }
+
+    @Test
+    public void testTimeout() throws InterruptedException
+    {
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+
+        MultiThreadSimulation simulation = new MultiThreadSimulation(1);
+        ActionGroup actionGroup = new ActionGroup();
+
+        PeriodicAction action = new BackgroundAction(20, TimeUnit.MILLISECONDS, () -> {
+            atomicInteger.incrementAndGet();
+            return true;
+        });
+
+        //TODO: Order matters? See github #35
+        actionGroup.addSequential(action);
+
+        simulation.add(actionGroup);
+        simulation.run(1, TimeUnit.SECONDS);
+
+        int actual = atomicInteger.get();
+        Assert.assertEquals(50, actual, 2);
+        Thread.sleep(500); // other threads should have stopped, no more incrementing
+        Assert.assertEquals("2", actual, atomicInteger.get());
     }
 }
