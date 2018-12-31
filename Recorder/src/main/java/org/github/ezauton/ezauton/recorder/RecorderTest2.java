@@ -34,9 +34,9 @@ public class RecorderTest2
         immutableVector.isFinite();
 
         Path path = new SplinePPWaypoint.Builder()
-                .add(0, 0, 0, 30, 15, 13, -12)
-                .add(20, 20, -20, 0, 30, 13,-20)
-                .add(17.2, 12, 0, -10, 0, 13, -20)
+                .add(0, 0, Math.PI / 2, 15, 13, -12)
+                .add(20, 20, Math.PI, 30, 13,-21)
+                .add(17.2, 12, 3 * Math.PI / 2, 0, 13, -20)
                 .buildPathGenerator()
                 .generate(0.05);
 
