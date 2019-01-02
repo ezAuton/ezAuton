@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
 }
 
 group 'com.team2502'
@@ -28,6 +29,7 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile project(':Core')
-    compile 'edu.wpi.first.wpilibj:wpilibJavaFinal:0.1.0-SNAPSHOT'
-    compile 'com.kauailabs.navx.frc:navx_frc:3.0.324'
+    compile wpilib()
+    compile ctre()
+    compile navx()
 }
