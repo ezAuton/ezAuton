@@ -48,14 +48,7 @@ public class SimulatedTankBotTest
 
         MultiThreadSimulation sim = new MultiThreadSimulation(10);
 
-        BackgroundAction background = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot, locEstimator, () -> {
-//            if(bot.getLeftDistanceSensor().getVelocity() != 0)
-//            {
-//                System.out.println("leftVelocity() = " + bot.getLeftDistanceSensor().getVelocity());
-//                System.out.println("rightVelocity() = " + bot.getRightDistanceSensor().getVelocity());
-//            }
-            return true;
-        });
+        BackgroundAction background = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot::update, locEstimator::update);
 
         sim.add(background);
 
@@ -94,10 +87,7 @@ public class SimulatedTankBotTest
 
         MultiThreadSimulation sim = new MultiThreadSimulation();
 
-        sim.add(new TimedPeriodicAction(5, TimeUnit.SECONDS, () -> {
-            bot.run(1, 1);
-            return true;
-        }));
+        sim.add(new TimedPeriodicAction(5, TimeUnit.SECONDS, () -> bot.run(1, 1)));
 
         sim.runSimulation(10, TimeUnit.SECONDS);
 

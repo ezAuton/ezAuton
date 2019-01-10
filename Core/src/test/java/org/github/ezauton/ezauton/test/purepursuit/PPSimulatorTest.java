@@ -5,6 +5,7 @@ import org.github.ezauton.ezauton.action.BackgroundAction;
 import org.github.ezauton.ezauton.action.PPCommand;
 import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.actuators.IVelocityMotor;
+import org.github.ezauton.ezauton.helper.PathHelper;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
 import org.github.ezauton.ezauton.pathplanning.Path;
@@ -57,6 +58,12 @@ public class PPSimulatorTest
     }
 
     @Test
+    public void testStraightGeneric()
+    {
+        test(PathHelper.STRAIGHT_12UNITS);
+    }
+
+    @Test
     public void testRight()
     {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
@@ -66,15 +73,8 @@ public class PPSimulatorTest
         test(waypoint1, waypoint2, waypoint3);
     }
 
-    /**
-     * Test the path with a robot max acceleration 14ft/s^2, min velocity 0.3ft/s, maxVelocity 16ft/s
-     * @param waypoints
-     */
-    private void test(PPWaypoint... waypoints)
+    private void test(Path path)
     {
-        PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
-        Path path = pathGenerator.generate(0.05);
-
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
 //        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
@@ -96,10 +96,10 @@ public class PPSimulatorTest
 
         PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
+        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot::update);
 
         // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator);
+        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator::update);
 
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)
@@ -139,8 +139,19 @@ public class PPSimulatorTest
         ImmutableVector finalLoc = locEstimator.estimateLocation();
 
         // If the final loc is approximately equal to the last waypoint
-        approxEqual(waypoints[waypoints.length - 1].getLocation(), finalLoc, 0.2);
+        approxEqual(path.getEnd(), finalLoc, 0.2);
 
+    }
+
+    /**
+     * Test the path with a robot max acceleration 14ft/s^2, min velocity 0.3ft/s, maxVelocity 16ft/s
+     * @param waypoints
+     */
+    private void test(PPWaypoint... waypoints)
+    {
+        PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
+        Path path = pathGenerator.generate(0.05);
+        test(path);
     }
 
     private void approxEqual(ImmutableVector a, ImmutableVector b, double epsilon)

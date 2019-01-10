@@ -87,10 +87,7 @@ public class SimulatorTest
         MultiThreadSimulation simulation = new MultiThreadSimulation(1);
         ActionGroup actionGroup = new ActionGroup();
 
-        PeriodicAction action = new BackgroundAction(20, TimeUnit.MILLISECONDS, () -> {
-            atomicInteger.incrementAndGet();
-            return true;
-        });
+        PeriodicAction action = new BackgroundAction(20, TimeUnit.MILLISECONDS, atomicInteger::incrementAndGet);
 
         //TODO: Order matters? See github #35
         actionGroup.addSequential(action);

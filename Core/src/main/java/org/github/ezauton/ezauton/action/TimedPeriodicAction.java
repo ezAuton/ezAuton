@@ -1,7 +1,5 @@
 package org.github.ezauton.ezauton.action;
 
-import org.github.ezauton.ezauton.localization.Updateable;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,9 +16,9 @@ public class TimedPeriodicAction extends PeriodicAction
      * @param duration     The timeunit that period is
      * @param durationUnit
      */
-    public TimedPeriodicAction(long period, TimeUnit periodUnit, long duration, TimeUnit durationUnit, Updateable... updateables)
+    public TimedPeriodicAction(long period, TimeUnit periodUnit, long duration, TimeUnit durationUnit, Runnable... runnables)
     {
-        super(period, periodUnit, updateables);
+        super(period, periodUnit, runnables);
         durationMillis = durationUnit.toMillis(duration);
     }
 
@@ -40,9 +38,9 @@ public class TimedPeriodicAction extends PeriodicAction
      * @param duration     The timeunit that period is
      * @param durationUnit
      */
-    public TimedPeriodicAction(long duration, TimeUnit durationUnit, Updateable... updateables)
+    public TimedPeriodicAction(long duration, TimeUnit durationUnit, Runnable... runnables)
     {
-        super(updateables);
+        super(runnables);
         durationMillis = durationUnit.toMillis(duration);
     }
 

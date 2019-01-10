@@ -20,14 +20,12 @@ public class InsantSimulatorTest
         IAction actionA = new TimedPeriodicAction(20, TimeUnit.SECONDS)
                 .addUpdateable(a -> () -> {
                     sum.addAndGet(a.getStopwatch().read());
-                    return true;
                 });
 
         IAction actionB = new TimedPeriodicAction(20, TimeUnit.SECONDS)
                 .addUpdateable(a -> () -> {
                     long l = sum.addAndGet(-a.getStopwatch().read(TimeUnit.MILLISECONDS));
                     Assert.assertEquals(0, l);
-                    return true;
                 });
 
         ModernSimulatedClock clock = new ModernSimulatedClock();

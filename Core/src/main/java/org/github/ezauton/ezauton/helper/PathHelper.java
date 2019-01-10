@@ -9,12 +9,12 @@ import org.github.ezauton.ezauton.pathplanning.purepursuit.PPWaypoint;
  * <p>
  * This class only contains static members.
  */
-public class Paths
+public class PathHelper
 {
     /**
      * Describes a path 12 (ft? m?) long reaching a max velocity of 5 (ft/s? m/s?) with a max accel and decel of 3 (ft/s^2? m/s^2)
      */
-    public static Path STRAIGHT_12FT;
+    public static Path STRAIGHT_12UNITS;
 
     static
     {
@@ -23,6 +23,6 @@ public class Paths
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 12, 0, 3, -3);
 
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoint1, waypoint2, waypoint3);
-        STRAIGHT_12FT = pathGenerator.generate(0.05);
+        STRAIGHT_12UNITS = pathGenerator.generate(0.05);
     }
 }
