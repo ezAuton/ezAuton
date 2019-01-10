@@ -1,4 +1,4 @@
-package com.team2502.ezauton.utils;
+package org.github.ezauton.ezauton.utils;
 
 import org.github.ezauton.ezauton.pathplanning.IPathSegment;
 import org.github.ezauton.ezauton.pathplanning.LinearPathSegment;

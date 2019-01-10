@@ -55,6 +55,10 @@ public abstract class PeriodicAction extends BaseAction
         return this;
     }
 
+    public int getTimesRun() {
+        return timesRun;
+    }
+
     /**
      * Added because https://stackoverflow.com/a/9584671/4889030 is ugly
      *
