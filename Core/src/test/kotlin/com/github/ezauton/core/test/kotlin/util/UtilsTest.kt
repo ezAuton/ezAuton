@@ -29,7 +29,7 @@ class UtilsTest {
     }
 
     @Test
-    fun `test interpolator too fast accel`() {
+    fun `test interpolator integrate`() {
 
         val map = mapOf(
                 1.0 to 2.0,
