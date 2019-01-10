@@ -14,7 +14,7 @@ public abstract class PeriodicAction extends BaseAction
 {
 
     protected final long periodMillis;
-    private final List<Updateable> updateables;
+    private final List<Runnable> runnables;
     protected IClock clock;
     protected Stopwatch stopwatch;
     protected boolean periodDelayAfterExecution = false;
@@ -25,22 +25,22 @@ public abstract class PeriodicAction extends BaseAction
      *
      * @param period
      * @param timeUnit
-     * @param updateables
+     * @param runnables
      */
-    public PeriodicAction(long period, TimeUnit timeUnit, Updateable... updateables)
+    public PeriodicAction(long period, TimeUnit timeUnit, Runnable... runnables)
     {
         this.periodMillis = timeUnit.toMillis(period);
-        this.updateables = new ArrayList<>(Arrays.asList(updateables));
+        this.runnables = new ArrayList<>(Arrays.asList(runnables));
     }
 
     /**
      * Creates a PeriodicAction with a 20 ms period.
      *
-     * @param updateables
+     * @param runnables
      */
-    public PeriodicAction(Updateable... updateables)
+    public PeriodicAction(Runnable... runnables)
     {
-        this(20, TimeUnit.MILLISECONDS, updateables);
+        this(20, TimeUnit.MILLISECONDS, runnables);
     }
 
     public PeriodicAction()
@@ -48,10 +48,10 @@ public abstract class PeriodicAction extends BaseAction
         this(20, TimeUnit.MILLISECONDS);
     }
 
-    public PeriodicAction addUpdateable(Updateable updateable)
+    public PeriodicAction addUpdateable(Runnable runnable)
     {
         // Added because https://stackoverflow.com/a/9584671/4889030 is ugly
-        updateables.add(updateable);
+        runnables.add(runnable);
         return this;
     }
 
@@ -65,9 +65,9 @@ public abstract class PeriodicAction extends BaseAction
      * @param updateableFunc
      * @return
      */
-    public PeriodicAction addUpdateable(Function<PeriodicAction, Updateable> updateableFunc)
+    public PeriodicAction addUpdateable(Function<PeriodicAction, Runnable> updateableFunc)
     {
-        updateables.add(updateableFunc.apply(this));
+        runnables.add(updateableFunc.apply(this));
         return this;
     }
 
@@ -75,7 +75,7 @@ public abstract class PeriodicAction extends BaseAction
 
     protected void execute()
     {
-        updateables.forEach(Updateable::update);
+        runnables.forEach(Runnable::run);
     }
 
     protected abstract boolean isFinished();

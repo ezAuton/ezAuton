@@ -15,11 +15,11 @@ public class BackgroundAction extends PeriodicAction
      *
      * @param period
      * @param timeUnit
-     * @param updateables
+     * @param runnables
      */
-    public BackgroundAction(long period, TimeUnit timeUnit, Updateable... updateables)
+    public BackgroundAction(long period, TimeUnit timeUnit, Runnable... runnables)
     {
-        super(period, timeUnit, updateables);
+        super(period, timeUnit, runnables);
     }
 
     @Override

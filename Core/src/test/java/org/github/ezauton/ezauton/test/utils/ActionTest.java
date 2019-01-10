@@ -228,10 +228,7 @@ public class ActionTest
 
         BackgroundAction actionA = new BackgroundAction(20, TimeUnit.MILLISECONDS);
 
-        actionA.addUpdateable(() -> {
-            counter.incrementAndGet();
-            return true;
-        });
+        actionA.addUpdateable(counter::incrementAndGet);
 
         actionA.setPeriodDelayAfterExecution(false);
 
