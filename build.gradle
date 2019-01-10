@@ -4,7 +4,7 @@ plugins {
 
 }
 
-group 'com.team2502'
+group 'com.github.ezauton'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
