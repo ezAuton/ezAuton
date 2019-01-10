@@ -67,9 +67,9 @@ public class RecorderTest
         recording.addSubRecording(ppRec);
         recording.addSubRecording(tankRobot);
 
-        BackgroundAction recAction = new BackgroundAction(10, TimeUnit.MILLISECONDS, recording);
+        BackgroundAction recAction = new BackgroundAction(10, TimeUnit.MILLISECONDS, recording::update);
 
-        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
+        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot::update);
 
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)
