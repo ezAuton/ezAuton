@@ -73,10 +73,6 @@ public class SimulatedTankBotTest
 
         sim.runSimulation(12, TimeUnit.SECONDS);
 
-//        System.out.println("leftpos = " + bot.getLeftDistanceSensor().getPosition());
-//        System.out.println("rightpos = " + bot.getRightDistanceSensor().getPosition());
-
-//        System.out.println(locEstimator.estimateLocation());
 
         String homeDir = System.getProperty("user.home");
         java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.txt");
@@ -106,9 +102,6 @@ public class SimulatedTankBotTest
         sim.runSimulation(10, TimeUnit.SECONDS);
 
         bot.run(0, 0);
-
-//        System.out.println("leftpos = " + bot.getLeftDistanceSensor().getPosition());
-//        System.out.println("rightpos = " + bot.getRightDistanceSensor().getPosition());
 
     }
 }

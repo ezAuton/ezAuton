@@ -3,7 +3,7 @@ package org.github.ezauton.ezauton.test.simulator;
 import org.github.ezauton.ezauton.action.*;
 import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
-import org.github.ezauton.ezauton.utils.SimulatedClock;
+import org.github.ezauton.ezauton.utils.ManualClock;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -66,7 +66,7 @@ public class SimulatorTest
     @Test
     public void testStraight()
     {
-        SimulatedClock clock = new SimulatedClock();
+        ManualClock clock = new ManualClock();
         SimulatedTankRobot robot = new SimulatedTankRobot(1, clock, 14, 0.3, 16);
         TankRobotEncoderEncoderEstimator encoderRotationEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftDistanceSensor(), robot.getRightDistanceSensor(), robot);
         encoderRotationEstimator.reset();

@@ -35,22 +35,12 @@ public class ThreadBuilder
         this(action, RealClock.CLOCK);
     }
 
-//    /**
-//     * Builds a new thread
-//     *
-//     * @return
-//     */
-//    public Thread build()
-//    {
-//        return new Thread(toRun);
-//    }
-
     /**
      * Uses ForkJoinPool which will be more efficient than regular build() most of the time
      */
     public Thread build()
     {
-        return new Thread(toRun);
+        return new ActionThread(toRun);
     }
 
     public ToRun getToRun()
@@ -91,6 +81,17 @@ public class ThreadBuilder
             e.printStackTrace();
         }
         return start;
+    }
+
+    /**
+     * Just used for instanceof
+     */
+    public class ActionThread extends Thread
+    {
+        public ActionThread(ToRun toRun)
+        {
+            super(toRun);
+        }
     }
 
     private class ToRun implements Runnable
