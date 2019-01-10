@@ -1,33 +1,55 @@
 package org.github.ezauton.ezauton.test.simulator;
 
+import org.github.ezauton.ezauton.action.BaseAction;
+import org.github.ezauton.ezauton.action.IAction;
+import org.github.ezauton.ezauton.action.simulation.ModernSimulatedClock;
 import org.github.ezauton.ezauton.actuators.implementations.BaseSimulatedMotor;
-import org.github.ezauton.ezauton.utils.SimulatedClock;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class SimulatedMotorTest
 {
     @Test
-    public void testMotor()
-    {
-        SimulatedClock clock = new SimulatedClock();
-        BaseSimulatedMotor motor = new BaseSimulatedMotor(clock);
+    public void testMotor() throws TimeoutException {
 
-        Assert.assertEquals(0, motor.getPosition(), 1E-6);
-        motor.runVelocity(1);
+        ModernSimulatedClock clock = new ModernSimulatedClock();
 
-        clock.addTime(1, TimeUnit.SECONDS);
-        Assert.assertEquals(1, motor.getPosition(), 1E-6);
+        IAction action = new BaseAction(()->{
+            BaseSimulatedMotor motor = new BaseSimulatedMotor(clock);
 
-        clock.addTime(1, TimeUnit.SECONDS);
-        Assert.assertEquals(2, motor.getPosition(), 1E-6);
-        motor.runVelocity(10);
-        Assert.assertEquals(2, motor.getPosition(), 1E-6);
+            Assert.assertEquals(0, motor.getPosition(), 1E-6);
+            motor.runVelocity(1);
 
-        clock.addTime(1, TimeUnit.SECONDS);
-        Assert.assertEquals(12, motor.getPosition(), 1E-6);
+            try {
+                clock.sleep(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                return;
+            }
+
+            Assert.assertEquals(1, motor.getPosition(), 1E-6);
+
+            try {
+                clock.sleep(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                return;
+            }
+            Assert.assertEquals(2, motor.getPosition(), 1E-6);
+            motor.runVelocity(10);
+            Assert.assertEquals(2, motor.getPosition(), 1E-6);
+
+            try {
+                clock.sleep(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                return;
+            }
+            Assert.assertEquals(12, motor.getPosition(), 1E-6);
+        });
+
+        clock.add(action);
+        clock.runSimulation(5, TimeUnit.SECONDS);
 
     }
 }

@@ -7,13 +7,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class InsantSimulatorTest
 {
     @Test
-    public void testABC()
-    {
+    public void testABC() throws TimeoutException {
 
         AtomicLong sum = new AtomicLong();
 

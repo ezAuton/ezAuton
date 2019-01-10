@@ -7,7 +7,7 @@ import org.github.ezauton.ezauton.actuators.IVoltageMotor;
 import org.github.ezauton.ezauton.actuators.implementations.BaseSimulatedMotor;
 import org.github.ezauton.ezauton.actuators.implementations.BoundedVelocityProcessor;
 import org.github.ezauton.ezauton.actuators.implementations.RampUpVelocityProcessor;
-import org.github.ezauton.ezauton.utils.SimulatedClock;
+import org.github.ezauton.ezauton.utils.ManualClock;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -52,7 +52,7 @@ public class ActuatorsTest
         AtomicDouble velocity = new AtomicDouble();
         IVelocityMotor velocityMotor = velocity::set;
 
-        SimulatedClock clock = new SimulatedClock();
+        ManualClock clock = new ManualClock();
 
         RampUpVelocityProcessor velocityProcessor = new RampUpVelocityProcessor(velocityMotor, clock, 1);
 
@@ -125,7 +125,7 @@ public class ActuatorsTest
         AtomicDouble velocity = new AtomicDouble();
         IVelocityMotor velocityMotor = velocity::set;
 
-        SimulatedClock clock = new SimulatedClock();
+        ManualClock clock = new ManualClock();
         BaseSimulatedMotor simulatedMotor = new BaseSimulatedMotor(clock);
 
         simulatedMotor.runVelocity(1);
