@@ -27,7 +27,7 @@ public class DelayedAction extends BaseAction
     /**
      * Called after delay is done
      */
-    public void onTimeUp(IClock clock)
+    private void onTimeUp()
     {
         if(runnable != null)
         {
@@ -56,6 +56,6 @@ public class DelayedAction extends BaseAction
         {
             return;
         }
-        onTimeUp(clock);
+        onTimeUp();
     }
 }

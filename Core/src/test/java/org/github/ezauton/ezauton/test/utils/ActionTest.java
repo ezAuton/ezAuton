@@ -1,22 +1,67 @@
 package org.github.ezauton.ezauton.test.utils;
 
-import org.github.ezauton.ezauton.action.ActionGroup;
-import org.github.ezauton.ezauton.action.BackgroundAction;
-import org.github.ezauton.ezauton.action.DelayedAction;
-import org.github.ezauton.ezauton.action.ThreadBuilder;
+import org.github.ezauton.ezauton.action.*;
 import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
+import org.github.ezauton.ezauton.utils.IClock;
 import org.github.ezauton.ezauton.utils.RealClock;
 import org.github.ezauton.ezauton.utils.Stopwatch;
 import org.github.ezauton.ezauton.utils.TimeWarpedClock;
 import org.junit.Test;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class ActionTest
 {
+
+    @Test
+    public void testScheduleActionInterface() throws InterruptedException {
+        AtomicLong atomicLong = new AtomicLong(0);
+        IAction action = new IAction(){
+
+            @Override
+            public void run(IClock clock) {
+                atomicLong.set(clock.getTime());
+            }
+
+            @Override
+            public void end() {
+                // Not implemented
+            }
+
+            @Override
+            public IAction onFinish(Runnable onFinish) {
+                return this; // Not implemented
+            }
+
+            @Override
+            public List<Runnable> getFinished() {
+                return Collections.emptyList(); // Not implemented
+            }
+        };
+
+        action.schedule().join(1_000);
+
+        assertEquals(System.currentTimeMillis(),atomicLong.get(),1_000);
+    }
+
+    @Test
+    public void testDelayedActionInterrupt() throws InterruptedException {
+        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+
+        DelayedAction delayedAction = new DelayedAction(20, TimeUnit.SECONDS, () -> atomicBoolean.set(true));
+        Thread thread = delayedAction.schedule();
+        thread.interrupt();
+        thread.join(1_000);
+        assertFalse(atomicBoolean.get());
+    }
 
     @Test
     public void testDelayedAction()
@@ -73,7 +118,7 @@ public class ActionTest
     }
 
     @Test
-    public void testActionGroupSequentialThreadBuilder() throws InterruptedException
+    public void testActionGroupSequentialThreadBuilder()
     {
         AtomicInteger count = new AtomicInteger(0);
 

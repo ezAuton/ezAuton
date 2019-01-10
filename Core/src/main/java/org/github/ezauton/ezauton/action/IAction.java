@@ -36,9 +36,9 @@ public interface IAction
     /**
      * A helper method to schedule a real-time task. If you want other ways to schedule the action see {@link ThreadBuilder} or {@link MultiThreadSimulation}.
      */
-    default void schedule()
+    default Thread schedule()
     {
-        new ThreadBuilder(this, RealClock.CLOCK).start();
+        return new ThreadBuilder(this, RealClock.CLOCK).start();
     }
 }
 
