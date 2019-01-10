@@ -20,7 +20,7 @@ public class SimulatorTest
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         MultiThreadSimulation simulation = new MultiThreadSimulation();
         simulation.add(new BaseAction(() -> atomicBoolean.set(true)));
-        simulation.run(100, TimeUnit.SECONDS);
+        simulation.runSimulation(100, TimeUnit.SECONDS);
         Assert.assertTrue(atomicBoolean.get());
     }
 
@@ -31,7 +31,7 @@ public class SimulatorTest
         MultiThreadSimulation simulation = new MultiThreadSimulation();
         DelayedAction delayedAction = new DelayedAction(1, TimeUnit.SECONDS, () -> atomicBoolean.set(true));
         simulation.add(delayedAction);
-        simulation.run(100, TimeUnit.SECONDS);
+        simulation.runSimulation(100, TimeUnit.SECONDS);
         Assert.assertTrue(atomicBoolean.get());
     }
 
@@ -58,7 +58,7 @@ public class SimulatorTest
         actionGroup.addSequential(delayedAction); // last
 
         simulation.add(actionGroup);
-        simulation.run(100, TimeUnit.SECONDS);
+        simulation.runSimulation(100, TimeUnit.SECONDS);
         Assert.assertEquals(3, atomicInteger.get());
     }
 
@@ -96,7 +96,7 @@ public class SimulatorTest
         actionGroup.addSequential(action);
 
         simulation.add(actionGroup);
-        simulation.run(1, TimeUnit.SECONDS);
+        simulation.runSimulation(1, TimeUnit.SECONDS);
 
         int actual = atomicInteger.get();
         Assert.assertEquals(50, actual, 2);

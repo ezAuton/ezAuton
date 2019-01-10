@@ -35,7 +35,7 @@ public class InsantSimulatorTest
         clock
                 .add(actionA)
                 .add(actionB)
-                .run(1000, TimeUnit.SECONDS);
+                .runSimulation(1000, TimeUnit.SECONDS);
 
         Assert.assertEquals(0, sum.get());
     }

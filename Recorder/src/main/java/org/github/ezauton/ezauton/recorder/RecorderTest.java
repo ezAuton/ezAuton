@@ -80,7 +80,7 @@ public class RecorderTest
 
 
         // run the simulator with a timeout of 20 seconds
-        simulation.run(30, TimeUnit.SECONDS);
+        simulation.runSimulation(30, TimeUnit.SECONDS);
 
 //        System.out.println("locEstimator.estimateLocation() = " + locEstimator.estimateLocation());
 
