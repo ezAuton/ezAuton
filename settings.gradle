@@ -3,5 +3,4 @@ include 'Core'
 include 'WPILib'
 include 'Visualizer'
 include 'Recorder'
-include 'WPILibExample'
 
