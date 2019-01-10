@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
  * You put in (x, f(x)) pairs of the function that you know for sure,
  * and linear regression is used to find the pairs you didn't explicitly put in.
  *
+ * If the key is outside the bounds, the first/last value is returned
+ *
  * @author ritikmishra
  */
 public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializable //TODO: Remove redundant methods defined in HashMap, also maybe extends HashMap<Double, Double>?
@@ -240,11 +242,11 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
 
         int i = 0;
 
-        for(Double a_key : keys)
+        for(Double keyOn : keys)
         {
-            if(key.floatValue() < a_key.floatValue())
+            if(key.floatValue() < keyOn.floatValue())
             {
-                upperBound = a_key;
+                upperBound = keyOn;
                 if(i > 0) {lowerBound = keys.get(i - 1);}
                 break;
             }
