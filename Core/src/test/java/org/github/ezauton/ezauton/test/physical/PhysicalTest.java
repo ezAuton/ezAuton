@@ -88,6 +88,6 @@ public class PhysicalTest
         localizer.reset();
         return new ActionGroup().with(new BackgroundAction(50, TimeUnit.MILLISECONDS, localizer))
                                 .addSequential(action)
-                                .addSequential(new BaseAction(() -> System.out.println(localizer.estimateLocation())));
+                                .addSequential(new BaseAction(() -> {}));
     }
 }

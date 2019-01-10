@@ -39,10 +39,10 @@ public class MathTest
         // latest closest point ImmutableVector{elements=[-0.5116462707519531, 8.695889472961426]}
 
         ImmutableVector closestPoint = pathSegment.getClosestPoint(robotPos); // ImmutableVector{elements=[-0.5, 8.644769668579102]}
-        System.out.println(closestPoint);
+//        System.out.println(closestPoint);
         double absoluteDistance = pathSegment.getAbsoluteDistance(closestPoint);
 
-        System.out.println(absoluteDistance);
+//        System.out.println(absoluteDistance);
 
 
         // path = PathSegment{from=ImmutableVector{elements=[-0.5, 8.589]}, to=ImmutableVector{elements=[-0.5, 12.405]}}

@@ -107,8 +107,8 @@ public class TimeWarpedClockTest
 
         assertEquals(expectedNums.size(), nums.size());
 
-        System.out.println("expectedNums = " + expectedNums);
-        System.out.println("nums = " + nums);
+//        System.out.println("expectedNums = " + expectedNums);
+//        System.out.println("nums = " + nums);
         for(int i = 0; i < expectedNums.size(); i++)
         {
             assertEquals(expectedNums.get(i).doubleValue(), nums.get(i).doubleValue(), 100);
@@ -129,7 +129,7 @@ public class TimeWarpedClockTest
         long init = System.currentTimeMillis();
         sim.run(10, TimeUnit.SECONDS);
 
-        System.out.println("time.get - init = " + (time.get() - init));
+//        System.out.println("time.get - init = " + (time.get() - init));
 
         assertEquals(1000, time.get() - init, 100);
 
