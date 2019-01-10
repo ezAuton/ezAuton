@@ -71,7 +71,7 @@ public class SimulatedTankBotTest
         sim.add(ppCommand);
 
 
-        sim.run(12, TimeUnit.SECONDS);
+        sim.runSimulation(12, TimeUnit.SECONDS);
 
 //        System.out.println("leftpos = " + bot.getLeftDistanceSensor().getPosition());
 //        System.out.println("rightpos = " + bot.getRightDistanceSensor().getPosition());
@@ -103,7 +103,7 @@ public class SimulatedTankBotTest
             return true;
         }));
 
-        sim.run(10, TimeUnit.SECONDS);
+        sim.runSimulation(10, TimeUnit.SECONDS);
 
         bot.run(0, 0);
 

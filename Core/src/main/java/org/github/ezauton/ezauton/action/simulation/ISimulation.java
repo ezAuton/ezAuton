@@ -13,7 +13,7 @@ public interface ISimulation
      */
     ISimulation add(IAction action);
 
-    void run(long timeout, TimeUnit timeUnit);
+    void runSimulation(long timeout, TimeUnit timeUnit);
 
     IClock getClock();
 }

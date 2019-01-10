@@ -125,14 +125,13 @@ public class SimulatedClock implements IClock
      * @deprecated Does not currently return a Future
      */
     @Override
-    public Future<?> scheduleAt(long millis, Runnable runnable)
+    public void scheduleAt(long millis, Runnable runnable)
     {
         if(millis < getTime())
         {
             throw new IllegalArgumentException("You are scheduling a task for before the current time!");
         }
         jobs.add(new Job(millis, runnable));
-        return null;
     }
 
     @Override

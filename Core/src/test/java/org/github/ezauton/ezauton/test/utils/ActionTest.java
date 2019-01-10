@@ -39,7 +39,7 @@ public class ActionTest
         Stopwatch stopwatch = new Stopwatch(RealClock.CLOCK);
 
         stopwatch.resetIfNotInit();
-        sim.run(2, TimeUnit.SECONDS);
+        sim.runSimulation(2, TimeUnit.SECONDS);
         assertEquals(delay, stopwatch.pop(TimeUnit.SECONDS) * 10, 0.2);
     }
 
@@ -74,7 +74,7 @@ public class ActionTest
 
         MultiThreadSimulation sim = new MultiThreadSimulation(10);
         sim.add(group);
-        sim.run(3, TimeUnit.SECONDS);
+        sim.runSimulation(3, TimeUnit.SECONDS);
         assertEquals(4, count.get());
 
     }
@@ -143,7 +143,7 @@ public class ActionTest
 
         MultiThreadSimulation simulation = new MultiThreadSimulation(10);
         simulation.add(actionGroup);
-        simulation.run(100, TimeUnit.SECONDS);
+        simulation.runSimulation(100, TimeUnit.SECONDS);
 
         assertEquals(10, count.intValue());
     }
@@ -178,7 +178,7 @@ public class ActionTest
 
         MultiThreadSimulation simulation = new MultiThreadSimulation();
         simulation.add(group);
-        simulation.run(100, TimeUnit.SECONDS);
+        simulation.runSimulation(100, TimeUnit.SECONDS);
 
         assertEquals(4, count.get());
     }
@@ -209,7 +209,7 @@ public class ActionTest
 
         sim.add(group);
 
-        sim.run(10, TimeUnit.SECONDS);
+        sim.runSimulation(10, TimeUnit.SECONDS);
 //        System.out.println("counter = " + counter.get());
         assertEquals(expectedValue, counter.get(), expectedValue * (19F / 20F));
     }

@@ -52,7 +52,7 @@ public class MultiThreadSimulation implements ISimulation
      * @param timeout  The amoount of <b>real</b> time that you want your simulation to cap out at.
      * @param timeUnit The timeunit that the timeout is in
      */
-    public void run(long timeout, TimeUnit timeUnit)
+    public void runSimulation(long timeout, TimeUnit timeUnit)
     {
         List<Thread> threads = new ArrayList<>();
         for(IAction action : actions)
