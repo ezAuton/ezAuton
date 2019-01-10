@@ -100,7 +100,6 @@ public class PathSegmentInterpolated extends LinearPathSegment
     public double getSpeed(double absoluteDistance)
     {
         double relativeDistance = getRelativeDistance(absoluteDistance);
-        Double toReturn = speedInterpolator.get(relativeDistance);
-        return toReturn;
+        return speedInterpolator.get(relativeDistance);
     }
 }
