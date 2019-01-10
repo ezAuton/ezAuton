@@ -44,13 +44,13 @@ public class SimulatorTest
         ActionGroup actionGroup = new ActionGroup();
 
         DelayedAction delayedAction = new DelayedAction(1, TimeUnit.SECONDS, () -> atomicInteger.compareAndSet(2, 3));
-        delayedAction.onFinish(() -> System.out.println("1 done"));
+        delayedAction.onFinish(() -> {});
 
         DelayedAction delayedAction2 = new DelayedAction(10, TimeUnit.MILLISECONDS, () -> atomicInteger.compareAndSet(0, 1));
-        delayedAction2.onFinish(() -> System.out.println("2 done"));
+        delayedAction2.onFinish(() -> {});
 
         DelayedAction delayedAction3 = new DelayedAction(500, TimeUnit.MILLISECONDS, () -> atomicInteger.compareAndSet(1, 2));
-        delayedAction3.onFinish(() -> System.out.println("3 done"));
+        delayedAction3.onFinish(() -> {});
 
         //TODO: Order matters? See github #35
         actionGroup.addParallel(delayedAction3); // second
@@ -76,7 +76,7 @@ public class SimulatorTest
             encoderRotationEstimator.update();
             clock.incAndGet();
         }
-        System.out.println("encoderRotationEstimator = " + encoderRotationEstimator.estimateLocation());
+//        System.out.println("encoderRotationEstimator = " + encoderRotationEstimator.estimateLocation());
     }
 
     @Test

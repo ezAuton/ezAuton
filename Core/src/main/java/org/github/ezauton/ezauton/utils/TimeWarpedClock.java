@@ -47,7 +47,7 @@ public class TimeWarpedClock implements IClock
     public Future<?> scheduleAt(long millis, Runnable runnable)
     {
         double realDt = (millis - getTime()) / speedMultiplier;
-        System.out.println(realDt);
+//        System.out.println(realDt);
         return realClock.scheduleIn((long) realDt, TimeUnit.MILLISECONDS, runnable);
     }
 

@@ -152,7 +152,7 @@ public class Controller implements Initializable
     private static String getExtension(String fileName)
     {
         String ret = fileName.substring(fileName.lastIndexOf(".") + 1);
-        System.out.println("ret = " + ret);
+//        System.out.println("ret = " + ret);
         return ret;
     }
 
@@ -259,8 +259,7 @@ public class Controller implements Initializable
         // must have a file and position
         if(fileChooser.getValue() == null || posChooser.getValue() == null)
         {
-            System.out.println("Please select a file and position!");
-            return;
+            throw new IllegalArgumentException("Please select a file and position!");
         }
 
         // Animation works by interpolating key values between key frames
@@ -305,7 +304,7 @@ public class Controller implements Initializable
                                    keyValArray
         ));
 
-        System.out.println("keyValues = " + keyValues);
+//        System.out.println("keyValues = " + keyValues);
         while(keyValItr.hasNext())
         {
             Map.Entry<Double, List<KeyValue>> next = keyValItr.next();

@@ -25,7 +25,7 @@ public class ActionTest
 
         int delay = 3;
         DelayedAction action = new DelayedAction(delay, TimeUnit.SECONDS); // w
-        action.onFinish(() -> System.out.println("[testDelayedAction] The delayed action finished"));
+//        action.onFinish(() -> System.out.println("[testDelayedAction] The delayed action finished"));
 
         sim.add(action);
 
@@ -79,13 +79,13 @@ public class ActionTest
 
         DelayedAction two = new DelayedAction(200, TimeUnit.MILLISECONDS);
         two.onFinish(() -> {
-            System.out.println("Two finished");
+//            System.out.println("Two finished");
             count.compareAndSet(0, 2);
         });
 
         DelayedAction three = new DelayedAction(300, TimeUnit.MILLISECONDS);
         two.onFinish(() -> {
-            System.out.println("three finished");
+//            System.out.println("three finished");
             count.compareAndSet(2, 3);
         });
 
@@ -94,7 +94,7 @@ public class ActionTest
                 .addSequential(two)
                 .addSequential(three)
                 .onFinish(() -> {
-                    System.out.println("all done");
+//                    System.out.println("all done");
 
                     count.compareAndSet(3, 4);
 
@@ -111,15 +111,15 @@ public class ActionTest
 
         DelayedAction five = new DelayedAction(5, TimeUnit.SECONDS); //then
         five.onFinish(() -> count.compareAndSet(3, 5));
-        five.onFinish(() -> System.out.println("five finished"));
+//        five.onFinish(() -> System.out.println("five finished"));
 
         DelayedAction three1 = new DelayedAction(3, TimeUnit.SECONDS); // first
         three1.onFinish(() -> count.compareAndSet(0, 3));
-        three1.onFinish(() -> System.out.println("three1 finished"));
+//        three1.onFinish(() -> System.out.println("three1 finished"));
 
         DelayedAction three2 = new DelayedAction(3, TimeUnit.SECONDS); // last
         three2.onFinish(() -> count.compareAndSet(5, 8));
-        three2.onFinish(() -> System.out.println("three2 finished"));
+//        three2.onFinish(() -> System.out.println("three2 finished"));
 
         // three1 and five run in parallel
         // when five has 2 seconds left, three2 starts
@@ -130,7 +130,7 @@ public class ActionTest
                 .addSequential(five)
                 .addSequential(three2)
                 .onFinish(() -> {
-                    System.out.println("done");
+//                    System.out.println("done");
                     count.compareAndSet(8, 10);
                 });
 
@@ -148,13 +148,13 @@ public class ActionTest
 
         DelayedAction two = new DelayedAction(2, TimeUnit.SECONDS);
         two.onFinish(() -> {
-            System.out.println("Two finished");
+//            System.out.println("Two finished");
             count.compareAndSet(0, 2);
         });
 
         DelayedAction three = new DelayedAction(3, TimeUnit.SECONDS);
         two.onFinish(() -> {
-            System.out.println("three finished");
+//            System.out.println("three finished");
             count.compareAndSet(2, 3);
         });
 
@@ -163,7 +163,7 @@ public class ActionTest
                 .addSequential(two)
                 .addSequential(three)
                 .onFinish(() -> {
-                    System.out.println("all done");
+//                    System.out.println("all done");
 
                     count.compareAndSet(3, 4);
 
@@ -203,7 +203,7 @@ public class ActionTest
         sim.add(group);
 
         sim.run(10, TimeUnit.SECONDS);
-        System.out.println("counter = " + counter.get());
+//        System.out.println("counter = " + counter.get());
         assertEquals(expectedValue, counter.get(), expectedValue * (19F / 20F));
     }
 

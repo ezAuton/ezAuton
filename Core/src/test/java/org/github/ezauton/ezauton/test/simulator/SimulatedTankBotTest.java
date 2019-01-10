@@ -49,11 +49,11 @@ public class SimulatedTankBotTest
         MultiThreadSimulation sim = new MultiThreadSimulation(10);
 
         BackgroundAction background = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot, locEstimator, () -> {
-            if(bot.getLeftDistanceSensor().getVelocity() != 0)
-            {
-                System.out.println("leftVelocity() = " + bot.getLeftDistanceSensor().getVelocity());
-                System.out.println("rightVelocity() = " + bot.getRightDistanceSensor().getVelocity());
-            }
+//            if(bot.getLeftDistanceSensor().getVelocity() != 0)
+//            {
+//                System.out.println("leftVelocity() = " + bot.getLeftDistanceSensor().getVelocity());
+//                System.out.println("rightVelocity() = " + bot.getRightDistanceSensor().getVelocity());
+//            }
             return true;
         });
 
@@ -73,10 +73,10 @@ public class SimulatedTankBotTest
 
         sim.run(12, TimeUnit.SECONDS);
 
-        System.out.println("leftpos = " + bot.getLeftDistanceSensor().getPosition());
-        System.out.println("rightpos = " + bot.getRightDistanceSensor().getPosition());
+//        System.out.println("leftpos = " + bot.getLeftDistanceSensor().getPosition());
+//        System.out.println("rightpos = " + bot.getRightDistanceSensor().getPosition());
 
-        System.out.println(locEstimator.estimateLocation());
+//        System.out.println(locEstimator.estimateLocation());
 
         String homeDir = System.getProperty("user.home");
         java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.txt");
@@ -107,8 +107,8 @@ public class SimulatedTankBotTest
 
         bot.run(0, 0);
 
-        System.out.println("leftpos = " + bot.getLeftDistanceSensor().getPosition());
-        System.out.println("rightpos = " + bot.getRightDistanceSensor().getPosition());
+//        System.out.println("leftpos = " + bot.getLeftDistanceSensor().getPosition());
+//        System.out.println("rightpos = " + bot.getRightDistanceSensor().getPosition());
 
     }
 }
