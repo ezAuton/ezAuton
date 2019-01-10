@@ -56,7 +56,7 @@ public class PurePursuitRecorder extends SequentialDataRecorder<PurePursuitFrame
                                             strat.getClosestPoint(),
                                             strat.getGoalPoint(),
                                             strat.getDCP(),
-                                            0));
+                                            strat.getPath().getSegmentOnI()));
         return true;
     }
 }
