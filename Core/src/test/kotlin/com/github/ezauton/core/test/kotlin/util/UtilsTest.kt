@@ -53,9 +53,6 @@ class UtilsTest {
         // [2,4] -> 2*2
         // [4,5] -> 3
 
-//        Assert.assertEquals()
-
-//        Assert.assertEquals(2 + (0.5+1) + 2*2 + 3, subIntegrate, 1E-6)
         Assert.assertEquals(2 + (0.5 + 1) + 2 * 2 + 3, integrate1, 1E-6)
     }
 

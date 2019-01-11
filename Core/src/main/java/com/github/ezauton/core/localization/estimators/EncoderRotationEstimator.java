@@ -7,9 +7,6 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
 
-//TODO: test
-//TODO: Better name
-
 /**
  * Describes an Updateable object that can track the location and heading of the robot
  */
