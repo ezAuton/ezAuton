@@ -292,23 +292,36 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
         List<MathUtils.Geometry.LineR2> lines = new ArrayList<>();
         double integralTotal = 0;
 
-        List<Double> significantPoints = new ArrayList<>(keySet());
+        List<Double> dataPoints = new ArrayList<>(keySet());
 
-        significantPoints.sort(null);
+        dataPoints.sort(null);
 
-        if(significantPoints.size() == 1)
+        if(dataPoints.isEmpty()) throw new IllegalArgumentException("Data points must not be empty");
+        if(dataPoints.size() == 1)
         {
             lines.add(new MathUtils.Geometry.LineR2(new ImmutableVector((float) a, get(a).floatValue()),
                                                     new ImmutableVector((float) b, get(b).floatValue())));
         }
         else
         {
-            for(int i = 1; i < significantPoints.size(); i++)
+            Double firstX = dataPoints.get(0);
+            Double lastX = dataPoints.get(dataPoints.size()-1);
+
+            if(a < firstX)
+            {
+                integralTotal+=get(firstX)*(firstX - a);
+            }
+            if(b > lastX)
+            {
+                integralTotal+=get(lastX)*(b - lastX);
+            }
+
+            for(int i = 1; i < dataPoints.size(); i++)
             {
                 double x1, x2;
 
-                x1 = significantPoints.get(i - 1);
-                x2 = significantPoints.get(i);
+                x1 = dataPoints.get(i - 1);
+                x2 = dataPoints.get(i);
 
                 // front of line within range or back of line within range
                 if(x1 < b && x2 > a)
