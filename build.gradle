@@ -1,7 +1,7 @@
-plugins {
-    id 'java'
-    id "jacoco"
-
+allprojects {
+    apply plugin: 'jacoco'
+    apply plugin: 'java'
+    apply plugin: 'maven'
 }
 
 group 'com.github.ezauton'
@@ -19,12 +19,33 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-jacocoTestReport {
+subprojects {
+    test.useTestNG()
+}
+
+task codeCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+    // Add all relevant sourcesets from the subprojects
+    subprojects.each {
+        sourceSets it.sourceSets.main
+    }
+
     reports {
-        xml.enabled true
-        csv.enabled false
+        xml.enabled = true
+        xml.setDestination(new File("${buildDir}/reports/jacoco/report.xml"))
+        html.setEnabled(true)
+        html.setDestination(new File("${buildDir}/reports/jacoco/report.html"))
+    }
+
+    dependencies {
+        subprojects {
+            test
+        }
     }
 }
+
+//check.dependsOn codeCoverageReport
 
 sourceSets {
     main {
@@ -44,8 +65,6 @@ test {
         exceptionFormat "short"
     }
 }
-
-check.dependsOn jacocoTestReport
 
 
 
