@@ -307,11 +307,11 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
             Double firstX = dataPoints.get(0);
             Double lastX = dataPoints.get(dataPoints.size()-1);
 
-            if(a < firstX)
+            if(a < firstX - 1E-6)
             {
                 integralTotal+=get(firstX)*(firstX - a);
             }
-            if(b > lastX)
+            if(b > lastX + 1E-6)
             {
                 integralTotal+=get(lastX)*(b - lastX);
             }
@@ -342,6 +342,7 @@ public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrab
 
         for(MathUtils.Geometry.LineR2 line : lines)
         {
+            if(!Double.isFinite(line.slope)) continue; // fixes floating-point NaN issues with integrating
             integralTotal += line.integrate();
         }
         return integralTotal;
