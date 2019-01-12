@@ -27,7 +27,7 @@ public class CommandCreator extends Command
     @Override
     protected void initialize()
     {
-        thread = new ThreadBuilder(action).build();
+        thread = new ThreadBuilder(action).start();
         action.onFinish(()->finished = true);
     }
 
