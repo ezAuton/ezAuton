@@ -97,7 +97,8 @@ class ClockTest {
 
         val action = ActionGroup()
                 .addParallel ( TestBaseAction(0,15) )
-                .addSequential( TestBaseAction(1,30) )
+                .addSequential{ /* do nothing */}
+//                .addSequential( TestBaseAction(1,30) )
 
 
         assertEquals(0, counter)
