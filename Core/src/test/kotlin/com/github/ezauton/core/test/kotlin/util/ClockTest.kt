@@ -82,7 +82,7 @@ class ClockTest {
     }
 
     @Test
-    fun `test modern clock action group parallel`() {
+    fun `test modern clock actustion group parallel`() {
 
 
         var counter = 0
@@ -106,7 +106,7 @@ class ClockTest {
         sim.add(action)
         sim.runSimulation(500, TimeUnit.MILLISECONDS)
 
-        assertEquals(2, counter)
+        assertEquals(1, counter)
     }
 
     @Test
