@@ -29,7 +29,7 @@ public class RampUpVelocityProcessor extends VelocityProcessor implements Update
     public RampUpVelocityProcessor(IVelocityMotor velocityMotor, IClock clock, double maxAccel)
     {
         super(velocityMotor);
-        accelStopwatch = new Stopwatch(clock);
+        accelStopwatch = new Stopwatch(clock).reset();
         this.maxAccel = maxAccel;
     }
 

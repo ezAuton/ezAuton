@@ -66,9 +66,9 @@ public class EncoderWheel implements ITranslationalDistanceSensor
     @Override
     public double getPosition()
     {
-        double tempPos = encoder.getPosition();
-        encoderPosMultiplied = (tempPos - encoderRawPos) * getMultiplier() + encoderPosMultiplied;
-        encoderRawPos = tempPos;
+        double tempRawPos = encoder.getPosition();
+        encoderPosMultiplied = (tempRawPos - encoderRawPos) * getMultiplier() + encoderPosMultiplied;
+        encoderRawPos = tempRawPos;
         return encoderPosMultiplied * Math.PI * wheelDiameter;
     }
 }
