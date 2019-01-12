@@ -1,4 +1,4 @@
-package com.github.ezauton.core.action.simulation;
+package com.github.ezauton.core.simulation;
 
 import com.github.ezauton.core.action.IAction;
 import com.github.ezauton.core.action.ThreadBuilder;
@@ -67,7 +67,6 @@ public class ModernSimulatedClock implements IClock, ISimulation
         runnables.add(runnable);
     }
 
-    @Override
     public ModernSimulatedClock add(IAction action)
     {
         actions.add(action);
@@ -115,10 +114,6 @@ public class ModernSimulatedClock implements IClock, ISimulation
         {
             throw new IllegalStateException(("You cannot sleep from the thread which the clock was created on (use the simulator)"));
         }
-        if(!(simulationThread.threads.contains(Thread.currentThread())))
-        {
-            throw new IllegalStateException("You can only sleep from actions in the simulation."); // TODO: might be able to remove
-        }
         if(dt < 0)
         {
             throw new IllegalArgumentException("Wait time cannot be lower than 0");
@@ -155,6 +150,11 @@ public class ModernSimulatedClock implements IClock, ISimulation
     public IClock getClock()
     {
         return this;
+    }
+
+    @Override
+    public void scheduleAction(IAction action) {
+        add(action);
     }
 
     /**

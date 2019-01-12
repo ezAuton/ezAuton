@@ -1,4 +1,4 @@
-package com.github.ezauton.core.action.simulation;
+package com.github.ezauton.core.simulation;
 
 
 import com.github.ezauton.core.action.IAction;
@@ -39,7 +39,6 @@ public class MultiThreadSimulation implements ISimulation
         return timeWarpedClock;
     }
 
-    @Override
     public MultiThreadSimulation add(IAction action)
     {
         actions.add(action);
@@ -63,4 +62,8 @@ public class MultiThreadSimulation implements ISimulation
     }
 
 
+    @Override
+    public void scheduleAction(IAction action) {
+        add(action);
+    }
 }

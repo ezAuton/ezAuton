@@ -1,18 +1,12 @@
-package com.github.ezauton.core.action.simulation;
+package com.github.ezauton.core.simulation;
 
-import com.github.ezauton.core.action.IAction;
 import com.github.ezauton.core.utils.IClock;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public interface ISimulation
+public interface ISimulation extends IScheduler
 {
-    /**
-     * @param action
-     * @return self
-     */
-    ISimulation add(IAction action);
 
     /**
      * Uses real units for timeout, not simulated

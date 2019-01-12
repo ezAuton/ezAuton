@@ -2,7 +2,7 @@ package com.github.ezauton.core.test.purepursuit;
 
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PPCommand;
-import com.github.ezauton.core.action.simulation.MultiThreadSimulation;
+import com.github.ezauton.core.simulation.MultiThreadSimulation;
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.helper.PathHelper;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;

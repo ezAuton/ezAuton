@@ -83,7 +83,6 @@ public class ActionGroup extends BaseAction
     public ActionGroup addSequential(Runnable runnable)
     {
         this.scheduledActions.add(new ActionWrapper(new BaseAction(runnable), Type.SEQUENTIAL));
-
         return this;
     }
 
@@ -145,6 +144,9 @@ public class ActionGroup extends BaseAction
     public void run(IClock clock)
     {
         List<IAction> withActions = new ArrayList<>();
+
+        Set<Thread> threadsToJoin = new HashSet<>();
+
         for(ActionWrapper scheduledAction : scheduledActions)
         {
             if(isStopped())
@@ -159,7 +161,8 @@ public class ActionGroup extends BaseAction
                     withActions.add(action);
 
                 case PARALLEL:
-                    new ThreadBuilder(action, clock).start();
+                    Thread start = new ThreadBuilder(action, clock).start();
+                    threadsToJoin.add(start);
                     break;
                 case SEQUENTIAL:
                     action.run(clock);
@@ -168,6 +171,14 @@ public class ActionGroup extends BaseAction
                     withActions.forEach(IAction::end);
                     withActions.clear();
             }
+        }
+        try {
+            for (Thread thread : threadsToJoin) {
+                thread.join();
+            }
+        }catch (InterruptedException e) {
+            threadsToJoin.forEach(Thread::interrupt);
+            e.printStackTrace();
         }
     }
 

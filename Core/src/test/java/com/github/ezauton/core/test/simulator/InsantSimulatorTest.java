@@ -2,7 +2,7 @@ package com.github.ezauton.core.test.simulator;
 
 import com.github.ezauton.core.action.TimedPeriodicAction;
 import com.github.ezauton.core.action.IAction;
-import com.github.ezauton.core.action.simulation.ModernSimulatedClock;
+import com.github.ezauton.core.simulation.ModernSimulatedClock;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;

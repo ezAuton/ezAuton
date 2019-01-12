@@ -2,7 +2,7 @@ package com.github.ezauton.core.test.kotlin.util
 
 import com.github.ezauton.core.action.ActionGroup
 import com.github.ezauton.core.action.BaseAction
-import com.github.ezauton.core.action.simulation.ModernSimulatedClock
+import com.github.ezauton.core.simulation.ModernSimulatedClock
 import com.github.ezauton.core.utils.IClock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
@@ -84,19 +84,20 @@ class ClockTest {
     @Test
     fun `test modern clock action group parallel`() {
 
+
         var counter = 0
         val sim = newSim()
 
-        class TestBaseAction(val counterShouldBe: Int) : BaseAction() {
+        class TestBaseAction(val counterShouldBe: Int, val wait: Long) : BaseAction() {
             override fun run(clock: IClock) {
-                clock.sleep(1, TimeUnit.SECONDS)
+                clock.sleep(wait, TimeUnit.SECONDS)
                 if (counter == counterShouldBe) counter++
             }
         }
 
         val action = ActionGroup()
-                .addParallel ( TestBaseAction(0) )
-                .addSequential( TestBaseAction(1) )
+                .addParallel ( TestBaseAction(0,15) )
+                .addSequential( TestBaseAction(1,30) )
 
 
         assertEquals(0, counter)

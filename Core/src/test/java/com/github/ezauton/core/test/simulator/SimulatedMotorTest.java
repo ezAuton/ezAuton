@@ -2,7 +2,7 @@ package com.github.ezauton.core.test.simulator;
 
 import com.github.ezauton.core.action.BaseAction;
 import com.github.ezauton.core.action.IAction;
-import com.github.ezauton.core.action.simulation.ModernSimulatedClock;
+import com.github.ezauton.core.simulation.ModernSimulatedClock;
 import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;
 import org.junit.jupiter.api.Test;
 

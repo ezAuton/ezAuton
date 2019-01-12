@@ -12,7 +12,7 @@ import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.action.ActionGroup;
-import com.github.ezauton.core.action.simulation.MultiThreadSimulation;
+import com.github.ezauton.core.simulation.MultiThreadSimulation;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 

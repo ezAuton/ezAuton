@@ -78,28 +78,35 @@ public class Encoders
 //        };
 //    }
 
-    private static IEncoder fixRegEncoder(IEncoder hardwareEncoder, int unitsPerRev)
-    {
-        if(unitsPerRev <= 0)
-        {
-            throw new IllegalArgumentException("unitsPerRev must be non-zero");
-        }
-        return new IEncoder()
-        {
-            @Override
-            public double getPosition()
-            {
-                return hardwareEncoder.getPosition() / unitsPerRev;
-            }
-
-            @Override
-            public double getVelocity()
-            {
-                // multiplying by 10 because velocity is in per 100ms by default
-                return 10D * hardwareEncoder.getVelocity() / unitsPerRev;
-            }
-        };
-    }
+//    /**
+//     * Makes it so we can take an encoder which returns (usually int) numbers on [0,unitsPerRev)
+//     * (let's say [0,4096)) and we can turn it into a normal encoder which returns fractions of a revolution.
+//     * @param hardwareEncoderInput
+//     * @param unitsPerRev
+//     * @return
+//     */
+//    public static IEncoder revEncoder(int unitsPerRev, IEncoder hardwareEncoderInput)
+//    {
+//        if(unitsPerRev <= 0)
+//        {
+//            throw new IllegalArgumentException("unitsPerRev must be non-zero");
+//        }
+//        return new IEncoder()
+//        {
+//            @Override
+//            public double getPosition()
+//            {
+//                return hardwareEncoderInput.getPosition() / unitsPerRev;
+//            }
+//
+//            @Override
+//            public double getVelocity()
+//            {
+//                // multiplying by 10 because velocity is in per 100ms by default
+//                return 10D * hardwareEncoderInput.getVelocity() / unitsPerRev;
+//            }
+//        };
+//    }
 
     public static IEncoder fromTachometer(ITachometer tachometer, Stopwatch stopwatch)
     {
