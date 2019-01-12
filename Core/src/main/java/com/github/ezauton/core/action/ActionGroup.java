@@ -144,6 +144,7 @@ public class ActionGroup extends BaseAction
     public void run(IClock clock)
     {
         List<IAction> withActions = new ArrayList<>();
+        List<Thread> withActionThreads = new ArrayList<>();
 
         Set<Thread> threadsToJoin = new HashSet<>();
 
@@ -163,12 +164,16 @@ public class ActionGroup extends BaseAction
                 case PARALLEL:
                     Thread start = new ThreadBuilder(action, clock).start();
                     threadsToJoin.add(start);
+                    if(scheduledAction.getType() == Type.WITH) withActionThreads.add(start);
                     break;
                 case SEQUENTIAL:
                     action.run(clock);
+
                     action.getFinished().forEach(Runnable::run);
 
+                    withActionThreads.forEach(Thread::interrupt);
                     withActions.forEach(IAction::end);
+
                     withActions.clear();
             }
         }
@@ -221,7 +226,7 @@ public class ActionGroup extends BaseAction
      *
      * @see Type
      */
-    protected static class ActionWrapper
+    public static class ActionWrapper
     {
 
         private final Type type;

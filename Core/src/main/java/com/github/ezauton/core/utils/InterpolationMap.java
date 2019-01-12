@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
  *
  * @author ritikmishra
  */
-public class InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializable //TODO: Remove redundant methods defined in HashMap, also maybe extends HashMap<Double, Double>?
+public class
+InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializable //TODO: Remove redundant methods defined in HashMap, also maybe extends HashMap<Double, Double>?
 {
 
     /**
