@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 
 class InterpolatorTest {
 
-    val interpMapRegular by lazy {
+    private val interpMapRegular by lazy {
 
         val map = mapOf(
                 1.0 to 2.0,
@@ -17,7 +17,7 @@ class InterpolatorTest {
         InterpolationMap(map)
     }
 
-    val interpMapEven by lazy {
+    private val interpMapEven by lazy {
         val map = mapOf(
                 0.0 to 1.0,
                 1.0 to 2.0
