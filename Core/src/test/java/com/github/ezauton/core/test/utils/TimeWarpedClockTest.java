@@ -1,7 +1,7 @@
 package com.github.ezauton.core.test.utils;
 
 import com.github.ezauton.core.action.DelayedAction;
-import com.github.ezauton.core.action.simulation.MultiThreadSimulation;
+import com.github.ezauton.core.simulation.MultiThreadSimulation;
 import com.github.ezauton.core.utils.Stopwatch;
 import com.github.ezauton.core.utils.TimeWarpedClock;
 import org.junit.jupiter.api.Test;

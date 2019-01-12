@@ -2,7 +2,7 @@ package com.github.ezauton.core.test.simulator;
 
 import com.github.ezauton.core.action.*;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
-import com.github.ezauton.core.action.simulation.MultiThreadSimulation;
+import com.github.ezauton.core.simulation.MultiThreadSimulation;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.utils.ManualClock;
 import org.junit.jupiter.api.Test;

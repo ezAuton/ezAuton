@@ -1,6 +1,6 @@
 package com.github.ezauton.core.action;
 
-import com.github.ezauton.core.action.simulation.MultiThreadSimulation;
+import com.github.ezauton.core.simulation.MultiThreadSimulation;
 import com.github.ezauton.core.utils.IClock;
 import com.github.ezauton.core.utils.RealClock;
 

@@ -3,7 +3,7 @@ package com.github.ezauton.core.test.simulator;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PPCommand;
 import com.github.ezauton.core.action.TimedPeriodicAction;
-import com.github.ezauton.core.action.simulation.MultiThreadSimulation;
+import com.github.ezauton.core.simulation.MultiThreadSimulation;
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
