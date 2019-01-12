@@ -1,8 +1,11 @@
 allprojects {
-    apply plugin: 'jacoco'
     apply plugin: 'java'
     apply plugin: 'maven'
-    
+    apply plugin: 'jacoco'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     dependencies {
         testImplementation(
                 'org.junit.jupiter:junit-jupiter-api:5.1.0'
@@ -13,44 +16,20 @@ allprojects {
     }
 }
 
+
 group 'com.github.ezauton'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-}
-
-dependencies {
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    
-}
-task codeCoverageReport(type: JacocoReport) {
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
-    // Add all relevant sourcesets from the subprojects
-    subprojects.each {
-        sourceSets it.sourceSets.main
-    }
-
-    reports {
-        xml.enabled = true
-        xml.setDestination(new File("${buildDir}/reports/jacoco/report.xml"))
-        html.setEnabled(true)
-        html.setDestination(new File("${buildDir}/reports/jacoco/report.html"))
-    }
-
-    dependencies {
-        subprojects {
-            test
+subprojects {
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            html.enabled false
         }
     }
-}
 
-//check.dependsOn codeCoverageReport
+    check.dependsOn jacocoTestReport
+}
 
 sourceSets {
     main {
@@ -64,11 +43,5 @@ sourceSets {
     }
 }
 
-
-//task testReport(type: TestReport) {
-//    destinationDir = file("$buildDir/reports/allTests")
-//    // Include the results from the `test` task in all subprojects
-//    reportOn subprojects*.test
-//}
 
 
