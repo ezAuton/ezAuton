@@ -2,12 +2,11 @@ package com.github.ezauton.core.test.math;
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.ezauton.core.utils.MathUtils.ROOT_2;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class KinematicsTest
 {
@@ -142,8 +141,8 @@ public class KinematicsTest
 
     private void vectorsCloseEnough(ImmutableVector a, ImmutableVector b)
     {
-        Assert.assertEquals(a.get(0), b.get(0), 1E-3);
-        Assert.assertEquals(a.get(1), b.get(1), 1E-3);
+        assertEquals(a.get(0), b.get(0), 1E-3);
+        assertEquals(a.get(1), b.get(1), 1E-3);
     }
 
 }

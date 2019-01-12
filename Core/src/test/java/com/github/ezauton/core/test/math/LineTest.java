@@ -2,11 +2,9 @@ package com.github.ezauton.core.test.math;
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LineTest
 {
@@ -65,7 +63,7 @@ public class LineTest
             assertEquals(b, lineBC.intersection(lineAB));
         }
 
-        Assert.assertNull(horizontal.intersection(horizontal));
+        assertNull(horizontal.intersection(horizontal));
     }
 
     @Test

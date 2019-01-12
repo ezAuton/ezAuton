@@ -1,8 +1,8 @@
 package com.github.ezauton.core.test.kotlin.util
 
 import com.github.ezauton.core.action.TimedPeriodicAction
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
 
 class ActionTest {
@@ -21,6 +21,6 @@ class ActionTest {
 
         timedPeriodicAction.schedule().join(2_000)
 
-        Assert.assertEquals(2_000/20.toDouble(),timedPeriodicAction.timesRun.toDouble(), 2.toDouble())
+        assertEquals(2_000/20.toDouble(),timedPeriodicAction.timesRun.toDouble(), 2.toDouble())
     }
 }

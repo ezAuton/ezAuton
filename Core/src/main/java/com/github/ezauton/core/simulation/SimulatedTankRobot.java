@@ -1,4 +1,4 @@
-package com.github.ezauton.core.test.simulator;
+package com.github.ezauton.core.simulation;
 
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;

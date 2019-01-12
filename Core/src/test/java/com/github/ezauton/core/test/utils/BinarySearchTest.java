@@ -1,12 +1,13 @@
 package com.github.ezauton.core.test.utils;
 
 import com.github.ezauton.core.utils.BinarySearch;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class BinarySearchTest
 {
@@ -43,6 +44,6 @@ public class BinarySearchTest
     {
         BinarySearch<Integer> binarySearch = new BinarySearch<>(sortedIntegers);
         Integer result = binarySearch.search(searchFor(2502));
-        assertEquals(null, result);
+        assertNull(result);
     }
 }

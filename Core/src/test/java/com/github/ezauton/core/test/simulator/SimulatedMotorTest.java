@@ -4,11 +4,12 @@ import com.github.ezauton.core.action.BaseAction;
 import com.github.ezauton.core.action.IAction;
 import com.github.ezauton.core.action.simulation.ModernSimulatedClock;
 import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SimulatedMotorTest
 {
@@ -20,7 +21,7 @@ public class SimulatedMotorTest
         IAction action = new BaseAction(()->{
             BaseSimulatedMotor motor = new BaseSimulatedMotor(clock);
 
-            Assert.assertEquals(0, motor.getPosition(), 1E-6);
+            assertEquals(0, motor.getPosition(), 1E-6);
             motor.runVelocity(1);
 
             try {
@@ -29,23 +30,23 @@ public class SimulatedMotorTest
                 return;
             }
 
-            Assert.assertEquals(1, motor.getPosition(), 1E-6);
+            assertEquals(1, motor.getPosition(), 1E-6);
 
             try {
                 clock.sleep(1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 return;
             }
-            Assert.assertEquals(2, motor.getPosition(), 1E-6);
+            assertEquals(2, motor.getPosition(), 1E-6);
             motor.runVelocity(10);
-            Assert.assertEquals(2, motor.getPosition(), 1E-6);
+            assertEquals(2, motor.getPosition(), 1E-6);
 
             try {
                 clock.sleep(1, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 return;
             }
-            Assert.assertEquals(12, motor.getPosition(), 1E-6);
+            assertEquals(12, motor.getPosition(), 1E-6);
         });
 
         clock.add(action);

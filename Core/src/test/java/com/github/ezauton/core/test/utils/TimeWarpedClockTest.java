@@ -4,11 +4,7 @@ import com.github.ezauton.core.action.DelayedAction;
 import com.github.ezauton.core.action.simulation.MultiThreadSimulation;
 import com.github.ezauton.core.utils.Stopwatch;
 import com.github.ezauton.core.utils.TimeWarpedClock;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,50 +12,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TimeWarpedClockTest
 {
-    /**
-     * @author https://stackoverflow.com/a/8301639
-     */
-    public class Retry implements TestRule
-    {
-        private int retryCount;
-
-        public Retry(int retryCount) {
-            this.retryCount = retryCount;
-        }
-
-        @Override
-        public Statement apply(Statement base, Description description)
-        {
-            return new Statement() {
-                @Override
-                public void evaluate() throws Throwable
-                {
-                    Throwable caughtThrowable = null;
-                    for (int i = 0; i < retryCount; i++) {
-                        try {
-                            base.evaluate();
-                            return;
-                        } catch (Throwable t) {
-                            caughtThrowable = t;
-                            System.err.println(description.getDisplayName() + ": run " + (i+1) + " failed");
-                        }
-                    }
-                    System.err.println(description.getDisplayName() + ": giving up after " + retryCount + " failures");
-                    throw caughtThrowable;
-                }
-            };
-        }
-    }
-
-    int i = 0;
-
-    @Rule
-    public Retry retry = new Retry(3);
-
     @Test
     public void testFastClock()
     {

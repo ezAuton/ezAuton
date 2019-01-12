@@ -4,13 +4,12 @@ import com.github.ezauton.core.pathplanning.LinearPathSegment;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.google.common.collect.ImmutableMap;
 import com.github.ezauton.core.utils.MathUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MathTest
 {
@@ -278,11 +277,11 @@ public class MathTest
             ImmutableVector c3 = new ImmutableVector(cx, ay);
             ImmutableVector c4 = new ImmutableVector(bx, cy);
             ImmutableVector c5 = new ImmutableVector(cx, by);
-            assertTrue("A: " + a + " B: " + b + " C: " + c1, MathUtils.between(a, c1, b));
-            assertTrue("A: " + a + " B: " + b + " C: " + c2, MathUtils.between(a, c2, b));
-            assertTrue("A: " + a + " B: " + b + " C: " + c3, MathUtils.between(a, c3, b));
-            assertTrue("A: " + a + " B: " + b + " C: " + c4, MathUtils.between(a, c4, b));
-            assertTrue("A: " + a + " B: " + b + " C: " + c5, MathUtils.between(a, c5, b));
+            assertTrue(MathUtils.between(a, c1, b));
+            assertTrue(MathUtils.between(a, c2, b));
+            assertTrue(MathUtils.between(a, c3, b));
+            assertTrue(MathUtils.between(a, c4, b));
+            assertTrue(MathUtils.between(a, c5, b));
         }
     }
 
@@ -297,7 +296,7 @@ public class MathTest
             assertEquals(Math.log(a) / Math.log(3), MathUtils.log3(a), DELTA);
             assertEquals(Math.log(a) / Math.log(4), MathUtils.log4(a), DELTA);
             assertEquals(Math.log(a) / Math.log(5), MathUtils.log5(a), DELTA);
-            assertEquals("A: " + a, Math.log(a) / Math.log(6), MathUtils.log6(a), DELTA);
+            assertEquals(Math.log(a) / Math.log(6), MathUtils.log6(a), DELTA);
             assertEquals(Math.log(a) / Math.log(7), MathUtils.log7(a), DELTA);
             assertEquals(Math.log(a) / Math.log(8), MathUtils.log8(a), DELTA);
             assertEquals(Math.log(a) / Math.log(9), MathUtils.log9(a), DELTA);
@@ -319,7 +318,7 @@ public class MathTest
         {
             double a = Math.random() * 15;
 
-            assertEquals("a: " + a, Math.pow(a, 2), MathUtils.pow2(a), 1e2);
+            assertEquals(Math.pow(a, 2),MathUtils.pow2(a), DELTA);
             assertEquals(Math.pow(a, 3), MathUtils.pow3(a), DELTA);
             assertEquals(Math.pow(a, 4), MathUtils.pow4(a), DELTA);
             assertEquals(Math.pow(a, 5), MathUtils.pow5(a), DELTA);
@@ -392,7 +391,7 @@ public class MathTest
             double d = (Math.random() - 0.5) * 20;
             double e = (Math.random() - 0.5) * 20;
 
-            assertEquals(a + " " + b + " " + c + " " + d + " " + e, Math.min(a, Math.min(b, Math.min(c, Math.min(d, e)))), MathUtils.min(a, b, c, d, e), DELTA);
+            assertEquals(Math.min(a, Math.min(b, Math.min(c, Math.min(d, e)))), MathUtils.min(a, b, c, d, e), DELTA);
         }
     }
 
@@ -517,7 +516,7 @@ public class MathTest
 
     private void vectorsCloseEnough(ImmutableVector a, ImmutableVector b)
     {
-        Assert.assertTrue(a + " " + b, MathUtils.epsilonEquals(a, b, 1E-3));
+        assertTrue(MathUtils.epsilonEquals(a, b, 1E-3));
     }
 
 }

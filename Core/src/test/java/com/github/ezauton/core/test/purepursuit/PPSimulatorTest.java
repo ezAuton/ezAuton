@@ -15,15 +15,16 @@ import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrat
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.action.ActionGroup;
-import com.github.ezauton.core.test.simulator.SimulatedTankRobot;
-import org.junit.Assert;
-import org.junit.Test;
+import com.github.ezauton.core.simulation.SimulatedTankRobot;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PPSimulatorTest
 {
@@ -130,10 +131,10 @@ public class PPSimulatorTest
         }
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
-        Assert.assertEquals("left wheel velocity", 0, leftWheelVelocity, 0.5D);
+        assertEquals(0, leftWheelVelocity, 0.5D, "left wheel velocity");
 
         double rightWheelVelocity = locEstimator.getRightTranslationalWheelVelocity();
-        Assert.assertEquals("right wheel velocity", 0, rightWheelVelocity, 0.5D);
+        assertEquals(0, rightWheelVelocity, 0.5D, "right wheel velocity");
 
         // The final location after the simulator
         ImmutableVector finalLoc = locEstimator.estimateLocation();
@@ -160,7 +161,7 @@ public class PPSimulatorTest
         double[] aElements = a.getElements();
         for(int i = 0; i < aElements.length; i++)
         {
-            Assert.assertEquals("vector[" + i + "]", aElements[i], bElements[i], epsilon);
+            assertEquals(aElements[i], bElements[i], epsilon);
         }
     }
 }
