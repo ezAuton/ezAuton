@@ -8,7 +8,7 @@ import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor
 
 import java.util.concurrent.TimeUnit;
 
-public class PhysicalTest
+public class PhysicalTest // TODO: what we using this for
 {
     /**
      * Test if the robot goes straight forward with constant voltage for two motors

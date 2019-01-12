@@ -25,7 +25,6 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 compileKotlin {
@@ -33,4 +32,11 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }

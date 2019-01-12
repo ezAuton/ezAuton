@@ -8,12 +8,12 @@ import com.github.ezauton.core.actuators.implementations.RampUpVelocityProcessor
 import com.google.common.util.concurrent.AtomicDouble;
 import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;
 import com.github.ezauton.core.utils.ManualClock;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ActuatorsTest
 {
@@ -112,11 +112,12 @@ public class ActuatorsTest
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testBoundedVelocityProcessorNegMaxSpeed()
     {
         AtomicDouble velocity = new AtomicDouble(0);
-        new BoundedVelocityProcessor(velocity::set, -10);
+
+        assertThrows(IllegalArgumentException.class, () -> new BoundedVelocityProcessor(velocity::set, -10));
     }
 
     @Test

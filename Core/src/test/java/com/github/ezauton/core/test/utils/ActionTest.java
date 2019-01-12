@@ -6,7 +6,7 @@ import com.github.ezauton.core.utils.IClock;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.core.utils.Stopwatch;
 import com.github.ezauton.core.utils.TimeWarpedClock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,8 +15,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class ActionTest
 {

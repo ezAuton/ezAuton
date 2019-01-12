@@ -2,10 +2,10 @@ package com.github.ezauton.core.test.math;
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class VectorTest
 {
@@ -31,11 +31,11 @@ public class VectorTest
         assertEquals(155, a.get(1), DELTA);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void testOnly2Components()
     {
         ImmutableVector a = new ImmutableVector(123, 155);
-        a.get(2);
+        assertThrows(IndexOutOfBoundsException.class, () -> a.get(2));
     }
 
     @Test

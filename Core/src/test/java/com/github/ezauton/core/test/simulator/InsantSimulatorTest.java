@@ -3,12 +3,13 @@ package com.github.ezauton.core.test.simulator;
 import com.github.ezauton.core.action.TimedPeriodicAction;
 import com.github.ezauton.core.action.IAction;
 import com.github.ezauton.core.action.simulation.ModernSimulatedClock;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InsantSimulatorTest
 {
@@ -25,7 +26,7 @@ public class InsantSimulatorTest
         IAction actionB = new TimedPeriodicAction(20, TimeUnit.SECONDS)
                 .addUpdateable(a -> () -> {
                     long l = sum.addAndGet(-a.getStopwatch().read(TimeUnit.MILLISECONDS));
-                    Assert.assertEquals(0, l);
+                    assertEquals(0, l);
                 });
 
         ModernSimulatedClock clock = new ModernSimulatedClock();
@@ -35,6 +36,6 @@ public class InsantSimulatorTest
                 .add(actionB)
                 .runSimulation(1000, TimeUnit.SECONDS);
 
-        Assert.assertEquals(0, sum.get());
+        assertEquals(0, sum.get());
     }
 }
