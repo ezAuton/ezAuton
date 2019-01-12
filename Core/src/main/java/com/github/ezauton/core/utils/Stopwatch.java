@@ -57,6 +57,7 @@ public class Stopwatch
      */
     public long read()
     {
+        if(!isInit()) throw new IllegalArgumentException("Stopwatch must be initialized to use");
         return clock.getTime() - millis;
     }
 
@@ -68,9 +69,10 @@ public class Stopwatch
     /**
      * Reset without reading
      */
-    public void reset()
+    public Stopwatch reset()
     {
         millis = clock.getTime();
+        return this;
     }
 
     /**

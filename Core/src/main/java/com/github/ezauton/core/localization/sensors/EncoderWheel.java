@@ -11,6 +11,9 @@ public class EncoderWheel implements ITranslationalDistanceSensor
     private final IEncoder encoder;
     private final double wheelDiameter;
     private double multiplier = 1D;
+    private double encoderPosMultiplied;
+    private double encoderRawPos;
+
 
     /**
      * @param encoder       The encoder for measuring revolutions
@@ -20,6 +23,8 @@ public class EncoderWheel implements ITranslationalDistanceSensor
     {
         this.encoder = encoder;
         this.wheelDiameter = wheelDiameter;
+        encoderPosMultiplied = encoder.getPosition() * getMultiplier();
+        encoderRawPos = encoder.getPosition();
     }
 
     public IEncoder getEncoder()
@@ -61,7 +66,9 @@ public class EncoderWheel implements ITranslationalDistanceSensor
     @Override
     public double getPosition()
     {
-        double epos = encoder.getPosition();
-        return epos * Math.PI * wheelDiameter * getMultiplier();
+        double tempPos = encoder.getPosition();
+        encoderPosMultiplied = (tempPos - encoderRawPos) * getMultiplier() + encoderPosMultiplied;
+        encoderRawPos = tempPos;
+        return encoderPosMultiplied * Math.PI * wheelDiameter;
     }
 }
