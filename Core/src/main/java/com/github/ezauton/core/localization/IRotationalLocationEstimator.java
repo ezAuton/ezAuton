@@ -6,7 +6,7 @@ package com.github.ezauton.core.localization;
 public interface IRotationalLocationEstimator
 {
     /**
-     * @return The estimated heading of the robot.
+     * @return The estimated heading of the robot in radians, where 0 is N, pi/2 is W...
      */
     double estimateHeading();
 }
