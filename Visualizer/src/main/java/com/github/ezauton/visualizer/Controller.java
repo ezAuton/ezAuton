@@ -282,7 +282,7 @@ public class Controller implements Initializable
         }
 
         // Initialize data processors and whatnot
-        FactoryMap factory = Main.getInstance().getFactory();
+        FactoryMap factory = Visualizer.getInstance().getFactory();
 
         // currentRecorder... holds values of RECORDINGS... maps to RECORDING PROCESSORS
         IDataProcessor dataProcessor = factory.getProcessor(currentRecording).orElseThrow(IllegalStateException::new);

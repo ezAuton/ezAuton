@@ -28,9 +28,8 @@ task runvis(dependsOn: 'test', type: JavaExec) {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.github.ezauton.ezauton.visualizer.Main'
+        attributes 'Main-Class': 'com.github.ezauton.visualizer.Main'
     }
-
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
