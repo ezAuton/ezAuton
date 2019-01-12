@@ -36,7 +36,7 @@ public class ModernSimulatedClock implements IClock, ISimulation
      * @return If an action either just started sleeping or just finished. Used to tell if we can run
      * the next action
      */
-    public boolean isCurrentActionRunning()
+    private boolean isCurrentActionRunning()
     {
         return currentActionRunning.get();
     }
@@ -61,7 +61,6 @@ public class ModernSimulatedClock implements IClock, ISimulation
     @Override
     public void scheduleAt(long millis, Runnable runnable)
     {
-        if(millis == getTime()) runnable.run();
         Queue<Runnable> runnables = timeToRunnableMap.computeIfAbsent(millis, v -> new LinkedList<>());
         runnables.add(runnable);
     }
@@ -214,9 +213,10 @@ public class ModernSimulatedClock implements IClock, ISimulation
 
                 Queue<Runnable> runnables = entry.getValue();
 
-                for(Runnable runnable : runnables)
+                while (!runnables.isEmpty())
                 {
-                    runnable.run();
+                    Runnable polled = runnables.poll();
+                    if(polled != null) polled.run();
                 }
             }
         }
