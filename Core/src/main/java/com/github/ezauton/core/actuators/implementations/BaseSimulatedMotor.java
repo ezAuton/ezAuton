@@ -66,6 +66,7 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
     @Override
     public double getPosition()
     {
+        stopwatch.resetIfNotInit();
         position += velocity * stopwatch.pop(TimeUnit.SECONDS); // Convert millis to seconds
         return position;
     }
