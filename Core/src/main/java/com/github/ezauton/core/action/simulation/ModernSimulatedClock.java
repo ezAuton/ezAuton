@@ -25,6 +25,8 @@ public class ModernSimulatedClock implements IClock, ISimulation
 
     private long currentTime = 0;
 
+    private boolean inSimulation = false;
+
     private AtomicBoolean currentActionRunning = new AtomicBoolean(false);
 
     private SimulationThread simulationThread;
@@ -74,6 +76,12 @@ public class ModernSimulatedClock implements IClock, ISimulation
 
     @Override
     public void runSimulation(long timeout, TimeUnit timeUnit) throws TimeoutException {
+
+        if(timeout <= 0)
+        {
+            throw new IllegalArgumentException("timeout must be positive");
+        }
+
         simulationThread.start();
 
         try
@@ -99,6 +107,10 @@ public class ModernSimulatedClock implements IClock, ISimulation
      */
     @Override
     public void sleep(long dt, TimeUnit timeUnit) throws InterruptedException {
+        if(!inSimulation)
+        {
+            throw new IllegalStateException("You must be in a simulation to use sleep.");
+        }
         if(Thread.currentThread() == initThread)
         {
             throw new IllegalStateException(("You cannot sleep from the thread which the clock was created on (use the simulator)"));
@@ -173,9 +185,10 @@ public class ModernSimulatedClock implements IClock, ISimulation
         @Override
         public synchronized void run()
         {
-
+            inSimulation = true;
             doFirstActionCycle();
             runInitActionsUntilFinish();
+            inSimulation = false;
         }
 
         /**
