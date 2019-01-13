@@ -136,7 +136,7 @@ public class ActionTest
         });
 
 
-        ActionGroup group = new ActionGroup()
+        IAction group = new ActionGroup()
                 .addSequential(two)
                 .addSequential(three)
                 .onFinish(() -> {
@@ -171,7 +171,7 @@ public class ActionTest
         // when five has 2 seconds left, three2 starts
         // then finally actiongroup should terminate
 
-        ActionGroup actionGroup = new ActionGroup()
+        IAction actionGroup = new ActionGroup()
                 .addParallel(three1)
                 .addSequential(five)
                 .addSequential(three2)
@@ -205,7 +205,7 @@ public class ActionTest
         });
 
 
-        ActionGroup group = new ActionGroup()
+        IAction group = new ActionGroup()
                 .addSequential(two)
                 .addSequential(three)
                 .onFinish(() -> {
