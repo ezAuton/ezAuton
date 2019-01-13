@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Describes a group of multiple IActions which itself is also an IAction
  */
-public class ActionGroup extends BaseAction
+public final class ActionGroup extends BaseAction
 {
     private Queue<ActionWrapper> scheduledActions;
 
@@ -67,7 +67,7 @@ public class ActionGroup extends BaseAction
      * @param action The Action to run
      * @return this
      */
-    public ActionGroup addSequential(IAction action)
+    public final ActionGroup addSequential(IAction action)
     {
         this.scheduledActions.add(new ActionWrapper(action, Type.SEQUENTIAL));
 
@@ -80,7 +80,7 @@ public class ActionGroup extends BaseAction
      * @param runnable The Action to run
      * @return this
      */
-    public ActionGroup addSequential(Runnable runnable)
+    public final ActionGroup addSequential(Runnable runnable)
     {
         this.scheduledActions.add(new ActionWrapper(new BaseAction(runnable), Type.SEQUENTIAL));
         return this;
@@ -92,7 +92,7 @@ public class ActionGroup extends BaseAction
      * @param action The Action to run
      * @return this
      */
-    public ActionGroup with(IAction action)
+    public final ActionGroup with(IAction action)
     {
         this.scheduledActions.add(new ActionWrapper(action, Type.WITH));
         return this;
@@ -104,7 +104,7 @@ public class ActionGroup extends BaseAction
      * @param runnable The Runnable to run
      * @return this
      */
-    public ActionGroup with(Runnable runnable)
+    public final ActionGroup with(Runnable runnable)
     {
         this.scheduledActions.add(new ActionWrapper(new BaseAction(runnable), Type.WITH));
         return this;
@@ -116,7 +116,7 @@ public class ActionGroup extends BaseAction
      * @param action The action to run
      * @return this
      */
-    public ActionGroup addParallel(IAction action)
+    public final ActionGroup addParallel(IAction action)
     {
         this.scheduledActions.add(new ActionWrapper(action, Type.PARALLEL));
         return this;
@@ -128,7 +128,7 @@ public class ActionGroup extends BaseAction
      * @param runnable The Runnable to run
      * @return this
      */
-    public ActionGroup addParallel(Runnable runnable)
+    public final ActionGroup addParallel(Runnable runnable)
     {
         this.scheduledActions.add(new ActionWrapper(new BaseAction(runnable), Type.PARALLEL));
         return this;
@@ -141,7 +141,7 @@ public class ActionGroup extends BaseAction
      * @return The thread, ready to start.
      */
     @Override
-    public void run(IClock clock)
+    public final void run(IClock clock)
     {
         List<IAction> withActions = new ArrayList<>();
         List<Thread> withActionThreads = new ArrayList<>();
@@ -188,19 +188,6 @@ public class ActionGroup extends BaseAction
     }
 
     /**
-     * Add something to run when finished
-     *
-     * @param runnable The thing to run
-     * @return this
-     */
-    @Override
-    public ActionGroup onFinish(Runnable runnable)
-    {
-        super.onFinish(runnable);
-        return this;
-    }
-
-    /**
      * Provides a way to describe the concurrency of an action
      */
     public enum Type
@@ -226,7 +213,7 @@ public class ActionGroup extends BaseAction
      *
      * @see Type
      */
-    public static class ActionWrapper
+    public static final class ActionWrapper
     {
 
         private final Type type;

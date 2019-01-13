@@ -17,3 +17,4 @@ fun baseAction(block: (IClock) -> Unit): BaseAction {
 fun IAction.wrap(type: ActionGroup.Type): ActionGroup.ActionWrapper {
     return ActionGroup.ActionWrapper(this,type)
 }
+

@@ -41,25 +41,25 @@ public class BaseAction implements IAction
     }
 
     @Override
-    public IAction onFinish(Runnable onFinish)
+    public final IAction onFinish(Runnable onFinish)
     {
         toRun.add(onFinish);
         return this;
     }
 
     @Override
-    public void end()
+    public final void end()
     {
         stopped = true;
     }
 
-    public boolean isStopped()
+    public final boolean isStopped()
     {
         return stopped;
     }
 
     @Override
-    public List<Runnable> getFinished()
+    public final List<Runnable> getFinished()
     {
         return toRun;
     }

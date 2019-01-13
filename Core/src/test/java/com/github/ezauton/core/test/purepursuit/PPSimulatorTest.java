@@ -43,7 +43,6 @@ public class PPSimulatorTest
                 .add(1.5, 19.4, 0, 13, -12)
                 .buildArray();
 
-//        System.out.println(Arrays.toString(build));
         test(build);
     }
 
@@ -78,7 +77,6 @@ public class PPSimulatorTest
     {
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
-//        ICopyable stopwatch = Simulation.getInstance().generateStopwatch();
         // Not a problem
         MultiThreadSimulation simulation = new MultiThreadSimulation(1);
 
