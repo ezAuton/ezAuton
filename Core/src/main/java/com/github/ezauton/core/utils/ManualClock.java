@@ -5,6 +5,9 @@ import java.util.Queue;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * ⏰ A clock where the time is manually changed.
+ */
 public class ManualClock implements IClock
 {
 

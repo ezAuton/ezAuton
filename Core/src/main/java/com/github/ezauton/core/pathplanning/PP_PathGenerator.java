@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Generates a path 🗺 for Pure Pursuit given {@link PPWaypoint}
+ */
 public class PP_PathGenerator implements Serializable
 {
 

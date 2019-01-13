@@ -5,6 +5,9 @@ import com.github.ezauton.core.utils.IClock;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * A simulator for actions
+ */
 public interface ISimulation extends IScheduler
 {
 

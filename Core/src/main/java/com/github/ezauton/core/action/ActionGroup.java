@@ -22,11 +22,19 @@ public final class ActionGroup extends BaseAction
         this.scheduledActions = new LinkedList<>(Arrays.asList(scheduledActions));
     }
 
+    /**
+     * Create an empty ActionGroup
+     */
     public ActionGroup()
     {
         this.scheduledActions = new LinkedList<>();
     }
 
+    /**
+     * Create an action group of sequential actions
+     * @param actions
+     * @return
+     */
     public static ActionGroup ofSequentials(IAction... actions)
     {
         ActionGroup actionGroup = new ActionGroup();
@@ -35,11 +43,21 @@ public final class ActionGroup extends BaseAction
     }
 
 
+    /**
+     * A utility method to merge multiple {@link Runnable}s in to one {@link Runnable}
+     * @param runnables the merged {@link Runnable}
+     * @return
+     */
     public static Runnable mergeRunnablesSequential(Runnable... runnables)
     {
         return () -> Arrays.stream(runnables).forEach(Runnable::run);
     }
 
+    /**
+     * Creates an {@link ActionGroup} with a sequential action for each {@link Runnable}
+     * @param runnables
+     * @return
+     */
     public static ActionGroup ofSequentials(Runnable... runnables)
     {
         ActionGroup actionGroup = new ActionGroup();
@@ -47,6 +65,11 @@ public final class ActionGroup extends BaseAction
         return actionGroup;
     }
 
+    /**
+     * Creates an {@link ActionGroup} with parallel actions for each {@link Runnable}
+     * @param actions
+     * @return
+     */
     public static ActionGroup ofParallels(IAction... actions)
     {
         ActionGroup actionGroup = new ActionGroup();
@@ -54,6 +77,11 @@ public final class ActionGroup extends BaseAction
         return actionGroup;
     }
 
+    /**
+     * Creates an {@link ActionGroup} with parallel actions for each {@link Runnable}
+     * @param actions
+     * @return
+     */
     public static ActionGroup ofParallels(Runnable... runnables)
     {
         ActionGroup actionGroup = new ActionGroup();
@@ -135,7 +163,9 @@ public final class ActionGroup extends BaseAction
     }
 
     /**
-     * Create a Thread from this Action group
+     * Create a Thread from this Action group. The ActionGroup blocks until all sub actions (including parallels) are
+     * finished. The reason for this is mentioned
+     * <a href = "https://vorpus.org/blog/notes-on-structured-concurrency-or-go-statement-considered-harmful/">here</a>.
      *
      * @param clock The clock that will be given to our actions
      * @return The thread, ready to start.

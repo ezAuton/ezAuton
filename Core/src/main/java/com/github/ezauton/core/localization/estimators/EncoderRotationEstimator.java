@@ -8,9 +8,10 @@ import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
 
 /**
- * Describes an Updateable object that can track the location and heading of the robot
+ * Describes an Updateable object that can track the location and heading of the robot using a rotational device
+ * which can record angle (i.e. gyro) and a device which can record translational distance (i.e., encoder).
  */
-public class EncoderRotationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, Updateable
+public final class EncoderRotationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, Updateable
 {
 
     private final IRotationalLocationEstimator rotationalLocationEstimator;

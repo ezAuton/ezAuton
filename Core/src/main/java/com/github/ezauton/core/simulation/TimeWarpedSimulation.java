@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class MultiThreadSimulation implements ISimulation
+/**
+ * A simulator which allows to run in real-time or real-time*{multiplier} 🔥
+ */
+public class TimeWarpedSimulation implements ISimulation
 {
 
     private final double speed;
@@ -17,13 +20,13 @@ public class MultiThreadSimulation implements ISimulation
 
     private List<IAction> actions = new ArrayList<>();
 
-    public MultiThreadSimulation(double speed)
+    public TimeWarpedSimulation(double speed)
     {
         this.speed = speed;
         timeWarpedClock = new TimeWarpedClock(speed);
     }
 
-    public MultiThreadSimulation()
+    public TimeWarpedSimulation()
     {
         this(1);
     }
@@ -39,7 +42,7 @@ public class MultiThreadSimulation implements ISimulation
         return timeWarpedClock;
     }
 
-    public MultiThreadSimulation add(IAction action)
+    public TimeWarpedSimulation add(IAction action)
     {
         actions.add(action);
         return this;

@@ -4,8 +4,7 @@ import com.github.ezauton.core.action.ActionGroup
 import com.github.ezauton.core.action.BaseAction
 import com.github.ezauton.core.action.DelayedAction
 import com.github.ezauton.core.action.TimedPeriodicAction
-import com.github.ezauton.core.kotlin.baseAction
-import com.github.ezauton.core.kotlin.wrap
+import com.github.ezauton.core.kotlin.wrapType
 import com.github.ezauton.core.simulation.ModernSimulatedClock
 import com.github.ezauton.core.utils.TimeWarpedClock
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -58,14 +57,14 @@ class ActionTest {
 
                 DelayedAction (30, TimeUnit.SECONDS)
                         .onFinish { if (counter == 0) counter++ }
-                        .wrap(ActionGroup.Type.WITH),
+                        .wrapType(ActionGroup.Type.WITH),
 
                 DelayedAction (20, TimeUnit.SECONDS)
                         .onFinish { if (counter == 1) counter++ }
-                        .wrap(ActionGroup.Type.PARALLEL),
+                        .wrapType(ActionGroup.Type.PARALLEL),
 
                 DelayedAction(10, TimeUnit.SECONDS)
-                        .wrap(ActionGroup.Type.SEQUENTIAL)
+                        .wrapType(ActionGroup.Type.SEQUENTIAL)
         )
 
         val clock = TimeWarpedClock(10.0, 0)

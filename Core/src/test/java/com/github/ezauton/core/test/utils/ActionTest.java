@@ -1,7 +1,7 @@
 package com.github.ezauton.core.test.utils;
 
 import com.github.ezauton.core.action.*;
-import com.github.ezauton.core.simulation.MultiThreadSimulation;
+import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.utils.IClock;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.core.utils.Stopwatch;
@@ -67,7 +67,7 @@ public class ActionTest
     @Test
     public void testDelayedAction()
     {
-        MultiThreadSimulation sim = new MultiThreadSimulation(10);
+        TimeWarpedSimulation sim = new TimeWarpedSimulation(10);
 
         int delay = 3;
         DelayedAction action = new DelayedAction(delay, TimeUnit.SECONDS); // w
@@ -111,7 +111,7 @@ public class ActionTest
         ActionGroup group = new ActionGroup()
                 .addSequential(action);
 
-        MultiThreadSimulation sim = new MultiThreadSimulation(10);
+        TimeWarpedSimulation sim = new TimeWarpedSimulation(10);
         sim.add(group);
         sim.runSimulation(3, TimeUnit.SECONDS);
         assertEquals(4, count.get());
@@ -180,7 +180,7 @@ public class ActionTest
                     count.compareAndSet(8, 10);
                 });
 
-        MultiThreadSimulation simulation = new MultiThreadSimulation(10);
+        TimeWarpedSimulation simulation = new TimeWarpedSimulation(10);
         simulation.add(actionGroup);
         simulation.runSimulation(100, TimeUnit.SECONDS);
 
@@ -215,7 +215,7 @@ public class ActionTest
 
                 });
 
-        MultiThreadSimulation simulation = new MultiThreadSimulation();
+        TimeWarpedSimulation simulation = new TimeWarpedSimulation();
         simulation.add(group);
         simulation.runSimulation(100, TimeUnit.SECONDS);
 
@@ -229,7 +229,7 @@ public class ActionTest
 
         BackgroundAction actionA = new BackgroundAction(20, TimeUnit.MILLISECONDS);
 
-        actionA.addUpdateable(counter::incrementAndGet);
+        actionA.addRunnable(counter::incrementAndGet);
 
         actionA.setPeriodDelayAfterExecution(false);
 
@@ -241,7 +241,7 @@ public class ActionTest
                 .with(actionA)
                 .addSequential(mainAction);
 
-        MultiThreadSimulation sim = new MultiThreadSimulation(1);
+        TimeWarpedSimulation sim = new TimeWarpedSimulation(1);
 
         sim.add(group);
 

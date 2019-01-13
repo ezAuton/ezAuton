@@ -2,7 +2,7 @@ package com.github.ezauton.core.test.simulator;
 
 import com.github.ezauton.core.action.*;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
-import com.github.ezauton.core.simulation.MultiThreadSimulation;
+import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.utils.ManualClock;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class SimulatorTest
     public void testSimpleAction()
     {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-        MultiThreadSimulation simulation = new MultiThreadSimulation();
+        TimeWarpedSimulation simulation = new TimeWarpedSimulation();
         simulation.add(new BaseAction(() -> atomicBoolean.set(true)));
         simulation.runSimulation(100, TimeUnit.SECONDS);
         assertTrue(atomicBoolean.get());
@@ -31,7 +31,7 @@ public class SimulatorTest
     public void testDelayedAction()
     {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-        MultiThreadSimulation simulation = new MultiThreadSimulation();
+        TimeWarpedSimulation simulation = new TimeWarpedSimulation();
         DelayedAction delayedAction = new DelayedAction(1, TimeUnit.SECONDS, () -> atomicBoolean.set(true));
         simulation.add(delayedAction);
         simulation.runSimulation(100, TimeUnit.SECONDS);
@@ -43,7 +43,7 @@ public class SimulatorTest
     {
         AtomicInteger atomicInteger = new AtomicInteger(0);
 
-        MultiThreadSimulation simulation = new MultiThreadSimulation(10);
+        TimeWarpedSimulation simulation = new TimeWarpedSimulation(10);
         ActionGroup actionGroup = new ActionGroup();
 
         DelayedAction delayedAction = new DelayedAction(1, TimeUnit.SECONDS, () -> atomicInteger.compareAndSet(2, 3));
@@ -87,7 +87,7 @@ public class SimulatorTest
     {
         AtomicInteger atomicInteger = new AtomicInteger(0);
 
-        MultiThreadSimulation simulation = new MultiThreadSimulation(1);
+        TimeWarpedSimulation simulation = new TimeWarpedSimulation(1);
         ActionGroup actionGroup = new ActionGroup();
 
         PeriodicAction action = new BackgroundAction(20, TimeUnit.MILLISECONDS, atomicInteger::incrementAndGet);

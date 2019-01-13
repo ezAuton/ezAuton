@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A class containing very many useful mathematical constants and operations
+ * A class containing very many useful mathematical constants and operations 🧮
  *
  * @see MathUtils.Algebra
  * @see MathUtils.Geometry

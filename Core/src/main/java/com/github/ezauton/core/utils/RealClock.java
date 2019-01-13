@@ -3,13 +3,16 @@ package com.github.ezauton.core.utils;
 import java.time.Instant;
 import java.util.concurrent.*;
 
-public class RealClock implements IClock
+/**
+ * A clock which represents the real world time. ⏱
+ */
+public final class RealClock implements IClock
 {
     public static final RealClock CLOCK = new RealClock();
     private final ScheduledExecutorService executorService;
 
 
-    protected RealClock()
+    private RealClock()
     {
         executorService = Executors.newScheduledThreadPool(1, Thread::new);
     }

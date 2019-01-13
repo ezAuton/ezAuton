@@ -19,12 +19,12 @@ public class InsantSimulatorTest
         AtomicLong sum = new AtomicLong();
 
         IAction actionA = new TimedPeriodicAction(20, TimeUnit.SECONDS)
-                .addUpdateable(a -> () -> {
+                .addRunnable(a -> () -> {
                     sum.addAndGet(a.getStopwatch().read());
                 });
 
         IAction actionB = new TimedPeriodicAction(20, TimeUnit.SECONDS)
-                .addUpdateable(a -> () -> {
+                .addRunnable(a -> () -> {
                     long l = sum.addAndGet(-a.getStopwatch().read(TimeUnit.MILLISECONDS));
                     assertEquals(0, l);
                 });

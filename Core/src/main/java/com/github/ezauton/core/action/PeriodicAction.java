@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+/**
+ * An action which runs at recurring intervals 🔁. Will run all {@link Runnable}s sequentially every period timeUnit.
+ */
 public abstract class PeriodicAction extends BaseAction
 {
 
@@ -20,7 +23,7 @@ public abstract class PeriodicAction extends BaseAction
     private int timesRun = 0;
 
     /**
-     * An action which runs at recurring intervals
+     * An action which runs at recurring intervals 🔁. Will run all {@link Runnable}s sequentially every period timeUnit.
      *
      * @param period
      * @param timeUnit
@@ -33,7 +36,7 @@ public abstract class PeriodicAction extends BaseAction
     }
 
     /**
-     * Creates a PeriodicAction with a 20 ms period.
+     * Creates a PeriodicAction which will run all {@link Runnable}s sequentially every 20 ms.
      *
      * @param runnables
      */
@@ -42,14 +45,22 @@ public abstract class PeriodicAction extends BaseAction
         this(20, TimeUnit.MILLISECONDS, runnables);
     }
 
+    /**
+     * Creates a PeriodicAction which will run every 20 ms.
+     */
     public PeriodicAction()
     {
         this(20, TimeUnit.MILLISECONDS);
     }
 
-    public PeriodicAction addUpdateable(Runnable runnable)
+
+    /**
+     * Add a runnable to tasks which are executed periodically
+     * @param runnable
+     * @return
+     */
+    public PeriodicAction addRunnable(Runnable runnable)
     {
-        // Added because https://stackoverflow.com/a/9584671/4889030 is ugly
         runnables.add(runnable);
         return this;
     }
@@ -59,31 +70,50 @@ public abstract class PeriodicAction extends BaseAction
     }
 
     /**
-     * Added because https://stackoverflow.com/a/9584671/4889030 is ugly
+     * An alternative to {@link PeriodicAction#addRunnable(Runnable)}.
+     * @see <a href = "https://stackoverflow.com/a/9584671/4889030">https://stackoverflow.com/a/9584671/4889030</a>
      *
      * @param updateableFunc
      * @return
      */
-    public PeriodicAction addUpdateable(Function<PeriodicAction, Runnable> updateableFunc)
+    public PeriodicAction addRunnable(Function<PeriodicAction, Runnable> updateableFunc)
     {
         runnables.add(updateableFunc.apply(this));
         return this;
     }
 
+    /**
+     * Called when the periodic action is first initialized
+     */
     protected void init() {}
 
+    /**
+     * Called every period cycle. By default, adds given {@link Runnable}s
+     */
     protected void execute()
     {
         runnables.forEach(Runnable::run);
     }
 
+    /**
+     *
+     * @return If the action is finished. Will stop execution if returns true.
+     */
     protected abstract boolean isFinished();
 
+    /**
+     * The action will attempt to try to run as close as it can to the given period.
+     * @return true if period is calculated after execution or false if the period counts execution time
+     */
     public boolean isPeriodDelayAfterExecution()
     {
         return periodDelayAfterExecution;
     }
 
+    /**
+     * The action will attempt to try to run as close as it can to the given period.
+     * @param periodDelayAfterExecution true if period is calculated after execution or false if the period counts execution time
+     */
     public void setPeriodDelayAfterExecution(boolean periodDelayAfterExecution)
     {
         this.periodDelayAfterExecution = periodDelayAfterExecution;
@@ -141,12 +171,22 @@ public abstract class PeriodicAction extends BaseAction
         while(!isFinished() && !isStopped());
     }
 
-    public Stopwatch getStopwatch()
+    /**
+     * A stopwatch which returns the time since the action started running (unless popped)
+     * TODO Should probably have a stopwatch cannot be reset (which is public) and another one which can
+     * TODO (and is protected) due to encapsulation
+     * @return
+     */
+    public final Stopwatch getStopwatch()
     {
         return stopwatch;
     }
 
-    public IClock getClock()
+    /**
+     * The clock which the action is run by
+     * @return
+     */
+    public final IClock getClock()
     {
         return clock;
     }

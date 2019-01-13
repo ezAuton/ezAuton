@@ -5,7 +5,15 @@ package com.github.ezauton.core.localization.sensors;
  */
 public interface ITranslationalDistanceSensor
 {
+    /**
+     * Get the translational position
+     * @return
+     */
     double getPosition();
 
+    /**
+     * Get the <strong>translational</strong> velocity (should be VELOCITY so positive <i>and</i> negative)
+     * @return
+     */
     double getVelocity();
 }
