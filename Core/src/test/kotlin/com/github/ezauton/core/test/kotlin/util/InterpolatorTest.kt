@@ -30,13 +30,13 @@ class InterpolatorTest {
     fun `test interpolator get`() {
 
         interpMapRegular.apply {
-            assertEquals(2.0, this[0.0]!!, 1E-6)
-            assertEquals(2.0, this[1.0]!!, 1E-6)
-            assertEquals(1.5, this[1.5]!!, 1E-6)
-            assertEquals(1.0, this[2.0]!!, 1E-6)
-            assertEquals(2.0, this[3.0]!!, 1E-6)
-            assertEquals(3.0, this[4.0]!!, 1E-6)
-            assertEquals(3.0, this[5.0]!!, 1E-6)
+            assertEquals(2.0, this[0.0], 1E-6)
+            assertEquals(2.0, this[1.0], 1E-6)
+            assertEquals(1.5, this[1.5], 1E-6)
+            assertEquals(1.0, this[2.0], 1E-6)
+            assertEquals(2.0, this[3.0], 1E-6)
+            assertEquals(3.0, this[4.0], 1E-6)
+            assertEquals(3.0, this[5.0], 1E-6)
         }
     }
 
@@ -63,9 +63,9 @@ class InterpolatorTest {
     @Test
     fun `test even interpolator get`() {
         interpMapEven.also {
-            it[0.0]!!.testEquals(1.0)
-            it[-1.0]!!.testEquals(2.0)
-            it[1.0]!!.testEquals(2.0)
+            it[0.0].testEquals(1.0)
+            it[-1.0].testEquals(2.0)
+            it[1.0].testEquals(2.0)
         }
     }
 
