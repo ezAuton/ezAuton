@@ -1,12 +1,10 @@
 package com.github.ezauton.core.simulation;
 
 import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;
-import com.github.ezauton.core.actuators.implementations.BoundedVelocityProcessor;
-import com.github.ezauton.core.actuators.implementations.RampUpVelocityProcessor;
-import com.github.ezauton.core.actuators.implementations.StaticFrictionVelocityProcessor;
+import com.github.ezauton.core.actuators.implementations.*;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
+import com.github.ezauton.core.localization.sensors.Encoders;
 import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
 import com.github.ezauton.core.robot.ITankRobotConstants;
 import com.github.ezauton.core.utils.IClock;
@@ -21,12 +19,12 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 
     private final double lateralWheelDistance;
 
-    private final IVelocityMotor leftMotor;
-    private final IVelocityMotor rightMotor;
+    private final SimulatedMotor left;
+    private final SimulatedMotor right;
 
-    private final BaseSimulatedMotor baseLeftSimulatedMotor;
-    private final BaseSimulatedMotor baseRightSimulatedMotor;
     private final Stopwatch stopwatch;
+    private final ITranslationalDistanceSensor leftTDS;
+    private final ITranslationalDistanceSensor rightTDS;
     public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
     private UpdateableGroup toUpdate = new UpdateableGroup();
 
@@ -41,12 +39,14 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
         stopwatch = new Stopwatch(clock);
         stopwatch.init();
 
-        baseLeftSimulatedMotor = new BaseSimulatedMotor(clock);
-        this.leftMotor = buildMotor(baseLeftSimulatedMotor, clock, maxAccel, minVel, maxVel);
+        left = new SimulatedMotor(clock, maxAccel, minVel, maxVel, 1);
+        leftTDS = Encoders.toTranslationalDistanceSensor(1, 1, left);
 
-        baseRightSimulatedMotor = new BaseSimulatedMotor(clock);
-        this.rightMotor = buildMotor(baseRightSimulatedMotor, clock, maxAccel, minVel, maxVel);
+        right = new SimulatedMotor(clock, maxAccel, minVel, maxVel, 1);
+        rightTDS = Encoders.toTranslationalDistanceSensor(1, 1, right);
 
+        toUpdate.add(left);
+        toUpdate.add(right);
         this.lateralWheelDistance = lateralWheelDistance;
 
     }
@@ -54,37 +54,28 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 
     public IVelocityMotor getLeftMotor()
     {
-        return leftMotor;
+        return left;
     }
 
     public IVelocityMotor getRightMotor()
     {
-        return rightMotor;
+        return right;
     }
 
-    public void run(double left, double right)
+    public void run(double leftV, double rightV)
     {
-        leftMotor.runVelocity(left);
-        rightMotor.runVelocity(right);
-    }
-
-    private BoundedVelocityProcessor buildMotor(BaseSimulatedMotor baseSimulatedMotor, IClock clock, double maxAccel, double minVel, double maxVel)
-    {
-        RampUpVelocityProcessor leftRampUpMotor = new RampUpVelocityProcessor(baseSimulatedMotor, clock, maxAccel);
-        toUpdate.add(leftRampUpMotor);
-
-        StaticFrictionVelocityProcessor leftSF = new StaticFrictionVelocityProcessor(baseSimulatedMotor, leftRampUpMotor, minVel);
-        return new BoundedVelocityProcessor(leftSF, maxVel);
+        left.runVelocity(leftV);
+        right.runVelocity(rightV);
     }
 
     public ITranslationalDistanceSensor getLeftDistanceSensor()
     {
-        return baseLeftSimulatedMotor;
+        return leftTDS;
     }
 
     public ITranslationalDistanceSensor getRightDistanceSensor()
     {
-        return baseRightSimulatedMotor;
+        return rightTDS;
     }
 
     public double getLateralWheelDistance()
@@ -96,7 +87,7 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
     public boolean update()
     {
         long read = stopwatch.read(TimeUnit.SECONDS);
-        log.append(read).append(", ").append(baseLeftSimulatedMotor.getVelocity()).append(", ").append(baseRightSimulatedMotor.getVelocity()).append("\n");
+        log.append(read).append(", ").append(leftTDS.getVelocity()).append(", ").append(rightTDS.getVelocity()).append("\n");
         toUpdate.update();
         return true;
     }
