@@ -2,7 +2,10 @@ package com.github.ezauton.core.test.kotlin.util
 
 import com.github.ezauton.core.action.require.BaseResource
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.lang.IllegalStateException
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
 class ResourceTest {
@@ -41,7 +44,48 @@ class ResourceTest {
 
         list.forEachIndexed{ i, bool ->
             Assertions.assertTrue(bool, i.toString()) }
+    }
 
-//        Assertions.assertTrue(a)
+    @Test
+    fun `assert possession test`(){
+
+        val resource = BaseResource()
+
+        var thread1NoException = true
+
+        val thread1 = thread {
+            resource.take()
+            Thread.sleep(100)
+            try{
+                resource.assertPossession()
+            }catch(e: IllegalStateException)
+            {
+                thread1NoException = false
+            }
+            resource.give()
+        }
+
+        var illegalStateCaught = false
+        var canTake = false
+
+        val thread2 = thread {
+
+            Thread.sleep(50)
+            try{
+                resource.assertPossession()
+            }catch (e: IllegalStateException)
+            {
+                illegalStateCaught = true
+            }
+            resource.take()
+            canTake = true
+        }
+
+        thread1.join()
+        thread2.join()
+
+        assertTrue(thread1NoException)
+        assertTrue(illegalStateCaught)
+        assertTrue(canTake)
     }
 }
