@@ -1,6 +1,5 @@
 package com.github.ezauton.core.pathplanning;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 
@@ -152,7 +151,6 @@ public abstract class LinearPathSegment implements IPathSegment
      * @return How far along the entire path that the from point is
      */
     @Override
-    @JsonIgnore
     public double getAbsoluteDistanceStart()
     {
         return distanceStart;
@@ -162,7 +160,6 @@ public abstract class LinearPathSegment implements IPathSegment
      * @return How far along the entire path that the end point is
      */
     @Override
-    @JsonIgnore
     public double getAbsoluteDistanceEnd()
     {
         return distanceEnd;

@@ -1,6 +1,8 @@
 package com.github.ezauton.core.test.utils;
 
 import com.github.ezauton.core.action.*;
+import com.github.ezauton.core.localization.Updateable;
+import com.github.ezauton.core.localization.UpdateableGroup;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.utils.IClock;
 import com.github.ezauton.core.utils.RealClock;
@@ -9,15 +11,16 @@ import com.github.ezauton.core.utils.TimeWarpedClock;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ActionTest
 {
@@ -267,6 +270,30 @@ public class ActionTest
 //        assertEquals(expectedDTms, count.get() - initmillis, 50);
 
 
+    }
+
+    @Test
+    public void testUpdateableGroup()
+    {
+        List<Integer> list = new ArrayList<>();
+        Updateable one = () -> list.add(1);
+        Updateable two = () -> list.add(2);
+        Updateable three = () -> list.add(3);
+        Updateable four = () -> list.add(4);
+
+        UpdateableGroup group = new UpdateableGroup(one, two, three, four);
+        assertTrue(group.update());
+        assertEquals(list, Arrays.asList(1, 2, 3, 4));
+        list.clear();
+        group.remove(three);
+        assertTrue(group.update());
+        assertEquals(list, Arrays.asList(1,  2, 4));
+        list.clear();
+        group.remove(one);
+        group.remove(two);
+        group.remove(four);
+        assertFalse(group.update());
+        assertTrue(list.isEmpty());
     }
 
 }

@@ -21,10 +21,8 @@ jar {
 }
 
 dependencies {
-    
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
 }
 
 compileKotlin {

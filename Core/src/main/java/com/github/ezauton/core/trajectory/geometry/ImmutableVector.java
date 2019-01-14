@@ -1,8 +1,5 @@
 package com.github.ezauton.core.trajectory.geometry;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +12,6 @@ import java.util.stream.DoubleStream;
  */
 public class ImmutableVector implements Serializable
 {
-    @JsonProperty
     private double[] elements;
 
     public ImmutableVector(double... x)
@@ -108,7 +104,6 @@ public class ImmutableVector implements Serializable
         }
     }
 
-    @JsonIgnore
     public int getDimension()
     {
         return elements.length;
@@ -202,7 +197,6 @@ public class ImmutableVector implements Serializable
         return Arrays.stream(elements);
     }
 
-    @JsonIgnore
     public boolean isFinite()
     {
         return stream().allMatch(Double::isFinite);
