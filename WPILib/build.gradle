@@ -15,7 +15,8 @@ repositories {
         dirs 'lib'
     }
     maven { url "http://first.wpi.edu/FRC/roborio/maven/release" }
-    maven { url "http://devsite.ctr-electronics.com/maven/release/" }
+    maven { url 'http://devsite.ctr-electronics.com/maven/release/' }
+    maven { url 'http://www.kauailabs.com/maven2'}
 }
 
 dependencies {
