@@ -2,10 +2,10 @@ package org.github.ezauton.ezauton.wpilib.motors;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
+import com.github.ezauton.core.localization.sensors.IEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SpeedController;
-import org.github.ezauton.ezauton.localization.sensors.IEncoder;
 
 import java.util.Arrays;
 

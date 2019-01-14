@@ -4,14 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.github.ezauton.core.pathplanning.IPathSegment;
+import com.github.ezauton.core.pathplanning.Path;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.recorder.serializers.IPathSegmentDeserializer;
 import com.github.ezauton.recorder.serializers.IPathSegmentSerializer;
 import com.github.ezauton.recorder.serializers.ImmutableVectorSerializer;
 import com.github.ezauton.recorder.serializers.PathSerializer;
-import org.github.ezauton.ezauton.pathplanning.IPathSegment;
-import org.github.ezauton.ezauton.pathplanning.Path;
-import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
-import org.github.ezauton.ezauton.utils.InterpolationMap;
 
 import java.io.IOException;
 
