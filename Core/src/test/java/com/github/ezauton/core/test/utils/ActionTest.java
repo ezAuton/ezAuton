@@ -3,17 +3,26 @@ package com.github.ezauton.core.test.utils;
 import com.github.ezauton.core.action.*;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
+<<<<<<< HEAD
+import com.github.ezauton.core.simulation.MultiThreadSimulation;
+=======
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
+>>>>>>> master
 import com.github.ezauton.core.utils.IClock;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.core.utils.Stopwatch;
 import com.github.ezauton.core.utils.TimeWarpedClock;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+<<<<<<< HEAD
+=======
 
 import java.util.ArrayList;
 import java.util.Arrays;
+>>>>>>> master
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,6 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 
 public class ActionTest
 {

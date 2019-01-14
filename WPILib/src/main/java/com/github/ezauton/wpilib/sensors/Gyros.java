@@ -1,4 +1,4 @@
-package com.github.ezauton.wpilib.command;
+package com.github.ezauton.wpilib.sensors;
 
 import com.github.ezauton.core.localization.sensors.ICompass;
 import com.kauailabs.navx.frc.AHRS;

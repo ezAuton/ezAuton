@@ -1,4 +1,4 @@
-package org.github.ezauton.ezauton.wpilib.motors;
+package com.github.ezauton.wpilib.motors;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
@@ -9,9 +9,17 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 import java.util.Arrays;
 
-
+/**
+ * Utility class for converting WPILib motor controllers into
+ */
 public class MotorControllers
 {
+    /**
+     * Create a combo IVelocityMotor, IEncoder, and IVoltageMotor from a CTRE motor
+     * @param motorController The instance of the motor
+     * @param pidIdx 0 for normal PID, 1 for auxiliary PID.
+     * @return An {@link ITypicalMotor}
+     */
     public static ITypicalMotor fromCTRE(BaseMotorController motorController, int pidIdx)
     {
         return new ITypicalMotor()
