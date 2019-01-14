@@ -221,7 +221,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @param key The Double to evaluate "f(x)" at
      * @return The estimated value of "f(key)"
      */
-    private Double get(Double key)
+    public Double get(Double key)
     {
         Set<Double> keyset = table.keySet();
 

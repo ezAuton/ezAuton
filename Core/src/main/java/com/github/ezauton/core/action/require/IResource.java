@@ -16,4 +16,6 @@ public interface IResource {
      * give the resource back
      */
     void give();
+
+    void assertPossession() throws IllegalStateException;
 }

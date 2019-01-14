@@ -43,4 +43,13 @@ public class BaseResource implements IResource {
             subResource.give();
         }
     }
+
+    @Override
+    public void assertPossession() throws IllegalStateException {
+        if(!lock.isHeldByCurrentThread()) throw new IllegalStateException("You must have possession of this resource " +
+                "(use Resource#take())");
+        for (IResource subResource : subResources) {
+            subResource.assertPossession();
+        }
+    }
 }
