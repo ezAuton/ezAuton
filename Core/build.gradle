@@ -13,16 +13,19 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
 }
-
+configurations {
+    fatCompile
+    compile.extendsFrom fatCompile
+}
 jar {
     from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.fatCompile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
+    fatCompile group: 'com.google.guava', name: 'guava', version: '19.0'
 }
 
 compileKotlin {
