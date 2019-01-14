@@ -3,7 +3,8 @@ package com.github.ezauton.core.pathplanning.purepursuit;
 import com.github.ezauton.core.localization.ITankRobotVelocityEstimator;
 
 /**
- * Data class regarding the lookahead. Takes
+ * Easy lookahead implementation given a speed. Takes in min speed, max speed, min lookahead, max lookahead and
+ * performs a linear interpolation.
  */
 public class LookaheadBounds implements ILookahead
 {

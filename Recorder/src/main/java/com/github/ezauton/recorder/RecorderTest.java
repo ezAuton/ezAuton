@@ -12,7 +12,7 @@ import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.action.ActionGroup;
-import com.github.ezauton.core.simulation.MultiThreadSimulation;
+import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 
@@ -43,7 +43,7 @@ public class RecorderTest
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
         // Not a problem
-        MultiThreadSimulation simulation = new MultiThreadSimulation(1);
+        TimeWarpedSimulation simulation = new TimeWarpedSimulation(1);
 
         // Might be a problem
         SimulatedTankRobot robot = new SimulatedTankRobot(1, simulation.getClock(), 40, 0.3, 30D);
@@ -87,7 +87,7 @@ public class RecorderTest
         // save recording
         {
             String homeDir = System.getProperty("user.home");
-            java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.json");
+            java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "loggy.json");
 
             Files.createDirectories(filePath.getParent());
 

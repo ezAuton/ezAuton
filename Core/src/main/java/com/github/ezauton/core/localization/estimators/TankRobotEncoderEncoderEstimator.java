@@ -9,12 +9,10 @@ import com.github.ezauton.core.robot.ITankRobotConstants;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 
-//TODO: Better name
-
 /**
  * Describes an object that can estimate the heading and absolute position of the robot solely using the encoders
  */
-public class TankRobotEncoderEncoderEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, ITankRobotVelocityEstimator, Updateable
+public final class TankRobotEncoderEncoderEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, ITankRobotVelocityEstimator, Updateable
 {
 
     private final ITankRobotConstants tankRobot;

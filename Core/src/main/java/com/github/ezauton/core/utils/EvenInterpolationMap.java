@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * An interpolation map that has odd symmetry https://en.wikipedia.org/wiki/Even_and_odd_functions
+ * An interpolation map that has even symmetry https://en.wikipedia.org/wiki/Even_and_odd_functions
  */
 public class EvenInterpolationMap extends InterpolationMap {
 

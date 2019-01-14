@@ -3,7 +3,8 @@ package com.github.ezauton.core.utils;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A handy stopwatch for recording time in seconds every time it is polled
+ * A handy stopwatch for recording time in seconds since it was last polled. Requires a ⏱ {@link IClock} to keep track
+ * of time.
  */
 public class Stopwatch
 {

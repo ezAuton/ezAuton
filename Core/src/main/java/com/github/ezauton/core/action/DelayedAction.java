@@ -5,7 +5,7 @@ import com.github.ezauton.core.utils.IClock;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Describes an action that waits a certain amount of time before running
+ * An action which ⏰ a certain amount of time before executing 1
  */
 public class DelayedAction extends BaseAction
 {
@@ -25,7 +25,7 @@ public class DelayedAction extends BaseAction
     }
 
     /**
-     * Called after delay is done
+     * Called when the time is up, i.e., the delay is done
      */
     private void onTimeUp()
     {

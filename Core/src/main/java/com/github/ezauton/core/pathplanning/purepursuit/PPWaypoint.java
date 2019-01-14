@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Waypoint used in Pure Pursuit
+ * Waypoint used in Pure Pursuit which includes translational location, speed, accel, decel...
  */
 public class PPWaypoint implements Serializable
 {

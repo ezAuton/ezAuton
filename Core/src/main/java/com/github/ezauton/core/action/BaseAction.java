@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The base implementation of an IAction.
+ * The base implementation of an IAction. Most actions are based off of this class, as it provides an easy, base
+ * implementation.
  */
 public class BaseAction implements IAction
 {
@@ -15,12 +16,17 @@ public class BaseAction implements IAction
     private boolean stopped = false;
     private Runnable runnable;
 
+    /**
+     * Create an empty {@link BaseAction} which does not run anything
+     */
     public BaseAction()
     {
 
     }
 
     /**
+     * Runs the provided {@link Runnable} once.
+     *
      * To avoid confusion on whether {@link Runnable}s execute sequentially or in parallel, only one runnable is allowed.
      * To easily create an action with multiple {@link Runnable}s or sub actions, see {@link ActionGroup}
      *

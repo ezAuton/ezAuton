@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * A Pure Pursuit action which can be used in simulation or as a WPILib Command
  */
-public class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
+public final class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
 {
     private final PurePursuitMovementStrategy purePursuitMovementStrategy;
     private final ITranslationalLocationEstimator translationalLocationEstimator;
@@ -56,11 +56,18 @@ public class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
         translationalLocationDriveable.driveTowardTransLoc(speedUsed, goalPoint);
     }
 
+    /**
+     * @return The most reset speed used by Pure Pursuit
+     */
     public double getSpeedUsed()
     {
         return speedUsed;
     }
 
+    /**
+     *
+     * @return The most reset absolute distance used by Pure Pursuit
+     */
     public double getAbsoluteDistanceUsed()
     {
         return absoluteDistanceUsed;

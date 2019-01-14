@@ -1,8 +1,6 @@
 package com.github.ezauton.core.utils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
 import java.io.Serializable;
 import java.util.*;
@@ -47,7 +45,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
     {
         if(initTable.keySet().isEmpty())
         {
-            throw new ValueException("Your initial table for the InterpolatingHashTable musn't be empty!");
+            throw new IllegalArgumentException("Your initial table for the InterpolatingHashTable musn't be empty!");
         }
         else
         {
@@ -128,7 +126,6 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @throws IllegalArgumentException If the key does not extend Double
      */
     @Override
-    @JsonIgnore
     public Double get(Object key) throws IllegalArgumentException
     {
         if(key instanceof Number)
@@ -224,8 +221,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @param key The Double to evaluate "f(x)" at
      * @return The estimated value of "f(key)"
      */
-    @JsonIgnore
-    public Double get(Double key)
+    private Double get(Double key)
     {
         Set<Double> keyset = table.keySet();
 

@@ -49,7 +49,10 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
         this.subscribed = subscribed;
     }
 
-
+    /**
+     *
+     * @param targetVelocity The target speed for the motor to be ran at
+     */
     @Override
     public void runVelocity(double targetVelocity)
     {

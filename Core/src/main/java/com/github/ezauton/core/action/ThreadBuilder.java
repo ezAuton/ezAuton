@@ -5,6 +5,9 @@ import com.github.ezauton.core.utils.RealClock;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Converts {@link IAction}s to {@link Thread}.
+ */
 public class ThreadBuilder
 {
 
@@ -43,11 +46,19 @@ public class ThreadBuilder
         return new ActionThread(toRun);
     }
 
+    /**
+     * Get the runnable which will be put into the thread
+     * @return
+     */
     public ToRun getToRun()
     {
         return toRun;
     }
 
+    /**
+     * Build a thread and start it
+     * @return the thread
+     */
     public Thread start()
     {
         Thread thread = build();
@@ -69,6 +80,12 @@ public class ThreadBuilder
         return start;
     }
 
+    /**
+     * Starts an action and blocks for a specified time. Nice for unit testing.
+     * @param maxTime
+     * @param unit
+     * @return
+     */
     public Thread startAndWait(long maxTime, TimeUnit unit)
     {
         Thread start = start();

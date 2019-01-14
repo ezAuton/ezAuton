@@ -3,7 +3,7 @@ package com.github.ezauton.core.utils;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A clock based off of Real Clock that is warped
+ * A clock based off of {@link RealClock} but is warped
  */
 public class TimeWarpedClock implements IClock
 {

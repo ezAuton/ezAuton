@@ -2,7 +2,15 @@ package com.github.ezauton.recorder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.github.ezauton.core.pathplanning.IPathSegment;
+import com.github.ezauton.core.pathplanning.Path;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.recorder.serializers.IPathSegmentDeserializer;
+import com.github.ezauton.recorder.serializers.IPathSegmentSerializer;
+import com.github.ezauton.recorder.serializers.ImmutableVectorSerializer;
+import com.github.ezauton.recorder.serializers.PathSerializer;
 
 import java.io.IOException;
 
@@ -15,6 +23,7 @@ public class JsonUtils
 {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
+    private static SimpleModule customSerializers = new SimpleModule();
 
     static
     {
@@ -22,6 +31,13 @@ public class JsonUtils
         objectMapper.setDateFormat(new ISO8601DateFormat());
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 //        objectMapper.enableDefaultTyping();
+
+        customSerializers.addSerializer(ImmutableVector.class, new ImmutableVectorSerializer());
+        customSerializers.addSerializer(IPathSegment.class, new IPathSegmentSerializer());
+        customSerializers.addDeserializer(IPathSegment.class, new IPathSegmentDeserializer());
+        customSerializers.addSerializer(Path.class, new PathSerializer());
+
+        objectMapper.registerModule(customSerializers);
     }
 
     /**

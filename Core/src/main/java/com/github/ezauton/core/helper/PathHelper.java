@@ -6,8 +6,10 @@ import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 
 /**
  * Class containing sample paths for Pure Pursuit
- * <p>
+ * <br/>
  * This class only contains static members.
+ * <br/>
+ * Useful for testing ezAuton on a new robot.
  */
 public class PathHelper
 {
