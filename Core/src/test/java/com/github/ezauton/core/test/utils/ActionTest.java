@@ -3,11 +3,7 @@ package com.github.ezauton.core.test.utils;
 import com.github.ezauton.core.action.*;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
-<<<<<<< HEAD
-import com.github.ezauton.core.simulation.MultiThreadSimulation;
-=======
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
->>>>>>> master
 import com.github.ezauton.core.utils.IClock;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.core.utils.Stopwatch;
@@ -17,12 +13,6 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-<<<<<<< HEAD
-=======
-
-import java.util.ArrayList;
-import java.util.Arrays;
->>>>>>> master
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -36,38 +26,45 @@ public class ActionTest
 {
 
     @Test
-    public void testScheduleActionInterface() throws InterruptedException {
+    public void testScheduleActionInterface() throws InterruptedException
+    {
         AtomicLong atomicLong = new AtomicLong(0);
-        IAction action = new IAction(){
+        IAction action = new IAction()
+        {
 
             @Override
-            public void run(IClock clock) {
+            public void run(IClock clock)
+            {
                 atomicLong.set(clock.getTime());
             }
 
             @Override
-            public void end() {
+            public void end()
+            {
                 // Not implemented
             }
 
             @Override
-            public IAction onFinish(Runnable onFinish) {
+            public IAction onFinish(Runnable onFinish)
+            {
                 return this; // Not implemented
             }
 
             @Override
-            public List<Runnable> getFinished() {
+            public List<Runnable> getFinished()
+            {
                 return Collections.emptyList(); // Not implemented
             }
         };
 
         action.schedule().join(1_000);
 
-        assertEquals(System.currentTimeMillis(),atomicLong.get(),1_000);
+        assertEquals(System.currentTimeMillis(), atomicLong.get(), 1_000);
     }
 
     @Test
-    public void testDelayedActionInterrupt() throws InterruptedException {
+    public void testDelayedActionInterrupt() throws InterruptedException
+    {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
 
         DelayedAction delayedAction = new DelayedAction(20, TimeUnit.SECONDS, () -> atomicBoolean.set(true));
@@ -297,7 +294,7 @@ public class ActionTest
         list.clear();
         group.remove(three);
         assertTrue(group.update());
-        assertEquals(list, Arrays.asList(1,  2, 4));
+        assertEquals(list, Arrays.asList(1, 2, 4));
         list.clear();
         group.remove(one);
         group.remove(two);
