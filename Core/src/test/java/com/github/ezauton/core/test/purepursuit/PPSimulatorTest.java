@@ -1,18 +1,18 @@
 package com.github.ezauton.core.test.purepursuit;
 
+import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PPCommand;
-import com.github.ezauton.core.pathplanning.purepursuit.*;
-import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.helper.PathHelper;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
+import com.github.ezauton.core.pathplanning.purepursuit.*;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
+import com.github.ezauton.core.simulation.TimeWarpedSimulation;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
@@ -28,7 +28,7 @@ public class PPSimulatorTest
 
     private static final double LATERAL_WHEEL_DIST = 4;
 
-//    @Test
+    //    @Test
     public void testLeftToRightScale()
     {
         PPWaypoint[] build = new PPWaypoint.Builder()
@@ -71,14 +71,15 @@ public class PPSimulatorTest
     }
 
     @Test
-    public void testSpline() {
+    public void testSpline()
+    {
         test(new SplinePPWaypoint.Builder()
-                .add(0, 0, 0, 5, 13, -12)
-                .add(0, 10, 0, 5, 13, -12)
-                .add(10, 20, Math.PI / 4, 5, 13, -12)
-                .add(20, 30, 0, 0, 13, -12)
-                .buildPathGenerator()
-                .generate(0.05));
+                     .add(0, 0, 0, 15, 13, -12)
+                     .add(0, 13, 0, 10, 13, -12)
+                     .add(20, 17, -Math.PI / 2, 8, 13, -12)
+                     .add(23, 24, 0, 0, 13, -12)
+                     .buildPathGenerator()
+                     .generate(0.05));
     }
 
     private void test(Path path)
@@ -147,11 +148,13 @@ public class PPSimulatorTest
 
         // If the final loc is approximately equal to the last waypoint
         approxEqual(path.getEnd(), finalLoc, 0.2);
+        System.out.println("finalLoc = " + finalLoc);
 
     }
 
     /**
      * Test the path with a robot max acceleration 14ft/s^2, min velocity 0.3ft/s, maxVelocity 16ft/s
+     *
      * @param waypoints
      */
     private void test(PPWaypoint... waypoints)
