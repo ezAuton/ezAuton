@@ -2,16 +2,13 @@ package com.github.ezauton.core.test.purepursuit;
 
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PPCommand;
+import com.github.ezauton.core.pathplanning.purepursuit.*;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.helper.PathHelper;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
-import com.github.ezauton.core.pathplanning.purepursuit.ILookahead;
-import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
-import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
-import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.action.ActionGroup;
@@ -71,6 +68,17 @@ public class PPSimulatorTest
         PPWaypoint waypoint3 = PPWaypoint.simple2D(12, 0, 0, 3, -3);
 
         test(waypoint1, waypoint2, waypoint3);
+    }
+
+    @Test
+    public void testSpline() {
+        test(new SplinePPWaypoint.Builder()
+                .add(0, 0, 0, 5, 13, -12)
+                .add(0, 10, 0, 5, 13, -12)
+                .add(10, 20, Math.PI / 4, 5, 13, -12)
+                .add(20, 30, 0, 0, 13, -12)
+                .buildPathGenerator()
+                .generate(0.05));
     }
 
     private void test(Path path)

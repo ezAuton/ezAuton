@@ -22,6 +22,7 @@ public class SplinePPWaypoint extends PPWaypoint implements Serializable
     {
         private List<SplinePPWaypoint> waypointList = new ArrayList<>();
 
+        @Deprecated
         public Builder add(double x, double y, double xPrime, double yPrime, double speed, double acceleration, double deceleration)
         {
             SplinePPWaypoint waypoint = new SplinePPWaypoint(new ImmutableVector(x, y), new ImmutableVector(xPrime, yPrime), speed, acceleration, deceleration);
@@ -29,14 +30,31 @@ public class SplinePPWaypoint extends PPWaypoint implements Serializable
             return this;
         }
 
+        /**
+         * Add a spline waypoint to the builder
+         *
+         * @param x
+         * @param y
+         * @param theta        Radians, rotated such that up is 0, left is Math.PI / 2, etc.
+         * @param speed
+         * @param acceleration
+         * @param deceleration
+         * @return
+         */
         public Builder add(double x, double y, double theta, double speed, double acceleration, double deceleration)
         {
+            theta += Math.PI / 2;
             SplinePPWaypoint waypoint = SplinePPWaypoint.simple2D(x, y, theta, speed, acceleration, deceleration);
             waypointList.add(waypoint);
             return this;
         }
 
         public PP_PathGenerator buildPathGenerator()
+        {
+            return new PP_PathGenerator(QuinticSpline.toPathSegments(buildSplines(), waypointList));
+        }
+
+        public List<QuinticSpline> buildSplines()
         {
             if(waypointList.size() > 1)
             {
@@ -47,13 +65,14 @@ public class SplinePPWaypoint extends PPWaypoint implements Serializable
                     SplinePPWaypoint thisWP = waypointList.get(i);
                     ImmutableVector prevWpTanvec = prevWP.tanVec;
 
-                    if(MathUtils.epsilonEquals(prevWpTanvec.mag(), kTheta)) {
+                    if(MathUtils.epsilonEquals(prevWpTanvec.mag(), kTheta))
+                    {
                         prevWpTanvec = prevWP.tanVec.mul(prevWP.getLocation().dist(thisWP.getLocation()));
                     }
 
                     splines.add(new QuinticSpline(prevWP.getLocation(), thisWP.getLocation(), prevWpTanvec, thisWP.tanVec));
                 }
-                return new PP_PathGenerator(QuinticSpline.toPathSegments(splines, waypointList));
+                return splines;
             }
             else
             {
@@ -132,7 +151,6 @@ public class SplinePPWaypoint extends PPWaypoint implements Serializable
      * @param acceleration Maximum acceleration allowed to reach the target speed
      * @param deceleration Maximum deceleration allowed to reach the target speed
      * @return A waypoint with the specified properties
-     *
      * @see <a href="http://mathworld.wolfram.com/SphericalCoordinates.html">Spherical Coordinates</a>
      */
     public static SplinePPWaypoint simple3D(double x, double y, double z, double theta, double phi, double speed, double acceleration, double deceleration)
