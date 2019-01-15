@@ -1,13 +1,12 @@
-package org.github.ezauton.ezauton.pathplanning;
+package com.github.ezauton.core.pathplanning;
 
-import org.github.ezauton.ezauton.pathplanning.purepursuit.PPWaypoint;
-import org.github.ezauton.ezauton.pathplanning.purepursuit.SplinePPWaypoint;
-import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
-import org.github.ezauton.ezauton.utils.InterpolationMap;
-import org.github.ezauton.ezauton.utils.MathUtils;
+
+import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.core.utils.InterpolationMap;
+import com.github.ezauton.core.utils.MathUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class QuinticSpline implements MathUtils.Geometry.ParametricFunction

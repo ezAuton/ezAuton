@@ -1,9 +1,10 @@
-package org.github.ezauton.ezauton.pathplanning.purepursuit;
+package com.github.ezauton.core.pathplanning.purepursuit;
 
-import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
-import org.github.ezauton.ezauton.pathplanning.QuinticSpline;
-import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
-import org.github.ezauton.ezauton.utils.MathUtils;
+
+import com.github.ezauton.core.pathplanning.PP_PathGenerator;
+import com.github.ezauton.core.pathplanning.QuinticSpline;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.core.utils.MathUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

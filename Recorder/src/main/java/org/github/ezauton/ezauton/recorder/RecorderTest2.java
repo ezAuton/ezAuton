@@ -1,5 +1,6 @@
 package org.github.ezauton.ezauton.recorder;
 
+import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
 import org.github.ezauton.ezauton.action.ActionGroup;
 import org.github.ezauton.ezauton.action.BackgroundAction;
 import org.github.ezauton.ezauton.action.PPCommand;
@@ -7,8 +8,6 @@ import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
 import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
 import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
 import org.github.ezauton.ezauton.pathplanning.Path;
-import org.github.ezauton.ezauton.pathplanning.QuinticSpline;
-import org.github.ezauton.ezauton.pathplanning.purepursuit.*;
 import org.github.ezauton.ezauton.recorder.base.PurePursuitRecorder;
 import org.github.ezauton.ezauton.recorder.base.RobotStateRecorder;
 import org.github.ezauton.ezauton.recorder.base.TankDriveableRecorder;
@@ -19,11 +18,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collector;
 
 public class RecorderTest2
 {
