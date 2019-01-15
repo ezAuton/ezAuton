@@ -1,18 +1,23 @@
-package org.github.ezauton.ezauton.recorder;
+package com.github.ezauton.recorder;
 
+import com.github.ezauton.core.action.ActionGroup;
+import com.github.ezauton.core.action.BackgroundAction;
+import com.github.ezauton.core.action.PPCommand;
+import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
+import com.github.ezauton.core.pathplanning.Path;
+import com.github.ezauton.core.pathplanning.purepursuit.ILookahead;
+import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
-import org.github.ezauton.ezauton.action.ActionGroup;
-import org.github.ezauton.ezauton.action.BackgroundAction;
-import org.github.ezauton.ezauton.action.PPCommand;
-import org.github.ezauton.ezauton.action.simulation.MultiThreadSimulation;
-import org.github.ezauton.ezauton.localization.estimators.TankRobotEncoderEncoderEstimator;
-import org.github.ezauton.ezauton.pathplanning.PP_PathGenerator;
-import org.github.ezauton.ezauton.pathplanning.Path;
-import org.github.ezauton.ezauton.recorder.base.PurePursuitRecorder;
-import org.github.ezauton.ezauton.recorder.base.RobotStateRecorder;
-import org.github.ezauton.ezauton.recorder.base.TankDriveableRecorder;
-import org.github.ezauton.ezauton.robot.implemented.TankRobotTransLocDriveable;
-import org.github.ezauton.ezauton.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
+import com.github.ezauton.recorder.SimulatedTankRobot;
+import com.github.ezauton.core.simulation.TimeWarpedSimulation;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.recorder.JsonUtils;
+import com.github.ezauton.recorder.Recording;
+import com.github.ezauton.recorder.base.PurePursuitRecorder;
+import com.github.ezauton.recorder.base.RobotStateRecorder;
+import com.github.ezauton.recorder.base.TankDriveableRecorder;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -25,20 +30,21 @@ public class RecorderTest2
     public static void main(String[] args) throws IOException
     {
 
-        ImmutableVector immutableVector = new ImmutableVector(0,0);
+        ImmutableVector immutableVector = new ImmutableVector(0, 0);
         immutableVector.isFinite();
 
         Path path = new SplinePPWaypoint.Builder()
                 .add(0, 0, Math.PI / 2, 15, 13, -12)
-                .add(20, 20, Math.PI, 30, 13,-21)
-                .add(17.2, 12, 3 * Math.PI / 2, 0, 13, -20)
+                .add(0, 13, Math.PI / 2, 10, 13, -12)
+                .add(20, 17, 0, 5, 13, -12)
+                .add(23, 24, Math.PI / 2, 0, 13, -12)
                 .buildPathGenerator()
                 .generate(0.05);
 
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
         // Not a problem
-        MultiThreadSimulation simulation = new MultiThreadSimulation(1);
+        TimeWarpedSimulation simulation = new TimeWarpedSimulation(10);
 
         // Might be a problem
         SimulatedTankRobot robot = new SimulatedTankRobot(1, simulation.getClock(), 40, 0.3, 30D);
@@ -48,7 +54,7 @@ public class RecorderTest2
 
         ILookahead lookahead = new LookaheadBounds(1, 3, 2, 10, locEstimator);
 
-        TankRobotTransLocDriveable  tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
+        TankRobotTransLocDriveable tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
         PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
@@ -62,9 +68,9 @@ public class RecorderTest2
         recording.addSubRecording(ppRec);
         recording.addSubRecording(tankRobot);
 
-        BackgroundAction recAction = new BackgroundAction(10, TimeUnit.MILLISECONDS, recording);
+        BackgroundAction recAction = new BackgroundAction(10, TimeUnit.MILLISECONDS, recording::update);
 
-        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot);
+        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot::update);
 
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)
@@ -75,7 +81,7 @@ public class RecorderTest2
 
 
         // run the simulator with a timeout of 20 seconds
-        simulation.run(30, TimeUnit.SECONDS);
+        simulation.runSimulation(30, TimeUnit.SECONDS);
 
         System.out.println("locEstimator.estimateLocation() = " + locEstimator.estimateLocation());
 
