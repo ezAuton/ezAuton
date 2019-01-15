@@ -259,7 +259,9 @@ public class Controller implements Initializable
         // must have a file and position
         if(fileChooser.getValue() == null || posChooser.getValue() == null)
         {
-            throw new IllegalArgumentException("Please select a file and position!");
+            System.err.println("Please select a file and a position");
+            return;
+//            throw new IllegalArgumentException("Please select a file and position!");
         }
 
         // Animation works by interpolating key values between key frames
