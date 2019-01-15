@@ -83,16 +83,19 @@ public class SimulatedTankBotTest
     @Test
     public void testStraight()
     {
-        TimeWarpedClock clock = new TimeWarpedClock(10);
-        SimulatedTankRobot bot = new SimulatedTankRobot(0.2, clock, 3, -4, 4);
 
         TimeWarpedSimulation sim = new TimeWarpedSimulation();
+        SimulatedTankRobot bot = new SimulatedTankRobot(0.2, sim.getClock(), 3, -4, 4);
+        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(bot.getLeftDistanceSensor(), bot.getRightDistanceSensor(), bot);
+        locEstimator.reset();
 
         sim.add(new TimedPeriodicAction(5, TimeUnit.SECONDS, () -> bot.run(1, 1)));
-
+        sim.add(new BackgroundAction(10, TimeUnit.MILLISECONDS, locEstimator::update, bot::update));
         sim.runSimulation(10, TimeUnit.SECONDS);
 
         bot.run(0, 0);
+
+        System.out.println("bot. = " + locEstimator.estimateLocation());
 
     }
 }

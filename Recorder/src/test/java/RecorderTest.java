@@ -15,7 +15,6 @@ import com.github.ezauton.recorder.SimulatedTankRobot;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,9 +31,6 @@ public class RecorderTest
     private ILookahead lookahead;
     private TankRobotTransLocDriveable tankRobotTransLocDriveable;
     private PPCommand ppCommand;
-    private PurePursuitRecorder ppRec;
-    private RobotStateRecorder posRec;
-    private TankDriveableRecorder tankRobot;
     private BackgroundAction updateKinematics;
     private Recording recording;
 
@@ -68,9 +64,6 @@ public class RecorderTest
 
         ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-        posRec = new RobotStateRecorder("robotstate", simulation.getClock(), locEstimator, locEstimator, robot.getLateralWheelDistance(), 1.5);
-        ppRec = new PurePursuitRecorder("pp", simulation.getClock(), path, ppMoveStrat);
-        tankRobot = new TankDriveableRecorder("td", simulation.getClock(), tankRobotTransLocDriveable);
 
         updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot::update);
     }
@@ -81,6 +74,10 @@ public class RecorderTest
 
 
         Recording recording = new Recording();
+        RobotStateRecorder posRec = new RobotStateRecorder("robotstate", simulation.getClock(), locEstimator, locEstimator, robot.getLateralWheelDistance(), 1.5);
+        PurePursuitRecorder ppRec = new PurePursuitRecorder("pp", simulation.getClock(), path, ppMoveStrat);
+        TankDriveableRecorder tankRobot = new TankDriveableRecorder("td", simulation.getClock(), tankRobotTransLocDriveable);
+
         recording.addSubRecording(posRec);
         recording.addSubRecording(ppRec);
         recording.addSubRecording(tankRobot);

@@ -41,7 +41,7 @@ public class Encoders
      * @param enc                  Reference to encoder
      * @return An ITranslationalDistanceSensor
      */
-    public static ITranslationalDistanceSensor toTranslationalDistanceSensor(double feetPerUnit, long fpsPerNativeSpeed, IEncoder enc)
+    public static ITranslationalDistanceSensor toTranslationalDistanceSensor(double feetPerUnit, double fpsPerNativeSpeed, IEncoder enc)
     {
         return new ITranslationalDistanceSensor() {
             @Override
