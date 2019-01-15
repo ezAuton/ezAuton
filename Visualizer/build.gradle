@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'com.team2502'
+group 'com.ezauton'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -21,16 +21,15 @@ dependencies {
 }
 
 task runvis(dependsOn: 'test', type: JavaExec) {
-    main = 'org.github.ezauton.ezauton.visualizer.Main'
+    main = 'com.github.ezauton.visualizer.Main'
     classpath = sourceSets.main.runtimeClasspath
 }
 
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.github.ezauton.ezauton.visualizer.Main'
+        attributes 'Main-Class': 'com.github.ezauton.visualizer.Main'
     }
-
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }

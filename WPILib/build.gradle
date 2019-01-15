@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'com.team2502'
+group 'com.ezauton'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -14,20 +14,19 @@ repositories {
     flatDir {
         dirs 'lib'
     }
-    maven {
-        url 'http://first.wpi.edu/FRC/roborio/maven/stable/'
-    }
-    maven {
-        url 'http://www.kauailabs.com/maven2'
-    }
-    maven {
-        url 'http://first.wpi.edu/FRC/roborio/maven/release/'
-    }
+    maven { url "http://first.wpi.edu/FRC/roborio/maven/release" }
+    maven { url 'http://devsite.ctr-electronics.com/maven/release/' }
+    maven { url 'http://www.kauailabs.com/maven2'}
 }
 
 dependencies {
+
+    compile 'edu.wpi.first.wpilibj:wpilibj-java:2019.1.1'
+
+    compile 'com.ctre.phoenix:api-java:5.12.0'
+    compile 'com.ctre.phoenix:wpiapi-java:5.12.0'
+    compile 'com.kauailabs.navx.frc:navx-java:3.1.344'
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile project(':Core')
-    compile 'edu.wpi.first.wpilibj:wpilibJavaFinal:0.1.0-SNAPSHOT'
-    compile 'com.kauailabs.navx.frc:navx_frc:3.0.324'
 }

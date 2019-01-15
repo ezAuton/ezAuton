@@ -1,29 +1,34 @@
-plugins {
-    id 'java'
-    id "jacoco"
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'jacoco'
 
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    dependencies {
+        testImplementation(
+                'org.junit.jupiter:junit-jupiter-api:5.1.0'
+        )
+        testRuntimeOnly(
+                'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+        )
+    }
 }
 
-group 'com.team2502'
+
+group 'com.github.ezauton'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-}
-
-dependencies {
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        csv.enabled false
+subprojects {
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            html.enabled false
+        }
     }
+
+    check.dependsOn jacocoTestReport
 }
 
 sourceSets {
@@ -37,15 +42,6 @@ sourceSets {
         resources { srcDirs = ['src/test/resources'] }
     }
 }
-
-test {
-    testLogging {
-        events "failed"
-        exceptionFormat "short"
-    }
-}
-
-check.dependsOn jacocoTestReport
 
 
 

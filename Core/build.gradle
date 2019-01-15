@@ -1,8 +1,9 @@
 plugins {
     id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.10'
 }
 
-group 'com.team2502'
+group 'com.ezauton'
 version '1.0-SNAPSHOT'
 
 archivesBaseName = "${parent.name}-${project.name}"
@@ -12,15 +13,31 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
 }
-
+configurations {
+    fatCompile
+    compile.extendsFrom fatCompile
+}
 jar {
     from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.fatCompile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
 dependencies {
-    compile group: 'com.google.guava', name: 'guava', version: '19.0'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    fatCompile group: 'com.google.guava', name: 'guava', version: '19.0'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
