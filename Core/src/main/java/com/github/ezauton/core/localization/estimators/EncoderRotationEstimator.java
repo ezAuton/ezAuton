@@ -42,6 +42,7 @@ public final class EncoderRotationEstimator implements IRotationalLocationEstima
     {
         lastPosition = distanceSensor.getPosition();
         dPosVec = new ImmutableVector(0, 0);
+        positionVec = new ImmutableVector(0, 0);
         init = true;
     }
 
