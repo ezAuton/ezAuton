@@ -421,10 +421,13 @@ public final class MathUtils
          */
         public static ImmutableVector rotate2D(ImmutableVector vector, double theta)
         {
+            vector.assertSize(2);
             double sin = sin(theta);
             double cos = cos(theta);
+
             ImmutableVector immutableVector = new ImmutableVector((vector.get(0) * cos - vector.get(1) * sin),
                                                                   (vector.get(0) * sin + vector.get(1) * cos));
+
             return immutableVector;
         }
 

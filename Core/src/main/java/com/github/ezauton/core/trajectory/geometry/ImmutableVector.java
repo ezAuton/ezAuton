@@ -1,22 +1,29 @@
 package com.github.ezauton.core.trajectory.geometry;
 
+import com.github.ezauton.core.utils.MathUtils;
+import com.sun.xml.internal.bind.v2.TODO;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 /**
  * An n-dimensional, immutable vector.
  */
-public class ImmutableVector implements Serializable
+public class ImmutableVector implements Serializable, Iterable<Double>
 {
     private double[] elements;
 
     public ImmutableVector(double... x)
     {
         this.elements = x;
+    }
+
+    public ImmutableMatrix T(){
+        List<ImmutableVector> t = Arrays.stream(elements).mapToObj(ImmutableVector::new).collect(Collectors.toList());
+        return new ImmutableMatrix(t);
     }
 
     /**
@@ -221,6 +228,16 @@ public class ImmutableVector implements Serializable
         return new ImmutableVector(toReturn);
     }
 
+    public ImmutableVector rotate2DCCW(double theta){
+        return MathUtils.LinearAlgebra.rotate2D(this,theta);
+        // TODO: test
+    }
+
+    public ImmutableVector rotate2DCW(double theta){
+        return MathUtils.LinearAlgebra.rotate2D(this,-theta);
+        // TODO: test
+    }
+
     public ImmutableVector mul(double scalar)
     {
         return mul(of(scalar, getDimension()));
@@ -247,7 +264,7 @@ public class ImmutableVector implements Serializable
         }
         for(int i = 0; i < getDimension(); i++)
         {
-            if(Math.abs(that.elements[i] - elements[i]) > 1E-6) // epsilon eq
+            if(Math.abs(that.elements[i] - elements[i]) > 1E-4) // epsilon eq // TODO: make this better documented
             {
                 return false;
             }
@@ -267,6 +284,26 @@ public class ImmutableVector implements Serializable
         return "ImmutableVector{" +
                "elements=" + Arrays.toString(elements) +
                '}';
+    }
+
+    @NotNull
+    @Override
+    public Iterator<Double> iterator() {
+        return new Iterator<Double>() {
+            int elementOn = 0;
+
+            @Override
+            public boolean hasNext() {
+                return elementOn < getDimension();
+            }
+
+            @Override
+            public Double next() {
+                double result = elements[elementOn];
+                elementOn++;
+                return result;
+            }
+        };
     }
 
     interface Operator

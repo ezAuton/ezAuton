@@ -8,7 +8,15 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
  * The main logic behind Pure Pursuit ... returns the subsequent location the robot should try to
  * go towards.
  */
-public class PurePursuitMovementStrategy
+public class
+
+
+
+
+
+
+
+PurePursuitMovementStrategy
 {
     /**
      * The path that we're driving on

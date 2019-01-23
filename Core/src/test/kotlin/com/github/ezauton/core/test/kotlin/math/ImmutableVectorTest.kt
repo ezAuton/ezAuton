@@ -1,16 +1,19 @@
 package com.github.ezauton.core.test.kotlin.math
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.*
+import kotlin.math.PI
 
 class ImmutableVectorTest {
 
 
     @Test
     fun testWrongSize() {
-        assertThrows<IllegalArgumentException>(IllegalArgumentException::class.java) { ImmutableVector(1.0, 1.0).assertSize(1) }
+        assertThrows<IllegalArgumentException>{ ImmutableVector(1.0, 1.0).assertSize(1) }
     }
 
     fun testCollectionWrongSize() {
@@ -22,7 +25,7 @@ class ImmutableVectorTest {
         }
         vectors.add(oddOneOut)
 
-        assertThrows(IllegalArgumentException::class.java){ImmutableVector.assertSameDim(vectors)}
+        assertThrows(IllegalArgumentException::class.java) { ImmutableVector.assertSameDim(vectors) }
     }
 
     @Test
@@ -70,5 +73,27 @@ class ImmutableVectorTest {
     @Test
     fun testAssertSameDim() {
         ImmutableVector.assertSameDim(Arrays.asList(ImmutableVector(1.0, 1.0, 1.0), ImmutableVector(1.0, 2.0, 3.0), ImmutableVector(0.0, 0.0, 0.0)))
+    }
+
+    @Test
+    fun `test iterator`() {
+        ImmutableVector(1.0, 3.0, 4.0, 2.0).forEachIndexed{i, value ->
+            when(i)
+            {
+                0 -> Assertions.assertEquals(1.0, value)
+                1 -> Assertions.assertEquals(3.0, value)
+                2 -> Assertions.assertEquals(4.0, value)
+                3 -> Assertions.assertEquals(2.0, value)
+            }
+        }
+    }
+
+    @Test
+    fun `test rotation`() {
+        // can't rotate 3D
+        assertThrows<IllegalArgumentException> { ImmutableVector(1.0,0.0,3.0).rotate2DCCW(PI/2.0) }
+
+        assertEquals(ImmutableVector(0.0,1.0), ImmutableVector(1.0,0.0).rotate2DCCW(PI/2.0))
+        assertEquals(ImmutableVector(0.0,-1.0), ImmutableVector(1.0,0.0).rotate2DCW(PI/2.0))
     }
 }
