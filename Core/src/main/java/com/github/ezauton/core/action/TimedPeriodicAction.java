@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Describes an action that ends after a certain amount of time has elapsed
  */
-public final class TimedPeriodicAction extends PeriodicAction
+public class TimedPeriodicAction extends PeriodicAction
 {
 
     private long durationMillis;
