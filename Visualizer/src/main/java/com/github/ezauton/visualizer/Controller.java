@@ -31,43 +31,30 @@ import java.util.*;
 
 enum StartPos
 {
-    LEFT(33D / 443D),
-    CENTER(206D / 443D),
-    RIGHT(358D / 443D);
+    LEFT_HAB2(163 / 443D, 485 / 492D),
+    LEFT_HAB1(163 / 443D, 421/492D),
+    CENTER(.5, 421/492D),
+    RIGHT_HAB2(1 - 163D / 443D, 485 / 492D),
+    RIGHT_HAB1(1 - 163D / 443D, 421/492D);
 
-    private final double proportion;
+    private final double proportionX;
+    private final double proportionY;
 
-    StartPos(double proportion)
+    StartPos(double proportionX, double proportionY)
     {
-        this.proportion = proportion;
+
+        this.proportionX = proportionX;
+        this.proportionY = proportionY;
     }
 
-    /**
-     * Turn a string into a {@link StartPos}
-     *
-     * @param str A string (like "center" or "banana")
-     * @return An instance of startpos if possible (e.g {@link StartPos#CENTER}) or null if not possible (e.g banana becomes null)
-     */
-    public static StartPos fromString(String str)
+    public double getProportionX()
     {
-        if(str.trim().equalsIgnoreCase("left"))
-        {
-            return LEFT;
-        }
-        else if(str.trim().equalsIgnoreCase("right"))
-        {
-            return RIGHT;
-        }
-        else if(str.trim().equalsIgnoreCase("center"))
-        {
-            return CENTER;
-        }
-        return null;
+        return proportionX;
     }
 
-    public double getXPos(double windowWidth)
+    public double getProportionY()
     {
-        return windowWidth * proportion;
+        return 1-proportionY;
     }
 
     @Override
@@ -191,7 +178,7 @@ public class Controller implements Initializable
                                              {
                                                  try
                                                  {
-                                                     originX = posChooser.getValue().getXPos(newWidth.doubleValue());
+                                                     originX = posChooser.getValue().getProportionX() * newWidth.doubleValue();
                                                  }
                                                  catch(NullPointerException e)
                                                  {
@@ -229,7 +216,8 @@ public class Controller implements Initializable
 
         posChooser.getItems().addAll(StartPos.values());
         posChooser.valueProperty().addListener((selectedProp, oldSelected, newSelected) -> {
-            originX = posChooser.getValue().getXPos(backdrop.getWidth());
+            originX = posChooser.getValue().getProportionX() * backdrop.getWidth();
+            originY = -posChooser.getValue().getProportionY() * backdrop.getHeight();
             animateSquareKeyframe(null);
         });
 
@@ -267,7 +255,7 @@ public class Controller implements Initializable
         // We store all our keyframes in this handy dandy list
         List<KeyFrame> keyFrames = new ArrayList<>();
 
-        originY = backdrop.getHeight();
+        originY += backdrop.getHeight();
 
         Interpolator interpolator = Interpolator.DISCRETE;
 
