@@ -438,6 +438,10 @@ public final class MathUtils
          */
         public static ImmutableVector absoluteToRelativeCoord(ImmutableVector coordinateAbsolute, ImmutableVector robotCoordAbs, double robotHeading)
         { return rotate2D(coordinateAbsolute.sub(robotCoordAbs), -robotHeading); }
+
+        public static ImmutableVector relativeToAbsoluteCoord(ImmutableVector coordinateRelative, ImmutableVector robotCoordAbs, double robotHeading) {
+            return rotate2D(coordinateRelative, robotHeading).add(robotCoordAbs);
+        }
     }
 
     /**

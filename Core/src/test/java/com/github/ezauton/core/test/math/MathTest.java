@@ -76,9 +76,11 @@ public class MathTest
         double distance = robotLocation.dist(absoluteCoord);
 
         ImmutableVector relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteCoord, robotLocation, robotHeading);
+        ImmutableVector absCoord = MathUtils.LinearAlgebra.relativeToAbsoluteCoord(relativeCoord, robotLocation, robotHeading);
 
         assertEquals(0, relativeCoord.get(0), 0.001);
         assertEquals(distance, relativeCoord.get(1), 0.001);
+        assertEquals(absoluteCoord, absCoord);
     }
 
     @Test
@@ -91,9 +93,11 @@ public class MathTest
         double distance = robotLocation.dist(absoluteCoord);
 
         ImmutableVector relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(absoluteCoord, robotLocation, robotHeading);
+        ImmutableVector absCoord = MathUtils.LinearAlgebra.relativeToAbsoluteCoord(relativeCoord, robotLocation, robotHeading);
 
         assertEquals(0, relativeCoord.get(0), 0.001);
         assertEquals(distance, relativeCoord.get(1), 0.001);
+        assertEquals(0, absoluteCoord.sub(absCoord).mag2(), 1E-7);
     }
 
 
