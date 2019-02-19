@@ -33,6 +33,8 @@ public class Path
      */
     public static Path fromSegments(List<IPathSegment> pathSegments)
     {
+        if(pathSegments.size() == 0) throw new IllegalArgumentException("Path must have at least one segment");
+
         Path path = new Path();
         path.pathSegments = new ArrayList<>(pathSegments);
         IPathSegment last = pathSegments.get(pathSegments.size() - 1);
