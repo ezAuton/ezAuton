@@ -5,6 +5,9 @@ allprojects {
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
+}
+
+subprojects {
 
     dependencies {
         testImplementation(
@@ -14,13 +17,7 @@ allprojects {
                 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
         )
     }
-}
-
-
-group 'com.github.ezauton'
-version '1.0-SNAPSHOT'
-
-subprojects {
+    
     jacocoTestReport {
         reports {
             xml.enabled true
