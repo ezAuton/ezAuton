@@ -41,6 +41,10 @@ public class BaseAction implements IAction {
         }
     }
 
+    protected void onEnd(){
+
+    }
+
     @Override
     public final IAction onFinish(Runnable onFinish) {
         toRun.add(onFinish);
@@ -50,6 +54,7 @@ public class BaseAction implements IAction {
     @Override
     public final void end() {
         stopped = true;
+        onEnd();
     }
 
     public final boolean isStopped() {
