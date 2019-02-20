@@ -1,12 +1,12 @@
 package com.github.ezauton.core.action;
 
+import com.github.ezauton.core.localization.ITranslationalLocationEstimator;
 import com.github.ezauton.core.pathplanning.IPathSegment;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.ILookahead;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.core.localization.ITranslationalLocationEstimator;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDriveable;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 
 import java.util.concurrent.TimeUnit;
 
@@ -32,8 +32,7 @@ public final class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
      * @param lookahead                      An instance of {@link ILookahead} that can tell us how far along the path to look ahead
      * @param translationalLocationDriveable The drivetrain of the robot
      */
-    public PPCommand(long period, TimeUnit timeUnit, PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable)
-    {
+    public PPCommand(long period, TimeUnit timeUnit, PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable) {
         super(period, timeUnit);
         this.purePursuitMovementStrategy = purePursuitMovementStrategy;
         this.translationalLocationEstimator = translationalLocationEstimator;
@@ -42,8 +41,7 @@ public final class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
     }
 
     @Override
-    public void execute()
-    {
+    public void execute() {
         // Find out where to drive to
         ImmutableVector loc = translationalLocationEstimator.estimateLocation();
         ImmutableVector goalPoint = purePursuitMovementStrategy.update(loc, lookahead.getLookahead());
@@ -59,25 +57,20 @@ public final class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
     /**
      * @return The most reset speed used by Pure Pursuit
      */
-    public double getSpeedUsed()
-    {
+    public double getSpeedUsed() {
         return speedUsed;
     }
 
     /**
-     *
      * @return The most reset absolute distance used by Pure Pursuit
      */
-    public double getAbsoluteDistanceUsed()
-    {
+    public double getAbsoluteDistanceUsed() {
         return absoluteDistanceUsed;
     }
 
     @Override
-    public boolean isFinished()
-    {
-        if(purePursuitMovementStrategy.isFinished())
-        {
+    public boolean isFinished() {
+        if (purePursuitMovementStrategy.isFinished()) {
             translationalLocationDriveable.driveSpeed(0);
             return true;
         }

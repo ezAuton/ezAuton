@@ -8,18 +8,15 @@ import static com.github.ezauton.core.utils.MathUtils.ROOT_2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class KinematicsTest
-{
+public class KinematicsTest {
     @Test
-    public void testNavXBound()
-    {
+    public void testNavXBound() {
         assertEquals(355, MathUtils.Kinematics.navXBound(-5), 0.001);
         assertEquals(14, MathUtils.Kinematics.navXBound(14), 0.001);
     }
 
     @Test //fail
-    public void testAbsoluteDPos45()
-    {
+    public void testAbsoluteDPos45() {
         ImmutableVector dPos = MathUtils.Kinematics.getAbsoluteDPosLine(1, 1, 1F, (double) (Math.PI / 4F));
 
         assertEquals(-Math.sqrt(1 / 2F), dPos.get(0), 0.001);
@@ -27,8 +24,7 @@ public class KinematicsTest
     }
 
     @Test
-    public void navXToRad()
-    {
+    public void navXToRad() {
         // TODO: returns cw radians not ccw I think
         double rad = MathUtils.Kinematics.navXToRad(270);
 
@@ -45,8 +41,7 @@ public class KinematicsTest
      * Should be a complete rotation around a circle (dpos = 0)
      */
     @Test
-    public void arcDposArcStraight0Heading()
-    {
+    public void arcDposArcStraight0Heading() {
         // l * pi = 1 (circumference)
         // 1/pi = l
         ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, 0);
@@ -55,8 +50,7 @@ public class KinematicsTest
     }
 
     @Test
-    public void arcDposArcStraight45Heading()
-    {
+    public void arcDposArcStraight45Heading() {
         // l * pi = 1 (circumference)
         // 1/pi = l
         ImmutableVector absoluteDPosCurve = MathUtils.Kinematics.getAbsoluteDPosCurve(1, 1, 123, Math.PI / 4F);
@@ -65,8 +59,7 @@ public class KinematicsTest
     }
 
     @Test
-    public void testAbsoluteToRelativeCoord()
-    {
+    public void testAbsoluteToRelativeCoord() {
         ImmutableVector robotPos = new ImmutableVector(4, 4);
 
         // We will convert this to absolute coords
@@ -85,8 +78,7 @@ public class KinematicsTest
     }
 
     @Test
-    public void testGetSpeedVector()
-    {
+    public void testGetSpeedVector() {
         ImmutableVector i = new ImmutableVector(1, 0);
         ImmutableVector j = new ImmutableVector(0, 1);
 
@@ -97,8 +89,7 @@ public class KinematicsTest
     }
 
     @Test
-    public void testGetPos()
-    {
+    public void testGetPos() {
         double standstill = MathUtils.Kinematics.getPos(10, 0, 0, 100);
         assertEquals(10, standstill, 1E-6);
 
@@ -110,8 +101,7 @@ public class KinematicsTest
     }
 
     @Test
-    public void testAngularVelocity()
-    {
+    public void testAngularVelocity() {
         // straight
         assertEquals(0, MathUtils.Kinematics.getAngularDistance(1, 1, 1), 1E-6);
         assertEquals(0, MathUtils.Kinematics.getAngularDistance(0, 0, 1), 1E-6);
@@ -121,15 +111,13 @@ public class KinematicsTest
     }
 
     @Test
-    public void testTrajRadius()
-    {
+    public void testTrajRadius() {
         assertTrue(MathUtils.Kinematics.getTrajectoryRadius(0, 1, 1) > 0);
         assertTrue(MathUtils.Kinematics.getTrajectoryRadius(1, 0, 1) < 0);
     }
 
     @Test
-    public void testRelativeDPosCurve()
-    {
+    public void testRelativeDPosCurve() {
         // straight
         vectorsCloseEnough(new ImmutableVector(0, 1), MathUtils.Kinematics.getRelativeDPosCurve(1, 1, 1));
 
@@ -139,8 +127,7 @@ public class KinematicsTest
         vectorsCloseEnough(new ImmutableVector(0.5, 0), MathUtils.Kinematics.getRelativeDPosCurve(Math.PI / 2, 0, 1 / 2F));
     }
 
-    private void vectorsCloseEnough(ImmutableVector a, ImmutableVector b)
-    {
+    private void vectorsCloseEnough(ImmutableVector a, ImmutableVector b) {
         assertEquals(a.get(0), b.get(0), 1E-3);
         assertEquals(a.get(1), b.get(1), 1E-3);
     }

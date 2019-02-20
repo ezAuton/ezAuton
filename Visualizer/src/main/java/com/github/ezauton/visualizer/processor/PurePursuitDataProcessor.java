@@ -1,6 +1,9 @@
 package com.github.ezauton.visualizer.processor;
 
 import com.github.ezauton.core.pathplanning.IPathSegment;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.recorder.base.PurePursuitRecorder;
+import com.github.ezauton.recorder.base.frame.PurePursuitFrame;
 import com.github.ezauton.visualizer.util.IDataProcessor;
 import com.github.ezauton.visualizer.util.IEnvironment;
 import javafx.animation.Interpolator;
@@ -10,17 +13,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.*;
-import com.github.ezauton.recorder.base.frame.PurePursuitFrame;
-import com.github.ezauton.recorder.base.PurePursuitRecorder;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PurePursuitDataProcessor implements IDataProcessor
-{
+public class PurePursuitDataProcessor implements IDataProcessor {
 
     private final PurePursuitRecorder ppRec;
     private final Circle goalPoint;
@@ -35,8 +34,7 @@ public class PurePursuitDataProcessor implements IDataProcessor
     private double originXPx;
     private double originYPx;
 
-    public PurePursuitDataProcessor(PurePursuitRecorder ppRec)
-    {
+    public PurePursuitDataProcessor(PurePursuitRecorder ppRec) {
         this.ppRec = ppRec;
 
         goalPoint = new Circle(3, Paint.valueOf("red"));
@@ -52,24 +50,20 @@ public class PurePursuitDataProcessor implements IDataProcessor
     }
 
 
-    private double getX(double feetX)
-    {
+    private double getX(double feetX) {
         return feetX * spatialScaleFactorX + originXPx;
     }
 
-    private double getY(double feetY)
-    {
+    private double getY(double feetY) {
         return -feetY * spatialScaleFactorY + originYPx;
     }
 
-    private ImmutableVector toPixels(ImmutableVector feet)
-    {
+    private ImmutableVector toPixels(ImmutableVector feet) {
         return new ImmutableVector(getX(feet.get(0)), getY(feet.get(1)));
     }
 
     @Override
-    public void initEnvironment(IEnvironment environment)
-    {
+    public void initEnvironment(IEnvironment environment) {
         this.spatialScaleFactorX = environment.getScaleFactorX();
         this.spatialScaleFactorY = environment.getScaleFactorY();
 
@@ -80,8 +74,7 @@ public class PurePursuitDataProcessor implements IDataProcessor
 
         waypointPath.getElements().add(new MoveTo((originXPx), (originYPx)));
 
-        for(IPathSegment segment : ppRec.getPath().getPathSegments())
-        {
+        for (IPathSegment segment : ppRec.getPath().getPathSegments()) {
             ImmutableVector to = segment.getTo();
             double x = to.get(0);
             double y = to.get(1);
@@ -115,17 +108,14 @@ public class PurePursuitDataProcessor implements IDataProcessor
     }
 
     @Override
-    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator)
-    {
+    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator) {
         Map<Double, List<KeyValue>> ret = new HashMap<>();
 
-        for(PurePursuitFrame frame : ppRec.getDataFrames())
-        {
+        for (PurePursuitFrame frame : ppRec.getDataFrames()) {
             List<KeyValue> keyValues = new ArrayList<>();
             double cpX, cpY, gpX, gpY;
 
-            if(frame.getClosestPoint() != null)
-            {
+            if (frame.getClosestPoint() != null) {
                 cpX = getX(frame.getClosestPoint().get(0));
                 cpY = getY(frame.getClosestPoint().get(1));
 
@@ -145,23 +135,18 @@ public class PurePursuitDataProcessor implements IDataProcessor
                 keyValues.add(new KeyValue(currentSegmentLine.endXProperty(), currentSegmentEndX, interpolator));
                 keyValues.add(new KeyValue(currentSegmentLine.endYProperty(), currentSegmentEndY, interpolator));
                 keyValues.add(new KeyValue(segmentIndexLabel.textProperty(), String.valueOf(frame.getCurrentSegmentIndex())));
-            }
-            else
-            {
+            } else {
                 keyValues.add(new KeyValue(closestPoint.visibleProperty(), false, interpolator));
             }
 
-            if(frame.getGoalPoint() != null)
-            {
+            if (frame.getGoalPoint() != null) {
                 gpX = getX(frame.getGoalPoint().get(0));
                 gpY = getY(frame.getGoalPoint().get(1));
 
                 keyValues.add(new KeyValue(goalPoint.centerXProperty(), gpX, interpolator));
                 keyValues.add(new KeyValue(goalPoint.centerYProperty(), gpY, interpolator));
                 keyValues.add(new KeyValue(goalPoint.visibleProperty(), true, interpolator));
-            }
-            else
-            {
+            } else {
                 keyValues.add(new KeyValue(goalPoint.visibleProperty(), false, interpolator));
             }
 

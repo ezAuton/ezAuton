@@ -1,7 +1,7 @@
 package com.github.ezauton.core.test.simulator;
 
-import com.github.ezauton.core.action.TimedPeriodicAction;
 import com.github.ezauton.core.action.IAction;
+import com.github.ezauton.core.action.TimedPeriodicAction;
 import com.github.ezauton.core.simulation.ModernSimulatedClock;
 import org.junit.jupiter.api.Test;
 
@@ -11,8 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InsantSimulatorTest
-{
+public class InsantSimulatorTest {
     @Test
     public void testABC() throws TimeoutException {
 

@@ -7,22 +7,19 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class VectorTest
-{
+public class VectorTest {
     private static final double DELTA = 1E-5;
     private static final ImmutableVector i = new ImmutableVector(1, 0);
     private static final ImmutableVector j = new ImmutableVector(0, 1);
     private static final ImmutableVector origin = new ImmutableVector(0, 0);
 
     @Test
-    public void testVectorConstructors()
-    {
+    public void testVectorConstructors() {
         assertNotEquals(new ImmutableVector(1), new ImmutableVector(1, 1));
     }
 
     @Test
-    public void testAccessingComponents()
-    {
+    public void testAccessingComponents() {
         ImmutableVector a = new ImmutableVector(123, 155);
 
         assertEquals(123, a.get(0), DELTA);
@@ -32,15 +29,13 @@ public class VectorTest
     }
 
     @Test
-    public void testOnly2Components()
-    {
+    public void testOnly2Components() {
         ImmutableVector a = new ImmutableVector(123, 155);
         assertThrows(IndexOutOfBoundsException.class, () -> a.get(2));
     }
 
     @Test
-    public void testPerpendicular()
-    {
+    public void testPerpendicular() {
         assertEquals(j.mul(-1), MathUtils.perp(i));
         assertNotEquals(i, MathUtils.perp(i));
         assertEquals(origin, MathUtils.perp(origin));

@@ -7,8 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  * Creates a action from an {@link IAction}. This allows for abstraction and use of commands in simulators.
  */
-public class CommandCreator extends Command
-{
+public class CommandCreator extends Command {
 
     private final IAction action;
     private Thread thread;
@@ -19,40 +18,34 @@ public class CommandCreator extends Command
      *
      * @param action The action to run as a action
      */
-    public CommandCreator(IAction action)
-    {
+    public CommandCreator(IAction action) {
         this.action = action;
     }
 
     @Override
-    protected void initialize()
-    {
+    protected void initialize() {
         thread = new ThreadBuilder(action).start();
-        action.onFinish(()->finished = true);
+        action.onFinish(() -> finished = true);
     }
 
     @Override
-    protected void execute()
-    {
+    protected void execute() {
         // nothing to execute... everything is in the thread.
     }
 
     @Override
-    protected boolean isFinished()
-    {
+    protected boolean isFinished() {
         return finished;
     }
 
     @Override
-    protected void end()
-    {
+    protected void end() {
         action.end();
         thread.stop();
     }
 
     @Override
-    protected void interrupted()
-    {
+    protected void interrupted() {
         action.end();
         thread.interrupt();
     }

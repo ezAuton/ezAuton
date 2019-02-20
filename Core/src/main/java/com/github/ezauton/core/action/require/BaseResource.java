@@ -13,11 +13,11 @@ public class BaseResource implements IResource {
 
     /**
      * Add another resource sub-dependency.
+     *
      * @param resource
      * @return
      */
-    public BaseResource dependOn(IResource resource)
-    {
+    public BaseResource dependOn(IResource resource) {
         subResources.add(resource);
         return this;
     }
@@ -32,7 +32,7 @@ public class BaseResource implements IResource {
 
     @Override
     public boolean isTaken() {
-        if(lock.isLocked()) return  true;
+        if (lock.isLocked()) return true;
         return subResources.stream().anyMatch(IResource::isTaken);
     }
 
@@ -46,8 +46,9 @@ public class BaseResource implements IResource {
 
     @Override
     public void assertPossession() throws IllegalStateException {
-        if(!lock.isHeldByCurrentThread()) throw new IllegalStateException("You must have possession of this resource " +
-                "(use Resource#take())");
+        if (!lock.isHeldByCurrentThread())
+            throw new IllegalStateException("You must have possession of this resource " +
+                    "(use Resource#take())");
         for (IResource subResource : subResources) {
             subResource.assertPossession();
         }

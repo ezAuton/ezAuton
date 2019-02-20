@@ -2,8 +2,8 @@ package com.github.ezauton.core.test.math;
 
 import com.github.ezauton.core.pathplanning.LinearPathSegment;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.google.common.collect.ImmutableMap;
 import com.github.ezauton.core.utils.MathUtils;
+import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -11,26 +11,21 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MathTest
-{
+public class MathTest {
     private final double DELTA = 1E-5;
     private ImmutableVector e1 = new ImmutableVector(1, 0);
 
-    public MathTest()
-    {
+    public MathTest() {
         MathUtils.init();
     }
 
     @Test
-    public void test1()
-    {
+    public void test1() {
         // robot Location ImmutableVector{elements=[-0.008823892537926835, 8.750675036640743]}
         ImmutableVector robotPos = new ImmutableVector(-0.008823892537926835, 8.750675036640743);
-        LinearPathSegment pathSegment = new LinearPathSegment(new ImmutableVector(-0.5,8.589),new ImmutableVector(-0.5,12.405),false,false,0)
-        {
+        LinearPathSegment pathSegment = new LinearPathSegment(new ImmutableVector(-0.5, 8.589), new ImmutableVector(-0.5, 12.405), false, false, 0) {
             @Override
-            public double getSpeed(double absoluteDistance)
-            {
+            public double getSpeed(double absoluteDistance) {
                 return 0;
             }
         };
@@ -49,8 +44,7 @@ public class MathTest
     }
 
     @Test
-    public void testRotation90()
-    {
+    public void testRotation90() {
         ImmutableVector rotated90 = MathUtils.LinearAlgebra.rotate2D(e1, Math.PI / 2);
 
         assertEquals(0, rotated90.get(0), 0.001);
@@ -58,8 +52,7 @@ public class MathTest
     }
 
     @Test
-    public void testRotation720()
-    {
+    public void testRotation720() {
         ImmutableVector rotated720 = MathUtils.LinearAlgebra.rotate2D(e1, Math.PI * 2);
 
         assertEquals(1, rotated720.get(0), 0.001);
@@ -67,8 +60,7 @@ public class MathTest
     }
 
     @Test
-    public void testPosRotationCoordinateTransform()
-    {
+    public void testPosRotationCoordinateTransform() {
         ImmutableVector robotLocation = new ImmutableVector(1, 1);
         double robotHeading = 7F * Math.PI / 4;
         ImmutableVector absoluteCoord = new ImmutableVector(2, 2);
@@ -84,8 +76,7 @@ public class MathTest
     }
 
     @Test
-    public void testNegRotationCoordinateTransform()
-    {
+    public void testNegRotationCoordinateTransform() {
         ImmutableVector robotLocation = new ImmutableVector(1, 1);
         double robotHeading = -Math.PI / 4;
         ImmutableVector absoluteCoord = new ImmutableVector(2, 2);
@@ -105,8 +96,7 @@ public class MathTest
      * Should be a complete rotation around a circle (dpos = 0)
      */
     @Test
-    public void testDTheta90()
-    {
+    public void testDTheta90() {
         double dTheta = MathUtils.Geometry.getDThetaNavX(270, 0);
         assertEquals(3F * Math.PI / 2F, dTheta, 0.001);
     }
@@ -115,8 +105,7 @@ public class MathTest
      * Should be a complete rotation around a circle (dpos = 0)
      */
     @Test
-    public void testIsCCWClosest()
-    {
+    public void testIsCCWClosest() {
         assertFalse(MathUtils.Geometry.isCCWQuickest(0, 90));
         assertTrue(MathUtils.Geometry.isCCWQuickest(90, 0));
         assertTrue(MathUtils.Geometry.isCCWQuickest(127, 359));
@@ -124,10 +113,8 @@ public class MathTest
     }
 
     @Test
-    public void testDAngle()
-    {
-        for(int i = 0; i < 10; i++)
-        {
+    public void testDAngle() {
+        for (int i = 0; i < 10; i++) {
             double a = Math.random() * 360;
             assertEquals(0, MathUtils.Geometry.getDAngle(a, a), DELTA);
         }
@@ -140,8 +127,7 @@ public class MathTest
     }
 
     @Test
-    public void testSignSame()
-    {
+    public void testSignSame() {
         assertTrue(MathUtils.signSame(Double.MAX_VALUE, Double.MAX_VALUE));
         assertTrue(MathUtils.signSame(1234.4, 1234.1));
         assertTrue(MathUtils.signSame(1234.4, 1234.4));
@@ -153,8 +139,7 @@ public class MathTest
     }
 
     @Test
-    public void testMinAbs()
-    {
+    public void testMinAbs() {
 
         assertEquals(MathUtils.minAbs(3, 5), 3, DELTA);
         assertEquals(MathUtils.minAbs(3, -5), 3, DELTA);
@@ -165,8 +150,7 @@ public class MathTest
     }
 
     @Test
-    public void testMaxAbs()
-    {
+    public void testMaxAbs() {
 
         assertEquals(MathUtils.maxAbs(3, 5), 5, DELTA);
         assertEquals(MathUtils.maxAbs(3, -5), -5, DELTA);
@@ -177,10 +161,8 @@ public class MathTest
     }
 
     @Test
-    public void testDegToRad()
-    {
-        for(int i = 0; i < 20; i++)
-        {
+    public void testDegToRad() {
+        for (int i = 0; i < 20; i++) {
             double deg = Math.random() * 360;
             double rad = MathUtils.deg2Rad(deg);
 
@@ -189,10 +171,8 @@ public class MathTest
     }
 
     @Test
-    public void testRadToDeg()
-    {
-        for(int i = 0; i < 20; i++)
-        {
+    public void testRadToDeg() {
+        for (int i = 0; i < 20; i++) {
             double rad = Math.random() * 360;
             double deg = MathUtils.rad2Deg(rad);
 
@@ -201,10 +181,8 @@ public class MathTest
     }
 
     @Test
-    public void testEpsilonEqualsNumbers()
-    {
-        for(int i = 0; i < 20; i++)
-        {
+    public void testEpsilonEqualsNumbers() {
+        for (int i = 0; i < 20; i++) {
             double a = Math.random() * 360;
             double b = (Math.sqrt(a * a) * 3.0) / 3 + 1.987 - 1 - 0.987; // try to accumulate FP errors
 
@@ -214,10 +192,8 @@ public class MathTest
     }
 
     @Test
-    public void testEpsilonEqualsVectors()
-    {
-        for(int i = 0; i < 20; i++)
-        {
+    public void testEpsilonEqualsVectors() {
+        for (int i = 0; i < 20; i++) {
             double ax = Math.random() * 360;
             double bx = (Math.sqrt(ax * ax) * 3.0) / 3 + 1.987 - 1 - 0.987; // try to accumulate FP errors
 
@@ -233,16 +209,13 @@ public class MathTest
     }
 
     @Test
-    public void testDecimalComponent()
-    {
+    public void testDecimalComponent() {
         assertEquals(.567, MathUtils.decimalComponent(1234.567), 1E-6);
     }
 
     @Test
-    public void testFloor()
-    {
-        for(int i = 0; i < 20; i++)
-        {
+    public void testFloor() {
+        for (int i = 0; i < 20; i++) {
             double a = (Math.random() - 0.5) * 2 * 360;
             assertEquals(MathUtils.floor(a), Math.floor(a), DELTA);
             assertEquals(MathUtils.lfloor(a), Math.floor(a), DELTA);
@@ -251,8 +224,7 @@ public class MathTest
     }
 
     @Test
-    public void testShiftRadiansBounded()
-    {
+    public void testShiftRadiansBounded() {
         assertEquals(Math.PI, MathUtils.shiftRadiansBounded(0, Math.PI), DELTA);
         assertEquals(0, MathUtils.shiftRadiansBounded(0, MathUtils.TAU), DELTA);
         assertEquals(Math.PI, MathUtils.shiftRadiansBounded(Math.PI / 2, Math.PI / 2), DELTA);
@@ -261,10 +233,8 @@ public class MathTest
     }
 
     @Test
-    public void testBetweenVec()
-    {
-        for(int i = 0; i < 40; i++)
-        {
+    public void testBetweenVec() {
+        for (int i = 0; i < 40; i++) {
             double ax = (Math.random()) * 10;
             double ay = (Math.random()) * 10;
             ImmutableVector a = new ImmutableVector(ax, ay);
@@ -290,10 +260,8 @@ public class MathTest
     }
 
     @Test
-    public void testLogarithms()
-    {
-        for(int i = 0; i < 40; i++)
-        {
+    public void testLogarithms() {
+        for (int i = 0; i < 40; i++) {
             double a = Math.random() * 360;
 
             assertEquals(Math.log(a) / Math.log(2), MathUtils.log2(a), DELTA);
@@ -306,8 +274,7 @@ public class MathTest
             assertEquals(Math.log(a) / Math.log(9), MathUtils.log9(a), DELTA);
             assertEquals(Math.log(a) / Math.log(10), MathUtils.log10(a), DELTA);
 
-            for(int j = 1; j < 10; j++)
-            {
+            for (int j = 1; j < 10; j++) {
                 assertEquals(Math.log(a) / Math.log(j), MathUtils.log(j, a), DELTA);
             }
 
@@ -316,13 +283,11 @@ public class MathTest
     }
 
     @Test
-    public void testPow()
-    {
-        for(int i = 0; i < 40; i++)
-        {
+    public void testPow() {
+        for (int i = 0; i < 40; i++) {
             double a = Math.random() * 15;
 
-            assertEquals(Math.pow(a, 2),MathUtils.pow2(a), DELTA);
+            assertEquals(Math.pow(a, 2), MathUtils.pow2(a), DELTA);
             assertEquals(Math.pow(a, 3), MathUtils.pow3(a), DELTA);
             assertEquals(Math.pow(a, 4), MathUtils.pow4(a), DELTA);
             assertEquals(Math.pow(a, 5), MathUtils.pow5(a), DELTA);
@@ -335,19 +300,15 @@ public class MathTest
     }
 
     @Test
-    public void testQuadratic()
-    {
-        for(int i = -20; i < 20; i++)
-        {
-            for(int j = -20; j < 20; j++)
-            {
+    public void testQuadratic() {
+        for (int i = -20; i < 20; i++) {
+            for (int j = -20; j < 20; j++) {
                 final int iWrapper = i;
                 final int jWrapper = j;
                 MathUtils.Function quadratic = (x) -> x * x - iWrapper * x - jWrapper * x + iWrapper * jWrapper;
                 Set<Double> solutions = MathUtils.Algebra.quadratic(1, -i - j, i * j);
 
-                for(double solution : solutions)
-                {
+                for (double solution : solutions) {
                     assertEquals(0, quadratic.get(solution), DELTA);
                 }
             }
@@ -371,8 +332,7 @@ public class MathTest
 //    }
 
     @Test
-    public void testAngleFromPoints()
-    {
+    public void testAngleFromPoints() {
         ImmutableVector i = new ImmutableVector(1, 0);
         ImmutableVector j = new ImmutableVector(0, 1);
         ImmutableVector diag = new ImmutableVector(1, 1);
@@ -385,10 +345,8 @@ public class MathTest
     }
 
     @Test
-    public void testMin()
-    {
-        for(int i = 0; i < 10; i++)
-        {
+    public void testMin() {
+        for (int i = 0; i < 10; i++) {
             double a = (Math.random() - 0.5) * 20;
             double b = (Math.random() - 0.5) * 20;
             double c = (Math.random() - 0.5) * 20;
@@ -400,15 +358,14 @@ public class MathTest
     }
 
     //    @Test //TODO: fix
-    public void testClosestPointOnLine()
-    {
+    public void testClosestPointOnLine() {
         ImmutableVector robotPos = new ImmutableVector(0, 0);
 
-        ImmutableVector[][] testCases = new ImmutableVector[][] {
-                { new ImmutableVector(1, 1), new ImmutableVector(3, 3) }, // point a should be closest
-                { new ImmutableVector(-1, -1), new ImmutableVector(1, 1) },
-                { new ImmutableVector(-5, -5), new ImmutableVector(-3, -3) },
-                { new ImmutableVector(-1, 0), new ImmutableVector(1, 2) }
+        ImmutableVector[][] testCases = new ImmutableVector[][]{
+                {new ImmutableVector(1, 1), new ImmutableVector(3, 3)}, // point a should be closest
+                {new ImmutableVector(-1, -1), new ImmutableVector(1, 1)},
+                {new ImmutableVector(-5, -5), new ImmutableVector(-3, -3)},
+                {new ImmutableVector(-1, 0), new ImmutableVector(1, 2)}
         };
 
         vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[0][0], testCases[0][1], robotPos), testCases[0][0]);
@@ -424,8 +381,7 @@ public class MathTest
     }
 
     @Test
-    public void testEvenFunc()
-    {
+    public void testEvenFunc() {
         Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
                 .put(-1D, 0D)
                 .put(1D, 0D)
@@ -471,8 +427,7 @@ public class MathTest
     }
 
     @Test
-    public void testOddFunc()
-    {
+    public void testOddFunc() {
         Map<Double, Double> map = ImmutableMap.<Double, Double>builder()
                 .put(-1D, 0D)
                 .put(1D, 0D)
@@ -518,8 +473,7 @@ public class MathTest
     }
 
 
-    private void vectorsCloseEnough(ImmutableVector a, ImmutableVector b)
-    {
+    private void vectorsCloseEnough(ImmutableVector a, ImmutableVector b) {
         assertTrue(MathUtils.epsilonEquals(a, b, 1E-3));
     }
 

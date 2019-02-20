@@ -22,7 +22,7 @@ class ImmutableVectorTest {
         }
         vectors.add(oddOneOut)
 
-        assertThrows(IllegalArgumentException::class.java){ImmutableVector.assertSameDim(vectors)}
+        assertThrows(IllegalArgumentException::class.java) { ImmutableVector.assertSameDim(vectors) }
     }
 
     @Test

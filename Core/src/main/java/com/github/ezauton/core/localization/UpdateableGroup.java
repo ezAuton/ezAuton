@@ -8,8 +8,7 @@ import java.util.List;
  * Describes a group of multiple things that should be updated in unison
  */
 //TODO: Suggestion -- Implement List<Updateable>?
-public class UpdateableGroup implements Updateable
-{
+public class UpdateableGroup implements Updateable {
 
     private final List<Updateable> updateables;
 
@@ -18,18 +17,15 @@ public class UpdateableGroup implements Updateable
      *
      * @param updateables All the things that should be updated together
      */
-    public UpdateableGroup(Updateable... updateables)
-    {
+    public UpdateableGroup(Updateable... updateables) {
         this.updateables = new ArrayList<>(Arrays.asList(updateables));
     }
 
-    public void add(Updateable updateable)
-    {
+    public void add(Updateable updateable) {
         updateables.add(updateable);
     }
 
-    public void remove(Updateable updateable)
-    {
+    public void remove(Updateable updateable) {
         updateables.remove(updateable);
     }
 
@@ -38,13 +34,10 @@ public class UpdateableGroup implements Updateable
      */
     //TODO: Perhaps should return a parallel list of which updateables succeeded and which failed, alternatively return true if all succeeded
     @Override
-    public boolean update()
-    {
+    public boolean update() {
         boolean updated = false;
-        for(Updateable updateable : updateables)
-        {
-            if(updateable.update())
-            {
+        for (Updateable updateable : updateables) {
+            if (updateable.update()) {
                 updated = true;
             }
         }

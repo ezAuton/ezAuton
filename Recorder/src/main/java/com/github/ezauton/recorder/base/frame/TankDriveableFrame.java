@@ -5,8 +5,7 @@ import com.github.ezauton.recorder.SequentialDataFrame;
 
 import java.io.Serializable;
 
-public class TankDriveableFrame extends SequentialDataFrame implements Serializable
-{
+public class TankDriveableFrame extends SequentialDataFrame implements Serializable {
 
     @JsonProperty
     private double attemptLeftVel;
@@ -14,24 +13,22 @@ public class TankDriveableFrame extends SequentialDataFrame implements Serializa
     @JsonProperty
     private double attemptRightVel;
 
-    public TankDriveableFrame(double time, double attemptLeftVel, double attemptRightVel)
-    {
+    public TankDriveableFrame(double time, double attemptLeftVel, double attemptRightVel) {
         super(time);
         this.attemptLeftVel = attemptLeftVel;
         this.attemptRightVel = attemptRightVel;
     }
 
-    public double getAttemptLeftVel()
-    {
+    private TankDriveableFrame() {
+    }
+
+    public double getAttemptLeftVel() {
         return attemptLeftVel;
     }
 
-    public double getAttemptRightVel()
-    {
+    public double getAttemptRightVel() {
         return attemptRightVel;
     }
-
-    private TankDriveableFrame(){}
 
     @Override
     public String toString() {

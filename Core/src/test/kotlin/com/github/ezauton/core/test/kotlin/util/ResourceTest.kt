@@ -4,8 +4,6 @@ import com.github.ezauton.core.action.require.BaseResource
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.lang.IllegalStateException
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
 class ResourceTest {
@@ -26,12 +24,12 @@ class ResourceTest {
         var list = ArrayList<Boolean>()
 
         thread {
-            list.add( !resource1.isTaken)
+            list.add(!resource1.isTaken)
             list.add(!resource3.isTaken)
 
             resource1.take()
 
-            list.add( resource1.isTaken)
+            list.add(resource1.isTaken)
             list.add(resource3.isTaken)
             list.add(resource.isTaken)
             list.add(!resource2.isTaken)
@@ -42,12 +40,13 @@ class ResourceTest {
 
         }.join()
 
-        list.forEachIndexed{ i, bool ->
-            Assertions.assertTrue(bool, i.toString()) }
+        list.forEachIndexed { i, bool ->
+            Assertions.assertTrue(bool, i.toString())
+        }
     }
 
     @Test
-    fun `assert possession test`(){
+    fun `assert possession test`() {
 
         val resource = BaseResource()
 
@@ -56,10 +55,9 @@ class ResourceTest {
         val thread1 = thread {
             resource.take()
             Thread.sleep(100)
-            try{
+            try {
                 resource.assertPossession()
-            }catch(e: IllegalStateException)
-            {
+            } catch (e: IllegalStateException) {
                 thread1NoException = false
             }
             resource.give()
@@ -71,10 +69,9 @@ class ResourceTest {
         val thread2 = thread {
 
             Thread.sleep(50)
-            try{
+            try {
                 resource.assertPossession()
-            }catch (e: IllegalStateException)
-            {
+            } catch (e: IllegalStateException) {
                 illegalStateCaught = true
             }
             resource.take()

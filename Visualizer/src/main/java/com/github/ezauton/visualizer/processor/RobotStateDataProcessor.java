@@ -1,5 +1,9 @@
 package com.github.ezauton.visualizer.processor;
 
+import com.github.ezauton.recorder.base.RobotStateRecorder;
+import com.github.ezauton.recorder.base.frame.RobotStateFrame;
+import com.github.ezauton.visualizer.util.IDataProcessor;
+import com.github.ezauton.visualizer.util.IEnvironment;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
@@ -8,15 +12,13 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
-import com.github.ezauton.recorder.base.frame.RobotStateFrame;
-import com.github.ezauton.recorder.base.RobotStateRecorder;
-import com.github.ezauton.visualizer.util.IDataProcessor;
-import com.github.ezauton.visualizer.util.IEnvironment;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class RobotStateDataProcessor implements IDataProcessor
-{
+public class RobotStateDataProcessor implements IDataProcessor {
     private final RobotStateRecorder robotRec;
     private final List<RobotStateFrame> dataFrames;
 
@@ -30,26 +32,22 @@ public class RobotStateDataProcessor implements IDataProcessor
     private int robotLengthPx;
     private int robotWidthPx;
 
-    public RobotStateDataProcessor(RobotStateRecorder robotRec)
-    {
+    public RobotStateDataProcessor(RobotStateRecorder robotRec) {
         this.robotRec = robotRec;
         dataFrames = robotRec.getDataFrames();
     }
 
 
-    private double getX(double feetX)
-    {
+    private double getX(double feetX) {
         return feetX * spatialScaleFactorX + originXPx;
     }
 
-    private double getY(double feetY)
-    {
+    private double getY(double feetY) {
         return -feetY * spatialScaleFactorY + originYPx;
     }
 
     @Override
-    public void initEnvironment(IEnvironment environment)
-    {
+    public void initEnvironment(IEnvironment environment) {
         this.spatialScaleFactorX = environment.getScaleFactorX();
         this.spatialScaleFactorY = environment.getScaleFactorY();
 
@@ -84,20 +82,17 @@ public class RobotStateDataProcessor implements IDataProcessor
     }
 
     @Override
-    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator)
-    {
+    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator) {
         Map<Double, List<KeyValue>> ret = new HashMap<>();
 
         Rotate robotRotation = new Rotate();
         robot.getTransforms().add(robotRotation);
 
-        for(RobotStateFrame frame : robotRec.getDataFrames())
-        {
+        for (RobotStateFrame frame : robotRec.getDataFrames()) {
             List<KeyValue> keyValues = new ArrayList<>();
             double x, y, heading;
 
-            if(frame.getPos() != null)
-            {
+            if (frame.getPos() != null) {
                 x = getX(frame.getPos().get(0));
                 y = getY(frame.getPos().get(1));
 
@@ -118,9 +113,7 @@ public class RobotStateDataProcessor implements IDataProcessor
                 keyValues.add(new KeyValue(headingLabel.textProperty(), String.format("%.02f radians", heading)));
                 keyValues.add(new KeyValue(posLabel.textProperty(), String.format("(%.02f, %.02f)", frame.getPos().get(0), frame.getPos().get(1))));
                 keyValues.add(new KeyValue(velocityLabel.textProperty(), String.format("(%.02f, %.02f)", frame.getRobotVelocity().get(0), frame.getRobotVelocity().get(1))));
-            }
-            else
-            {
+            } else {
                 keyValues.add(new KeyValue(robot.visibleProperty(), false, interpolator));
             }
 

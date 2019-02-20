@@ -5,6 +5,5 @@ package com.github.ezauton.core.robot;
  *
  * @see ITankRobotConstants
  */
-public interface IRobotConstants
-{
+public interface IRobotConstants {
 }

@@ -55,11 +55,11 @@ class ActionTest {
 
         val actionGroup = ActionGroup(
 
-                DelayedAction (30, TimeUnit.SECONDS)
+                DelayedAction(30, TimeUnit.SECONDS)
                         .onFinish { if (counter == 0) counter++ }
                         .wrapType(ActionGroup.Type.WITH),
 
-                DelayedAction (20, TimeUnit.SECONDS)
+                DelayedAction(20, TimeUnit.SECONDS)
                         .onFinish { if (counter == 1) counter++ }
                         .wrapType(ActionGroup.Type.PARALLEL),
 

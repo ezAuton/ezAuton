@@ -23,14 +23,12 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PPSimulatorTest
-{
+public class PPSimulatorTest {
 
     private static final double LATERAL_WHEEL_DIST = 4;
 
     //    @Test
-    public void testLeftToRightScale()
-    {
+    public void testLeftToRightScale() {
         PPWaypoint[] build = new PPWaypoint.Builder()
                 .add(0, 0, 16, 13, -12)
                 .add(0, 4, 16, 13, -12)
@@ -44,8 +42,7 @@ public class PPSimulatorTest
     }
 
     @Test
-    public void testStraight()
-    {
+    public void testStraight() {
 
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -4);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -4);
@@ -55,14 +52,12 @@ public class PPSimulatorTest
     }
 
     @Test
-    public void testStraightGeneric()
-    {
+    public void testStraightGeneric() {
         test(PathHelper.STRAIGHT_12UNITS);
     }
 
     @Test
-    public void testRight()
-    {
+    public void testRight() {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(6, 6, 5, 3, -3);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(12, 0, 0, 3, -3);
@@ -71,19 +66,17 @@ public class PPSimulatorTest
     }
 
     @Test
-    public void testSpline()
-    {
+    public void testSpline() {
         test(new SplinePPWaypoint.Builder()
-                     .add(0, 0, 0, 15, 13, -12)
-                     .add(0, 13, 0, 10, 13, -12)
-                     .add(20, 17, -Math.PI / 2, 8, 13, -12)
-                     .add(23, 24, 0, 0, 13, -12)
-                     .buildPathGenerator()
-                     .generate(0.05));
+                .add(0, 0, 0, 15, 13, -12)
+                .add(0, 13, 0, 10, 13, -12)
+                .add(20, 17, -Math.PI / 2, 8, 13, -12)
+                .add(23, 24, 0, 0, 13, -12)
+                .buildPathGenerator()
+                .generate(0.05));
     }
 
-    private void test(Path path)
-    {
+    private void test(Path path) {
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
         // Not a problem
@@ -124,16 +117,13 @@ public class PPSimulatorTest
         String homeDir = System.getProperty("user.home");
         java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.txt");
 
-        try
-        {
+        try {
             Files.createDirectories(filePath.getParent());
             BufferedWriter writer = Files.newBufferedWriter(filePath);
             writer.write(robot.log.toString());
 
             writer.close();
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -157,19 +147,16 @@ public class PPSimulatorTest
      *
      * @param waypoints
      */
-    private void test(PPWaypoint... waypoints)
-    {
+    private void test(PPWaypoint... waypoints) {
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
         Path path = pathGenerator.generate(0.05);
         test(path);
     }
 
-    private void approxEqual(ImmutableVector a, ImmutableVector b, double epsilon)
-    {
+    private void approxEqual(ImmutableVector a, ImmutableVector b, double epsilon) {
         double[] bElements = b.getElements();
         double[] aElements = a.getElements();
-        for(int i = 0; i < aElements.length; i++)
-        {
+        for (int i = 0; i < aElements.length; i++) {
             assertEquals(aElements[i], bElements[i], epsilon);
         }
     }

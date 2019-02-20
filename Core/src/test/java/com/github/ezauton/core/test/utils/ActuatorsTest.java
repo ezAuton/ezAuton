@@ -3,23 +3,20 @@ package com.github.ezauton.core.test.utils;
 import com.github.ezauton.core.actuators.Actuators;
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.actuators.IVoltageMotor;
+import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;
 import com.github.ezauton.core.actuators.implementations.BoundedVelocityProcessor;
 import com.github.ezauton.core.actuators.implementations.RampUpVelocityProcessor;
-import com.google.common.util.concurrent.AtomicDouble;
-import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;
 import com.github.ezauton.core.utils.ManualClock;
-import org.junit.jupiter.api.Assertions;
+import com.google.common.util.concurrent.AtomicDouble;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ActuatorsTest
-{
+public class ActuatorsTest {
     @Test
-    public void testSimpleVoltToVel()
-    {
+    public void testSimpleVoltToVel() {
         AtomicDouble atomicDouble = new AtomicDouble();
         IVoltageMotor voltageMotor = atomicDouble::set;
         IVelocityMotor velocityMotor = Actuators.roughConvertVoltageToVel(voltageMotor, 16);
@@ -47,8 +44,7 @@ public class ActuatorsTest
     }
 
     @Test
-    public void testRampUpVelocityProcessor()
-    {
+    public void testRampUpVelocityProcessor() {
         AtomicDouble velocity = new AtomicDouble();
         IVelocityMotor velocityMotor = velocity::set;
 
@@ -85,8 +81,7 @@ public class ActuatorsTest
     }
 
     @Test
-    public void testBoundedVelocityProcessor()
-    {
+    public void testBoundedVelocityProcessor() {
         AtomicDouble velocity = new AtomicDouble();
         IVelocityMotor velocityMotor = velocity::set;
 
@@ -113,16 +108,14 @@ public class ActuatorsTest
     }
 
     @Test
-    public void testBoundedVelocityProcessorNegMaxSpeed()
-    {
+    public void testBoundedVelocityProcessorNegMaxSpeed() {
         AtomicDouble velocity = new AtomicDouble(0);
 
         assertThrows(IllegalArgumentException.class, () -> new BoundedVelocityProcessor(velocity::set, -10));
     }
 
     @Test
-    public void testBaseSimulatedMotor()
-    {
+    public void testBaseSimulatedMotor() {
         AtomicDouble velocity = new AtomicDouble();
         IVelocityMotor velocityMotor = velocity::set;
 

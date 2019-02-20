@@ -10,11 +10,8 @@ import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
-import com.github.ezauton.recorder.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.recorder.JsonUtils;
-import com.github.ezauton.recorder.Recording;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
@@ -25,10 +22,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-public class RecorderTest2
-{
-    public static void main(String[] args) throws IOException
-    {
+public class RecorderTest2 {
+    public static void main(String[] args) throws IOException {
 
         ImmutableVector immutableVector = new ImmutableVector(0, 0);
         immutableVector.isFinite();

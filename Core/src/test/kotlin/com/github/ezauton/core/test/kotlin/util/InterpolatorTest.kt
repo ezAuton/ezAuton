@@ -73,15 +73,14 @@ class InterpolatorTest {
     fun `test even interpolator integrate`() {
 
         interpMapEven.also {
-            it.integrate(-1.0,0.0).testEquals(3.0/2)
-            it.integrate(0.0,1.0).testEquals(3.0/2)
+            it.integrate(-1.0, 0.0).testEquals(3.0 / 2)
+            it.integrate(0.0, 1.0).testEquals(3.0 / 2)
 
-            it.integrate(-1.0,1.0).testEquals(3.0)
+            it.integrate(-1.0, 1.0).testEquals(3.0)
         }
     }
 
-    fun Double.testEquals(actual: Double, epsilon: Double = 1E-6)
-    {
+    fun Double.testEquals(actual: Double, epsilon: Double = 1E-6) {
         assertEquals(actual, this, epsilon)
     }
 }

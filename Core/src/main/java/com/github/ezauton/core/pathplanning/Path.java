@@ -13,8 +13,7 @@ import java.util.List;
  * This class is very helpful when it comes to tracking which segment is currently on and getting the distance
  * on the path at any point (taking arclength ... basically making path 1D).
  */
-public class Path
-{
+public class Path {
     private List<IPathSegment> pathSegments;
 
     private int segmentOnI = -1;
@@ -23,7 +22,8 @@ public class Path
     private ImmutableVector robotLocationClosestPoint;
     private double length;
 
-    private Path() {}
+    private Path() {
+    }
 
     /**
      * Create a path from multiple path segments
@@ -31,9 +31,8 @@ public class Path
      * @param pathSegments A List of IPathSegments
      * @return A path consisting of these segments
      */
-    public static Path fromSegments(List<IPathSegment> pathSegments)
-    {
-        if(pathSegments.size() == 0) throw new IllegalArgumentException("Path must have at least one segment");
+    public static Path fromSegments(List<IPathSegment> pathSegments) {
+        if (pathSegments.size() == 0) throw new IllegalArgumentException("Path must have at least one segment");
 
         Path path = new Path();
         path.pathSegments = new ArrayList<>(pathSegments);
@@ -43,16 +42,14 @@ public class Path
         return path;
     }
 
-    public static Path fromSegments(IPathSegment... pathSegments)
-    {
+    public static Path fromSegments(IPathSegment... pathSegments) {
         return fromSegments(Arrays.asList(pathSegments));
     }
 
     /**
      * @return the total arclength of this path
      */
-    public double getLength()
-    {
+    public double getLength() {
         return length;
     }
 
@@ -61,10 +58,8 @@ public class Path
      *
      * @return If there was a next path segment to progress to
      */
-    public boolean moveNextSegment()
-    {
-        if(segmentOnI < pathSegments.size() - 1)
-        {
+    public boolean moveNextSegment() {
+        if (segmentOnI < pathSegments.size() - 1) {
             segmentOnI++;
             segmentOn = pathSegments.get(segmentOnI);
             return true;
@@ -72,8 +67,7 @@ public class Path
         return false;
     }
 
-    public boolean exists()
-    {
+    public boolean exists() {
         return !pathSegments.isEmpty();
     }
 
@@ -84,7 +78,7 @@ public class Path
         // TODO: figure out a way to put some type of cache back in
 //        if(this.robotLocationClosestPoint != null && MathUtils.epsilonEquals(this.robotLocationClosestPoint, origin))
 //        {
-            // ISSUE what if the path changed during this time!!!!!!!!! :o
+        // ISSUE what if the path changed during this time!!!!!!!!! :o
 //            return closestPoint;
 //        }
 
@@ -94,8 +88,7 @@ public class Path
         return closestPoint;
     }
 
-    public int getSegmentOnI()
-    {
+    public int getSegmentOnI() {
         return segmentOnI;
     }
 
@@ -106,30 +99,23 @@ public class Path
      * @param lookahead                  Our current lookahead distance
      * @return Where we should drive at
      */
-    public ImmutableVector getGoalPoint(double distanceLeftCurrentSegment, double lookahead)
-    {
+    public ImmutableVector getGoalPoint(double distanceLeftCurrentSegment, double lookahead) {
         IPathSegment current = getCurrent();
         // If our circle intersects on the assertSameDim path
-        if(lookahead < distanceLeftCurrentSegment || current.isFinish())
-        {
+        if (lookahead < distanceLeftCurrentSegment || current.isFinish()) {
             double relativeDistance = current.getLength() - distanceLeftCurrentSegment + lookahead;
             return current.getPoint(relativeDistance);
         }
         // If our circle intersects other segments
-        else
-        {
+        else {
             lookahead -= distanceLeftCurrentSegment;
 
-            for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
-            {
+            for (int i = segmentOnI + 1; i < pathSegments.size(); i++) {
                 IPathSegment pathSegment = pathSegments.get(i);
                 double length = pathSegment.getLength();
-                if(lookahead > length && !pathSegment.isFinish())
-                {
+                if (lookahead > length && !pathSegment.isFinish()) {
                     lookahead -= length;
-                }
-                else
-                {
+                } else {
                     return pathSegment.getPoint(lookahead);
                 }
             }
@@ -146,14 +132,11 @@ public class Path
      * @param robotPos            The location of the robot
      * @return The PathSegments that have been progressed
      */
-    public List<IPathSegment> progressIfNeeded(double distanceLeftSegment, double closestPointDist, ImmutableVector robotPos)
-    {
+    public List<IPathSegment> progressIfNeeded(double distanceLeftSegment, double closestPointDist, ImmutableVector robotPos) {
         //TODO: Move magic number
         // Move to the next segment if we are near the end of the current segment
-        if(distanceLeftSegment < .16F)
-        {
-            if(moveNextSegment())
-            {
+        if (distanceLeftSegment < .16F) {
+            if (moveNextSegment()) {
                 return Collections.singletonList(pathSegments.get(segmentOnI - 1));
             }
         }
@@ -163,10 +146,8 @@ public class Path
         List<IPathSegment> pathSegments = nextSegmentsInclusive(2);
         int i = segmentOnI;
         int j = 0;
-        for(IPathSegment pathSegment : pathSegments)
-        {
-            if(shouldProgress(pathSegment, robotPos, closestPointDist))
-            {
+        for (IPathSegment pathSegment : pathSegments) {
+            if (shouldProgress(pathSegment, robotPos, closestPointDist)) {
                 moveSegment(i, pathSegment);
                 return pathSegments.subList(0, j + 1);
             }
@@ -182,8 +163,7 @@ public class Path
      * @param segmentOnI The index of the path segment
      * @param segmentOn  The instance of the path segment
      */
-    public void moveSegment(int segmentOnI, IPathSegment segmentOn)
-    {
+    public void moveSegment(int segmentOnI, IPathSegment segmentOn) {
         this.segmentOnI = segmentOnI;
         this.segmentOn = segmentOn;
     }
@@ -196,9 +176,8 @@ public class Path
      * @param currentSegmentCPDist The distance to the closest point on the current segment
      * @return If we should progress to this "other" path segment
      */
-    public boolean shouldProgress(IPathSegment segment, ImmutableVector robotPos, double currentSegmentCPDist)
-    {
-        if(segment == null) // we are on the last segment... we cannot progress
+    public boolean shouldProgress(IPathSegment segment, ImmutableVector robotPos, double currentSegmentCPDist) {
+        if (segment == null) // we are on the last segment... we cannot progress
         {
             return false;
         }
@@ -210,8 +189,7 @@ public class Path
     }
 
 
-    public double getAbsDistanceOfClosestPoint(ImmutableVector closestPoint)
-    {
+    public double getAbsDistanceOfClosestPoint(ImmutableVector closestPoint) {
         IPathSegment current = getCurrent();
         ImmutableVector firstLocation = current.getFrom();
         return current.getAbsoluteDistanceStart() + firstLocation.dist(closestPoint);
@@ -221,61 +199,49 @@ public class Path
      * @param maxAheadDistance The distance to look ahead from the last segment
      * @return The segments that lay on the path between our current position and maxAheadDistance from our current position. This result includes the current path segment.
      */
-    public List<IPathSegment> nextSegmentsInclusive(double maxAheadDistance)
-    {
+    public List<IPathSegment> nextSegmentsInclusive(double maxAheadDistance) {
         List<IPathSegment> segments = new ArrayList<>();
         IPathSegment startSegment = getCurrent();
         segments.add(startSegment);
         double distanceStart = startSegment.getAbsoluteDistanceEnd();
-        for(int i = segmentOnI + 1; i < pathSegments.size(); i++)
-        {
+        for (int i = segmentOnI + 1; i < pathSegments.size(); i++) {
             IPathSegment pathSegment = pathSegments.get(i);
-            if(pathSegment.getAbsoluteDistanceStart() - distanceStart < maxAheadDistance)
-            {
+            if (pathSegment.getAbsoluteDistanceStart() - distanceStart < maxAheadDistance) {
                 segments.add(pathSegment);
-            }
-            else
-            {
+            } else {
                 break;
             }
         }
         return segments;
     }
 
-    public IPathSegment getCurrent()
-    {
+    public IPathSegment getCurrent() {
         return segmentOn;
     }
 
-    public IPathSegment getNext()
-    {
+    public IPathSegment getNext() {
         int nextSegmentI = segmentOnI + 1;
-        if(nextSegmentI >= pathSegments.size())
-        {
+        if (nextSegmentI >= pathSegments.size()) {
             return null;
         }
         IPathSegment nextSegment = pathSegments.get(nextSegmentI);
         return nextSegment;
     }
 
-    public ImmutableVector getStart()
-    {
+    public ImmutableVector getStart() {
         return pathSegments.get(0).getFrom();
     }
 
-    public ImmutableVector getEnd()
-    {
+    public ImmutableVector getEnd() {
         return pathSegments.get(pathSegments.size() - 1).getTo();
     }
 
-    public List<IPathSegment> getPathSegments()
-    {
+    public List<IPathSegment> getPathSegments() {
         return pathSegments;
     }
 
     @Override
-    public Path clone()
-    {
+    public Path clone() {
         Path path = new Path();
         path.pathSegments = pathSegments;
         path.segmentOn = segmentOn;

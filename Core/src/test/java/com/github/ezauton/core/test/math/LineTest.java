@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LineTest
-{
+public class LineTest {
     private final double DELTA = 1e-5;
     private MathUtils.Geometry.LineR2 horizontal = new MathUtils.Geometry.LineR2(new ImmutableVector(0, 0), new ImmutableVector(1, 0));
     private MathUtils.Geometry.LineR2 vertical = new MathUtils.Geometry.LineR2(new ImmutableVector(0, 0), new ImmutableVector(0, 1));
@@ -15,13 +14,11 @@ public class LineTest
     private MathUtils.Geometry.LineR2 otherDiag = new MathUtils.Geometry.LineR2(new ImmutableVector(0, 0), new ImmutableVector(-1, 1));
 
     @Test
-    public void testEvaluateY()
-    {
+    public void testEvaluateY() {
         assertEquals(horizontal.evaluateY(1), 0, DELTA);
         assertEquals(diag.evaluateY(1), 1, DELTA);
 
-        for(int i = 0; i < 20; i++)
-        {
+        for (int i = 0; i < 20; i++) {
             double ax = (Math.random() - 0.5) * 20;
             double ay = (Math.random() - 0.5) * 20;
             ImmutableVector a = new ImmutableVector(ax, ay);
@@ -39,11 +36,9 @@ public class LineTest
     }
 
     @Test
-    public void testIntersect()
-    {
+    public void testIntersect() {
 
-        for(int i = 0; i < 20; i++)
-        {
+        for (int i = 0; i < 20; i++) {
             double ax = (Math.random() - 0.5) * 20;
             double ay = (Math.random() - 0.5) * 20;
             ImmutableVector a = new ImmutableVector(ax, ay);
@@ -67,8 +62,7 @@ public class LineTest
     }
 
     @Test
-    public void testLineEquals()
-    {
+    public void testLineEquals() {
         String notALine = "";
         assertNotEquals(horizontal, notALine);
         assertEquals(horizontal, horizontal);
@@ -78,20 +72,18 @@ public class LineTest
     }
 
     //    @Test //TODO: fix
-    public void testPerp()
-    {
+    public void testPerp() {
         assertEquals(otherDiag, diag.getPerp(new ImmutableVector(0, 0)));
         assertEquals(diag, otherDiag.getPerp(new ImmutableVector(0, 0)));
 
         assertEquals(horizontal, vertical.getPerp(new ImmutableVector(0, 0)));
         assertEquals(vertical,
-                     horizontal.getPerp(new ImmutableVector(0, 0))
-                    );
+                horizontal.getPerp(new ImmutableVector(0, 0))
+        );
     }
 
     @Test
-    public void testIntegrate()
-    {
+    public void testIntegrate() {
         assertEquals(0.5, diag.integrate(0, 1), DELTA);
         assertEquals(0.5, diag.integrate(), DELTA);
         assertEquals(0, diag.integrate(-1, 1), DELTA);
