@@ -168,7 +168,7 @@ public final class ActionGroup extends BaseAction {
      * @return The thread, ready to start.
      */
     @Override
-    public final void run(IClock clock) throws Exception {
+    public final void run(IClock clock) throws ExecutionException {
         List<IAction> withActions = new ArrayList<>();
         List<Future<Void>> withActionFutures = new ArrayList<>();
         List<Future<Void>> actionFutures = new ArrayList<>();
