@@ -1,7 +1,7 @@
 package com.github.ezauton.core.simulation;
 
 import com.github.ezauton.core.action.IAction;
-import com.github.ezauton.core.action.ThreadBuilder;
+import com.github.ezauton.core.action.tangible.ProcessBuilder;
 import com.github.ezauton.core.utils.IClock;
 
 import java.util.*;
@@ -183,7 +183,7 @@ public class ModernSimulatedClock implements IClock, ISimulation {
                 action.onFinish(this::notifyCurrentActionPause);
 
 
-                ThreadBuilder threadBuilder = new ThreadBuilder(action, ModernSimulatedClock.this);
+                ProcessBuilder threadBuilder = new ProcessBuilder(action, ModernSimulatedClock.this);
                 threads.add(threadBuilder.start());
 
                 // waits until we can go on to the next action

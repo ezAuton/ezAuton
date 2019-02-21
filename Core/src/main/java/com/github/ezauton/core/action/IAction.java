@@ -16,7 +16,7 @@ public interface IAction {
      *
      * @param clock The clock to run the action
      */
-    void run(IClock clock);
+    void run(IClock clock) throws Exception;
 
     /**
      * End the action peacefully ✌️
@@ -35,17 +35,17 @@ public interface IAction {
     List<Runnable> getFinished();
 
     /**
-     * A helper method to ⌚ schedule a real-time task. If you want other ways to schedule the action see {@link ThreadBuilder} or {@link TimeWarpedSimulation}.
+     * A helper method to ⌚ schedule a real-time task. If you want other ways to schedule the action see {@link ProcessBuilder} or {@link TimeWarpedSimulation}.
      */
     default Thread schedule() {
-        return new ThreadBuilder(this, RealClock.CLOCK).start();
+        return new ProcessBuilder(this, RealClock.CLOCK).start();
     }
 
     /**
-     * A helper method to ⌚️ schedule a task. If you want other ways to schedule the action see {@link ThreadBuilder} or {@link TimeWarpedSimulation}.
+     * A helper method to ⌚️ schedule a task. If you want other ways to schedule the action see {@link ProcessBuilder} or {@link TimeWarpedSimulation}.
      */
     default Thread schedule(IClock clock) {
-        return new ThreadBuilder(this, clock).start();
+        return new ProcessBuilder(this, clock).start();
     }
 }
 

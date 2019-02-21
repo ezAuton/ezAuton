@@ -1,6 +1,7 @@
 package com.github.ezauton.core.test.utils;
 
 import com.github.ezauton.core.action.*;
+import com.github.ezauton.core.action.tangible.ProcessBuilder;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
@@ -144,7 +145,7 @@ public class ActionTest {
 
                 });
 
-        new ThreadBuilder(group).startAndWait(1, TimeUnit.SECONDS);
+        new ProcessBuilder(group).startAndWait(1, TimeUnit.SECONDS);
         assertEquals(4, count.get());
     }
 

@@ -2,7 +2,7 @@ package com.github.ezauton.core.simulation;
 
 
 import com.github.ezauton.core.action.IAction;
-import com.github.ezauton.core.action.ThreadBuilder;
+import com.github.ezauton.core.action.tangible.ProcessBuilder;
 import com.github.ezauton.core.utils.TimeWarpedClock;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class TimeWarpedSimulation implements ISimulation {
     public void runSimulation(long timeout, TimeUnit timeUnit) {
         List<Thread> threads = new ArrayList<>();
         for (IAction action : actions) {
-            threads.add(new ThreadBuilder(action, timeWarpedClock).startAndWait(timeout, timeUnit));
+            threads.add(new ProcessBuilder(action, timeWarpedClock).startAndWait(timeout, timeUnit));
         }
         threads.forEach(Thread::interrupt);
     }

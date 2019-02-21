@@ -35,7 +35,7 @@ public class BaseAction implements IAction {
     }
 
     @Override
-    public void run(IClock clock) {
+    public void run(IClock clock) throws Exception {
         if (runnable != null) {
             runnable.run();
         }

@@ -1,8 +1,13 @@
 package com.github.ezauton.core.action;
 
+import com.github.ezauton.core.action.tangible.ActionCallable;
 import com.github.ezauton.core.utils.IClock;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 /**
@@ -10,6 +15,7 @@ import java.util.*;
  */
 public final class ActionGroup extends BaseAction {
     private Queue<ActionWrapper> scheduledActions;
+    private final ExecutorService executorService = Executors.newCachedThreadPool(); // TODO: remove
 
     /**
      * Creates an Action Group comprised of different kinds of commands (i.e sequential, parallel, with)
@@ -77,7 +83,7 @@ public final class ActionGroup extends BaseAction {
     /**
      * Creates an {@link ActionGroup} with parallel actions for each {@link Runnable}
      *
-     * @param actions
+     * @param runnables actions to run
      * @return
      */
     public static ActionGroup ofParallels(Runnable... runnables) {
@@ -162,11 +168,13 @@ public final class ActionGroup extends BaseAction {
      * @return The thread, ready to start.
      */
     @Override
-    public final void run(IClock clock) {
+    public final void run(IClock clock) throws Exception {
         List<IAction> withActions = new ArrayList<>();
-        List<Thread> withActionThreads = new ArrayList<>();
+        List<Future<Void>> withActionFutures = new ArrayList<>();
+        List<Future<Void>> actionFutures = new ArrayList<>();
 
-        Set<Thread> threadsToJoin = new HashSet<>();
+
+//        Set<Thread> threadsToJoin = new HashSet<>();
 
         for (ActionWrapper scheduledAction : scheduledActions) {
             if (isStopped()) {
@@ -179,29 +187,41 @@ public final class ActionGroup extends BaseAction {
                     withActions.add(action);
 
                 case PARALLEL:
-                    Thread start = new ThreadBuilder(action, clock).start();
-                    threadsToJoin.add(start);
-                    if (scheduledAction.getType() == Type.WITH) withActionThreads.add(start);
+
+                    final ActionCallable callable = new ActionCallable(action, clock);
+                    final Future<Void> submit = executorService.submit(callable);
+
+                    actionFutures.add(submit);
+
+                    if (scheduledAction.getType() == Type.WITH) withActionFutures.add(submit);
                     break;
                 case SEQUENTIAL:
-                    action.run(clock);
+                    try {
+                        new ActionCallable(action, clock).call();
+                    } catch (Exception e) {
+                        finishUp(actionFutures);
+                        throw new ExecutionException("A sequential action threw an exception", e);
+                    }
 
-                    action.getFinished().forEach(Runnable::run);
-
-                    withActionThreads.forEach(Thread::interrupt);
                     withActions.forEach(IAction::end);
+                    withActionFutures.forEach(future -> future.cancel(true));
 
                     withActions.clear();
             }
         }
         try {
-            for (Thread thread : threadsToJoin) {
-                thread.join();
+            for (Future<Void> actionFuture : actionFutures) {
+                actionFuture.get();
             }
         } catch (InterruptedException e) {
-            threadsToJoin.forEach(Thread::interrupt);
-            e.printStackTrace();
+            // If we get interrupted
+            finishUp(actionFutures);
         }
+    }
+
+
+    private void finishUp(Collection<Future<Void>> futures) {
+        futures.forEach(voidFuture -> voidFuture.cancel(true));
     }
 
     /**

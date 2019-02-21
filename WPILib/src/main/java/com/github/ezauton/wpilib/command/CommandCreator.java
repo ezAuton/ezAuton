@@ -1,7 +1,7 @@
 package com.github.ezauton.wpilib.command;
 
 import com.github.ezauton.core.action.IAction;
-import com.github.ezauton.core.action.ThreadBuilder;
+import com.github.ezauton.core.action.tangible.ProcessBuilder;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -24,7 +24,7 @@ public class CommandCreator extends Command {
 
     @Override
     protected void initialize() {
-        thread = new ThreadBuilder(action).start();
+        thread = new ProcessBuilder(action).start();
         action.onFinish(() -> finished = true);
     }
 
