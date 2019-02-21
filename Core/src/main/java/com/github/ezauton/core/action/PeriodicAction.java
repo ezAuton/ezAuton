@@ -114,8 +114,8 @@ public abstract class PeriodicAction extends BaseAction {
     }
 
     @Override
-    public final void run(IClock clock) {
-        this.clock = clock;
+    public final void run(ActionRunInfo actionRunInfo) {
+        this.clock = actionRunInfo.getClock();
 
         stopwatch = new Stopwatch(clock);
         stopwatch.reset();

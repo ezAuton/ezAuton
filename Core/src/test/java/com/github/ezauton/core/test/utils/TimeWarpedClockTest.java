@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,7 +62,7 @@ public class TimeWarpedClockTest {
     }
 
     @Test
-    public void testFastClockWait() {
+    public void testFastClockWait() throws TimeoutException, ExecutionException {
         AtomicLong time = new AtomicLong(0);
 
         int speed = 100000;

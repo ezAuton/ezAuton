@@ -1,7 +1,5 @@
 package com.github.ezauton.core.action;
 
-import com.github.ezauton.core.utils.IClock;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +33,13 @@ public class BaseAction implements IAction {
     }
 
     @Override
-    public void run(IClock clock) throws Exception {
+    public void run(ActionRunInfo actionRunInfo) throws Exception {
         if (runnable != null) {
             runnable.run();
         }
     }
 
-    protected void onEnd(){
+    protected void onEnd() {
 
     }
 

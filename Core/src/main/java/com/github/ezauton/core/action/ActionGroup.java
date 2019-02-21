@@ -1,21 +1,22 @@
 package com.github.ezauton.core.action;
 
 import com.github.ezauton.core.action.tangible.ActionCallable;
-import com.github.ezauton.core.utils.IClock;
 
 import java.util.*;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 
 /**
  * Describes a group of multiple IActions which itself is also an IAction
+ * <p>
+ * Create a Thread from this Action group. The ActionGroup blocks until all sub actions (including parallels) are
+ * finished. The reason for this is mentioned
+ * <a href = "https://vorpus.org/blog/notes-on-structured-concurrency-or-go-statement-considered-harmful/">here</a>.
  */
 public final class ActionGroup extends BaseAction {
     private Queue<ActionWrapper> scheduledActions;
-    private final ExecutorService executorService = Executors.newCachedThreadPool(); // TODO: remove
 
     /**
      * Creates an Action Group comprised of different kinds of commands (i.e sequential, parallel, with)
@@ -159,22 +160,11 @@ public final class ActionGroup extends BaseAction {
         return this;
     }
 
-    /**
-     * Create a Thread from this Action group. The ActionGroup blocks until all sub actions (including parallels) are
-     * finished. The reason for this is mentioned
-     * <a href = "https://vorpus.org/blog/notes-on-structured-concurrency-or-go-statement-considered-harmful/">here</a>.
-     *
-     * @param clock The clock that will be given to our actions
-     * @return The thread, ready to start.
-     */
     @Override
-    public final void run(IClock clock) throws ExecutionException {
+    public final void run(ActionRunInfo actionRunInfo) throws ExecutionException {
         List<IAction> withActions = new ArrayList<>();
         List<Future<Void>> withActionFutures = new ArrayList<>();
         List<Future<Void>> actionFutures = new ArrayList<>();
-
-
-//        Set<Thread> threadsToJoin = new HashSet<>();
 
         for (ActionWrapper scheduledAction : scheduledActions) {
             if (isStopped()) {
@@ -188,8 +178,7 @@ public final class ActionGroup extends BaseAction {
 
                 case PARALLEL:
 
-                    final ActionCallable callable = new ActionCallable(action, clock);
-                    final Future<Void> submit = executorService.submit(callable);
+                    final Future<Void> submit = actionRunInfo.getActionScheduler().scheduleAction(action);
 
                     actionFutures.add(submit);
 
@@ -197,21 +186,25 @@ public final class ActionGroup extends BaseAction {
                     break;
                 case SEQUENTIAL:
                     try {
-                        new ActionCallable(action, clock).call();
+                        new ActionCallable(action, actionRunInfo).call();
                     } catch (Exception e) {
                         finishUp(actionFutures);
                         throw new ExecutionException("A sequential action threw an exception", e);
                     }
 
                     withActions.forEach(IAction::end);
-                    withActionFutures.forEach(future -> future.cancel(true));
+                    withActionFutures.forEach(future -> future.cancel(false));
 
                     withActions.clear();
             }
         }
         try {
             for (Future<Void> actionFuture : actionFutures) {
-                actionFuture.get();
+                try {
+                    actionFuture.get();
+                } catch (CancellationException ignored) {
+                    // We are excepting exceptions to be cancelled if this
+                }
             }
         } catch (InterruptedException e) {
             // If we get interrupted

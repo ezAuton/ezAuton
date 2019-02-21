@@ -18,7 +18,9 @@ import com.github.ezauton.recorder.base.TankDriveableRecorder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class RecorderTest {
 
@@ -67,7 +69,7 @@ public class RecorderTest {
     }
 
     @Test
-    public void testRecording() {
+    public void testRecording() throws TimeoutException, ExecutionException {
 
 
         Recording recording = new Recording();

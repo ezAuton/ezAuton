@@ -1,9 +1,9 @@
 package com.github.ezauton.core.test.kotlin.util
 
 import com.github.ezauton.core.action.ActionGroup
+import com.github.ezauton.core.action.ActionRunInfo
 import com.github.ezauton.core.action.BaseAction
 import com.github.ezauton.core.simulation.ModernSimulatedClock
-import com.github.ezauton.core.utils.IClock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -60,8 +60,8 @@ class ClockTest {
         val sim = newSim()
 
         class TestBaseAction(val counterShouldBe: Int) : BaseAction() {
-            override fun run(clock: IClock) {
-                clock.sleep(1, TimeUnit.SECONDS)
+            override fun run(actionInfo: ActionRunInfo) {
+                actionInfo.clock.sleep(1, TimeUnit.SECONDS)
                 if (counter == counterShouldBe) counter++
             }
         }
@@ -89,8 +89,8 @@ class ClockTest {
         val sim = newSim()
 
         class TestBaseAction(val counterShouldBe: Int, val wait: Long) : BaseAction() {
-            override fun run(clock: IClock) {
-                clock.sleep(wait, TimeUnit.SECONDS)
+            override fun run(actionRunInfo: ActionRunInfo) {
+                actionRunInfo.clock.sleep(wait, TimeUnit.SECONDS)
                 if (counter == counterShouldBe) counter++
             }
         }

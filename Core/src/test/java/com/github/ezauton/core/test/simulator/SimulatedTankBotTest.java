@@ -21,11 +21,13 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class SimulatedTankBotTest {
     @Test
-    public void testStraight2() throws IOException {
+    public void testStraight2() throws IOException, TimeoutException, ExecutionException {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -4);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 1, 3, -4);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 0, 3, -4);
@@ -79,7 +81,7 @@ public class SimulatedTankBotTest {
     }
 
     @Test
-    public void testStraight() {
+    public void testStraight() throws TimeoutException, ExecutionException {
 
         TimeWarpedSimulation sim = new TimeWarpedSimulation();
         SimulatedTankRobot bot = new SimulatedTankRobot(0.2, sim.getClock(), 3, -4, 4);
@@ -88,7 +90,7 @@ public class SimulatedTankBotTest {
 
         sim.add(new TimedPeriodicAction(5, TimeUnit.SECONDS, () -> bot.run(1, 1)));
         sim.add(new BackgroundAction(10, TimeUnit.MILLISECONDS, locEstimator::update, bot::update));
-        sim.runSimulation(10, TimeUnit.SECONDS);
+        sim.runSimulation(17, TimeUnit.SECONDS);
 
         bot.run(0, 0);
 

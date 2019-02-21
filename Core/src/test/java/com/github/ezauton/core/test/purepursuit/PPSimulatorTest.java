@@ -19,7 +19,9 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,7 +30,7 @@ public class PPSimulatorTest {
     private static final double LATERAL_WHEEL_DIST = 4;
 
     //    @Test
-    public void testLeftToRightScale() {
+    public void testLeftToRightScale() throws TimeoutException, ExecutionException {
         PPWaypoint[] build = new PPWaypoint.Builder()
                 .add(0, 0, 16, 13, -12)
                 .add(0, 4, 16, 13, -12)
@@ -42,7 +44,7 @@ public class PPSimulatorTest {
     }
 
     @Test
-    public void testStraight() {
+    public void testStraight() throws TimeoutException, ExecutionException {
 
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -4);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -4);
@@ -52,12 +54,12 @@ public class PPSimulatorTest {
     }
 
     @Test
-    public void testStraightGeneric() {
+    public void testStraightGeneric() throws TimeoutException, ExecutionException {
         test(PathHelper.STRAIGHT_12UNITS);
     }
 
     @Test
-    public void testRight() {
+    public void testRight() throws TimeoutException, ExecutionException {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(6, 6, 5, 3, -3);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(12, 0, 0, 3, -3);
@@ -66,7 +68,7 @@ public class PPSimulatorTest {
     }
 
     @Test
-    public void testSpline() {
+    public void testSpline() throws TimeoutException, ExecutionException {
         test(new SplinePPWaypoint.Builder()
                 .add(0, 0, 0, 15, 13, -12)
                 .add(0, 13, 0, 10, 13, -12)
@@ -76,7 +78,7 @@ public class PPSimulatorTest {
                 .generate(0.05));
     }
 
-    private void test(Path path) {
+    private void test(Path path) throws TimeoutException, ExecutionException {
         PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
         // Not a problem
@@ -147,7 +149,7 @@ public class PPSimulatorTest {
      *
      * @param waypoints
      */
-    private void test(PPWaypoint... waypoints) {
+    private void test(PPWaypoint... waypoints) throws TimeoutException, ExecutionException {
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
         Path path = pathGenerator.generate(0.05);
         test(path);

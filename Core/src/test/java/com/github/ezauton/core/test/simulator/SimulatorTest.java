@@ -7,7 +7,9 @@ import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.utils.ManualClock;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SimulatorTest {
 
     @Test
-    public void testSimpleAction() {
+    public void testSimpleAction() throws TimeoutException, ExecutionException {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         TimeWarpedSimulation simulation = new TimeWarpedSimulation();
         simulation.add(new BaseAction(() -> atomicBoolean.set(true)));
@@ -26,7 +28,7 @@ public class SimulatorTest {
     }
 
     @Test
-    public void testDelayedAction() {
+    public void testDelayedAction() throws TimeoutException, ExecutionException {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         TimeWarpedSimulation simulation = new TimeWarpedSimulation();
         DelayedAction delayedAction = new DelayedAction(1, TimeUnit.SECONDS, () -> atomicBoolean.set(true));
@@ -36,7 +38,7 @@ public class SimulatorTest {
     }
 
     @Test
-    public void testActionGroup() {
+    public void testActionGroup() throws TimeoutException, ExecutionException {
         AtomicInteger atomicInteger = new AtomicInteger(0);
 
         TimeWarpedSimulation simulation = new TimeWarpedSimulation(10);
@@ -80,7 +82,7 @@ public class SimulatorTest {
     }
 
     @Test
-    public void testTimeout() throws InterruptedException {
+    public void testTimeout() throws InterruptedException, TimeoutException, ExecutionException {
         AtomicInteger atomicInteger = new AtomicInteger(0);
 
         TimeWarpedSimulation simulation = new TimeWarpedSimulation(1);

@@ -1,11 +1,11 @@
 package com.github.ezauton.core.test.utils;
 
 import com.github.ezauton.core.action.*;
-import com.github.ezauton.core.action.tangible.ProcessBuilder;
+import com.github.ezauton.core.action.tangible.MainActionScheduler;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
+import com.github.ezauton.core.simulation.ActionScheduler;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
-import com.github.ezauton.core.utils.IClock;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.core.utils.Stopwatch;
 import com.github.ezauton.core.utils.TimeWarpedClock;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -25,14 +25,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ActionTest {
 
+    private ActionScheduler actionScheduler = new MainActionScheduler(RealClock.CLOCK);
+
     @Test
-    public void testScheduleActionInterface() throws InterruptedException {
+    public void testScheduleActionInterface() throws InterruptedException, TimeoutException, ExecutionException {
         AtomicLong atomicLong = new AtomicLong(0);
         IAction action = new IAction() {
 
             @Override
-            public void run(IClock clock) {
-                atomicLong.set(clock.getTime());
+            public void run(ActionRunInfo actionRunInfo) {
+                atomicLong.set(actionRunInfo.getClock().getTime());
             }
 
             @Override
@@ -51,24 +53,24 @@ public class ActionTest {
             }
         };
 
-        action.schedule().join(1_000);
+        actionScheduler.scheduleAction(action).get(1_000, TimeUnit.MILLISECONDS);
 
         assertEquals(System.currentTimeMillis(), atomicLong.get(), 1_000);
     }
 
     @Test
-    public void testDelayedActionInterrupt() throws InterruptedException {
+    public void testDelayedActionInterrupt() {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
 
         DelayedAction delayedAction = new DelayedAction(20, TimeUnit.SECONDS, () -> atomicBoolean.set(true));
-        Thread thread = delayedAction.schedule();
-        thread.interrupt();
-        thread.join(1_000);
+        final Future<Void> voidFuture = actionScheduler.scheduleAction(delayedAction);
+        voidFuture.cancel(true);
+        assertThrows(CancellationException.class, () -> voidFuture.get(1_000, TimeUnit.MILLISECONDS));
         assertFalse(atomicBoolean.get());
     }
 
     @Test
-    public void testDelayedAction() {
+    public void testDelayedAction() throws TimeoutException, ExecutionException {
         TimeWarpedSimulation sim = new TimeWarpedSimulation(10);
 
         int delay = 3;
@@ -85,7 +87,7 @@ public class ActionTest {
     }
 
     @Test
-    public void testActionGroupSingleNoSim() {
+    public void testActionGroupSingleNoSim() throws ExecutionException {
         TimeWarpedClock clock = new TimeWarpedClock(10);
 
         AtomicInteger count = new AtomicInteger(0);
@@ -97,12 +99,13 @@ public class ActionTest {
         ActionGroup group = new ActionGroup()
                 .addSequential(action);
 
-        group.run(clock);
+
+        group.run(new ActionRunInfo(clock, null));
         assertEquals(4, count.get());
     }
 
     @Test
-    public void testActionGroupSingle() {
+    public void testActionGroupSingle() throws TimeoutException, ExecutionException {
         AtomicInteger count = new AtomicInteger(0);
         count.compareAndSet(0, 1);
         assertEquals(1, count.get());
@@ -119,7 +122,7 @@ public class ActionTest {
     }
 
     @Test
-    public void testActionGroupSequentialThreadBuilder() {
+    public void testActionGroupSequentialThreadBuilder() throws InterruptedException, ExecutionException, TimeoutException {
         AtomicInteger count = new AtomicInteger(0);
 
         DelayedAction two = new DelayedAction(200, TimeUnit.MILLISECONDS);
@@ -145,12 +148,13 @@ public class ActionTest {
 
                 });
 
-        new ProcessBuilder(group).startAndWait(1, TimeUnit.SECONDS);
+//        new ProcessBuilder(group).startAndWait(1, TimeUnit.SECONDS);
+        actionScheduler.scheduleAction(group).get(1, TimeUnit.SECONDS);
         assertEquals(4, count.get());
     }
 
     @Test
-    public void testActionGroup() {
+    public void testActionGroup() throws TimeoutException, ExecutionException {
         AtomicInteger count = new AtomicInteger(0);
 
         DelayedAction five = new DelayedAction(5, TimeUnit.SECONDS); //then
@@ -186,7 +190,7 @@ public class ActionTest {
     }
 
     @Test
-    public void testActionGroupSequential() {
+    public void testActionGroupSequential() throws TimeoutException, ExecutionException {
         AtomicInteger count = new AtomicInteger(0);
 
         DelayedAction two = new DelayedAction(2, TimeUnit.SECONDS);
@@ -220,7 +224,7 @@ public class ActionTest {
     }
 
     @Test
-    public void testWithActionGroup() {
+    public void testWithActionGroup() throws TimeoutException, ExecutionException {
         AtomicInteger counter = new AtomicInteger(0);
 
         BackgroundAction actionA = new BackgroundAction(20, TimeUnit.MILLISECONDS);
@@ -242,7 +246,7 @@ public class ActionTest {
         sim.add(group);
 
         sim.runSimulation(10, TimeUnit.SECONDS);
-//        System.out.println("counter = " + counter.get());
+
         assertEquals(expectedValue, counter.get(), expectedValue * (19F / 20F));
     }
 

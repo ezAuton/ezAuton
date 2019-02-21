@@ -16,6 +16,7 @@ public class PPWaypoint implements Serializable {
     private final double speed;
     private final double acceleration;
     private final double deceleration;
+
     /**
      * Create a waypoint for Pure Pursuit to drive to
      *

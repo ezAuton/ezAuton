@@ -1,23 +1,23 @@
 package com.github.ezauton.core.action.tangible;
 
+import com.github.ezauton.core.action.ActionRunInfo;
 import com.github.ezauton.core.action.IAction;
-import com.github.ezauton.core.utils.IClock;
 
 import java.util.concurrent.Callable;
 
 public class ActionCallable implements Callable<Void> {
 
     private final IAction action;
-    private final IClock clock;
+    private final ActionRunInfo actionRunInfo;
 
-    public ActionCallable(IAction action, IClock clock){
+    public ActionCallable(IAction action, ActionRunInfo actionRunInfo) {
         this.action = action;
-        this.clock = clock;
+        this.actionRunInfo = actionRunInfo;
     }
 
     @Override
     public Void call() throws Exception {
-        action.run(clock);
+        action.run(actionRunInfo);
         action.end();
         action.getFinished().forEach(Runnable::run);
         return null;
