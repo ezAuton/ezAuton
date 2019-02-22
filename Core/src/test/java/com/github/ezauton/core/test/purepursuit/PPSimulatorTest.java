@@ -108,12 +108,11 @@ public class PPSimulatorTest {
                 .with(updateKinematics)
                 .with(backgroundAction)
                 .addSequential(ppCommand);
-        simulation
-                .add(group);
+        simulation.add(group);
 
 
         // run the simulator with a timeout of 20 seconds
-        simulation.runSimulation(10, TimeUnit.SECONDS);
+        simulation.runSimulation(20, TimeUnit.SECONDS);
 
         // test
         String homeDir = System.getProperty("user.home");
