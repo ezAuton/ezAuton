@@ -46,15 +46,21 @@
             <Label GridPane.columnIndex="0" GridPane.rowIndex="4">Rate</Label>
             <Slider fx:id="rateSlider" majorTickUnit="0.2" max="1.0" minorTickCount="2" showTickLabels="true" showTickMarks="true" value="1.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
 
-            <Button onMouseClicked="#animateSquareKeyframe" GridPane.columnIndex="1" GridPane.rowIndex="7">Start!
+            <Button fx:id="btnPlayPause" text="Play" GridPane.columnIndex="1" GridPane.rowIndex="6">
             </Button>
 
             <Label text="Select CSV" GridPane.columnIndex="0" />
+         <Label text="You clicked on:" GridPane.rowIndex="7" />
+         <Label fx:id="clickedCoordsDisplay" prefHeight="12.0" prefWidth="220.0" text="You haven't clicked anywhere yet" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+         <Button fx:id="btnAdvanceOneFrame" mnemonicParsing="false" text="Advance one frame" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+         <Button fx:id="btnRewindOneFrame" mnemonicParsing="false" text="Rewind one frame" GridPane.rowIndex="6" />
+         <Button fx:id="btnSkipToStart" layoutX="24.0" layoutY="388.0" mnemonicParsing="false" text="Skip to Beginning" GridPane.rowIndex="5" />
+         <Button fx:id="btnSkipToEnd" layoutX="24.0" layoutY="322.0" mnemonicParsing="false" text="Skip to end" GridPane.columnIndex="2" GridPane.rowIndex="5" />
 
 
         </children>
     </GridPane>
-    <AnchorPane id="backdrop" fx:id="backdrop" maxHeight="492.0" maxWidth="443.0" minHeight="492" minWidth="443" prefHeight="492.0" prefWidth="443.0">
+    <AnchorPane id="backdrop" fx:id="backdrop" maxHeight="492.0" maxWidth="443.0" minHeight="492" minWidth="443" onMouseClicked="#displayRealWorldCoordsOnClick" prefHeight="492.0" prefWidth="443.0">
         <children>
 
         </children>

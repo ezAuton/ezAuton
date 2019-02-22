@@ -1,15 +1,13 @@
 package com.github.ezauton.visualizer;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
@@ -67,7 +65,22 @@ enum StartPos
 public class Controller implements Initializable
 {
     @FXML
-    public TabPane tabPane;
+    private TabPane tabPane;
+
+    @FXML
+    private Button btnSkipToStart;
+
+    @FXML
+    private Button btnSkipToEnd;
+
+    @FXML
+    private Button btnAdvanceOneFrame;
+
+    @FXML
+    private Button btnRewindOneFrame;
+
+    @FXML
+    private Button btnPlayPause;
 
     @FXML
     AnchorPane backdrop;
@@ -84,6 +97,9 @@ public class Controller implements Initializable
     @FXML
     private ChoiceBox<File> fileChooser;
 
+    @FXML
+    private Label clickedCoordsDisplay;
+
 
     /**
      * The coordinate (0, 0) is in the top left corner of the screen. Since driving forwards = up, this is bad.
@@ -91,8 +107,8 @@ public class Controller implements Initializable
      * <p>
      * This way, we can make originY non zero allowing us to actually see the path
      */
-    private double originX;
-    private double originY;
+    private double originX = -1234;
+    private double originY = -1234;
 
     /**
      * By default, the robot is 2-3 pixels tall. This is much too small to learn anything.
@@ -190,10 +206,7 @@ public class Controller implements Initializable
 
         // Make sure the circle always stays with the robot
 
-        backdrop.setOnMouseClicked(((e) -> {
-            animateSquareKeyframe(e);
-            backdrop.setOnMouseClicked((j) -> {});
-        }));
+        backdrop.setOnMouseClicked(this::displayRealWorldCoordsOnClick);
 
         List<File> listOfCSVs = getAllFilesInDirectory(Paths.get(System.getProperty("user.home"), ".ezauton").toString());
         fileChooser.getItems().addAll(listOfCSVs);
@@ -217,7 +230,7 @@ public class Controller implements Initializable
         posChooser.getItems().addAll(StartPos.values());
         posChooser.valueProperty().addListener((selectedProp, oldSelected, newSelected) -> {
             originX = posChooser.getValue().getProportionX() * backdrop.getWidth();
-            originY = -posChooser.getValue().getProportionY() * backdrop.getHeight();
+            originY = backdrop.getHeight() - posChooser.getValue().getProportionY() * backdrop.getHeight();
             animateSquareKeyframe(null);
         });
 
@@ -254,8 +267,6 @@ public class Controller implements Initializable
         // Animation works by interpolating key values between key frames
         // We store all our keyframes in this handy dandy list
         List<KeyFrame> keyFrames = new ArrayList<>();
-
-        originY += backdrop.getHeight();
 
         Interpolator interpolator = Interpolator.DISCRETE;
 
@@ -338,9 +349,57 @@ public class Controller implements Initializable
         // Add our keyframes to the animation
         keyFrames.forEach((KeyFrame kf) -> timeline.getKeyFrames().add(kf));
 
+
+        btnPlayPause.setOnMouseClicked((e) -> {
+            System.out.println("timeline.getStatus() = " + timeline.getStatus());
+            if(timeline.getStatus() == Animation.Status.RUNNING) {
+                pause();
+            }
+            else {
+                play();
+            }
+        });
+
+        btnAdvanceOneFrame.setOnMouseClicked((e) -> {
+            pause();
+            timeline.jumpTo(timeline.getCurrentTime().add(new Duration(1000 / timeline.getTargetFramerate())));
+        });
+
+        btnRewindOneFrame.setOnMouseClicked((e) -> {
+            pause();
+            timeline.jumpTo(timeline.getCurrentTime().subtract(new Duration(1000 / timeline.getTargetFramerate())));
+        });
+
+        btnSkipToStart.setOnMouseClicked((e) -> {
+            pause();
+            timeline.jumpTo(new Duration(3000 / timeline.getTargetFramerate())); // skip 3 frames so that stuff will be in the right spot.
+
+        });
+
+        btnSkipToEnd.setOnMouseClicked((e) -> {
+            pause();
+            timeline.jumpTo(timeline.getCycleDuration());
+        });
+
         // Play it
         timeline.playFromStart();
+        btnPlayPause.setText("Pause");
         actOnTimeline(timeline, rateSlider.valueProperty().doubleValue());
+    }
+
+    private void pause() {
+        timeline.pause();
+        btnPlayPause.setText("Play");
+    }
+    private void play() {
+        if(timeline.getStatus() == Animation.Status.STOPPED) {
+            timeline.playFromStart();
+            btnPlayPause.setText("Pause");
+        }
+        else {
+            timeline.play();
+            btnPlayPause.setText("Pause");
+        }
     }
 
     private IEnvironment getEnvironment()
@@ -399,6 +458,20 @@ public class Controller implements Initializable
         {
             timeline.play();
             timeline.setRate(value);
+        }
+    }
+
+    @FXML
+    private void displayRealWorldCoordsOnClick(MouseEvent e) {
+        double xFt = (e.getX() - originX) / spatialScaleFactor;
+        double yFt = ( originY - e.getY()) / spatialScaleFactor;
+
+        if(MathUtils.epsilonEquals(originX, -1234) && MathUtils.epsilonEquals(originY, -1234)) {
+            clickedCoordsDisplay.setText("Select a starting position first.");
+        }
+        else
+        {
+            clickedCoordsDisplay.setText(String.format("(%f, %f)", xFt, yFt));
         }
     }
 
