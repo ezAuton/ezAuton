@@ -31,16 +31,16 @@ public class BaseResource implements IResource {
     }
 
     @Override
-    public boolean isTaken() {
+    public boolean isTakenByAnyone() {
         if (lock.isLocked()) return true;
-        return subResources.stream().anyMatch(IResource::isTaken);
+        return subResources.stream().anyMatch(IResource::isTakenByAnyone);
     }
 
     @Override
-    public void give() {
+    public void giveBack() {
         lock.unlock();
         for (IResource subResource : subResources) {
-            subResource.give();
+            subResource.giveBack();
         }
     }
 

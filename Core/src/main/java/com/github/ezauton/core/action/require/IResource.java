@@ -9,12 +9,12 @@ public interface IResource {
     /**
      * @return If the resource is taken
      */
-    boolean isTaken();
+    boolean isTakenByAnyone();
 
     /**
      * give the resource back
      */
-    void give();
+    void giveBack();
 
     void assertPossession() throws IllegalStateException;
 }
