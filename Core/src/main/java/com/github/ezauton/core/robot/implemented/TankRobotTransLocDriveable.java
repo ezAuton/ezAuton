@@ -160,8 +160,8 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
                 throw new NullPointerException(s); //TODO: More informative error message
             }
 
-            if (bestVector.get(0) < 0 && bestVector.get(1) < 0) {
-                System.err.println("Robot is going backwards!");
+            if ( (bestVector.get(0) + bestVector.get(1))/speed == -1) { // tangential vel and speed are opposite signs
+                System.err.println("Robot is going the wrong direction!");
             }
 
 
