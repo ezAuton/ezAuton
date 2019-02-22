@@ -111,8 +111,8 @@ public class PPSimulatorTest {
         simulation.add(group);
 
 
-        // run the simulator with a timeout of 20 seconds
-        simulation.runSimulation(20, TimeUnit.SECONDS);
+        // run the simulator for 30 seconds
+        simulation.runSimulation(30, TimeUnit.SECONDS);
 
         // test
         String homeDir = System.getProperty("user.home");
