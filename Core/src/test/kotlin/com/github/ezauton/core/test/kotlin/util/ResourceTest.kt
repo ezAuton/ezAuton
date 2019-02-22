@@ -24,18 +24,18 @@ class ResourceTest {
         var list = ArrayList<Boolean>()
 
         thread {
-            list.add(!resource1.isTaken)
-            list.add(!resource3.isTaken)
+            list.add(!resource1.isTakenByAnyone)
+            list.add(!resource3.isTakenByAnyone)
 
             resource1.take()
 
-            list.add(resource1.isTaken)
-            list.add(resource3.isTaken)
-            list.add(resource.isTaken)
-            list.add(!resource2.isTaken)
+            list.add(resource1.isTakenByAnyone)
+            list.add(resource3.isTakenByAnyone)
+            list.add(resource.isTakenByAnyone)
+            list.add(!resource2.isTakenByAnyone)
 
-            resource1.give()
-            val toAdd = arrayOf(resource, resource1, resource2, resource3).map { !it.isTaken }
+            resource1.giveBack()
+            val toAdd = arrayOf(resource, resource1, resource2, resource3).map { !it.isTakenByAnyone }
             list.addAll(toAdd)
 
         }.join()
@@ -60,7 +60,7 @@ class ResourceTest {
             } catch (e: IllegalStateException) {
                 thread1NoException = false
             }
-            resource.give()
+            resource.giveBack()
         }
 
         var illegalStateCaught = false
