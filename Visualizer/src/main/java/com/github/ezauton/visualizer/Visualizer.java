@@ -15,11 +15,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 
 public class Visualizer extends Application {
     private static Visualizer instance;
     private FactoryMap factory = new FactoryMap();
+    private Scene mainScene;
 
     public static Visualizer getInstance() {
         return instance;
@@ -53,9 +55,14 @@ public class Visualizer extends Application {
 
         // Display the window
 
-        Scene mainScene = new Scene(mainRoot);
+        mainScene = new Scene(mainRoot);
         primaryStage.setScene(mainScene);
 
         primaryStage.show();
+    }
+
+    public Window getStage()
+    {
+        return mainScene.getWindow();
     }
 }

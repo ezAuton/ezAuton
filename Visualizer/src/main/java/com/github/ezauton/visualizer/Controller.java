@@ -22,6 +22,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -62,6 +63,10 @@ enum StartPos {
 }
 
 public class Controller implements Initializable {
+
+    @FXML
+    public Button btnSelectJsonLogFile;
+
     @FXML
     private TabPane tabPane;
 
@@ -91,9 +96,6 @@ public class Controller implements Initializable {
 
     @FXML
     private ChoiceBox<StartPos> posChooser;
-
-    @FXML
-    private ChoiceBox<File> fileChooser;
 
     @FXML
     private Label clickedCoordsDisplay;
@@ -189,19 +191,6 @@ public class Controller implements Initializable {
         backdrop.setOnMouseClicked(this::displayRealWorldCoordsOnClick);
 
         List<File> listOfCSVs = getAllFilesInDirectory(Paths.get(System.getProperty("user.home"), ".ezauton").toString());
-        fileChooser.getItems().addAll(listOfCSVs);
-        fileChooser.valueProperty().addListener((selectedProp, oldSelected, newSelected) -> {
-            try {
-                loadRecording(newSelected);
-                animateSquareKeyframe(null);
-            } catch (IOException e1) {
-                System.out.println("Try the following: ");
-                System.out.println("1. Create a directory called outPaths in the root folder of the RobotCode2018 project");
-                System.out.println("2. Run the unit tests for RobotCode2018 on this computer");
-                System.out.println("Then it should work.");
-            }
-
-        });
 
 
         posChooser.getItems().addAll(StartPos.values());
@@ -233,7 +222,7 @@ public class Controller implements Initializable {
     @FXML
     private void animateSquareKeyframe(Event event) {
         // must have a file and position
-        if (fileChooser.getValue() == null || posChooser.getValue() == null) {
+        if (this.currentRecording == null || posChooser.getValue() == null) {
             System.err.println("Please select a file and a position");
             return;
         }
@@ -429,6 +418,24 @@ public class Controller implements Initializable {
         else
         {
             clickedCoordsDisplay.setText(String.format("(%f, %f)", xFt, yFt));
+        }
+    }
+
+    @FXML
+    private void selectFile(Event e) {
+        e.consume();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select JSON Recording");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("JSON file", "*.json"));
+        try
+        {
+            File jsonFile = fileChooser.showOpenDialog(Visualizer.getInstance().getStage());
+            loadRecording(jsonFile);
+            btnSelectJsonLogFile.setText(jsonFile.getName());
+        }
+        catch(IOException err)
+        {
+            err.printStackTrace();
         }
     }
 
