@@ -70,7 +70,7 @@ ILookahead lookahead = new LookaheadBounds(1, 7, 2, 10, locEstimator);
 
 TankRobotTransLocDriveable  tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
-PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+PPCommand purePursuitAction = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
 Recording recording = new Recording();
 
@@ -89,7 +89,7 @@ BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECOND
 ActionGroup group = new ActionGroup()
         .with(updateKinematics)
         .with(recAction)
-        .addSequential(ppCommand);
+        .addSequential(purePursuitAction);
 
 simulation.add(group);
 

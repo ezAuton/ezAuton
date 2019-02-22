@@ -2,7 +2,7 @@ package com.github.ezauton.core.test.purepursuit;
 
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
-import com.github.ezauton.core.action.PPCommand;
+import com.github.ezauton.core.action.PurePursuitAction;
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.helper.PathHelper;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
@@ -97,7 +97,7 @@ public class PPSimulatorTest {
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
 
-        PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot::update);
 
@@ -107,7 +107,7 @@ public class PPSimulatorTest {
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)
                 .with(backgroundAction)
-                .addSequential(ppCommand);
+                .addSequential(purePursuitAction);
         simulation.add(group);
 
 

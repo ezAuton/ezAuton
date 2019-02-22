@@ -2,7 +2,7 @@ package com.github.ezauton.recorder;
 
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
-import com.github.ezauton.core.action.PPCommand;
+import com.github.ezauton.core.action.PurePursuitAction;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.ILookahead;
@@ -56,7 +56,7 @@ public class RecorderTest {
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
-        PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         Recording recording = new Recording();
 
@@ -75,7 +75,7 @@ public class RecorderTest {
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)
                 .with(recAction)
-                .addSequential(ppCommand);
+                .addSequential(purePursuitAction);
 
         simulation.add(group);
 

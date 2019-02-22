@@ -57,11 +57,11 @@ public class SimulatedTankBotTest {
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, bot);
 
-        PPCommand ppCommand = new PPCommand(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PurePursuitAction purePursuitAction = new PurePursuitAction(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         ActionGroup actionGroup = new ActionGroup()
                 .with(background)
-                .addSequential(ppCommand);
+                .addSequential(purePursuitAction);
 
         sim.add(actionGroup);
 
