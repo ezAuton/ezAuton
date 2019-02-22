@@ -13,8 +13,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SimulatorTest {
 
@@ -82,7 +81,7 @@ public class SimulatorTest {
     }
 
     @Test
-    public void testTimeout() throws InterruptedException, TimeoutException, ExecutionException {
+    public void testTimeout() throws InterruptedException {
         AtomicInteger atomicInteger = new AtomicInteger(0);
 
         TimeWarpedSimulation simulation = new TimeWarpedSimulation(1);
@@ -94,7 +93,8 @@ public class SimulatorTest {
         actionGroup.addSequential(action);
 
         simulation.add(actionGroup);
-        simulation.runSimulation(1, TimeUnit.SECONDS);
+
+        assertThrows(TimeoutException.class, () -> simulation.runSimulation(1, TimeUnit.SECONDS));
 
         int actual = atomicInteger.get();
         assertEquals(50, actual, 2);
