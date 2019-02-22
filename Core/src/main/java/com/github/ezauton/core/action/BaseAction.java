@@ -39,7 +39,7 @@ public class BaseAction implements IAction {
         }
     }
 
-    protected void onEnd() {
+    protected void onEnd() throws Exception{
 
     }
 
@@ -50,7 +50,7 @@ public class BaseAction implements IAction {
     }
 
     @Override
-    public final void end() {
+    public final void end() throws Exception{
         stopped = true;
         onEnd();
     }

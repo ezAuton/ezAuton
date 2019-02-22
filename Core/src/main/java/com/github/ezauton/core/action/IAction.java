@@ -17,7 +17,7 @@ public interface IAction {
     /**
      * End the action peacefully ✌️
      */
-    void end();
+    void end() throws Exception;
 
     /**
      * Returns self. Will run onFinish when finished 🏁. Should not overwrite previous runnables, but instead append to
