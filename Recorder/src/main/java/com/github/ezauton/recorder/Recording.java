@@ -3,6 +3,11 @@ package com.github.ezauton.recorder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.ezauton.core.localization.Updateable;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -60,5 +65,24 @@ public class Recording implements ISubRecording, Updateable {
             }
         }
         return ret;
+    }
+
+    public void save(String name) throws IOException {
+        String homeDir = System.getProperty("user.home");
+        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", name);
+        save(filePath);
+    }
+
+    public void save(Path filePath) throws IOException {
+        Files.createDirectories(filePath.getParent());
+
+        BufferedWriter writer = Files.newBufferedWriter(filePath);
+        String json = this.toJson();
+
+        writer.write(json);
+
+        writer.close();
+
+        JsonUtils.toObject(Recording.class, json);
     }
 }

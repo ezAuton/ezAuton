@@ -85,23 +85,6 @@ public class RecorderTest {
 
 //        System.out.println("locEstimator.estimateLocation() = " + locEstimator.estimateLocation());
 
-        // save recording
-        {
-            String homeDir = System.getProperty("user.home");
-            java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "loggy.json");
-
-            Files.createDirectories(filePath.getParent());
-
-            BufferedWriter writer = Files.newBufferedWriter(filePath);
-            String json = recording.toJson();
-
-            writer.write(json);
-
-            writer.close();
-
-            JsonUtils.toObject(Recording.class, json);
-        }
-
-
+        recording.save("loggy.json");
     }
 }
