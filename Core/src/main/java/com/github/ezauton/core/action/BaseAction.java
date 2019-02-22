@@ -10,7 +10,6 @@ import java.util.List;
 public class BaseAction implements IAction {
 
     private List<Runnable> toRun = new ArrayList<>();
-    private boolean stopped = false;
     private Runnable runnable;
 
     /**
@@ -39,24 +38,10 @@ public class BaseAction implements IAction {
         }
     }
 
-    protected void onEnd() throws Exception{
-
-    }
-
     @Override
     public final IAction onFinish(Runnable onFinish) {
         toRun.add(onFinish);
         return this;
-    }
-
-    @Override
-    public final void end() throws Exception{
-        stopped = true;
-        onEnd();
-    }
-
-    public final boolean isStopped() {
-        return stopped;
     }
 
     @Override

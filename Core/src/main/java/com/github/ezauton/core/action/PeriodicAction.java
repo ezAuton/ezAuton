@@ -151,7 +151,7 @@ public abstract class PeriodicAction extends BaseAction {
                 return;
             }
         }
-        while (!isFinished() && !isStopped());
+        while (!isFinished());
     }
 
     /**

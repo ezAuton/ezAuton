@@ -1,5 +1,6 @@
 package com.github.ezauton.core.test.simulator;
 
+import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PPCommand;
 import com.github.ezauton.core.action.TimedPeriodicAction;
@@ -51,18 +52,17 @@ public class SimulatedTankBotTest {
 
         BackgroundAction background = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot::update, locEstimator::update);
 
-        sim.add(background);
-
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, bot);
 
         PPCommand ppCommand = new PPCommand(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-        ppCommand.onFinish(background::end);
-        ppCommand.onFinish(() -> bot.run(0, 0));
+        ActionGroup actionGroup = new ActionGroup()
+                .with(background)
+                .addSequential(ppCommand);
 
-        sim.add(ppCommand);
+        sim.add(actionGroup);
 
 
         sim.runSimulation(12, TimeUnit.SECONDS);

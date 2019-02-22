@@ -160,29 +160,43 @@ public final class ActionGroup extends BaseAction {
         return this;
     }
 
+    class WithActionData {
+
+        private final IAction action;
+        private final Future<Void> future;
+
+        WithActionData(IAction action, Future<Void> future) {
+            this.action = action;
+            this.future = future;
+        }
+
+        public IAction getAction() {
+            return action;
+        }
+
+        public Future<Void> getFuture() {
+            return future;
+        }
+    }
+
     @Override
     public final void run(ActionRunInfo actionRunInfo) throws ExecutionException {
-        List<IAction> withActions = new ArrayList<>();
-        List<Future<Void>> withActionFutures = new ArrayList<>();
+        List<WithActionData> withActions = new ArrayList<>();
+//        List<Future<Void>> withActionFutures = new ArrayList<>();
         List<Future<Void>> actionFutures = new ArrayList<>();
 
         for (ActionWrapper scheduledAction : scheduledActions) {
-            if (isStopped()) {
-                return;
-            }
             IAction action = scheduledAction.getAction();
 
             switch (scheduledAction.getType()) {
                 case WITH:
-                    withActions.add(action);
-
                 case PARALLEL:
 
                     final Future<Void> submit = actionRunInfo.getActionScheduler().scheduleAction(action);
 
                     actionFutures.add(submit);
 
-                    if (scheduledAction.getType() == Type.WITH) withActionFutures.add(submit);
+                    if (scheduledAction.getType() == Type.WITH) withActions.add(new WithActionData(action, submit));
                     break;
                 case SEQUENTIAL:
                     try {
@@ -192,9 +206,17 @@ public final class ActionGroup extends BaseAction {
                         throw new ExecutionException("A sequential action threw an exception", e);
                     }
 
-                    withActions.forEach(IAction::end);
-                    withActionFutures.forEach(future -> future.cancel(false));
-
+                    for (WithActionData withAction : withActions) {
+                        final Future<Void> future = withAction.getFuture();
+                        if (!future.isDone()) {
+                            try {
+                                withAction.getAction().interrupted();
+                                future.cancel(true);
+                            } catch (Exception e) {
+                                throw new ExecutionException("Exception in interrupt()", e);
+                            }
+                        }
+                    }
                     withActions.clear();
             }
         }

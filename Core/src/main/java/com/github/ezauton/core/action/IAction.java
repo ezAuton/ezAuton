@@ -15,9 +15,19 @@ public interface IAction {
     void run(ActionRunInfo actionRunInfo) throws Exception;
 
     /**
-     * End the action peacefully ✌️
+     * Called when the action is ended peacefully ✌️
      */
-    void end() throws Exception;
+    default void end() throws Exception {
+    }
+
+    /**
+     * Called when the action is ended violently 💥
+     *
+     * @throws Exception
+     */
+    default void interrupted() throws Exception {
+    }
+
 
     /**
      * Returns self. Will run onFinish when finished 🏁. Should not overwrite previous runnables, but instead append to

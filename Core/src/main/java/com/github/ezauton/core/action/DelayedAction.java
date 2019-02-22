@@ -36,9 +36,6 @@ public class DelayedAction extends BaseAction {
             return;
         }
 
-        if (isStopped()) {
-            return;
-        }
         onTimeUp();
     }
 }

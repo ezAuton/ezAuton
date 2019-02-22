@@ -11,7 +11,6 @@ import com.github.ezauton.core.utils.RealClock
 import com.github.ezauton.core.utils.TimeWarpedClock
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
@@ -31,7 +30,10 @@ class ActionTest {
             }
         })
 
-        assertThrows<TimeoutException> { scheduler.scheduleAction(timedPeriodicAction).get(2_000, TimeUnit.MILLISECONDS) }
+        try {
+            scheduler.scheduleAction(timedPeriodicAction).get(2_000, TimeUnit.MILLISECONDS)
+        } catch (ignored: TimeoutException) {
+        }
 
         assertEquals(2_000 / 20.toDouble(), timedPeriodicAction.timesRun.toDouble(), 2.toDouble())
     }
