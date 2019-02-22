@@ -82,22 +82,9 @@ public class RecorderTest2 {
         System.out.println("locEstimator.estimateLocation() = " + locEstimator.estimateLocation());
 
         System.out.println("about to save recording");
+
         // save recording
-        {
-            String homeDir = System.getProperty("user.home");
-            java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "splinelog.json");
-
-            Files.createDirectories(filePath.getParent());
-
-            BufferedWriter writer = Files.newBufferedWriter(filePath);
-            String json = recording.toJson();
-
-            writer.write(json);
-
-            writer.close();
-
-            JsonUtils.toObject(Recording.class, json);
-        }
+        recording.save("splinelog.json");
         System.out.println("saved  recording");
 
     }
