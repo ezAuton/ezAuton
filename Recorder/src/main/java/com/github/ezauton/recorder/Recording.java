@@ -29,8 +29,9 @@ public class Recording implements ISubRecording, Updateable {
         }
     }
 
-    public void addSubRecording(ISubRecording subRecording) {
+    public Recording addSubRecording(ISubRecording subRecording) {
         Optional.ofNullable(subRecording).ifPresent(r -> recordingMap.put(r.getName(), r));
+        return this;
     }
 
     @Override

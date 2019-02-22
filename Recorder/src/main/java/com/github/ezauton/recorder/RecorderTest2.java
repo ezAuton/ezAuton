@@ -62,9 +62,10 @@ public class RecorderTest2 {
         PurePursuitRecorder ppRec = new PurePursuitRecorder("pp", simulation.getClock(), path, ppMoveStrat);
         TankDriveableRecorder tankRobot = new TankDriveableRecorder("td", simulation.getClock(), tankRobotTransLocDriveable);
 
-        recording.addSubRecording(posRec);
-        recording.addSubRecording(ppRec);
-        recording.addSubRecording(tankRobot);
+        recording
+                .addSubRecording(posRec)
+                .addSubRecording(ppRec)
+                .addSubRecording(tankRobot);
 
         BackgroundAction recAction = new BackgroundAction(10, TimeUnit.MILLISECONDS, recording::update);
 
