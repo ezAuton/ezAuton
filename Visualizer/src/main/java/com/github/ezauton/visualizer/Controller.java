@@ -27,6 +27,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -433,9 +435,13 @@ public class Controller implements Initializable {
             loadRecording(jsonFile);
             btnSelectJsonLogFile.setText(jsonFile.getName());
         }
-        catch(IOException err)
+        catch(Exception err)
         {
             err.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error deserializing log file");
+            alert.setContentText("Are you sure that you picked a json recording? \n See stacktrace in console.");
+            alert.showAndWait();
         }
     }
 
@@ -452,5 +458,6 @@ public class Controller implements Initializable {
         String json = fileContentsSb.toString();
 
         this.currentRecording = JsonUtils.toObject(Recording.class, json);
+        animateSquareKeyframe(null);
     }
 }
