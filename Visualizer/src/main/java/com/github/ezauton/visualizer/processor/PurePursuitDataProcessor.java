@@ -78,7 +78,8 @@ public class PurePursuitDataProcessor implements IDataProcessor
 
         AnchorPane anchorPane = environment.getFieldAnchorPane();
 
-        waypointPath.getElements().add(new MoveTo((originXPx), (originYPx)));
+        ImmutableVector startingPos = ppRec.getPath().getPathSegments().get(0).getFrom();
+        waypointPath.getElements().add(new MoveTo((getX(startingPos.get(0))), (getY(startingPos.get(1)))));
 
         for(IPathSegment segment : ppRec.getPath().getPathSegments())
         {
