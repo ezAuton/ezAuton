@@ -6,8 +6,7 @@ import com.github.ezauton.core.utils.MathUtils;
 /**
  * A mostly-implemented linear IPathSegment which contains all methods save getSpeed(...).
  */
-public abstract class LinearPathSegment implements IPathSegment
-{
+public abstract class LinearPathSegment implements IPathSegment {
     private ImmutableVector from;
     private ImmutableVector to;
     private boolean finish;
@@ -26,16 +25,14 @@ public abstract class LinearPathSegment implements IPathSegment
      * @param beginning     If this is the first path segment in the path
      * @param distanceStart How far along the path the starting location is (arclength)
      */
-    protected LinearPathSegment(ImmutableVector from, ImmutableVector to, boolean finish, boolean beginning, double distanceStart)
-    {
+    protected LinearPathSegment(ImmutableVector from, ImmutableVector to, boolean finish, boolean beginning, double distanceStart) {
 //        this.maxSpeed = maxSpeed;
         this.finish = finish;
         this.from = from;
         this.to = to;
 //        differenceVec = to.sub(from);
         this.length = this.from.dist(this.to);
-        if(MathUtils.epsilonEquals(0, length))
-        {
+        if (MathUtils.epsilonEquals(0, length)) {
             throw new IllegalArgumentException("PathSegment length must be non-zero.");
         }
         this.beginning = beginning;
@@ -44,7 +41,8 @@ public abstract class LinearPathSegment implements IPathSegment
         dPos = to.sub(from);
     }
 
-    protected LinearPathSegment() {}
+    protected LinearPathSegment() {
+    }
 
     /**
      * Get the point on the line segment that is the closest to the robot
@@ -53,8 +51,7 @@ public abstract class LinearPathSegment implements IPathSegment
      * @return The point on the line segment that is the closest to the robot
      */
     @Override
-    public ImmutableVector getClosestPoint(ImmutableVector robotPos)
-    {
+    public ImmutableVector getClosestPoint(ImmutableVector robotPos) {
         return MathUtils.Geometry.getClosestPointLineSegments(from, to, robotPos);
     }
 
@@ -65,25 +62,20 @@ public abstract class LinearPathSegment implements IPathSegment
      * @return How far it is along the line segment
      */
     @Override
-    public double getAbsoluteDistance(ImmutableVector linePos)
-    {
-        if(to.equals(linePos))
-        {
+    public double getAbsoluteDistance(ImmutableVector linePos) {
+        if (to.equals(linePos)) {
             return distanceEnd;
         }
 
-        if(from.equals(linePos))
-        {
+        if (from.equals(linePos)) {
             return distanceStart;
         }
 
         // The difference between from, truncating 0
         ImmutableVector dif = linePos.sub(from);
-        for(int i = 0; i < dif.getElements().length; i++)
-        {
+        for (int i = 0; i < dif.getElements().length; i++) {
             double difElement = dif.get(i);
-            if(difElement != 0)
-            {
+            if (difElement != 0) {
                 double dPosElement = dPos.get(i);
 //                assert dPosElement != 0;
 //                if(dPos.get(i) == 0) throw new IllegalArgumentException("Point must be on the line!");
@@ -100,8 +92,7 @@ public abstract class LinearPathSegment implements IPathSegment
      * @param absoluteDistance The absolute distance along the path
      * @return The relative distance along this path segment
      */
-    public double getRelativeDistance(double absoluteDistance)
-    {
+    public double getRelativeDistance(double absoluteDistance) {
         return absoluteDistance - distanceStart;
     }
 
@@ -114,10 +105,8 @@ public abstract class LinearPathSegment implements IPathSegment
      * @param absoluteDistance How far the point is along the path
      * @throws IllegalArgumentException
      */
-    private void checkDistance(double absoluteDistance)
-    {
-        if(!MathUtils.Algebra.bounded(distanceStart, absoluteDistance, distanceEnd))
-        {
+    private void checkDistance(double absoluteDistance) {
+        if (!MathUtils.Algebra.bounded(distanceStart, absoluteDistance, distanceEnd)) {
             throw new IllegalArgumentException("Must be within bounds");
         }
     }
@@ -129,8 +118,7 @@ public abstract class LinearPathSegment implements IPathSegment
      * @return The aboslute location of the point
      */
     @Override
-    public ImmutableVector getPoint(double relativeDistance)
-    {
+    public ImmutableVector getPoint(double relativeDistance) {
         return dPos.mul(relativeDistance / length).add(from);
     }
 
@@ -142,8 +130,7 @@ public abstract class LinearPathSegment implements IPathSegment
      * @deprecated
      */
     @Deprecated
-    public double getDistanceLeft2(ImmutableVector point)
-    {
+    public double getDistanceLeft2(ImmutableVector point) {
         return to.sub(point).mag2();
     }
 
@@ -151,8 +138,7 @@ public abstract class LinearPathSegment implements IPathSegment
      * @return How far along the entire path that the from point is
      */
     @Override
-    public double getAbsoluteDistanceStart()
-    {
+    public double getAbsoluteDistanceStart() {
         return distanceStart;
     }
 
@@ -160,50 +146,42 @@ public abstract class LinearPathSegment implements IPathSegment
      * @return How far along the entire path that the end point is
      */
     @Override
-    public double getAbsoluteDistanceEnd()
-    {
+    public double getAbsoluteDistanceEnd() {
         return distanceEnd;
     }
 
     @Override
-    public boolean isBeginning()
-    {
+    public boolean isBeginning() {
         return beginning;
     }
 
     @Override
-    public boolean isFinish()
-    {
+    public boolean isFinish() {
         return finish;
     }
 
-    public ImmutableVector getFrom()
-    {
+    public ImmutableVector getFrom() {
         return from;
     }
 
-    public ImmutableVector getTo()
-    {
+    public ImmutableVector getTo() {
         return to;
     }
 
-    public double getLength()
-    {
+    public double getLength() {
         return length;
     }
 
-    public ImmutableVector getdPos()
-    {
+    public ImmutableVector getdPos() {
         return dPos;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "PathSegment{" +
-               "from=" + from +
-               ", to=" + to +
-               '}';
+                "from=" + from +
+                ", to=" + to +
+                '}';
     }
 
 

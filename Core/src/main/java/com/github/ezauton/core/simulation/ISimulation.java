@@ -8,11 +8,11 @@ import java.util.concurrent.TimeoutException;
 /**
  * A simulator for actions
  */
-public interface ISimulation extends IScheduler
-{
+public interface ISimulation extends IScheduler {
 
     /**
      * Uses real units for timeout, not simulated
+     *
      * @param timeout
      * @param timeUnit
      * @throws TimeoutException

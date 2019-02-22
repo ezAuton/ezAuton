@@ -19,14 +19,12 @@ import java.io.IOException;
  *
  * @author Maxwell Harper
  */
-public class JsonUtils
-{
+public class JsonUtils {
 
     private static ObjectMapper objectMapper = new ObjectMapper();
     private static SimpleModule customSerializers = new SimpleModule();
 
-    static
-    {
+    static {
         // dates should be serialized using ISO pattern
         objectMapper.setDateFormat(new ISO8601DateFormat());
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -43,22 +41,17 @@ public class JsonUtils
     /**
      * @return (JSON) String representation of the object.
      */
-    public static String toString(Object o) throws IOException
-    {
+    public static String toString(Object o) throws IOException {
         return objectMapper.writeValueAsString(o);
     }
 
     /**
      * @return (JSON) String representation of the object, or null if an error occurred.
      */
-    public static String toStringUnchecked(Object o)
-    {
-        try
-        {
+    public static String toStringUnchecked(Object o) {
+        try {
             return toString(o);
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
@@ -72,14 +65,10 @@ public class JsonUtils
      * @param <T>     The type of object this data should become (e.g Banana)
      * @return An object of type T containing all the data that the JSON String did
      */
-    public static <T> T toObject(Class<T> clazz, String jsonStr)
-    {
-        try
-        {
+    public static <T> T toObject(Class<T> clazz, String jsonStr) {
+        try {
             return objectMapper.readValue(jsonStr, clazz);
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             // TODO: throw a more appropriate unchecked exception here
             throw new RuntimeException("problem!!!!", e);
         }

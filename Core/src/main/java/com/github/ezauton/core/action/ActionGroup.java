@@ -8,8 +8,7 @@ import java.util.*;
 /**
  * Describes a group of multiple IActions which itself is also an IAction
  */
-public final class ActionGroup extends BaseAction
-{
+public final class ActionGroup extends BaseAction {
     private Queue<ActionWrapper> scheduledActions;
 
     /**
@@ -17,26 +16,24 @@ public final class ActionGroup extends BaseAction
      *
      * @param scheduledActions The ActionWrappers to run
      */
-    public ActionGroup(ActionWrapper... scheduledActions)
-    {
+    public ActionGroup(ActionWrapper... scheduledActions) {
         this.scheduledActions = new LinkedList<>(Arrays.asList(scheduledActions));
     }
 
     /**
      * Create an empty ActionGroup
      */
-    public ActionGroup()
-    {
+    public ActionGroup() {
         this.scheduledActions = new LinkedList<>();
     }
 
     /**
      * Create an action group of sequential actions
+     *
      * @param actions
      * @return
      */
-    public static ActionGroup ofSequentials(IAction... actions)
-    {
+    public static ActionGroup ofSequentials(IAction... actions) {
         ActionGroup actionGroup = new ActionGroup();
         Arrays.stream(actions).forEach(actionGroup::addSequential);
         return actionGroup;
@@ -45,21 +42,21 @@ public final class ActionGroup extends BaseAction
 
     /**
      * A utility method to merge multiple {@link Runnable}s in to one {@link Runnable}
+     *
      * @param runnables the merged {@link Runnable}
      * @return
      */
-    public static Runnable mergeRunnablesSequential(Runnable... runnables)
-    {
+    public static Runnable mergeRunnablesSequential(Runnable... runnables) {
         return () -> Arrays.stream(runnables).forEach(Runnable::run);
     }
 
     /**
      * Creates an {@link ActionGroup} with a sequential action for each {@link Runnable}
+     *
      * @param runnables
      * @return
      */
-    public static ActionGroup ofSequentials(Runnable... runnables)
-    {
+    public static ActionGroup ofSequentials(Runnable... runnables) {
         ActionGroup actionGroup = new ActionGroup();
         Arrays.stream(runnables).forEach(actionGroup::addSequential);
         return actionGroup;
@@ -67,11 +64,11 @@ public final class ActionGroup extends BaseAction
 
     /**
      * Creates an {@link ActionGroup} with parallel actions for each {@link Runnable}
+     *
      * @param actions
      * @return
      */
-    public static ActionGroup ofParallels(IAction... actions)
-    {
+    public static ActionGroup ofParallels(IAction... actions) {
         ActionGroup actionGroup = new ActionGroup();
         Arrays.stream(actions).forEach(actionGroup::addParallel);
         return actionGroup;
@@ -79,11 +76,11 @@ public final class ActionGroup extends BaseAction
 
     /**
      * Creates an {@link ActionGroup} with parallel actions for each {@link Runnable}
+     *
      * @param actions
      * @return
      */
-    public static ActionGroup ofParallels(Runnable... runnables)
-    {
+    public static ActionGroup ofParallels(Runnable... runnables) {
         ActionGroup actionGroup = new ActionGroup();
         Arrays.stream(runnables).forEach(actionGroup::addParallel);
         return actionGroup;
@@ -95,8 +92,7 @@ public final class ActionGroup extends BaseAction
      * @param action The Action to run
      * @return this
      */
-    public final ActionGroup addSequential(IAction action)
-    {
+    public final ActionGroup addSequential(IAction action) {
         this.scheduledActions.add(new ActionWrapper(action, Type.SEQUENTIAL));
 
         return this;
@@ -108,8 +104,7 @@ public final class ActionGroup extends BaseAction
      * @param runnable The Action to run
      * @return this
      */
-    public final ActionGroup addSequential(Runnable runnable)
-    {
+    public final ActionGroup addSequential(Runnable runnable) {
         this.scheduledActions.add(new ActionWrapper(new BaseAction(runnable), Type.SEQUENTIAL));
         return this;
     }
@@ -120,8 +115,7 @@ public final class ActionGroup extends BaseAction
      * @param action The Action to run
      * @return this
      */
-    public final ActionGroup with(IAction action)
-    {
+    public final ActionGroup with(IAction action) {
         this.scheduledActions.add(new ActionWrapper(action, Type.WITH));
         return this;
     }
@@ -132,8 +126,7 @@ public final class ActionGroup extends BaseAction
      * @param runnable The Runnable to run
      * @return this
      */
-    public final ActionGroup with(Runnable runnable)
-    {
+    public final ActionGroup with(Runnable runnable) {
         this.scheduledActions.add(new ActionWrapper(new BaseAction(runnable), Type.WITH));
         return this;
     }
@@ -144,8 +137,7 @@ public final class ActionGroup extends BaseAction
      * @param action The action to run
      * @return this
      */
-    public final ActionGroup addParallel(IAction action)
-    {
+    public final ActionGroup addParallel(IAction action) {
         this.scheduledActions.add(new ActionWrapper(action, Type.PARALLEL));
         return this;
     }
@@ -156,8 +148,7 @@ public final class ActionGroup extends BaseAction
      * @param runnable The Runnable to run
      * @return this
      */
-    public final ActionGroup addParallel(Runnable runnable)
-    {
+    public final ActionGroup addParallel(Runnable runnable) {
         this.scheduledActions.add(new ActionWrapper(new BaseAction(runnable), Type.PARALLEL));
         return this;
     }
@@ -171,30 +162,26 @@ public final class ActionGroup extends BaseAction
      * @return The thread, ready to start.
      */
     @Override
-    public final void run(IClock clock)
-    {
+    public final void run(IClock clock) {
         List<IAction> withActions = new ArrayList<>();
         List<Thread> withActionThreads = new ArrayList<>();
 
         Set<Thread> threadsToJoin = new HashSet<>();
 
-        for(ActionWrapper scheduledAction : scheduledActions)
-        {
-            if(isStopped())
-            {
+        for (ActionWrapper scheduledAction : scheduledActions) {
+            if (isStopped()) {
                 return;
             }
             IAction action = scheduledAction.getAction();
 
-            switch(scheduledAction.getType())
-            {
+            switch (scheduledAction.getType()) {
                 case WITH:
                     withActions.add(action);
 
                 case PARALLEL:
                     Thread start = new ThreadBuilder(action, clock).start();
                     threadsToJoin.add(start);
-                    if(scheduledAction.getType() == Type.WITH) withActionThreads.add(start);
+                    if (scheduledAction.getType() == Type.WITH) withActionThreads.add(start);
                     break;
                 case SEQUENTIAL:
                     action.run(clock);
@@ -211,7 +198,7 @@ public final class ActionGroup extends BaseAction
             for (Thread thread : threadsToJoin) {
                 thread.join();
             }
-        }catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             threadsToJoin.forEach(Thread::interrupt);
             e.printStackTrace();
         }
@@ -220,8 +207,7 @@ public final class ActionGroup extends BaseAction
     /**
      * Provides a way to describe the concurrency of an action
      */
-    public enum Type
-    {
+    public enum Type {
         /**
          * Runs in parallel to everything else.
          */
@@ -243,25 +229,21 @@ public final class ActionGroup extends BaseAction
      *
      * @see Type
      */
-    public static final class ActionWrapper
-    {
+    public static final class ActionWrapper {
 
         private final Type type;
         private final IAction action;
 
-        public ActionWrapper(IAction action, Type type)
-        {
+        public ActionWrapper(IAction action, Type type) {
             this.type = type;
             this.action = action;
         }
 
-        public Type getType()
-        {
+        public Type getType() {
             return type;
         }
 
-        public IAction getAction()
-        {
+        public IAction getAction() {
             return action;
         }
     }

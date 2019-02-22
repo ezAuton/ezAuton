@@ -3,16 +3,15 @@ package com.github.ezauton.core.localization.estimators;
 import com.github.ezauton.core.localization.IRotationalLocationEstimator;
 import com.github.ezauton.core.localization.ITranslationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
+import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
-import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
 
 /**
  * Describes an Updateable object that can track the location and heading of the robot using a rotational device
  * which can record angle (i.e. gyro) and a device which can record translational distance (i.e., encoder).
  */
-public final class EncoderRotationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, Updateable
-{
+public final class EncoderRotationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, Updateable {
 
     private final IRotationalLocationEstimator rotationalLocationEstimator;
     private final ITranslationalDistanceSensor distanceSensor;
@@ -29,8 +28,7 @@ public final class EncoderRotationEstimator implements IRotationalLocationEstima
      * @param rotationalLocationEstimator An object that can estimate our current heading
      * @param distanceSensor              An encoder or encoder-like object.
      */
-    public EncoderRotationEstimator(IRotationalLocationEstimator rotationalLocationEstimator, ITranslationalDistanceSensor distanceSensor)
-    {
+    public EncoderRotationEstimator(IRotationalLocationEstimator rotationalLocationEstimator, ITranslationalDistanceSensor distanceSensor) {
         this.rotationalLocationEstimator = rotationalLocationEstimator;
         this.distanceSensor = distanceSensor;
     }
@@ -48,8 +46,7 @@ public final class EncoderRotationEstimator implements IRotationalLocationEstima
 
 
     @Override
-    public double estimateHeading()
-    {
+    public double estimateHeading() {
         return rotationalLocationEstimator.estimateHeading();
     }
 
@@ -57,8 +54,7 @@ public final class EncoderRotationEstimator implements IRotationalLocationEstima
      * @return The current velocity vector of the robot in 2D space.
      */
     @Override
-    public ImmutableVector estimateAbsoluteVelocity()
-    {
+    public ImmutableVector estimateAbsoluteVelocity() {
         return MathUtils.Geometry.getVector(velocity, rotationalLocationEstimator.estimateHeading());
     }
 
@@ -67,8 +63,7 @@ public final class EncoderRotationEstimator implements IRotationalLocationEstima
      * @return The current location as estimated from the encoders
      */
     @Override
-    public ImmutableVector estimateLocation()
-    {
+    public ImmutableVector estimateLocation() {
         return positionVec;
     }
 
@@ -78,14 +73,11 @@ public final class EncoderRotationEstimator implements IRotationalLocationEstima
      * @return True
      */
     @Override
-    public boolean update()
-    {
-        if(!init)
-        {
+    public boolean update() {
+        if (!init) {
             throw new IllegalArgumentException("Must be initialized! (call reset())");
         }
-        if(rotationalLocationEstimator instanceof Updateable)
-        {
+        if (rotationalLocationEstimator instanceof Updateable) {
             ((Updateable) rotationalLocationEstimator).update();
         }
         velocity = distanceSensor.getVelocity();

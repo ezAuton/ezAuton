@@ -17,8 +17,7 @@ import java.util.List;
  * @param <T> The type of SequentialDataFrame this DataSequence contains.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-public abstract class SequentialDataRecorder<T extends SequentialDataFrame> implements ISubRecording, Updateable, Iterable<T>
-{
+public abstract class SequentialDataRecorder<T extends SequentialDataFrame> implements ISubRecording, Updateable, Iterable<T> {
     @JsonIgnore
     private static int sequenceCounter = 0;
     @JsonProperty("dataSequence")
@@ -30,72 +29,60 @@ public abstract class SequentialDataRecorder<T extends SequentialDataFrame> impl
     @JsonIgnore
     private int i = 0;
 
-    public SequentialDataRecorder()
-    {
+    public SequentialDataRecorder() {
         this("DataSequence_" + sequenceCounter++);
     }
 
-    public SequentialDataRecorder(IClock clock)
-    {
+    public SequentialDataRecorder(IClock clock) {
         this("DataSequence_" + sequenceCounter++, clock);
     }
 
-    public SequentialDataRecorder(String name)
-    {
+    public SequentialDataRecorder(String name) {
         this.name = name;
         dataFrames = new ArrayList<>();
     }
 
-    public SequentialDataRecorder(String name, IClock clock)
-    {
+    public SequentialDataRecorder(String name, IClock clock) {
         this(name);
         this.stopwatch = new Stopwatch(clock);
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
     @Override
-    public String toJson()
-    {
+    public String toJson() {
         return JsonUtils.toStringUnchecked(this);
     }
 
-    public List<T> getDataFrames()
-    {
+    public List<T> getDataFrames() {
         return dataFrames;
     }
 
-    public void setDataFrames(List<T> dataFrames)
-    {
+    public void setDataFrames(List<T> dataFrames) {
         this.dataFrames = dataFrames;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "DataSequence{" +
-               "dataFrames=" + dataFrames +
-               ", name='" + name + '\'' +
-               '}';
+                "dataFrames=" + dataFrames +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     @Override
-    public boolean update()
-    {
-        if(i++ == 0)
-        {
+    public boolean update() {
+        if (i++ == 0) {
             stopwatch.init();
         }
         return checkForNewData();
     }
 
     @Override
-    public Iterator<T> iterator()
-    {
+    public Iterator<T> iterator() {
         return dataFrames.iterator();
     }
 

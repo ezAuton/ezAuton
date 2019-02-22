@@ -22,37 +22,30 @@ import java.util.concurrent.atomic.AtomicLong;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class ActionTest
-{
+public class ActionTest {
 
     @Test
-    public void testScheduleActionInterface() throws InterruptedException
-    {
+    public void testScheduleActionInterface() throws InterruptedException {
         AtomicLong atomicLong = new AtomicLong(0);
-        IAction action = new IAction()
-        {
+        IAction action = new IAction() {
 
             @Override
-            public void run(IClock clock)
-            {
+            public void run(IClock clock) {
                 atomicLong.set(clock.getTime());
             }
 
             @Override
-            public void end()
-            {
+            public void end() {
                 // Not implemented
             }
 
             @Override
-            public IAction onFinish(Runnable onFinish)
-            {
+            public IAction onFinish(Runnable onFinish) {
                 return this; // Not implemented
             }
 
             @Override
-            public List<Runnable> getFinished()
-            {
+            public List<Runnable> getFinished() {
                 return Collections.emptyList(); // Not implemented
             }
         };
@@ -63,8 +56,7 @@ public class ActionTest
     }
 
     @Test
-    public void testDelayedActionInterrupt() throws InterruptedException
-    {
+    public void testDelayedActionInterrupt() throws InterruptedException {
         AtomicBoolean atomicBoolean = new AtomicBoolean(false);
 
         DelayedAction delayedAction = new DelayedAction(20, TimeUnit.SECONDS, () -> atomicBoolean.set(true));
@@ -75,8 +67,7 @@ public class ActionTest
     }
 
     @Test
-    public void testDelayedAction()
-    {
+    public void testDelayedAction() {
         TimeWarpedSimulation sim = new TimeWarpedSimulation(10);
 
         int delay = 3;
@@ -93,8 +84,7 @@ public class ActionTest
     }
 
     @Test
-    public void testActionGroupSingleNoSim()
-    {
+    public void testActionGroupSingleNoSim() {
         TimeWarpedClock clock = new TimeWarpedClock(10);
 
         AtomicInteger count = new AtomicInteger(0);
@@ -111,8 +101,7 @@ public class ActionTest
     }
 
     @Test
-    public void testActionGroupSingle()
-    {
+    public void testActionGroupSingle() {
         AtomicInteger count = new AtomicInteger(0);
         count.compareAndSet(0, 1);
         assertEquals(1, count.get());
@@ -129,8 +118,7 @@ public class ActionTest
     }
 
     @Test
-    public void testActionGroupSequentialThreadBuilder()
-    {
+    public void testActionGroupSequentialThreadBuilder() {
         AtomicInteger count = new AtomicInteger(0);
 
         DelayedAction two = new DelayedAction(200, TimeUnit.MILLISECONDS);
@@ -161,8 +149,7 @@ public class ActionTest
     }
 
     @Test
-    public void testActionGroup()
-    {
+    public void testActionGroup() {
         AtomicInteger count = new AtomicInteger(0);
 
         DelayedAction five = new DelayedAction(5, TimeUnit.SECONDS); //then
@@ -198,8 +185,7 @@ public class ActionTest
     }
 
     @Test
-    public void testActionGroupSequential()
-    {
+    public void testActionGroupSequential() {
         AtomicInteger count = new AtomicInteger(0);
 
         DelayedAction two = new DelayedAction(2, TimeUnit.SECONDS);
@@ -233,8 +219,7 @@ public class ActionTest
     }
 
     @Test
-    public void testWithActionGroup()
-    {
+    public void testWithActionGroup() {
         AtomicInteger counter = new AtomicInteger(0);
 
         BackgroundAction actionA = new BackgroundAction(20, TimeUnit.MILLISECONDS);
@@ -261,8 +246,7 @@ public class ActionTest
     }
 
     @Test // TODO: add
-    public void testTimedAction()
-    {
+    public void testTimedAction() {
 //        AtomicLong count = new AtomicLong(0);
 //
 //        long expectedDTms = 3000;
@@ -280,8 +264,7 @@ public class ActionTest
     }
 
     @Test
-    public void testUpdateableGroup()
-    {
+    public void testUpdateableGroup() {
         List<Integer> list = new ArrayList<>();
         Updateable one = () -> list.add(1);
         Updateable two = () -> list.add(2);

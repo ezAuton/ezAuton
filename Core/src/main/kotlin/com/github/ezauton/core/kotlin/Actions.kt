@@ -9,8 +9,7 @@ import com.github.ezauton.core.utils.IClock
  *  Create a base action whilst having access to a clock ⏱
  */
 fun baseAction(block: (IClock) -> Unit): BaseAction {
-    return object: BaseAction()
-    {
+    return object : BaseAction() {
         override fun run(clock: IClock) {
             block(clock)
         }
@@ -21,6 +20,6 @@ fun baseAction(block: (IClock) -> Unit): BaseAction {
  * Converts an IAction into an ActionWrapper which is used for ActionGroups.
  */
 fun IAction.wrapType(type: ActionGroup.Type): ActionGroup.ActionWrapper {
-    return ActionGroup.ActionWrapper(this,type)
+    return ActionGroup.ActionWrapper(this, type)
 }
 

@@ -20,8 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
-public class RecorderTest
-{
+public class RecorderTest {
 
     private Path path;
     private PurePursuitMovementStrategy ppMoveStrat;
@@ -35,8 +34,7 @@ public class RecorderTest
     private Recording recording;
 
     @BeforeEach
-    public void init()
-    {
+    public void init() {
         path = new PPWaypoint.Builder()
                 .add(0, 0, 16, 13, -12)
                 .add(0, 4, 16, 13, -12)
@@ -69,8 +67,7 @@ public class RecorderTest
     }
 
     @Test
-    public void testRecording()
-    {
+    public void testRecording() {
 
 
         Recording recording = new Recording();

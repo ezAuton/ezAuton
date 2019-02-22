@@ -7,7 +7,6 @@ public interface IResource {
     void take() throws InterruptedException;
 
     /**
-     *
      * @return If the resource is taken
      */
     boolean isTaken();

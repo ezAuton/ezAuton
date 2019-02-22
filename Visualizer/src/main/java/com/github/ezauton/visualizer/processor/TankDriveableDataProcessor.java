@@ -1,32 +1,29 @@
 package com.github.ezauton.visualizer.processor;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyValue;
-import javafx.scene.control.Label;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
 import com.github.ezauton.visualizer.util.IDataProcessor;
 import com.github.ezauton.visualizer.util.IEnvironment;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyValue;
+import javafx.scene.control.Label;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TankDriveableDataProcessor implements IDataProcessor
-{
+public class TankDriveableDataProcessor implements IDataProcessor {
 
     private final TankDriveableRecorder recorder;
     private Label leftVel;
     private Label rightVel;
 
-    public TankDriveableDataProcessor(TankDriveableRecorder recorder)
-    {
+    public TankDriveableDataProcessor(TankDriveableRecorder recorder) {
         this.recorder = recorder;
     }
 
     @Override
-    public void initEnvironment(IEnvironment environment)
-    {
+    public void initEnvironment(IEnvironment environment) {
         // heading info
         leftVel = new Label("0");
 
@@ -34,12 +31,12 @@ public class TankDriveableDataProcessor implements IDataProcessor
         rightVel = new Label("0");
 
         environment.getDataGridPane(recorder.getName()).addRow(0, new Label("Left vel: "), leftVel);
-        environment.getDataGridPane(recorder.getName()).addRow(1, new Label("Right vel: "), rightVel);;
+        environment.getDataGridPane(recorder.getName()).addRow(1, new Label("Right vel: "), rightVel);
+        ;
     }
 
     @Override
-    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator)
-    {
+    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator) {
         Map<Double, List<KeyValue>> map = new HashMap<>();
         recorder.getDataFrames()
                 .forEach(frame -> {

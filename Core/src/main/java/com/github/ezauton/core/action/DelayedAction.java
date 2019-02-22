@@ -7,19 +7,16 @@ import java.util.concurrent.TimeUnit;
 /**
  * An action which ⏰ a certain amount of time before executing 1
  */
-public class DelayedAction extends BaseAction
-{
+public class DelayedAction extends BaseAction {
 
     private Runnable runnable;
     private long millis;
 
-    public DelayedAction(long value, TimeUnit unit)
-    {
+    public DelayedAction(long value, TimeUnit unit) {
         millis = unit.toMillis(value);
     }
 
-    public DelayedAction(long value, TimeUnit unit, Runnable runnable)
-    {
+    public DelayedAction(long value, TimeUnit unit, Runnable runnable) {
         this(value, unit);
         this.runnable = runnable;
     }
@@ -27,10 +24,8 @@ public class DelayedAction extends BaseAction
     /**
      * Called when the time is up, i.e., the delay is done
      */
-    private void onTimeUp()
-    {
-        if(runnable != null)
-        {
+    private void onTimeUp() {
+        if (runnable != null) {
             runnable.run();
         }
     }
@@ -41,19 +36,14 @@ public class DelayedAction extends BaseAction
      * @param clock
      */
     @Override
-    public void run(IClock clock)
-    {
-        try
-        {
+    public void run(IClock clock) {
+        try {
             clock.sleep(millis, TimeUnit.MILLISECONDS);
-        }
-        catch(InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             return;
         }
 
-        if(isStopped())
-        {
+        if (isStopped()) {
             return;
         }
         onTimeUp();

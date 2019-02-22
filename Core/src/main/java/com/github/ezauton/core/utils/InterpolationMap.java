@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * Interpolation is like a crappy kind of regression.
  * You put in (x, f(x)) pairs of the function that you know for sure,
  * and linear regression is used to find the pairs you didn't explicitly put in.
- *
+ * <p>
  * If the key is outside the bounds, the first/last value is returned
  *
  * @author ritikmishra
@@ -29,8 +29,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @param firstKey   The first key to put into the hash table.
      * @param firstValue The first value to put into the hash table.
      */
-    public InterpolationMap(Double firstKey, Double firstValue)
-    {
+    public InterpolationMap(Double firstKey, Double firstValue) {
         table = new HashMap<>();
         put(firstKey, firstValue);
     }
@@ -41,31 +40,27 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      *
      * @param initTable The table to start with
      */
-    public InterpolationMap(Map<Double, Double> initTable)
-    {
-        if(initTable.keySet().isEmpty())
-        {
+    public InterpolationMap(Map<Double, Double> initTable) {
+        if (initTable.keySet().isEmpty()) {
             throw new IllegalArgumentException("Your initial table for the InterpolatingHashTable musn't be empty!");
-        }
-        else
-        {
+        } else {
             putAll(initTable);
         }
     }
 
-    private InterpolationMap() {}
+    private InterpolationMap() {
+    }
 
     /**
      * @return A sorted table
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         table.entrySet()
-             .stream()
-             .sorted(Comparator.comparingDouble(Entry::getKey))
-             .forEach(doubleDoubleEntry -> stringBuilder.append("\n" + doubleDoubleEntry.getKey() + ": " + doubleDoubleEntry.getValue()));
+                .stream()
+                .sorted(Comparator.comparingDouble(Entry::getKey))
+                .forEach(doubleDoubleEntry -> stringBuilder.append("\n" + doubleDoubleEntry.getKey() + ": " + doubleDoubleEntry.getValue()));
         return stringBuilder.toString();
     }
 
@@ -77,8 +72,8 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
     {
         Map<Double, Double> mapInversed =
                 table.entrySet()
-                     .stream()
-                     .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+                        .stream()
+                        .collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
         return new InterpolationMap(mapInversed);
     }
 
@@ -86,8 +81,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @return How many defined values there are (i.e how many values we aren't guessing with linear regression)
      */
     @Override
-    public int size()
-    {
+    public int size() {
         return table.size();
     }
 
@@ -95,8 +89,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @return If there are any defined values for this Interpolation Map
      */
     @Override
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return table.isEmpty();
     }
 
@@ -105,8 +98,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @return If it is a key for which there is a defined value in our map
      */
     @Override
-    public boolean containsKey(Object key)
-    {
+    public boolean containsKey(Object key) {
         return table.containsKey(key);
     }
 
@@ -115,8 +107,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @return If it is a value where it is fully defined for some key in the map
      */
     @Override
-    public boolean containsValue(Object value)
-    {
+    public boolean containsValue(Object value) {
         return table.containsValue(value);
     }
 
@@ -126,10 +117,8 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @throws IllegalArgumentException If the key does not extend Double
      */
     @Override
-    public Double get(Object key) throws IllegalArgumentException
-    {
-        if(key instanceof Number)
-        {
+    public Double get(Object key) throws IllegalArgumentException {
+        if (key instanceof Number) {
             Number number = (Number) key;
             return this.get(number.doubleValue());
         }
@@ -143,10 +132,8 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @param value The "f(x)" value that you got out
      */
     @Override
-    public Double put(Double key, Double value)
-    {
-        if(table == null)
-        {
+    public Double put(Double key, Double value) {
+        if (table == null) {
             table = new HashMap<>();
         }
         return table.put(key, value);
@@ -159,8 +146,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @return The value formerly associated with that key.
      */
     @Override
-    public Double remove(Object key)
-    {
+    public Double remove(Object key) {
         return table.remove(key);
     }
 
@@ -170,10 +156,8 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @param m that map
      */
     @Override
-    public void putAll(Map<? extends Double, ? extends Double> m)
-    {
-        if(table == null)
-        {
+    public void putAll(Map<? extends Double, ? extends Double> m) {
+        if (table == null) {
             table = new HashMap<>();
         }
         table.putAll(m);
@@ -183,8 +167,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * Reset the table such that there are 0 defined values
      */
     @Override
-    public void clear()
-    {
+    public void clear() {
         table.clear();
     }
 
@@ -192,8 +175,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @return All the keys for which we have a defined value
      */
     @Override
-    public Set<Double> keySet()
-    {
+    public Set<Double> keySet() {
         return table.keySet();
     }
 
@@ -201,8 +183,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @return All the values that are defined in the table.
      */
     @Override
-    public Collection<Double> values()
-    {
+    public Collection<Double> values() {
         return table.values();
     }
 
@@ -210,8 +191,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @return Every defined key-value pair
      */
     @Override
-    public Set<Entry<Double, Double>> entrySet()
-    {
+    public Set<Entry<Double, Double>> entrySet() {
         return table.entrySet();
     }
 
@@ -221,12 +201,10 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @param key The Double to evaluate "f(x)" at
      * @return The estimated value of "f(key)"
      */
-    public Double get(Double key)
-    {
+    public Double get(Double key) {
         Set<Double> keyset = table.keySet();
 
-        if(keyset.size() == 1)
-        {
+        if (keyset.size() == 1) {
             return table.get(keyset.toArray()[0]);
         }
 
@@ -239,26 +217,24 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
 
         int i = 0;
 
-        for(Double keyOn : keys)
-        {
-            if(key.floatValue() < keyOn.floatValue())
-            {
+        for (Double keyOn : keys) {
+            if (key.floatValue() < keyOn.floatValue()) {
                 upperBound = keyOn;
-                if(i > 0) {lowerBound = keys.get(i - 1);}
+                if (i > 0) {
+                    lowerBound = keys.get(i - 1);
+                }
                 break;
             }
             i++;
         }
 
-        if(upperBound == null) // i.e all the keys are smaller than the value we want to grab
+        if (upperBound == null) // i.e all the keys are smaller than the value we want to grab
         {
             return table.get(keys.get(keys.size() - 1)); // evaluateY the f(x) for the biggest x. we can't do real interpolation
-        }
-        else if(lowerBound == null) // i.e all the keys are bigger than the value we want to grab
+        } else if (lowerBound == null) // i.e all the keys are bigger than the value we want to grab
         {
             return table.get(keys.get(0)); // evaluateY the f(x) for the smallest x. we can't do real interpolation.
-        }
-        else // we can do real interpolation
+        } else // we can do real interpolation
         {
             double dx = upperBound - lowerBound;
             double dy = table.get(upperBound) - table.get(lowerBound);
@@ -284,8 +260,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
      * @return Area under the "curve"
      */
     @Override
-    public double integrate(double a, double b)
-    {
+    public double integrate(double a, double b) {
         List<MathUtils.Geometry.LineR2> lines = new ArrayList<>();
         double integralTotal = 0;
 
@@ -293,42 +268,35 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
 
         dataPoints.sort(null);
 
-        if(dataPoints.isEmpty()) throw new IllegalArgumentException("Data points must not be empty");
-        if(dataPoints.size() == 1)
-        {
+        if (dataPoints.isEmpty()) throw new IllegalArgumentException("Data points must not be empty");
+        if (dataPoints.size() == 1) {
             lines.add(new MathUtils.Geometry.LineR2(new ImmutableVector((float) a, get(a).floatValue()),
-                                                    new ImmutableVector((float) b, get(b).floatValue())));
-        }
-        else
-        {
+                    new ImmutableVector((float) b, get(b).floatValue())));
+        } else {
             Double firstX = dataPoints.get(0);
-            Double lastX = dataPoints.get(dataPoints.size()-1);
+            Double lastX = dataPoints.get(dataPoints.size() - 1);
 
-            if(a < firstX - 1E-6)
-            {
-                integralTotal+=get(firstX)*(firstX - a);
+            if (a < firstX - 1E-6) {
+                integralTotal += get(firstX) * (firstX - a);
             }
-            if(b > lastX + 1E-6)
-            {
-                integralTotal+=get(lastX)*(b - lastX);
+            if (b > lastX + 1E-6) {
+                integralTotal += get(lastX) * (b - lastX);
             }
 
-            for(int i = 1; i < dataPoints.size(); i++)
-            {
+            for (int i = 1; i < dataPoints.size(); i++) {
                 double x1, x2;
 
                 x1 = dataPoints.get(i - 1);
                 x2 = dataPoints.get(i);
 
                 // front of line within range or back of line within range
-                if(x1 < b && x2 > a)
-                {
+                if (x1 < b && x2 > a) {
                     x1 = Math.max(a, x1);
                     x2 = Math.min(b, x2);
 
                     // use "entire" line
                     lines.add(new MathUtils.Geometry.LineR2(new ImmutableVector((float) x1, get(x1)),
-                                                            new ImmutableVector((float) x2, get(x2))));
+                            new ImmutableVector((float) x2, get(x2))));
                 }
             }
 
@@ -337,9 +305,8 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
         lines.sort(Comparator.comparingDouble(line -> line.x1));
 
 
-        for(MathUtils.Geometry.LineR2 line : lines)
-        {
-            if(!Double.isFinite(line.slope)) continue; // fixes floating-point NaN issues with integrating
+        for (MathUtils.Geometry.LineR2 line : lines) {
+            if (!Double.isFinite(line.slope)) continue; // fixes floating-point NaN issues with integrating
             integralTotal += line.integrate();
         }
         return integralTotal;

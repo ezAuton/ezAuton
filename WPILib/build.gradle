@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'com.ezauton'
+group 'com.github.ezauton'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -16,7 +16,7 @@ repositories {
     }
     maven { url "http://first.wpi.edu/FRC/roborio/maven/release" }
     maven { url 'http://devsite.ctr-electronics.com/maven/release/' }
-    maven { url 'http://www.kauailabs.com/maven2'}
+    maven { url 'http://www.kauailabs.com/maven2' }
 }
 
 dependencies {

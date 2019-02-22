@@ -5,8 +5,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Describes a Clock. The clock can be real or simulated. The purpose of a clock is to support a {@link Stopwatch}
  */
-public interface IClock
-{
+public interface IClock {
     /**
      * @return The current time as read by the clock in seconds
      */
@@ -15,7 +14,7 @@ public interface IClock
 
     /**
      * Schedule an activity to run some amount of time in the future
-     *
+     * <p>
      * Should, if possible, be FIFO
      *
      * @param millis   The timestamp at which the runnable should be run
@@ -27,20 +26,18 @@ public interface IClock
      * Schedule a runnable to be run `dt` `timeUnit`s in the future
      * <p>
      * For example, of timeUnit is TimeUnit.MILLISECONDS and dt is 5, the runnable will be run 5 milliseconds in the future
-     *
+     * <p>
      * Should, if possible, be FIFO
      *
      * @param dt       The quantity of time
      * @param timeUnit The timeunit that dt is in
      * @param runnable The thing that should happen
      */
-    default void scheduleIn(long dt, TimeUnit timeUnit, Runnable runnable)
-    {
+    default void scheduleIn(long dt, TimeUnit timeUnit, Runnable runnable) {
         scheduleAt(getTime() + timeUnit.toMillis(dt), runnable);
     }
 
-    default void scheduleNow(Runnable runnable)
-    {
+    default void scheduleNow(Runnable runnable) {
         scheduleAt(getTime(), runnable);
     }
 

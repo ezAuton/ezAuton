@@ -5,7 +5,6 @@ package com.github.ezauton.core.pathplanning.purepursuit;
  * far we would want to look ahead on a path we were walking on. It is logical to adjust lookahead based
  * on how fast we are going or the curvature of the path.
  */
-public interface ILookahead
-{
+public interface ILookahead {
     double getLookahead();
 }

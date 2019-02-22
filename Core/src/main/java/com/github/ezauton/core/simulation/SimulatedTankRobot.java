@@ -1,7 +1,7 @@
 package com.github.ezauton.core.simulation;
 
 import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.actuators.implementations.*;
+import com.github.ezauton.core.actuators.implementations.SimulatedMotor;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
 import com.github.ezauton.core.localization.sensors.Encoders;
@@ -12,8 +12,7 @@ import com.github.ezauton.core.utils.Stopwatch;
 
 import java.util.concurrent.TimeUnit;
 
-public class SimulatedTankRobot implements ITankRobotConstants, Updateable
-{
+public class SimulatedTankRobot implements ITankRobotConstants, Updateable {
 
     public static final double NORM_DT = 0.02D;
 
@@ -34,8 +33,7 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
      * @param maxAccel             The max acceleration of the motors
      * @param minVel               The minimum velocity the robot can continuously drive at (i.e. the robot cannot drive at 0.0001 ft/s)
      */
-    public SimulatedTankRobot(double lateralWheelDistance, IClock clock, double maxAccel, double minVel, double maxVel)
-    {
+    public SimulatedTankRobot(double lateralWheelDistance, IClock clock, double maxAccel, double minVel, double maxVel) {
         stopwatch = new Stopwatch(clock);
         stopwatch.init();
 
@@ -52,40 +50,33 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
     }
 
 
-    public IVelocityMotor getLeftMotor()
-    {
+    public IVelocityMotor getLeftMotor() {
         return left;
     }
 
-    public IVelocityMotor getRightMotor()
-    {
+    public IVelocityMotor getRightMotor() {
         return right;
     }
 
-    public void run(double leftV, double rightV)
-    {
+    public void run(double leftV, double rightV) {
         left.runVelocity(leftV);
         right.runVelocity(rightV);
     }
 
-    public ITranslationalDistanceSensor getLeftDistanceSensor()
-    {
+    public ITranslationalDistanceSensor getLeftDistanceSensor() {
         return leftTDS;
     }
 
-    public ITranslationalDistanceSensor getRightDistanceSensor()
-    {
+    public ITranslationalDistanceSensor getRightDistanceSensor() {
         return rightTDS;
     }
 
-    public double getLateralWheelDistance()
-    {
+    public double getLateralWheelDistance() {
         return lateralWheelDistance;
     }
 
     @Override
-    public boolean update()
-    {
+    public boolean update() {
         long read = stopwatch.read(TimeUnit.SECONDS);
         log.append(read).append(", ").append(leftTDS.getVelocity()).append(", ").append(rightTDS.getVelocity()).append("\n");
         toUpdate.update();

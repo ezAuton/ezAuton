@@ -1,6 +1,18 @@
 package com.github.ezauton.visualizer;
 
 import javafx.animation.*;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.core.utils.MathUtils;
+import com.github.ezauton.recorder.ISubRecording;
+import com.github.ezauton.recorder.JsonUtils;
+import com.github.ezauton.recorder.Recording;
+import com.github.ezauton.visualizer.processor.factory.FactoryMap;
+import com.github.ezauton.visualizer.util.IDataProcessor;
+import com.github.ezauton.visualizer.util.IEnvironment;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -11,14 +23,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
-import com.github.ezauton.recorder.ISubRecording;
-import com.github.ezauton.recorder.JsonUtils;
-import com.github.ezauton.recorder.Recording;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.core.utils.MathUtils;
-import com.github.ezauton.visualizer.processor.factory.FactoryMap;
-import com.github.ezauton.visualizer.util.IDataProcessor;
-import com.github.ezauton.visualizer.util.IEnvironment;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,43 +31,37 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-enum StartPos
-{
+enum StartPos {
     LEFT_HAB2(163 / 443D, 485 / 492D),
-    LEFT_HAB1(163 / 443D, 421/492D),
-    CENTER(.5, 421/492D),
+    LEFT_HAB1(163 / 443D, 421 / 492D),
+    CENTER(.5, 421 / 492D),
     RIGHT_HAB2(1 - 163D / 443D, 485 / 492D),
-    RIGHT_HAB1(1 - 163D / 443D, 421/492D);
+    RIGHT_HAB1(1 - 163D / 443D, 421 / 492D);
 
     private final double proportionX;
     private final double proportionY;
 
-    StartPos(double proportionX, double proportionY)
-    {
+    StartPos(double proportionX, double proportionY) {
 
         this.proportionX = proportionX;
         this.proportionY = proportionY;
     }
 
-    public double getProportionX()
-    {
+    public double getProportionX() {
         return proportionX;
     }
 
-    public double getProportionY()
-    {
-        return 1-proportionY;
+    public double getProportionY() {
+        return 1 - proportionY;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return this.name();
     }
 }
 
-public class Controller implements Initializable
-{
+public class Controller implements Initializable {
     @FXML
     private TabPane tabPane;
 
@@ -123,61 +121,47 @@ public class Controller implements Initializable
     private Recording currentRecording;
 
     /**
+     *
      */
-    public Controller()
-    {
+    public Controller() {
         // Read the config file in the resources folder and initialize values appropriately
         String homeDir = System.getProperty("user.home");
         java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "config", "visualizer.config");
 
-        try
-        {
+        try {
             Files.createDirectories(filePath.getParent());
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try
-        {
-            if(!Files.exists(filePath))
-            {
+        try {
+            if (!Files.exists(filePath)) {
                 Files.createFile(filePath);
             }
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static String getExtension(String fileName)
-    {
+    private static String getExtension(String fileName) {
         String ret = fileName.substring(fileName.lastIndexOf(".") + 1);
 //        System.out.println("ret = " + ret);
         return ret;
     }
 
-    private static List<File> getAllFilesInDirectory(String dir)
-    {
+    private static List<File> getAllFilesInDirectory(String dir) {
         List<File> files = new ArrayList<>();
         File folder = new File(dir);
         File[] listOfFiles = folder.listFiles();
 
-        try
-        {
-            for(int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++)
-            {
-                if(listOfFiles[i].isFile() && getExtension(listOfFiles[i].getName()).equalsIgnoreCase("json"))
-                {
+        try {
+            for (int i = 0; i < Objects.requireNonNull(listOfFiles).length; i++) {
+                if (listOfFiles[i].isFile() && getExtension(listOfFiles[i].getName()).equalsIgnoreCase("json")) {
                     files.add(listOfFiles[i]);
                 }
             }
             return files;
-        }
-        catch(NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             folder.mkdir();
             return new ArrayList<>();
         }
@@ -185,23 +169,19 @@ public class Controller implements Initializable
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources)
-    {
+    public void initialize(URL location, ResourceBundle resources) {
         backdrop.heightProperty().addListener((heightProp, oldHeight, newHeight) -> spatialScaleFactor = newHeight.doubleValue() / 30.0156D
-                                             );
+        );
 
         backdrop.widthProperty().addListener((widthProp, oldWidth, newWidth) ->
-                                             {
-                                                 try
-                                                 {
-                                                     originX = posChooser.getValue().getProportionX() * newWidth.doubleValue();
-                                                 }
-                                                 catch(NullPointerException e)
-                                                 {
-                                                     // this is ok
-                                                 }
-                                             }
-                                            );
+                {
+                    try {
+                        originX = posChooser.getValue().getProportionX() * newWidth.doubleValue();
+                    } catch (NullPointerException e) {
+                        // this is ok
+                    }
+                }
+        );
 
 
         // Make sure the circle always stays with the robot
@@ -211,13 +191,10 @@ public class Controller implements Initializable
         List<File> listOfCSVs = getAllFilesInDirectory(Paths.get(System.getProperty("user.home"), ".ezauton").toString());
         fileChooser.getItems().addAll(listOfCSVs);
         fileChooser.valueProperty().addListener((selectedProp, oldSelected, newSelected) -> {
-            try
-            {
+            try {
                 loadRecording(newSelected);
                 animateSquareKeyframe(null);
-            }
-            catch(IOException e1)
-            {
+            } catch (IOException e1) {
                 System.out.println("Try the following: ");
                 System.out.println("1. Create a directory called outPaths in the root folder of the RobotCode2018 project");
                 System.out.println("2. Run the unit tests for RobotCode2018 on this computer");
@@ -243,8 +220,7 @@ public class Controller implements Initializable
     /**
      * Clear the tab pane to the right and the canvas with the field on it
      */
-    private void clear()
-    {
+    private void clear() {
         tabPane.getTabs().clear();
         backdrop.getChildren().clear();
     }
@@ -255,11 +231,9 @@ public class Controller implements Initializable
      * @param event This exists in case you want to add this as an onClickListener or something like that. Not used.
      */
     @FXML
-    private void animateSquareKeyframe(Event event)
-    {
+    private void animateSquareKeyframe(Event event) {
         // must have a file and position
-        if(fileChooser.getValue() == null || posChooser.getValue() == null)
-        {
+        if (fileChooser.getValue() == null || posChooser.getValue() == null) {
             System.err.println("Please select a file and a position");
             return;
         }
@@ -273,8 +247,7 @@ public class Controller implements Initializable
         // Clear everything
         clear();
 
-        for(Map.Entry<String, ISubRecording> entry : currentRecording.getRecordingMap().entrySet())
-        {
+        for (Map.Entry<String, ISubRecording> entry : currentRecording.getRecordingMap().entrySet()) {
             // Add new tab for each sub-recording
             GridPane content = new GridPane();
             content.setAlignment(Pos.CENTER);
@@ -301,12 +274,11 @@ public class Controller implements Initializable
         keyValList.toArray(keyValArray);
 
         keyFrames.add(new KeyFrame(Duration.ZERO,
-                                   keyValArray
+                keyValArray
         ));
 
 //        System.out.println("keyValues = " + keyValues);
-        while(keyValItr.hasNext())
-        {
+        while (keyValItr.hasNext()) {
             Map.Entry<Double, List<KeyValue>> next = keyValItr.next();
 
             keyValList = next.getValue();
@@ -315,19 +287,17 @@ public class Controller implements Initializable
             keyValList.toArray(keyValArray);
 
             keyFrames.add(new KeyFrame(Duration.millis(next.getKey()),
-                                       keyValArray
+                    keyValArray
             ));
         }
 
         // Create the animation
 
-        if(rateSliderListener != null)
-        {
+        if (rateSliderListener != null) {
             rateSlider.valueProperty().removeListener(rateSliderListener);
         }
 
-        if(timeline != null)
-        {
+        if (timeline != null) {
             timeline.pause();
         }
 
@@ -402,23 +372,17 @@ public class Controller implements Initializable
         }
     }
 
-    private IEnvironment getEnvironment()
-    {
-        return new IEnvironment()
-        {
+    private IEnvironment getEnvironment() {
+        return new IEnvironment() {
             @Override
-            public AnchorPane getFieldAnchorPane()
-            {
+            public AnchorPane getFieldAnchorPane() {
                 return backdrop;
             }
 
             @Override
-            public GridPane getDataGridPane(String name)
-            {
-                for(Tab tab : tabPane.getTabs())
-                {
-                    if(tab.getText().equals(name) && tab.getContent() instanceof GridPane)
-                    {
+            public GridPane getDataGridPane(String name) {
+                for (Tab tab : tabPane.getTabs()) {
+                    if (tab.getText().equals(name) && tab.getContent() instanceof GridPane) {
                         return (GridPane) tab.getContent();
                     }
                 }
@@ -426,20 +390,17 @@ public class Controller implements Initializable
             }
 
             @Override
-            public double getScaleFactorX()
-            {
+            public double getScaleFactorX() {
                 return spatialScaleFactor;
             }
 
             @Override
-            public double getScaleFactorY()
-            {
+            public double getScaleFactorY() {
                 return spatialScaleFactor;
             }
 
             @Override
-            public ImmutableVector getOrigin()
-            {
+            public ImmutableVector getOrigin() {
                 return new ImmutableVector(originX, originY);
             }
         };
@@ -448,14 +409,10 @@ public class Controller implements Initializable
     /**
      * Handles pausing/playing the timeline based on the rate slider
      */
-    private void actOnTimeline(Timeline timeline, double value)
-    {
-        if(MathUtils.epsilonEquals(0, value))
-        {
+    private void actOnTimeline(Timeline timeline, double value) {
+        if (MathUtils.epsilonEquals(0, value)) {
             timeline.pause();
-        }
-        else
-        {
+        } else {
             timeline.play();
             timeline.setRate(value);
         }
@@ -481,8 +438,7 @@ public class Controller implements Initializable
      * @param jsonFile
      * @throws IOException If the file cannot be read from
      */
-    private void loadRecording(File jsonFile) throws IOException
-    {
+    private void loadRecording(File jsonFile) throws IOException {
         List<String> lines = Files.readAllLines(jsonFile.toPath());
         StringBuilder fileContentsSb = new StringBuilder();
         lines.forEach(fileContentsSb::append);

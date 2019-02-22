@@ -1,21 +1,19 @@
 package com.github.ezauton.visualizer.processor;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyValue;
 import com.github.ezauton.recorder.Recording;
+import com.github.ezauton.visualizer.processor.factory.IDataProcessorFactory;
 import com.github.ezauton.visualizer.util.IDataProcessor;
 import com.github.ezauton.visualizer.util.IEnvironment;
-import com.github.ezauton.visualizer.processor.factory.IDataProcessorFactory;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyValue;
 
 import java.util.*;
 
-public class RecordingDataProcessor implements IDataProcessor
-{
+public class RecordingDataProcessor implements IDataProcessor {
 
     final List<IDataProcessor> childDataProcessors = new ArrayList<>();
 
-    public RecordingDataProcessor(Recording recording, IDataProcessorFactory factory)
-    {
+    public RecordingDataProcessor(Recording recording, IDataProcessorFactory factory) {
         recording.getRecordingMap()
                 .values()
                 .stream()
@@ -26,8 +24,7 @@ public class RecordingDataProcessor implements IDataProcessor
     }
 
     @Override
-    public void initEnvironment(IEnvironment environment)
-    {
+    public void initEnvironment(IEnvironment environment) {
         for (IDataProcessor d : childDataProcessors) {
             if (d != null) {
                 d.initEnvironment(environment);
@@ -36,8 +33,7 @@ public class RecordingDataProcessor implements IDataProcessor
     }
 
     @Override
-    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator)
-    {
+    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator) {
         Map<Double, List<KeyValue>> ret = new HashMap<>();
         for (IDataProcessor dataProcessor : childDataProcessors) {
             if (dataProcessor != null) {

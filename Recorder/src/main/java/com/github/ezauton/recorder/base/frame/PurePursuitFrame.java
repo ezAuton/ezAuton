@@ -1,11 +1,10 @@
 package com.github.ezauton.recorder.base.frame;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.ezauton.recorder.SequentialDataFrame;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.recorder.SequentialDataFrame;
 
-public class PurePursuitFrame extends SequentialDataFrame
-{
+public class PurePursuitFrame extends SequentialDataFrame {
     @JsonProperty
     private double lookahead;
 
@@ -21,8 +20,7 @@ public class PurePursuitFrame extends SequentialDataFrame
     @JsonProperty
     private int currentSegmentIndex;
 
-    public PurePursuitFrame(double time, double lookahead, ImmutableVector closestPoint, ImmutableVector goalPoint, double dCP, int currentSegmentIndex)
-    {
+    public PurePursuitFrame(double time, double lookahead, ImmutableVector closestPoint, ImmutableVector goalPoint, double dCP, int currentSegmentIndex) {
         super(time);
 
         this.lookahead = lookahead;
@@ -32,36 +30,31 @@ public class PurePursuitFrame extends SequentialDataFrame
         this.currentSegmentIndex = currentSegmentIndex;
     }
 
-    private PurePursuitFrame() {}
+    private PurePursuitFrame() {
+    }
 
-    public double getLookahead()
-    {
+    public double getLookahead() {
         return lookahead;
     }
 
-    public ImmutableVector getClosestPoint()
-    {
+    public ImmutableVector getClosestPoint() {
         return closestPoint;
     }
 
-    public ImmutableVector getGoalPoint()
-    {
+    public ImmutableVector getGoalPoint() {
         return goalPoint;
     }
 
-    public double getdCP()
-    {
+    public double getdCP() {
         return dCP;
     }
 
-    public int getCurrentSegmentIndex()
-    {
+    public int getCurrentSegmentIndex() {
         return currentSegmentIndex;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         final StringBuilder sb = new StringBuilder("PurePursuitFrame{");
         sb.append("lookahead=").append(lookahead);
         sb.append(", closestPoint=").append(closestPoint);

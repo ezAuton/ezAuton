@@ -6,19 +6,16 @@ import java.util.concurrent.TimeUnit;
  * A handy stopwatch for recording time in seconds since it was last polled. Requires a ⏱ {@link IClock} to keep track
  * of time.
  */
-public class Stopwatch
-{
+public class Stopwatch {
 
     protected final IClock clock;
     protected long millis = -1;
 
-    public Stopwatch(IClock clock)
-    {
+    public Stopwatch(IClock clock) {
         this.clock = clock;
     }
 
-    public void init()
-    {
+    public void init() {
         millis = clock.getTime();
 
     }
@@ -28,8 +25,7 @@ public class Stopwatch
      *
      * @return The value of the stopwatch (ms)
      */
-    public double pop()
-    {
+    public double pop() {
         double readVal = read();
         reset();
         return readVal;
@@ -41,13 +37,11 @@ public class Stopwatch
      * @param timeUnit The time unit you would like to get the result in
      * @return Value of stopwatch (in specified timeunit)
      */
-    public double pop(TimeUnit timeUnit)
-    {
+    public double pop(TimeUnit timeUnit) {
         return pop() / timeUnit.toMillis(1);
     }
 
-    public IClock getClock()
-    {
+    public IClock getClock() {
         return clock;
     }
 
@@ -56,22 +50,19 @@ public class Stopwatch
      *
      * @return The value of the stopwatch (ms)
      */
-    public long read()
-    {
-        if(!isInit()) throw new IllegalArgumentException("Stopwatch must be initialized to use");
+    public long read() {
+        if (!isInit()) throw new IllegalArgumentException("Stopwatch must be initialized to use");
         return clock.getTime() - millis;
     }
 
-    public long read(TimeUnit timeUnit)
-    {
+    public long read(TimeUnit timeUnit) {
         return timeUnit.convert(read(), TimeUnit.MILLISECONDS);
     }
 
     /**
      * Reset without reading
      */
-    public Stopwatch reset()
-    {
+    public Stopwatch reset() {
         millis = clock.getTime();
         return this;
     }
@@ -79,18 +70,15 @@ public class Stopwatch
     /**
      * @return If this stopwatch is initialized
      */
-    public boolean isInit()
-    {
+    public boolean isInit() {
         return millis != -1;
     }
 
     /**
      * @return If is not init
      */
-    public boolean resetIfNotInit()
-    {
-        if(isInit())
-        {
+    public boolean resetIfNotInit() {
+        if (isInit()) {
             return false;
         }
         reset();

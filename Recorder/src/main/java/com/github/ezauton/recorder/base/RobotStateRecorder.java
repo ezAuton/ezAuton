@@ -2,15 +2,14 @@ package com.github.ezauton.recorder.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.ezauton.core.localization.IRotationalLocationEstimator;
-import com.github.ezauton.recorder.base.frame.RobotStateFrame;
-import com.github.ezauton.core.utils.IClock;
 import com.github.ezauton.core.localization.ITranslationalLocationEstimator;
+import com.github.ezauton.core.utils.IClock;
 import com.github.ezauton.recorder.SequentialDataRecorder;
+import com.github.ezauton.recorder.base.frame.RobotStateFrame;
 
 import java.util.concurrent.TimeUnit;
 
-public class RobotStateRecorder extends SequentialDataRecorder<RobotStateFrame>
-{
+public class RobotStateRecorder extends SequentialDataRecorder<RobotStateFrame> {
 
     private static int instanceCounter = 0;
     @JsonIgnore
@@ -20,8 +19,7 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotStateFrame>
     private double width;
     private double height;
 
-    public RobotStateRecorder(String name, IClock clock, ITranslationalLocationEstimator posEstimator, IRotationalLocationEstimator rotEstimator, double width, double length)
-    {
+    public RobotStateRecorder(String name, IClock clock, ITranslationalLocationEstimator posEstimator, IRotationalLocationEstimator rotEstimator, double width, double length) {
         super(name, clock);
         this.posEstimator = posEstimator;
         this.rotEstimator = rotEstimator;
@@ -29,8 +27,7 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotStateFrame>
         this.height = length;
     }
 
-    public RobotStateRecorder(IClock clock, ITranslationalLocationEstimator posEstimator, IRotationalLocationEstimator rotEstimator, double width, double length)
-    {
+    public RobotStateRecorder(IClock clock, ITranslationalLocationEstimator posEstimator, IRotationalLocationEstimator rotEstimator, double width, double length) {
         this("RobotStateRecorder_" + instanceCounter++, clock, posEstimator, rotEstimator, width, length);
     }
 
@@ -39,8 +36,7 @@ public class RobotStateRecorder extends SequentialDataRecorder<RobotStateFrame>
     }
 
     @Override
-    public boolean checkForNewData()
-    {
+    public boolean checkForNewData() {
         dataFrames.add(new RobotStateFrame(
                 stopwatch.read(TimeUnit.MILLISECONDS),
                 posEstimator.estimateLocation(),

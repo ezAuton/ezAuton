@@ -6,8 +6,7 @@ import com.github.ezauton.core.actuators.VelocityProcessor;
 /**
  * A velocity processor that makes the target motor respect a maximum speed
  */
-public class BoundedVelocityProcessor extends VelocityProcessor
-{
+public class BoundedVelocityProcessor extends VelocityProcessor {
 
     private final double maxSpeed;
 
@@ -17,11 +16,9 @@ public class BoundedVelocityProcessor extends VelocityProcessor
      * @param toApply  The motor to apply the processed velocity to
      * @param maxSpeed The maximum speed that the motor will be allowed to run at.
      */
-    public BoundedVelocityProcessor(IVelocityMotor toApply, double maxSpeed)
-    {
+    public BoundedVelocityProcessor(IVelocityMotor toApply, double maxSpeed) {
         super(toApply);
-        if(maxSpeed <= 0)
-        {
+        if (maxSpeed <= 0) {
             throw new IllegalArgumentException("maxSpeed must be a positive number!");
         }
         this.maxSpeed = maxSpeed;
@@ -33,18 +30,12 @@ public class BoundedVelocityProcessor extends VelocityProcessor
      * @param targetVelocity The speed to run the motor at
      */
     @Override
-    public void runVelocity(double targetVelocity)
-    {
-        if(targetVelocity > maxSpeed)
-        {
+    public void runVelocity(double targetVelocity) {
+        if (targetVelocity > maxSpeed) {
             getToApply().runVelocity(maxSpeed);
-        }
-        else if(targetVelocity < -maxSpeed)
-        {
+        } else if (targetVelocity < -maxSpeed) {
             getToApply().runVelocity(-maxSpeed);
-        }
-        else
-        {
+        } else {
             getToApply().runVelocity(targetVelocity);
         }
     }

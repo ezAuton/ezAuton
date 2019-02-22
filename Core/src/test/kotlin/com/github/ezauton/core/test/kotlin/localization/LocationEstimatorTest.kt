@@ -1,7 +1,6 @@
 package com.github.ezauton.core.test.kotlin.localization
 
 import com.github.ezauton.core.localization.ITankRobotVelocityEstimator
-import com.github.ezauton.core.localization.ITranslationalLocationEstimator
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

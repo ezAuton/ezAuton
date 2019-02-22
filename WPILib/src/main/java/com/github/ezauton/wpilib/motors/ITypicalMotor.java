@@ -8,6 +8,5 @@ import com.github.ezauton.core.localization.sensors.IEncoder;
 /**
  * An interface representing your typical motor. It is able to be controller by either velocity or voltage, and has an encoder.
  */
-public interface ITypicalMotor extends IVelocityMotor, IEncoder, IVoltageMotor
-{
+public interface ITypicalMotor extends IVelocityMotor, IEncoder, IVoltageMotor {
 }

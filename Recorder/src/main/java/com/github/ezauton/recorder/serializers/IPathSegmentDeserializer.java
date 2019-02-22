@@ -12,36 +12,29 @@ import com.github.ezauton.core.pathplanning.IPathSegment;
 import java.io.IOException;
 
 
-public class IPathSegmentDeserializer extends StdDeserializer<IPathSegment>
-{
-    public IPathSegmentDeserializer()
-    {
+public class IPathSegmentDeserializer extends StdDeserializer<IPathSegment> {
+    public IPathSegmentDeserializer() {
         this(null);
     }
 
-    public IPathSegmentDeserializer(Class<IPathSegment> t)
-    {
+    public IPathSegmentDeserializer(Class<IPathSegment> t) {
         super(t);
     }
 
 
     @Override
-    public IPathSegment deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException
-    {
+    public IPathSegment deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 
 //        System.out.println("node.getClass() = " + node.getClass());
         ObjectMapper mp = new ObjectMapper();
 
         mp.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         ObjectNode node = jp.getCodec().readTree(jp);
-        try
-        {
+        try {
             Class<IPathSegment> clazz = (Class<IPathSegment>) Class.forName(node.get("@class").textValue());
             node.remove("@class");
             return mp.readValue(node.toString(), clazz);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             System.err.println(node.toString());
             throw new IOException("Cannot deserialize alleged IPathSegment", e);
         }

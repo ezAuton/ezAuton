@@ -1,5 +1,6 @@
 package com.github.ezauton.recorder;
 
+import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PPCommand;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
@@ -7,14 +8,13 @@ import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.ILookahead;
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
+import com.github.ezauton.core.simulation.TimeWarpedSimulation;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.core.action.ActionGroup;
-import com.github.ezauton.core.simulation.TimeWarpedSimulation;
-import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
-import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -22,12 +22,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-public class RecorderTest
-{
-    public static void main(String[] args) throws IOException
-    {
+public class RecorderTest {
+    public static void main(String[] args) throws IOException {
 
-        ImmutableVector immutableVector = new ImmutableVector(0,0);
+        ImmutableVector immutableVector = new ImmutableVector(0, 0);
         immutableVector.isFinite();
 
         Path path = new PPWaypoint.Builder()
@@ -53,7 +51,7 @@ public class RecorderTest
 
         ILookahead lookahead = new LookaheadBounds(1, 7, 2, 10, locEstimator);
 
-        TankRobotTransLocDriveable  tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
+        TankRobotTransLocDriveable tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
         PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 

@@ -5,12 +5,12 @@ import com.github.ezauton.core.action.BaseAction
 import com.github.ezauton.core.simulation.ModernSimulatedClock
 import com.github.ezauton.core.utils.IClock
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-import kotlin.IllegalStateException
 
 
 class ClockTest {
@@ -67,10 +67,10 @@ class ClockTest {
         }
 
         val action = ActionGroup()
-                .addSequential ( TestBaseAction(0) )
+                .addSequential(TestBaseAction(0))
                 .addSequential { if (counter == 1) counter++ }
-                .addSequential ( TestBaseAction(2) )
-                .addSequential ( TestBaseAction(3) )
+                .addSequential(TestBaseAction(2))
+                .addSequential(TestBaseAction(3))
                 .addSequential { if (counter == 4) counter++ }
 
         assertEquals(0, counter)
@@ -96,8 +96,8 @@ class ClockTest {
         }
 
         val action = ActionGroup()
-                .addParallel ( TestBaseAction(0,15) )
-                .addSequential{ /* do nothing */}
+                .addParallel(TestBaseAction(0, 15))
+                .addSequential { /* do nothing */ }
 //                .addSequential( TestBaseAction(1,30) )
 
 

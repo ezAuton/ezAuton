@@ -7,66 +7,53 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class Recording implements ISubRecording, Updateable
-{
+public class Recording implements ISubRecording, Updateable {
     private static int recordingCounter = 0;
     @JsonProperty("recordingData")
     private Map<String, ISubRecording> recordingMap = new HashMap<>();
     @JsonProperty("name")
     private String name;
 
-    public Recording()
-    {
+    public Recording() {
         name = "Recording_" + recordingCounter++;
     }
 
-    public Recording(ISubRecording... recordings)
-    {
+    public Recording(ISubRecording... recordings) {
         this("Recording_" + recordingCounter++, recordings);
     }
 
-    public Recording(String name, ISubRecording... recordings)
-    {
+    public Recording(String name, ISubRecording... recordings) {
         this.name = name;
-        for(ISubRecording recording : recordings)
-        {
+        for (ISubRecording recording : recordings) {
             recordingMap.put(recording.getName(), recording);
         }
     }
 
-    public void addSubRecording(ISubRecording subRecording)
-    {
+    public void addSubRecording(ISubRecording subRecording) {
         Optional.ofNullable(subRecording).ifPresent(r -> recordingMap.put(r.getName(), r));
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
     @Override
-    public String toJson()
-    {
+    public String toJson() {
         return JsonUtils.toStringUnchecked(this);
     }
 
-    public Map<String, ISubRecording> getRecordingMap()
-    {
+    public Map<String, ISubRecording> getRecordingMap() {
         return recordingMap;
     }
 
     @Override
-    public boolean update()
-    {
+    public boolean update() {
         boolean ret = false;
-        for(ISubRecording recording : recordingMap.values())
-        {
-            if(recording instanceof Updateable)
-            {
+        for (ISubRecording recording : recordingMap.values()) {
+            if (recording instanceof Updateable) {
                 // If the update method returns true
-                if(((Updateable) recording).update())
-                {
+                if (((Updateable) recording).update()) {
                     ret = true;
                 }
             }

@@ -8,16 +8,15 @@ import com.github.ezauton.core.actuators.implementations.StaticFrictionVelocityP
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
+import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
 import com.github.ezauton.core.robot.ITankRobotConstants;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.utils.IClock;
 import com.github.ezauton.core.utils.Stopwatch;
-import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
 
 import java.util.concurrent.TimeUnit;
 
-public class SimulatedTankRobot implements ITankRobotConstants, Updateable
-{
+public class SimulatedTankRobot implements ITankRobotConstants, Updateable {
     private final double lateralWheelDistance;
 
     private final IVelocityMotor leftMotor;
@@ -37,8 +36,7 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
      * @param maxAccel             The max acceleration of the motors
      * @param minVel               The minimum velocity the robot can continuously drive at (i.e. the robot cannot drive at 0.0001 ft/s)
      */
-    public SimulatedTankRobot(double lateralWheelDistance, IClock clock, double maxAccel, double minVel, double maxVel)
-    {
+    public SimulatedTankRobot(double lateralWheelDistance, IClock clock, double maxAccel, double minVel, double maxVel) {
         stopwatch = new Stopwatch(clock);
         stopwatch.init();
 
@@ -50,44 +48,36 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
 
         this.lateralWheelDistance = lateralWheelDistance;
 
-       this.defaultLocationEstimator = new TankRobotEncoderEncoderEstimator(getLeftDistanceSensor(), getRightDistanceSensor(), this);
-       this.defaultTranslationalLocationDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, defaultLocationEstimator, defaultLocationEstimator, this);
+        this.defaultLocationEstimator = new TankRobotEncoderEncoderEstimator(getLeftDistanceSensor(), getRightDistanceSensor(), this);
+        this.defaultTranslationalLocationDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, defaultLocationEstimator, defaultLocationEstimator, this);
     }
 
     /**
-     *
      * @return A location estimator which automatically updates
      */
-    public TankRobotEncoderEncoderEstimator getDefaultLocEstimator()
-    {
+    public TankRobotEncoderEncoderEstimator getDefaultLocEstimator() {
         return defaultLocationEstimator;
     }
 
-    public TankRobotTransLocDriveable getDefaultTransLocDriveable()
-    {
+    public TankRobotTransLocDriveable getDefaultTransLocDriveable() {
         return defaultTranslationalLocationDriveable;
     }
 
 
-
-    public IVelocityMotor getLeftMotor()
-    {
+    public IVelocityMotor getLeftMotor() {
         return leftMotor;
     }
 
-    public IVelocityMotor getRightMotor()
-    {
+    public IVelocityMotor getRightMotor() {
         return rightMotor;
     }
 
-    public void run(double left, double right)
-    {
+    public void run(double left, double right) {
         leftMotor.runVelocity(left);
         rightMotor.runVelocity(right);
     }
 
-    private BoundedVelocityProcessor buildMotor(BaseSimulatedMotor baseSimulatedMotor, IClock clock, double maxAccel, double minVel, double maxVel)
-    {
+    private BoundedVelocityProcessor buildMotor(BaseSimulatedMotor baseSimulatedMotor, IClock clock, double maxAccel, double minVel, double maxVel) {
         RampUpVelocityProcessor leftRampUpMotor = new RampUpVelocityProcessor(baseSimulatedMotor, clock, maxAccel);
         toUpdate.add(leftRampUpMotor);
 
@@ -95,24 +85,20 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable
         return new BoundedVelocityProcessor(leftSF, maxVel);
     }
 
-    public ITranslationalDistanceSensor getLeftDistanceSensor()
-    {
+    public ITranslationalDistanceSensor getLeftDistanceSensor() {
         return baseLeftSimulatedMotor;
     }
 
-    public ITranslationalDistanceSensor getRightDistanceSensor()
-    {
+    public ITranslationalDistanceSensor getRightDistanceSensor() {
         return baseRightSimulatedMotor;
     }
 
-    public double getLateralWheelDistance()
-    {
+    public double getLateralWheelDistance() {
         return lateralWheelDistance;
     }
 
     @Override
-    public boolean update()
-    {
+    public boolean update() {
         long read = stopwatch.read(TimeUnit.SECONDS);
         log.append(read).append(", ").append(baseLeftSimulatedMotor.getVelocity()).append(", ").append(baseRightSimulatedMotor.getVelocity()).append("\n");
         toUpdate.update();

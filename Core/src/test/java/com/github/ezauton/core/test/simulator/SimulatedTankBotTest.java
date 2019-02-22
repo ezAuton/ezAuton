@@ -3,7 +3,6 @@ package com.github.ezauton.core.test.simulator;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PPCommand;
 import com.github.ezauton.core.action.TimedPeriodicAction;
-import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
@@ -14,6 +13,7 @@ import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
+import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.utils.TimeWarpedClock;
 import org.junit.jupiter.api.Test;
 
@@ -23,11 +23,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-public class SimulatedTankBotTest
-{
+public class SimulatedTankBotTest {
     @Test
-    public void testStraight2() throws IOException
-    {
+    public void testStraight2() throws IOException {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -4);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 1, 3, -4);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 0, 3, -4);
@@ -81,8 +79,7 @@ public class SimulatedTankBotTest
     }
 
     @Test
-    public void testStraight()
-    {
+    public void testStraight() {
 
         TimeWarpedSimulation sim = new TimeWarpedSimulation();
         SimulatedTankRobot bot = new SimulatedTankRobot(0.2, sim.getClock(), 3, -4, 4);

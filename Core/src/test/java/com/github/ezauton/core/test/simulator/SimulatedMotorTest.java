@@ -2,8 +2,8 @@ package com.github.ezauton.core.test.simulator;
 
 import com.github.ezauton.core.action.BaseAction;
 import com.github.ezauton.core.action.IAction;
-import com.github.ezauton.core.simulation.ModernSimulatedClock;
 import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;
+import com.github.ezauton.core.simulation.ModernSimulatedClock;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -11,14 +11,13 @@ import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SimulatedMotorTest
-{
+public class SimulatedMotorTest {
     @Test
     public void testMotor() throws TimeoutException {
 
         ModernSimulatedClock clock = new ModernSimulatedClock();
 
-        IAction action = new BaseAction(()->{
+        IAction action = new BaseAction(() -> {
             BaseSimulatedMotor motor = new BaseSimulatedMotor(clock);
 
             assertEquals(0, motor.getPosition(), 1E-6);
