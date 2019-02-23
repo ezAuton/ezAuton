@@ -33,6 +33,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 enum StartPos {
     LEFT_HAB2(163 / 443D, 485 / 492D),
@@ -68,6 +69,9 @@ public class Controller implements Initializable {
 
     @FXML
     public Button btnSelectJsonLogFile;
+
+    @FXML
+    private Slider timeSlider;
 
     @FXML
     private TabPane tabPane;
@@ -294,12 +298,6 @@ public class Controller implements Initializable {
 
         timeline = new Timeline();
 
-        rateSliderListener = (observable, oldValue, newValue) -> {
-            double value = newValue.doubleValue();
-            actOnTimeline(timeline, value);
-        };
-
-        rateSlider.valueProperty().addListener(rateSliderListener);
 
         // Loop it forever
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -310,9 +308,47 @@ public class Controller implements Initializable {
         // Add our keyframes to the animation
         keyFrames.forEach((KeyFrame kf) -> timeline.getKeyFrames().add(kf));
 
+        /// Begin binds
+        rateSliderListener = (observable, oldValue, newValue) -> {
+            double value = newValue.doubleValue();
+            actOnTimeline(timeline, value);
+        };
+
+        rateSlider.valueProperty().addListener(rateSliderListener);
+
+        timeSlider.setMin(0);
+        timeSlider.setMax(timeline.getCycleDuration().toSeconds());
+        timeSlider.setMajorTickUnit(1);
+
+        AtomicBoolean wasPlaying = new AtomicBoolean(true);
+
+        ChangeListener<Number> updateTimelineTimeListener = ((observable, oldValue, newValue) -> {
+            timeline.jumpTo(Duration.seconds(timeSlider.getValue()));
+        });
+
+        ChangeListener<Duration> updateSliderPositionListener = (prop, old, newVal) -> {
+            timeSlider.setValue(newVal.toSeconds());
+        };
+
+        timeline.currentTimeProperty().addListener(updateSliderPositionListener);
+
+        timeSlider.setOnMousePressed((e) -> {
+            wasPlaying.set(timeline.getStatus() == Animation.Status.RUNNING);
+            pause();
+            timeline.currentTimeProperty().removeListener(updateSliderPositionListener);
+            timeSlider.valueProperty().addListener(updateTimelineTimeListener);
+        });
+
+        timeSlider.setOnMouseReleased((e) -> {
+            if(wasPlaying.get()) {
+                play();
+            }
+            timeSlider.valueProperty().removeListener(updateTimelineTimeListener);
+            timeline.currentTimeProperty().addListener(updateSliderPositionListener);
+
+        });
 
         btnPlayPause.setOnMouseClicked((e) -> {
-            System.out.println("timeline.getStatus() = " + timeline.getStatus());
             if(timeline.getStatus() == Animation.Status.RUNNING) {
                 pause();
             }
@@ -342,6 +378,7 @@ public class Controller implements Initializable {
             timeline.jumpTo(timeline.getCycleDuration());
         });
 
+        // End binds
         // Play it
         timeline.playFromStart();
         btnPlayPause.setText("Pause");
@@ -404,7 +441,7 @@ public class Controller implements Initializable {
         if (MathUtils.epsilonEquals(0, value)) {
             timeline.pause();
         } else {
-            timeline.play();
+            play();
             timeline.setRate(value);
         }
     }
