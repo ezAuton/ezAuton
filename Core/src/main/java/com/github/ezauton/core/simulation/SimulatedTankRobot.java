@@ -29,7 +29,7 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable {
     private final TankRobotEncoderEncoderEstimator defaultLocationEstimator;
     private final TankRobotTransLocDriveable defaultTranslationalLocationDriveable
             ;
-    public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
+//    public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
     private UpdateableGroup toUpdate = new UpdateableGroup();
 
     /**
@@ -96,8 +96,8 @@ public class SimulatedTankRobot implements ITankRobotConstants, Updateable {
 
     @Override
     public boolean update() {
-        long read = stopwatch.read(TimeUnit.SECONDS);
-        log.append(read).append(", ").append(leftTDS.getVelocity()).append(", ").append(rightTDS.getVelocity()).append("\n");
+//        long read = stopwatch.read(TimeUnit.SECONDS);
+//        log.append(read).append(", ").append(leftTDS.getVelocity()).append(", ").append(rightTDS.getVelocity()).append("\n");
         toUpdate.update();
         defaultLocationEstimator.update();
         return true;

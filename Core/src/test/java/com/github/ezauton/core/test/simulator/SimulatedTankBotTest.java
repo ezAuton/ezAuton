@@ -68,17 +68,6 @@ public class SimulatedTankBotTest {
 
         sim.runSimulation(12, TimeUnit.SECONDS);
 
-
-        String homeDir = System.getProperty("user.home");
-        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.txt");
-
-        Files.createDirectories(filePath.getParent());
-
-        BufferedWriter writer = Files.newBufferedWriter(filePath);
-        writer.write(bot.log.toString());
-
-        writer.close();
-
     }
 
     @Test

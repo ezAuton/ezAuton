@@ -25,6 +25,7 @@ jar {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     fatCompile group: 'com.google.guava', name: 'guava', version: '19.0'
+    testCompile project(":Recorder")
 }
 
 compileKotlin {
