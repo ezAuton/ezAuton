@@ -13,6 +13,10 @@ import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.recorder.Recording;
+import com.github.ezauton.recorder.base.PurePursuitRecorder;
+import com.github.ezauton.recorder.base.RobotStateRecorder;
+import com.github.ezauton.recorder.base.TankDriveableRecorder;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
@@ -37,10 +41,10 @@ public class PPSimulatorTest {
                 .add(-0.5, 8.589, 16, 13, -12)
                 .add(-0.5, 12.405, 13, 13, -12)
                 .add(-0.5, 17, 8.5, 13, -12)
-                .add(1.5, 19.4, 0, 13, -12)
+                .add(1.5, 19.4, 1, 13, -12)
                 .buildArray();
 
-        test(build);
+        test("testLeftToRightScale", build);
     }
 
     @Test
@@ -48,98 +52,112 @@ public class PPSimulatorTest {
 
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -4);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -4);
-        PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 0, 3, -4);
+        PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 1, 3, -4);
 
-        test(waypoint1, waypoint2, waypoint3);
+        test("testStraight", waypoint1, waypoint2, waypoint3);
     }
 
     @Test
     public void testStraightGeneric() throws TimeoutException, ExecutionException {
-        test(PathHelper.STRAIGHT_12UNITS);
+        test("testStraightGeneric", PathHelper.STRAIGHT_12UNITS);
     }
 
     @Test
     public void testRight() throws TimeoutException, ExecutionException {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(6, 6, 5, 3, -3);
-        PPWaypoint waypoint3 = PPWaypoint.simple2D(12, 0, 0, 3, -3);
+        PPWaypoint waypoint3 = PPWaypoint.simple2D(12, 0, 1, 3, -3);
 
-        test(waypoint1, waypoint2, waypoint3);
+        test("testRight", waypoint1, waypoint2, waypoint3);
     }
 
     @Test
     public void testSpline() throws TimeoutException, ExecutionException {
-        test(new SplinePPWaypoint.Builder()
+        test("testSpline", new SplinePPWaypoint.Builder()
                 .add(0, 0, 0, 15, 13, -12)
                 .add(0, 13, 0, 10, 13, -12)
                 .add(20, 17, -Math.PI / 2, 8, 13, -12)
-                .add(23, 24, 0, 0, 13, -12)
+                .add(23, 24, 0, 1, 13, -12)
                 .buildPathGenerator()
                 .generate(0.05));
     }
 
-    private void test(Path path) throws TimeoutException, ExecutionException {
-        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
+    private void test(String name, Path path) throws TimeoutException, ExecutionException {
 
-        // Not a problem
-        TimeWarpedSimulation simulation = new TimeWarpedSimulation(1);
+            PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
-        // Might be a problem
-        SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getClock(), 14, 0.3, 16D);
+            // Not a problem
+            TimeWarpedSimulation simulation = new TimeWarpedSimulation(1);
 
-        IVelocityMotor leftMotor = robot.getLeftMotor();
-        IVelocityMotor rightMotor = robot.getRightMotor();
+            // Might be a problem
+            SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getClock(), 14, 0.3, 16D);
 
-        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftDistanceSensor(), robot.getRightDistanceSensor(), robot);
-        locEstimator.reset();
+            IVelocityMotor leftMotor = robot.getLeftMotor();
+            IVelocityMotor rightMotor = robot.getRightMotor();
 
-        ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
+            TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(robot.getLeftDistanceSensor(), robot.getRightDistanceSensor(), robot);
+            locEstimator.reset();
 
-        TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
+            ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
-        PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+            TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, robot);
 
-        BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot::update);
+            Recording rec = new Recording();
+            rec.addSubRecording(new PurePursuitRecorder(simulation.getClock(), path, ppMoveStrat));
+            rec.addSubRecording(new RobotStateRecorder(simulation.getClock(), locEstimator, locEstimator, 30 / 12D, 2));
+            rec.addSubRecording(new TankDriveableRecorder("td", simulation.getClock(), robot.getDefaultTransLocDriveable()));
 
-        // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator::update);
+            PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-        ActionGroup group = new ActionGroup()
-                .with(updateKinematics)
-                .with(backgroundAction)
-                .addSequential(purePursuitAction);
-        simulation.add(group);
+            BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot::update);
 
+            // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
+            BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator::update, rec::update);
 
-        // run the simulator for 30 seconds
-        simulation.runSimulation(30, TimeUnit.SECONDS);
-
-        // test
-        String homeDir = System.getProperty("user.home");
-        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.txt");
+            ActionGroup group = new ActionGroup()
+                    .with(updateKinematics)
+                    .with(backgroundAction)
+                    .addSequential(purePursuitAction);
+            simulation.add(group);
 
         try {
-            Files.createDirectories(filePath.getParent());
-            BufferedWriter writer = Files.newBufferedWriter(filePath);
-            writer.write(robot.log.toString());
+            // run the simulator for 30 seconds
+            simulation.runSimulation(30, TimeUnit.SECONDS);
 
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
+            assertEquals(0, leftWheelVelocity, 0.5D, "left wheel velocity");
+
+            double rightWheelVelocity = locEstimator.getRightTranslationalWheelVelocity();
+            assertEquals(0, rightWheelVelocity, 0.5D, "right wheel velocity");
+
+            // The final location after the simulator
+            ImmutableVector finalLoc = locEstimator.estimateLocation();
+
+            // If the final loc is approximately equal to the last waypoint
+            approxEqual(path.getEnd(), finalLoc, 0.2);
+            System.out.println("finalLoc = " + finalLoc);
+        } finally {
+            // test
+            String homeDir = System.getProperty("user.home");
+            java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", name + "_log.txt");
+            java.nio.file.Path jsonPath = Paths.get(homeDir, ".ezauton", name + "_rec.json");
+
+            try
+            {
+                Files.createDirectories(filePath.getParent());
+                BufferedWriter writer = Files.newBufferedWriter(filePath);
+                writer.write(robot.log.toString());
+
+                writer = Files.newBufferedWriter(jsonPath);
+                writer.write(rec.toJson());
+
+                writer.close();
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
         }
-
-        double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
-        assertEquals(0, leftWheelVelocity, 0.5D, "left wheel velocity");
-
-        double rightWheelVelocity = locEstimator.getRightTranslationalWheelVelocity();
-        assertEquals(0, rightWheelVelocity, 0.5D, "right wheel velocity");
-
-        // The final location after the simulator
-        ImmutableVector finalLoc = locEstimator.estimateLocation();
-
-        // If the final loc is approximately equal to the last waypoint
-        approxEqual(path.getEnd(), finalLoc, 0.2);
-        System.out.println("finalLoc = " + finalLoc);
 
     }
 
@@ -148,10 +166,10 @@ public class PPSimulatorTest {
      *
      * @param waypoints
      */
-    private void test(PPWaypoint... waypoints) throws TimeoutException, ExecutionException {
+    private void test(String name, PPWaypoint... waypoints) throws TimeoutException, ExecutionException {
         PP_PathGenerator pathGenerator = new PP_PathGenerator(waypoints);
         Path path = pathGenerator.generate(0.05);
-        test(path);
+        test(name, path);
     }
 
     private void approxEqual(ImmutableVector a, ImmutableVector b, double epsilon) {
