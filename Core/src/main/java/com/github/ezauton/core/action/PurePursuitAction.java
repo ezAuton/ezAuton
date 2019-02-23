@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * A Pure Pursuit action which can be used in simulation or as a WPILib Command
  */
-public final class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
+public final class PurePursuitAction extends PeriodicAction  // TODO: Rename to PPAction
 {
     private final PurePursuitMovementStrategy purePursuitMovementStrategy;
     private final ITranslationalLocationEstimator translationalLocationEstimator;
@@ -32,7 +32,7 @@ public final class PPCommand extends PeriodicAction  // TODO: Rename to PPAction
      * @param lookahead                      An instance of {@link ILookahead} that can tell us how far along the path to look ahead
      * @param translationalLocationDriveable The drivetrain of the robot
      */
-    public PPCommand(long period, TimeUnit timeUnit, PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable) {
+    public PurePursuitAction(long period, TimeUnit timeUnit, PurePursuitMovementStrategy purePursuitMovementStrategy, ITranslationalLocationEstimator translationalLocationEstimator, ILookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable) {
         super(period, timeUnit);
         this.purePursuitMovementStrategy = purePursuitMovementStrategy;
         this.translationalLocationEstimator = translationalLocationEstimator;

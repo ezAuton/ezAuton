@@ -1,7 +1,5 @@
 package com.github.ezauton.core.action;
 
-import com.github.ezauton.core.utils.IClock;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +10,6 @@ import java.util.List;
 public class BaseAction implements IAction {
 
     private List<Runnable> toRun = new ArrayList<>();
-    private boolean stopped = false;
     private Runnable runnable;
 
     /**
@@ -35,30 +32,16 @@ public class BaseAction implements IAction {
     }
 
     @Override
-    public void run(IClock clock) {
+    public void run(ActionRunInfo actionRunInfo) throws Exception {
         if (runnable != null) {
             runnable.run();
         }
-    }
-
-    protected void onEnd(){
-
     }
 
     @Override
     public final IAction onFinish(Runnable onFinish) {
         toRun.add(onFinish);
         return this;
-    }
-
-    @Override
-    public final void end() {
-        stopped = true;
-        onEnd();
-    }
-
-    public final boolean isStopped() {
-        return stopped;
     }
 
     @Override

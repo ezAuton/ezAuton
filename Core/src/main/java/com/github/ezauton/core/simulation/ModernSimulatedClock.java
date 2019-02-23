@@ -1,11 +1,12 @@
 package com.github.ezauton.core.simulation;
 
 import com.github.ezauton.core.action.IAction;
-import com.github.ezauton.core.action.ThreadBuilder;
+import com.github.ezauton.core.action.tangible.MainActionScheduler;
 import com.github.ezauton.core.utils.IClock;
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,6 +32,8 @@ public class ModernSimulatedClock implements IClock, ISimulation {
     private SimulationThread simulationThread;
 
     private Thread initThread;
+
+    private MainActionScheduler mainActionScheduler = new MainActionScheduler(this);
 
     public ModernSimulatedClock() {
         simulationThread = new SimulationThread();
@@ -137,18 +140,13 @@ public class ModernSimulatedClock implements IClock, ISimulation {
         return this;
     }
 
-    @Override
-    public void scheduleAction(IAction action) {
-        add(action);
-    }
-
     /**
      * The worker thread which executes the simulations
      */
     public class SimulationThread extends Thread {
 
         boolean stopNow = false;
-        Set<Thread> threads = new HashSet<>();
+        Set<Future<Void>> futures = new HashSet<>();
 
 
         SimulationThread() {
@@ -157,7 +155,7 @@ public class ModernSimulatedClock implements IClock, ISimulation {
 
         public void stopNow() {
             stopNow = true;
-            threads.forEach(Thread::interrupt);
+            futures.forEach(future -> future.cancel(true));
         }
 
         /**
@@ -183,8 +181,7 @@ public class ModernSimulatedClock implements IClock, ISimulation {
                 action.onFinish(this::notifyCurrentActionPause);
 
 
-                ThreadBuilder threadBuilder = new ThreadBuilder(action, ModernSimulatedClock.this);
-                threads.add(threadBuilder.start());
+                futures.add(mainActionScheduler.scheduleAction(action));
 
                 // waits until we can go on to the next action
                 waitUntilCurrentActionPauses();

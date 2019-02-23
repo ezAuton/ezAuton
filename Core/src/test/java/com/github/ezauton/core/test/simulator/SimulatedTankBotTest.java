@@ -1,8 +1,6 @@
 package com.github.ezauton.core.test.simulator;
 
-import com.github.ezauton.core.action.BackgroundAction;
-import com.github.ezauton.core.action.PPCommand;
-import com.github.ezauton.core.action.TimedPeriodicAction;
+import com.github.ezauton.core.action.*;
 import com.github.ezauton.core.actuators.IVelocityMotor;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
@@ -14,6 +12,7 @@ import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrat
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.TimeWarpedClock;
 import org.junit.jupiter.api.Test;
 
@@ -21,11 +20,16 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SimulatedTankBotTest {
     @Test
-    public void testStraight2() throws IOException {
+    public void testStraight2() throws IOException, TimeoutException, ExecutionException {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -4);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 1, 3, -4);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 0, 3, -4);
@@ -38,7 +42,7 @@ public class SimulatedTankBotTest {
 
         TimeWarpedClock clock = new TimeWarpedClock(10);
         SimulatedTankRobot bot = new SimulatedTankRobot(0.2, clock, 3, 0.2, 4);
-
+        bot.getDefaultLocEstimator().reset();
         IVelocityMotor leftMotor = bot.getLeftMotor();
         IVelocityMotor rightMotor = bot.getRightMotor();
 
@@ -49,50 +53,51 @@ public class SimulatedTankBotTest {
 
         BackgroundAction background = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot::update, locEstimator::update);
 
-        sim.add(background);
-
         ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, bot);
 
-        PPCommand ppCommand = new PPCommand(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PurePursuitAction purePursuitAction = new PurePursuitAction(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
-        ppCommand.onFinish(background::end);
-        ppCommand.onFinish(() -> bot.run(0, 0));
+        ActionGroup actionGroup = new ActionGroup()
+                .with(background)
+                .addSequential(purePursuitAction);
 
-        sim.add(ppCommand);
+        sim.add(actionGroup);
 
 
         sim.runSimulation(12, TimeUnit.SECONDS);
 
-
-        String homeDir = System.getProperty("user.home");
-        java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "log.txt");
-
-        Files.createDirectories(filePath.getParent());
-
-        BufferedWriter writer = Files.newBufferedWriter(filePath);
-        writer.write(bot.log.toString());
-
-        writer.close();
-
     }
 
     @Test
-    public void testStraight() {
+    public void testStraight() throws TimeoutException, ExecutionException {
 
         TimeWarpedSimulation sim = new TimeWarpedSimulation();
-        SimulatedTankRobot bot = new SimulatedTankRobot(0.2, sim.getClock(), 3, -4, 4);
-        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(bot.getLeftDistanceSensor(), bot.getRightDistanceSensor(), bot);
+        SimulatedTankRobot simulatedBot = new SimulatedTankRobot(0.2, sim.getClock(), 3, -4, 4);
+        simulatedBot.getDefaultLocEstimator().reset();
+        TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(simulatedBot.getLeftDistanceSensor(), simulatedBot.getRightDistanceSensor(), simulatedBot);
         locEstimator.reset();
 
-        sim.add(new TimedPeriodicAction(5, TimeUnit.SECONDS, () -> bot.run(1, 1)));
-        sim.add(new BackgroundAction(10, TimeUnit.MILLISECONDS, locEstimator::update, bot::update));
+//        sim.add(new TimedPeriodicAction(5, TimeUnit.SECONDS, () -> simulatedBot.run(1, 1)));
+//
+//        sim.add(new BackgroundAction(10, TimeUnit.MILLISECONDS, locEstimator::update, simulatedBot::update));
+
+        ActionGroup actionGroup = new ActionGroup()
+                .addParallel(new TimedPeriodicAction(5, TimeUnit.SECONDS, () -> simulatedBot.run(1, 1)))
+                .with(new BackgroundAction(10, TimeUnit.MILLISECONDS, locEstimator::update, simulatedBot::update))
+                .addSequential(new DelayedAction(7, TimeUnit.SECONDS));
+
+        sim.add(actionGroup);
+
         sim.runSimulation(10, TimeUnit.SECONDS);
 
-        bot.run(0, 0);
+        simulatedBot.run(0, 0);
 
-        System.out.println("bot. = " + locEstimator.estimateLocation());
+        final ImmutableVector estimatedLocation = locEstimator.estimateLocation();
+
+        assertTrue(estimatedLocation.get(1) > 5);
+//        assertTrue(Math.abs(estimatedLocation.get(0)) < 1E-3);
 
     }
 }

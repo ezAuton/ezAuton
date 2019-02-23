@@ -80,20 +80,20 @@ public abstract class PeriodicAction extends BaseAction {
     /**
      * Called when the periodic action is first initialized
      */
-    protected void init() {
+    protected void init() throws Exception  {
     }
 
     /**
      * Called every period cycle. By default, adds given {@link Runnable}s
      */
-    protected void execute() {
+    protected void execute() throws Exception {
         runnables.forEach(Runnable::run);
     }
 
     /**
      * @return If the action is finished. Will stop execution if returns true.
      */
-    protected abstract boolean isFinished();
+    protected abstract boolean isFinished() throws Exception;
 
     /**
      * The action will attempt to try to run as close as it can to the given period.
@@ -114,8 +114,8 @@ public abstract class PeriodicAction extends BaseAction {
     }
 
     @Override
-    public final void run(IClock clock) {
-        this.clock = clock;
+    public final void run(ActionRunInfo actionRunInfo) throws Exception  {
+        this.clock = actionRunInfo.getClock();
 
         stopwatch = new Stopwatch(clock);
         stopwatch.reset();
@@ -151,7 +151,7 @@ public abstract class PeriodicAction extends BaseAction {
                 return;
             }
         }
-        while (!isFinished() && !isStopped());
+        while (!isFinished());
     }
 
     /**

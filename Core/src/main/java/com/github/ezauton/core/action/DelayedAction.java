@@ -1,7 +1,5 @@
 package com.github.ezauton.core.action;
 
-import com.github.ezauton.core.utils.IClock;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,22 +28,14 @@ public class DelayedAction extends BaseAction {
         }
     }
 
-    /**
-     * Do not override!
-     *
-     * @param clock
-     */
     @Override
-    public void run(IClock clock) {
+    public final void run(ActionRunInfo actionRunInfo) {
         try {
-            clock.sleep(millis, TimeUnit.MILLISECONDS);
+            actionRunInfo.getClock().sleep(millis, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             return;
         }
 
-        if (isStopped()) {
-            return;
-        }
         onTimeUp();
     }
 }

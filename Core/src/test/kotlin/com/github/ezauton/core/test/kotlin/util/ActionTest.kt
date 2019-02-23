@@ -4,14 +4,19 @@ import com.github.ezauton.core.action.ActionGroup
 import com.github.ezauton.core.action.BaseAction
 import com.github.ezauton.core.action.DelayedAction
 import com.github.ezauton.core.action.TimedPeriodicAction
+import com.github.ezauton.core.action.tangible.MainActionScheduler
 import com.github.ezauton.core.kotlin.wrapType
 import com.github.ezauton.core.simulation.ModernSimulatedClock
+import com.github.ezauton.core.utils.RealClock
 import com.github.ezauton.core.utils.TimeWarpedClock
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class ActionTest {
+
+    private val scheduler = MainActionScheduler(RealClock.CLOCK)
 
     @Test
     fun `overloaded periodic tries to become stable`() {
@@ -25,7 +30,10 @@ class ActionTest {
             }
         })
 
-        timedPeriodicAction.schedule().join(2_000)
+        try {
+            scheduler.scheduleAction(timedPeriodicAction).get(2_000, TimeUnit.MILLISECONDS)
+        } catch (ignored: TimeoutException) {
+        }
 
         assertEquals(2_000 / 20.toDouble(), timedPeriodicAction.timesRun.toDouble(), 2.toDouble())
     }
@@ -51,6 +59,7 @@ class ActionTest {
     @Test
     fun `action group of wrappers test`() {
 
+
         var counter = 0
 
         val actionGroup = ActionGroup(
@@ -69,7 +78,10 @@ class ActionTest {
 
         val clock = TimeWarpedClock(10.0, 0)
 
-        actionGroup.schedule(clock).join()
+
+        val warpedScheduler = MainActionScheduler(clock)
+
+        warpedScheduler.scheduleAction(actionGroup).get(4_000, TimeUnit.MILLISECONDS)
 
         assertEquals(2, counter)
 

@@ -1,12 +1,19 @@
 package com.github.ezauton.core.action;
 
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.action.tangible.ActionCallable;
 
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 
 /**
  * Describes a group of multiple IActions which itself is also an IAction
+ * <p>
+ * Create a Thread from this Action group. The ActionGroup blocks until all sub actions (including parallels) are
+ * finished. The reason for this is mentioned
+ * <a href = "https://vorpus.org/blog/notes-on-structured-concurrency-or-go-statement-considered-harmful/">here</a>.
  */
 public final class ActionGroup extends BaseAction {
     private Queue<ActionWrapper> scheduledActions;
@@ -77,7 +84,7 @@ public final class ActionGroup extends BaseAction {
     /**
      * Creates an {@link ActionGroup} with parallel actions for each {@link Runnable}
      *
-     * @param actions
+     * @param runnables actions to run
      * @return
      */
     public static ActionGroup ofParallels(Runnable... runnables) {
@@ -153,55 +160,83 @@ public final class ActionGroup extends BaseAction {
         return this;
     }
 
-    /**
-     * Create a Thread from this Action group. The ActionGroup blocks until all sub actions (including parallels) are
-     * finished. The reason for this is mentioned
-     * <a href = "https://vorpus.org/blog/notes-on-structured-concurrency-or-go-statement-considered-harmful/">here</a>.
-     *
-     * @param clock The clock that will be given to our actions
-     * @return The thread, ready to start.
-     */
-    @Override
-    public final void run(IClock clock) {
-        List<IAction> withActions = new ArrayList<>();
-        List<Thread> withActionThreads = new ArrayList<>();
+    class WithActionData {
 
-        Set<Thread> threadsToJoin = new HashSet<>();
+        private final IAction action;
+        private final Future<Void> future;
+
+        WithActionData(IAction action, Future<Void> future) {
+            this.action = action;
+            this.future = future;
+        }
+
+        public IAction getAction() {
+            return action;
+        }
+
+        public Future<Void> getFuture() {
+            return future;
+        }
+    }
+
+    @Override
+    public final void run(ActionRunInfo actionRunInfo) throws ExecutionException {
+        List<WithActionData> withActions = new ArrayList<>();
+//        List<Future<Void>> withActionFutures = new ArrayList<>();
+        List<Future<Void>> actionFutures = new ArrayList<>();
 
         for (ActionWrapper scheduledAction : scheduledActions) {
-            if (isStopped()) {
-                return;
-            }
             IAction action = scheduledAction.getAction();
 
             switch (scheduledAction.getType()) {
                 case WITH:
-                    withActions.add(action);
-
                 case PARALLEL:
-                    Thread start = new ThreadBuilder(action, clock).start();
-                    threadsToJoin.add(start);
-                    if (scheduledAction.getType() == Type.WITH) withActionThreads.add(start);
+
+                    final Future<Void> submit = actionRunInfo.getActionScheduler().scheduleAction(action);
+
+                    actionFutures.add(submit);
+
+                    if (scheduledAction.getType() == Type.WITH) withActions.add(new WithActionData(action, submit));
                     break;
                 case SEQUENTIAL:
-                    action.run(clock);
+                    try {
+                        new ActionCallable(action, actionRunInfo).call();
+                    } catch (Exception e) {
+                        finishUp(actionFutures);
+                        throw new ExecutionException("A sequential action threw an exception", e);
+                    }
 
-                    action.getFinished().forEach(Runnable::run);
-
-                    withActionThreads.forEach(Thread::interrupt);
-                    withActions.forEach(IAction::end);
-
+                    for (WithActionData withAction : withActions) {
+                        final Future<Void> future = withAction.getFuture();
+                        if (!future.isDone()) {
+                            try {
+                                withAction.getAction().interrupted();
+                                future.cancel(true);
+                            } catch (Exception e) {
+                                throw new ExecutionException("Exception in interrupt()", e);
+                            }
+                        }
+                    }
                     withActions.clear();
             }
         }
         try {
-            for (Thread thread : threadsToJoin) {
-                thread.join();
+            for (Future<Void> actionFuture : actionFutures) {
+                try {
+                    actionFuture.get();
+                } catch (CancellationException ignored) {
+                    // We are excepting exceptions to be cancelled if this
+                }
             }
         } catch (InterruptedException e) {
-            threadsToJoin.forEach(Thread::interrupt);
-            e.printStackTrace();
+            // If we get interrupted
+            finishUp(actionFutures);
         }
+    }
+
+
+    private void finishUp(Collection<Future<Void>> futures) {
+        futures.forEach(voidFuture -> voidFuture.cancel(true));
     }
 
     /**

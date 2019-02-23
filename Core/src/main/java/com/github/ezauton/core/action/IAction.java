@@ -1,9 +1,5 @@
 package com.github.ezauton.core.action;
 
-import com.github.ezauton.core.simulation.TimeWarpedSimulation;
-import com.github.ezauton.core.utils.IClock;
-import com.github.ezauton.core.utils.RealClock;
-
 import java.util.List;
 
 /**
@@ -14,14 +10,24 @@ public interface IAction {
     /**
      * Run the action given a clock 🏃‍️
      *
-     * @param clock The clock to run the action
+     * @param actionRunInfo The clock to run the action
      */
-    void run(IClock clock);
+    void run(ActionRunInfo actionRunInfo) throws Exception;
 
     /**
-     * End the action peacefully ✌️
+     * Called when the action is ended peacefully ✌️
      */
-    void end();
+    default void end() throws Exception {
+    }
+
+    /**
+     * Called when the action is ended violently 💥
+     *
+     * @throws Exception
+     */
+    default void interrupted() throws Exception {
+    }
+
 
     /**
      * Returns self. Will run onFinish when finished 🏁. Should not overwrite previous runnables, but instead append to
@@ -34,18 +40,5 @@ public interface IAction {
 
     List<Runnable> getFinished();
 
-    /**
-     * A helper method to ⌚ schedule a real-time task. If you want other ways to schedule the action see {@link ThreadBuilder} or {@link TimeWarpedSimulation}.
-     */
-    default Thread schedule() {
-        return new ThreadBuilder(this, RealClock.CLOCK).start();
-    }
-
-    /**
-     * A helper method to ⌚️ schedule a task. If you want other ways to schedule the action see {@link ThreadBuilder} or {@link TimeWarpedSimulation}.
-     */
-    default Thread schedule(IClock clock) {
-        return new ThreadBuilder(this, clock).start();
-    }
 }
 

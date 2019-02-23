@@ -1,17 +1,17 @@
 package com.github.ezauton.core.kotlin
 
 import com.github.ezauton.core.action.ActionGroup
+import com.github.ezauton.core.action.ActionRunInfo
 import com.github.ezauton.core.action.BaseAction
 import com.github.ezauton.core.action.IAction
-import com.github.ezauton.core.utils.IClock
 
 /**
  *  Create a base action whilst having access to a clock ⏱
  */
-fun baseAction(block: (IClock) -> Unit): BaseAction {
+fun baseAction(block: (ActionRunInfo) -> Unit): BaseAction {
     return object : BaseAction() {
-        override fun run(clock: IClock) {
-            block(clock)
+        override fun run(actionRunInfo: ActionRunInfo) {
+            block(actionRunInfo)
         }
     }
 }

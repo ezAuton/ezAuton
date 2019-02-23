@@ -2,12 +2,15 @@ package com.github.ezauton.core.simulation;
 
 
 import com.github.ezauton.core.action.IAction;
-import com.github.ezauton.core.action.ThreadBuilder;
+import com.github.ezauton.core.action.tangible.MainActionScheduler;
 import com.github.ezauton.core.utils.TimeWarpedClock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * A simulator which allows to run in real-time or real-time*{multiplier} 🔥
@@ -43,22 +46,25 @@ public class TimeWarpedSimulation implements ISimulation {
     }
 
     /**
-     * Run your simulation
+     * Run your simulation and blocks until done
      *
      * @param timeout  The amoount of <b>real</b> time that you want your simulation to cap out at.
      * @param timeUnit The timeunit that the timeout is in
      */
-    public void runSimulation(long timeout, TimeUnit timeUnit) {
-        List<Thread> threads = new ArrayList<>();
-        for (IAction action : actions) {
-            threads.add(new ThreadBuilder(action, timeWarpedClock).startAndWait(timeout, timeUnit));
-        }
-        threads.forEach(Thread::interrupt);
-    }
-
-
     @Override
-    public void scheduleAction(IAction action) {
-        add(action);
+    public void runSimulation(long timeout, TimeUnit timeUnit) throws TimeoutException, ExecutionException {
+        MainActionScheduler mainActionScheduler = new MainActionScheduler(timeWarpedClock);
+        List<Future<Void>> futures = new ArrayList<>();
+        for (IAction action : actions) {
+            final Future<Void> future = mainActionScheduler.scheduleAction(action);
+            futures.add(future);
+        }
+        for (Future<Void> future : futures) {
+            try {
+                future.get(timeout, timeUnit);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

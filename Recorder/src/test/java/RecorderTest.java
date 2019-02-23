@@ -1,6 +1,6 @@
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
-import com.github.ezauton.core.action.PPCommand;
+import com.github.ezauton.core.action.PurePursuitAction;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.ILookahead;
@@ -8,17 +8,19 @@ import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
+import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.recorder.JsonUtils;
 import com.github.ezauton.recorder.Recording;
-import com.github.ezauton.recorder.SimulatedTankRobot;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class RecorderTest {
 
@@ -29,7 +31,7 @@ public class RecorderTest {
     private TankRobotEncoderEncoderEstimator locEstimator;
     private ILookahead lookahead;
     private TankRobotTransLocDriveable tankRobotTransLocDriveable;
-    private PPCommand ppCommand;
+    private PurePursuitAction purePursuitAction;
     private BackgroundAction updateKinematics;
     private Recording recording;
 
@@ -60,14 +62,14 @@ public class RecorderTest {
 
         tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
-        ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
 
         updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot::update);
     }
 
     @Test
-    public void testRecording() {
+    public void testRecording() throws TimeoutException, ExecutionException {
 
 
         Recording recording = new Recording();
@@ -85,7 +87,7 @@ public class RecorderTest {
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)
                 .with(recAction)
-                .addSequential(ppCommand);
+                .addSequential(purePursuitAction);
 
         simulation.add(group);
 
