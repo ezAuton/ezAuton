@@ -78,6 +78,9 @@ public final class TankRobotEncoderEncoderEstimator implements IRotationalLocati
         lastPosRight = rightPosition;
 
         ImmutableVector dLocation = MathUtils.Kinematics.getAbsoluteDPosCurve(dl, dr, tankRobot.getLateralWheelDistance(), heading);
+        if(!dLocation.isFinite()) {
+            throw new IllegalStateException("dLocation is " + dLocation + ", which is not finite! dl = " + dl + ", dr = " + dr + ", heading = " + heading );
+        }
         location = location.add(dLocation);
         heading += MathUtils.Kinematics.getAngularDistance(dl, dr, tankRobot.getLateralWheelDistance());
         return true;

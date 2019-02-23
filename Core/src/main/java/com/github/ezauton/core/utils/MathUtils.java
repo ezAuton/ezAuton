@@ -595,7 +595,7 @@ public final class MathUtils {
          */
         public static ImmutableVector getRelativeDPosCurve(double distanceLeft, double distanceRight, double lateralWheelDistance) {
             // To account for an infinite pathplanning radius when going straight
-            if (Math.abs(distanceLeft - distanceRight) <= (distanceLeft + distanceRight) * 1E-2) {
+            if (Math.abs(distanceLeft - distanceRight) <= Math.abs(distanceLeft + distanceRight) * 1E-2) {
                 // Probably average is not needed, but it may be useful over long distances
                 return new ImmutableVector(0, (distanceLeft + distanceRight) / 2F);
             }

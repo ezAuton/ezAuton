@@ -156,7 +156,7 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
             }
 
             if (bestVector == null) {
-                String s = "bestVector is null! input: {speed: " + speed + ", loc: " + loc + "}";
+                String s = "bestVector is null! input: {speed: " + speed + ", targetLoc: " + loc + ", robotLoc: " + translationalLocationEstimator.estimateLocation() + "}";
                 throw new NullPointerException(s); //TODO: More informative error message
             }
 
