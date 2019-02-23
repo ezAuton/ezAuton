@@ -2,8 +2,7 @@ package com.github.ezauton.wpilib.motors;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
-import com.github.ezauton.core.localization.sensors.IEncoder;
-import edu.wpi.first.wpilibj.Encoder;
+import com.github.ezauton.core.localization.sensors.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -14,14 +13,14 @@ import java.util.Arrays;
  */
 public class MotorControllers {
     /**
-     * Create a combo IVelocityMotor, IEncoder, and IVoltageMotor from a CTRE motor
+     * Create a combo VelocityMotor, Encoder, and VoltageMotor from a CTRE motor
      *
      * @param motorController The instance of the motor
      * @param pidIdx          0 for normal PID, 1 for auxiliary PID.
-     * @return An {@link ITypicalMotor}
+     * @return An {@link TypicalMotor}
      */
-    public static ITypicalMotor fromCTRE(BaseMotorController motorController, int pidIdx) {
-        return new ITypicalMotor() {
+    public static TypicalMotor fromCTRE(BaseMotorController motorController, int pidIdx) {
+        return new TypicalMotor() {
             @Override
             public void runVoltage(double targetVoltage) {
                 motorController.set(ControlMode.PercentOutput, targetVoltage);
@@ -44,8 +43,8 @@ public class MotorControllers {
         };
     }
 
-    public static ITypicalMotor fromSeveralCTRE(BaseMotorController master, int pidIdx, BaseMotorController... slaves) {
-        return new ITypicalMotor() {
+    public static TypicalMotor fromSeveralCTRE(BaseMotorController master, int pidIdx, BaseMotorController... slaves) {
+        return new TypicalMotor() {
             @Override
             public void runVelocity(double targetVelocity) {
                 makeSlavesFollowMaster();
@@ -75,8 +74,8 @@ public class MotorControllers {
         };
     }
 
-    public static IEncoder fromWPILibEncoder(Encoder encoder) {
-        return new IEncoder() {
+    public static Encoder fromWPILibEncoder(edu.wpi.first.wpilibj.Encoder encoder) {
+        return new Encoder() {
             @Override
             public double getPosition() {
                 return encoder.getDistance();
@@ -90,8 +89,8 @@ public class MotorControllers {
     }
 
 
-    public static ITypicalMotor fromPWM(PIDController controller, Encoder encoder, SpeedController motor) {
-        return new ITypicalMotor() {
+    public static TypicalMotor fromPWM(PIDController controller, edu.wpi.first.wpilibj.Encoder encoder, SpeedController motor) {
+        return new TypicalMotor() {
             @Override
             public void runVoltage(double targetVoltage) {
                 controller.disable();

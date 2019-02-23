@@ -1,6 +1,6 @@
 package com.github.ezauton.core.simulation;
 
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.utils.Clock;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -9,7 +9,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * A simulator for actions
  */
-public interface ISimulation {
+public interface Simulation {
 
     /**
      * Uses real units for timeout, not simulated
@@ -20,5 +20,5 @@ public interface ISimulation {
      */
     void runSimulation(long timeout, TimeUnit timeUnit) throws TimeoutException, ExecutionException;
 
-    IClock getClock();
+    Clock getClock();
 }

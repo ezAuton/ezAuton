@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Describes a Clock. The clock can be real or simulated. The purpose of a clock is to support a {@link Stopwatch}
  */
-public interface IClock {
+public interface Clock {
     /**
      * @return The current time as read by the clock in seconds
      */

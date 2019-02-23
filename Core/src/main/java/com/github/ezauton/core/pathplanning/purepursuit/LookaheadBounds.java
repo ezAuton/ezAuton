@@ -1,12 +1,12 @@
 package com.github.ezauton.core.pathplanning.purepursuit;
 
-import com.github.ezauton.core.localization.sensors.IVelocityEstimator;
+import com.github.ezauton.core.localization.sensors.VelocityEstimator;
 
 /**
  * Easy lookahead implementation given a speed. Takes in min speed, max speed, min lookahead, max lookahead and
  * performs a linear interpolation.
  */
-public class LookaheadBounds implements ILookahead {
+public class LookaheadBounds implements Lookahead {
 
     private final double minDistance;
     private final double maxDistance;
@@ -14,7 +14,7 @@ public class LookaheadBounds implements ILookahead {
 
     private final double dDistance;
     private final double dSpeed;
-    private final IVelocityEstimator velocityEstimator;
+    private final VelocityEstimator velocityEstimator;
 
     /**
      * Create some lookahead bounds
@@ -25,7 +25,7 @@ public class LookaheadBounds implements ILookahead {
      * @param maxSpeed          Maximum speed where lookahead is allowed to be dynamic
      * @param velocityEstimator Estimator of the robot's velocity. Used to calculate lookahead based on current speed.
      */
-    public LookaheadBounds(double minDistance, double maxDistance, double minSpeed, double maxSpeed, IVelocityEstimator velocityEstimator) {
+    public LookaheadBounds(double minDistance, double maxDistance, double minSpeed, double maxSpeed, VelocityEstimator velocityEstimator) {
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
         dDistance = maxDistance - minDistance;

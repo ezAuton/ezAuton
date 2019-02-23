@@ -1,6 +1,6 @@
 package com.github.ezauton.visualizer.processor;
 
-import com.github.ezauton.core.pathplanning.IPathSegment;
+import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.frame.PurePursuitFrame;
@@ -75,7 +75,7 @@ public class PurePursuitDataProcessor implements IDataProcessor {
         ImmutableVector startingPos = ppRec.getPath().getPathSegments().get(0).getFrom();
         waypointPath.getElements().add(new MoveTo((getX(startingPos.get(0))), (getY(startingPos.get(1)))));
 
-        for (IPathSegment segment : ppRec.getPath().getPathSegments()) {
+        for (PathSegment segment : ppRec.getPath().getPathSegments()) {
             ImmutableVector to = segment.getTo();
             double x = to.get(0);
             double y = to.get(1);
@@ -120,7 +120,7 @@ public class PurePursuitDataProcessor implements IDataProcessor {
                 cpX = getX(frame.getClosestPoint().get(0));
                 cpY = getY(frame.getClosestPoint().get(1));
 
-                IPathSegment currentSegment = ppRec.getPath().getPathSegments().get(frame.getCurrentSegmentIndex());
+                PathSegment currentSegment = ppRec.getPath().getPathSegments().get(frame.getCurrentSegmentIndex());
 
                 double currentSegmentStartX = getX(currentSegment.getFrom().get(0));
                 double currentSegmentStartY = getY(currentSegment.getFrom().get(1));

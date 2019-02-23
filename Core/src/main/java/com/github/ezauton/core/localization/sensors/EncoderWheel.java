@@ -5,9 +5,9 @@ package com.github.ezauton.core.localization.sensors;
  * wheel specifications can only calculate revolutions.
  */
 //TODO: Perhaps redundant with Encoders#fixRegEncoder
-public class EncoderWheel implements ITranslationalDistanceSensor {
+public class EncoderWheel implements TranslationalDistanceSensor {
 
-    private final IEncoder encoder;
+    private final Encoder encoder;
     private final double wheelDiameter;
     private double multiplier = 1D;
     private double encoderPosMultiplied;
@@ -18,14 +18,14 @@ public class EncoderWheel implements ITranslationalDistanceSensor {
      * @param encoder       The encoder for measuring revolutions
      * @param wheelDiameter The diameter of the wheel with the encoder (recommended in ft)
      */
-    public EncoderWheel(IEncoder encoder, double wheelDiameter) {
+    public EncoderWheel(Encoder encoder, double wheelDiameter) {
         this.encoder = encoder;
         this.wheelDiameter = wheelDiameter;
         encoderPosMultiplied = encoder.getPosition() * getMultiplier();
         encoderRawPos = encoder.getPosition();
     }
 
-    public IEncoder getEncoder() {
+    public Encoder getEncoder() {
         return encoder;
     }
 

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The base implementation of an IAction. Most actions are based off of this class, as it provides an easy, base
+ * The base implementation of an Action. Most actions are based off of this class, as it provides an easy, base
  * implementation.
  */
-public class BaseAction implements IAction {
+public class BaseAction implements Action {
 
     private List<Runnable> toRun = new ArrayList<>();
     private Runnable runnable;
@@ -39,7 +39,7 @@ public class BaseAction implements IAction {
     }
 
     @Override
-    public final IAction onFinish(Runnable onFinish) {
+    public final Action onFinish(Runnable onFinish) {
         toRun.add(onFinish);
         return this;
     }

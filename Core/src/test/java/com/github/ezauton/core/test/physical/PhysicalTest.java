@@ -1,10 +1,10 @@
 package com.github.ezauton.core.test.physical;
 
 import com.github.ezauton.core.action.*;
-import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.actuators.IVoltageMotor;
+import com.github.ezauton.core.actuators.VelocityMotor;
+import com.github.ezauton.core.actuators.VoltageMotor;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
-import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
+import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +20,7 @@ public class PhysicalTest // TODO: what we using this for
      * @param leftMotor
      * @param rightMotor
      */
-    public static IAction testStraightVoltage(IVoltageMotor leftMotor, IVoltageMotor rightMotor, double voltage) {
+    public static Action testStraightVoltage(VoltageMotor leftMotor, VoltageMotor rightMotor, double voltage) {
         // run for 5 seconds
         return new PeriodicAction(20, TimeUnit.MILLISECONDS) {
             @Override
@@ -46,7 +46,7 @@ public class PhysicalTest // TODO: what we using this for
      * @param leftMotor
      * @param rightMotor
      */
-    public static IAction testStraightVelocity(IVelocityMotor leftMotor, IVelocityMotor rightMotor, double velocity) {
+    public static Action testStraightVelocity(VelocityMotor leftMotor, VelocityMotor rightMotor, double velocity) {
         // run for 5 seconds
         return new PeriodicAction(20, TimeUnit.MILLISECONDS) {
             @Override
@@ -73,8 +73,8 @@ public class PhysicalTest // TODO: what we using this for
      * @param voltage
      * @return
      */
-    public static IAction testStraightEncoderEncoderLocalization(ITranslationalDistanceSensor left, ITranslationalDistanceSensor right, IVoltageMotor leftMotor, IVoltageMotor rightMotor, double lateralWheelDistance, double voltage) {
-        IAction action = testStraightVoltage(leftMotor, rightMotor, voltage);
+    public static Action testStraightEncoderEncoderLocalization(TranslationalDistanceSensor left, TranslationalDistanceSensor right, VoltageMotor leftMotor, VoltageMotor rightMotor, double lateralWheelDistance, double voltage) {
+        Action action = testStraightVoltage(leftMotor, rightMotor, voltage);
         TankRobotEncoderEncoderEstimator localizer = new TankRobotEncoderEncoderEstimator(left, right, () -> lateralWheelDistance);
         localizer.reset();
         return new ActionGroup().with(new BackgroundAction(50, TimeUnit.MILLISECONDS, localizer::update))

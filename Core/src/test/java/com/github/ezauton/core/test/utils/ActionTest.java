@@ -30,7 +30,7 @@ public class ActionTest {
     @Test
     public void testScheduleActionInterface() throws InterruptedException, TimeoutException, ExecutionException {
         AtomicLong atomicLong = new AtomicLong(0);
-        IAction action = new IAction() {
+        Action action = new Action() {
 
             @Override
             public void run(ActionRunInfo actionRunInfo) {
@@ -43,7 +43,7 @@ public class ActionTest {
             }
 
             @Override
-            public IAction onFinish(Runnable onFinish) {
+            public Action onFinish(Runnable onFinish) {
                 return this; // Not implemented
             }
 
@@ -138,7 +138,7 @@ public class ActionTest {
         });
 
 
-        IAction group = new ActionGroup()
+        Action group = new ActionGroup()
                 .addSequential(two)
                 .addSequential(three)
                 .onFinish(() -> {
@@ -173,7 +173,7 @@ public class ActionTest {
         // when five has 2 seconds left, three2 starts
         // then finally actiongroup should terminate
 
-        IAction actionGroup = new ActionGroup()
+        Action actionGroup = new ActionGroup()
                 .addParallel(three1)
                 .addSequential(five)
                 .addSequential(three2)
@@ -206,7 +206,7 @@ public class ActionTest {
         });
 
 
-        IAction group = new ActionGroup()
+        Action group = new ActionGroup()
                 .addSequential(two)
                 .addSequential(three)
                 .onFinish(() -> {

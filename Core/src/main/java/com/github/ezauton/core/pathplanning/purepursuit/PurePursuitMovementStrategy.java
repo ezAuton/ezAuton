@@ -1,6 +1,6 @@
 package com.github.ezauton.core.pathplanning.purepursuit;
 
-import com.github.ezauton.core.pathplanning.IPathSegment;
+import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 
@@ -62,12 +62,12 @@ public class PurePursuitMovementStrategy {
 
     /**
      * @param loc       Current position of the robot
-     * @param lookahead Current lookahead as given by an ILookahead instance
+     * @param lookahead Current lookahead as given by an Lookahead instance
      * @return The wanted pose of the robot at a certain location
      */
     public ImmutableVector update(ImmutableVector loc, double lookahead) {
         latestLookahead = lookahead;
-        IPathSegment current = path.getCurrent();
+        PathSegment current = path.getCurrent();
 
         ImmutableVector currentClosestPoint = current.getClosestPoint(loc);
         latestClosestPoint = path.getClosestPoint(loc); // why do we not get closest point on current line segment???

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
-import com.github.ezauton.core.pathplanning.IPathSegment;
+import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.recorder.serializers.IPathSegmentDeserializer;
@@ -31,8 +31,8 @@ public class JsonUtils {
 //        objectMapper.enableDefaultTyping();
 
         customSerializers.addSerializer(ImmutableVector.class, new ImmutableVectorSerializer());
-        customSerializers.addSerializer(IPathSegment.class, new IPathSegmentSerializer());
-        customSerializers.addDeserializer(IPathSegment.class, new IPathSegmentDeserializer());
+        customSerializers.addSerializer(PathSegment.class, new IPathSegmentSerializer());
+        customSerializers.addDeserializer(PathSegment.class, new IPathSegmentDeserializer());
         customSerializers.addSerializer(Path.class, new PathSerializer());
 
         objectMapper.registerModule(customSerializers);

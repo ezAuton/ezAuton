@@ -3,7 +3,7 @@ package com.github.ezauton.core.action;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A background is an action that runs forever (until manually ended with {@link IAction#end()}.
+ * A background is an action that runs forever (until manually ended with {@link Action#end()}.
  */
 public class BackgroundAction extends PeriodicAction {
 

@@ -1,7 +1,7 @@
 package com.github.ezauton.core.test.simulator;
 
+import com.github.ezauton.core.action.Action;
 import com.github.ezauton.core.action.BaseAction;
-import com.github.ezauton.core.action.IAction;
 import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;
 import com.github.ezauton.core.simulation.ModernSimulatedClock;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ public class SimulatedMotorTest {
 
         ModernSimulatedClock clock = new ModernSimulatedClock();
 
-        IAction action = new BaseAction(() -> {
+        Action action = new BaseAction(() -> {
             BaseSimulatedMotor motor = new BaseSimulatedMotor(clock);
 
             assertEquals(0, motor.getPosition(), 1E-6);

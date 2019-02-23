@@ -3,7 +3,7 @@ package com.github.ezauton.core.robot;
 /**
  * A placeholder interface for physical constants of particular robots
  *
- * @see ITankRobotConstants
+ * @see TankRobotConstants
  */
-public interface IRobotConstants {
+public interface RobotConstants {
 }

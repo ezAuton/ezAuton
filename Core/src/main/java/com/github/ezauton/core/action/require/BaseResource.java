@@ -4,12 +4,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class BaseResource implements IResource {
+public class BaseResource implements Resource {
 
 
     private ReentrantLock lock = new ReentrantLock();
 
-    private Set<IResource> subResources = new HashSet<>();
+    private Set<Resource> subResources = new HashSet<>();
 
     /**
      * Add another resource sub-dependency.
@@ -17,7 +17,7 @@ public class BaseResource implements IResource {
      * @param resource
      * @return
      */
-    public BaseResource dependOn(IResource resource) {
+    public BaseResource dependOn(Resource resource) {
         subResources.add(resource);
         return this;
     }
@@ -25,7 +25,7 @@ public class BaseResource implements IResource {
     @Override
     public final void take() throws InterruptedException {
         lock.lock();
-        for (IResource subResource : subResources) {
+        for (Resource subResource : subResources) {
             subResource.take();
         }
     }
@@ -33,13 +33,13 @@ public class BaseResource implements IResource {
     @Override
     public boolean isTakenByAnyone() {
         if (lock.isLocked()) return true;
-        return subResources.stream().anyMatch(IResource::isTakenByAnyone);
+        return subResources.stream().anyMatch(Resource::isTakenByAnyone);
     }
 
     @Override
     public void giveBack() {
         lock.unlock();
-        for (IResource subResource : subResources) {
+        for (Resource subResource : subResources) {
             subResource.giveBack();
         }
     }
@@ -49,7 +49,7 @@ public class BaseResource implements IResource {
         if (!lock.isHeldByCurrentThread())
             throw new IllegalStateException("You must have possession of this resource " +
                     "(use Resource#take())");
-        for (IResource subResource : subResources) {
+        for (Resource subResource : subResources) {
             subResource.assertPossession();
         }
     }

@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * A section of a path (usually linear) which has similar laws (i.e. same transition between two speeds).
  */
-public interface IPathSegment extends Serializable {
+public interface PathSegment extends Serializable {
     double getAbsoluteDistanceEnd();
 
     boolean isBeginning();

@@ -1,8 +1,8 @@
 package com.github.ezauton.core.test.utils;
 
 import com.github.ezauton.core.actuators.Actuators;
-import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.actuators.IVoltageMotor;
+import com.github.ezauton.core.actuators.VelocityMotor;
+import com.github.ezauton.core.actuators.VoltageMotor;
 import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;
 import com.github.ezauton.core.actuators.implementations.BoundedVelocityProcessor;
 import com.github.ezauton.core.actuators.implementations.RampUpVelocityProcessor;
@@ -18,8 +18,8 @@ public class ActuatorsTest {
     @Test
     public void testSimpleVoltToVel() {
         AtomicDouble atomicDouble = new AtomicDouble();
-        IVoltageMotor voltageMotor = atomicDouble::set;
-        IVelocityMotor velocityMotor = Actuators.roughConvertVoltageToVel(voltageMotor, 16);
+        VoltageMotor voltageMotor = atomicDouble::set;
+        VelocityMotor velocityMotor = Actuators.roughConvertVoltageToVel(voltageMotor, 16);
 
         velocityMotor.runVelocity(16);
         assertEquals(1D, atomicDouble.doubleValue(), 1E-6);
@@ -46,7 +46,7 @@ public class ActuatorsTest {
     @Test
     public void testRampUpVelocityProcessor() {
         AtomicDouble velocity = new AtomicDouble();
-        IVelocityMotor velocityMotor = velocity::set;
+        VelocityMotor velocityMotor = velocity::set;
 
         ManualClock clock = new ManualClock();
 
@@ -83,7 +83,7 @@ public class ActuatorsTest {
     @Test
     public void testBoundedVelocityProcessor() {
         AtomicDouble velocity = new AtomicDouble();
-        IVelocityMotor velocityMotor = velocity::set;
+        VelocityMotor velocityMotor = velocity::set;
 
         BoundedVelocityProcessor velocityProcessor = new BoundedVelocityProcessor(velocityMotor, 16);
 
@@ -117,7 +117,7 @@ public class ActuatorsTest {
     @Test
     public void testBaseSimulatedMotor() {
         AtomicDouble velocity = new AtomicDouble();
-        IVelocityMotor velocityMotor = velocity::set;
+        VelocityMotor velocityMotor = velocity::set;
 
         ManualClock clock = new ManualClock();
         BaseSimulatedMotor simulatedMotor = new BaseSimulatedMotor(clock);

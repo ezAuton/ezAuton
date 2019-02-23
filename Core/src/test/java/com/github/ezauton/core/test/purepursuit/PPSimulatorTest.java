@@ -3,7 +3,7 @@ package com.github.ezauton.core.test.purepursuit;
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PurePursuitAction;
-import com.github.ezauton.core.actuators.IVelocityMotor;
+import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.helper.PathHelper;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
@@ -89,13 +89,13 @@ public class PPSimulatorTest {
         // Might be a problem
         SimulatedTankRobot simulatedRobot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getClock(), 14, 0.3, 16D);
         simulatedRobot.getDefaultLocEstimator().reset();
-        IVelocityMotor leftMotor = simulatedRobot.getLeftMotor();
-        IVelocityMotor rightMotor = simulatedRobot.getRightMotor();
+        VelocityMotor leftMotor = simulatedRobot.getLeftMotor();
+        VelocityMotor rightMotor = simulatedRobot.getRightMotor();
 
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(simulatedRobot.getLeftDistanceSensor(), simulatedRobot.getRightDistanceSensor(), simulatedRobot);
         locEstimator.reset();
 
-        ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
+        Lookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot);
 

@@ -4,9 +4,9 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 
 /**
- * A mostly-implemented linear IPathSegment which contains all methods save getSpeed(...).
+ * A mostly-implemented linear PathSegment which contains all methods save getSpeed(...).
  */
-public abstract class LinearPathSegment implements IPathSegment {
+public abstract class LinearPathSegment implements PathSegment {
     private ImmutableVector from;
     private ImmutableVector to;
     private boolean finish;

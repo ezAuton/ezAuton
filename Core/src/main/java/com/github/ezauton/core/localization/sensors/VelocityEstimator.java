@@ -1,5 +1,5 @@
 package com.github.ezauton.core.localization.sensors;
 
-public interface IVelocityEstimator {
+public interface VelocityEstimator {
     double getTranslationalVelocity();
 }

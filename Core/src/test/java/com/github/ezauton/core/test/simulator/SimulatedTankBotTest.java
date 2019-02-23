@@ -1,11 +1,11 @@
 package com.github.ezauton.core.test.simulator;
 
 import com.github.ezauton.core.action.*;
-import com.github.ezauton.core.actuators.IVelocityMotor;
+import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
-import com.github.ezauton.core.pathplanning.purepursuit.ILookahead;
+import com.github.ezauton.core.pathplanning.purepursuit.Lookahead;
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
@@ -16,10 +16,7 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.TimeWarpedClock;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -43,8 +40,8 @@ public class SimulatedTankBotTest {
         TimeWarpedClock clock = new TimeWarpedClock(10);
         SimulatedTankRobot bot = new SimulatedTankRobot(0.2, clock, 3, 0.2, 4);
         bot.getDefaultLocEstimator().reset();
-        IVelocityMotor leftMotor = bot.getLeftMotor();
-        IVelocityMotor rightMotor = bot.getRightMotor();
+        VelocityMotor leftMotor = bot.getLeftMotor();
+        VelocityMotor rightMotor = bot.getRightMotor();
 
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(bot.getLeftDistanceSensor(), bot.getRightDistanceSensor(), bot);
         locEstimator.reset();
@@ -53,7 +50,7 @@ public class SimulatedTankBotTest {
 
         BackgroundAction background = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot::update, locEstimator::update);
 
-        ILookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
+        Lookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, bot);
 

@@ -1,9 +1,9 @@
 package com.github.ezauton.core.localization.sensors;
 
 /**
- * Like an encoder but for translational distance instead of rotations. An example of a ITranslationalDistanceSensor is an {@link EncoderWheel}.
+ * Like an encoder but for translational distance instead of rotations. An example of a TranslationalDistanceSensor is an {@link EncoderWheel}.
  */
-public interface ITranslationalDistanceSensor {
+public interface TranslationalDistanceSensor {
     /**
      * Get the translational position
      *

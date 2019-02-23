@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.github.ezauton.core.pathplanning.IPathSegment;
+import com.github.ezauton.core.pathplanning.PathSegment;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -12,17 +12,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class IPathSegmentSerializer extends StdSerializer<IPathSegment> {
+public class IPathSegmentSerializer extends StdSerializer<PathSegment> {
     public IPathSegmentSerializer() {
         this(null);
     }
 
-    public IPathSegmentSerializer(Class<IPathSegment> t) {
+    public IPathSegmentSerializer(Class<PathSegment> t) {
         super(t);
     }
 
     @Override
-    public void serialize(IPathSegment value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
+    public void serialize(PathSegment value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
         try {
             jgen.writeStartObject();
 

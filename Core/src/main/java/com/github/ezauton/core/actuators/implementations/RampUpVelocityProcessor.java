@@ -1,9 +1,9 @@
 package com.github.ezauton.core.actuators.implementations;
 
-import com.github.ezauton.core.actuators.IVelocityMotor;
+import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.actuators.VelocityProcessor;
 import com.github.ezauton.core.localization.Updateable;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.core.utils.Stopwatch;
 
 import java.util.concurrent.TimeUnit;
@@ -25,7 +25,7 @@ public class RampUpVelocityProcessor extends VelocityProcessor implements Update
      * @param clock         The clock to keep time with
      * @param maxAccel      The maximum acceleration of this motor.
      */
-    public RampUpVelocityProcessor(IVelocityMotor velocityMotor, IClock clock, double maxAccel) {
+    public RampUpVelocityProcessor(VelocityMotor velocityMotor, Clock clock, double maxAccel) {
         super(velocityMotor);
         accelStopwatch = new Stopwatch(clock).reset();
         this.maxAccel = maxAccel;

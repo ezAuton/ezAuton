@@ -1,16 +1,16 @@
 package com.github.ezauton.core.action.tangible;
 
+import com.github.ezauton.core.action.Action;
 import com.github.ezauton.core.action.ActionRunInfo;
-import com.github.ezauton.core.action.IAction;
 
 import java.util.concurrent.Callable;
 
 public class ActionCallable implements Callable<Void> {
 
-    private final IAction action;
+    private final Action action;
     private final ActionRunInfo actionRunInfo;
 
-    public ActionCallable(IAction action, ActionRunInfo actionRunInfo) {
+    public ActionCallable(Action action, ActionRunInfo actionRunInfo) {
         this.action = action;
         this.actionRunInfo = actionRunInfo;
     }

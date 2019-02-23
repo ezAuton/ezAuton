@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * A clock which represents the real world time. ⏱
  */
-public final class RealClock implements IClock {
+public final class RealClock implements Clock {
     public static final RealClock CLOCK = new RealClock();
     private final ScheduledExecutorService executorService;
 

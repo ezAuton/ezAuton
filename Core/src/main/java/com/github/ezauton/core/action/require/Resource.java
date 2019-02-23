@@ -1,6 +1,6 @@
 package com.github.ezauton.core.action.require;
 
-public interface IResource {
+public interface Resource {
     /**
      * block until the resource if available and then take control of it
      */
