@@ -70,7 +70,7 @@ ILookahead lookahead = new LookaheadBounds(1, 7, 2, 10, locEstimator);
 
 TankRobotTransLocDriveable  tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
-PPCommand purePursuitAction = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
 Recording recording = new Recording();
 
@@ -111,7 +111,7 @@ writer.close();
 ### Visualizer
 - Once you record, you can _play_ the recording as well. Built to be extendible, so you can implement your own 
 visualizer modules as well (use `ISubRecording` in the "Recording" module and `IDataProcessor` in the "Visualizer" module).
-- ![Visualizer in Action](https://i.imgur.com/OCRWotR.gif)
+- ![Visualizer in Action](https://thumbs.gfycat.com/LimpSplendidGuanaco-size_restricted.gif)
  
 
 ## Examples
@@ -165,7 +165,7 @@ Thread thread = new BackgroundAction(locEstimator).buildThread(10);
 thread.start();
 
 // Command to start Pure Pursuit
-Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
+Command commmand = new PurePursuitAction(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
  ```
  
  ### Tank robot voltage localization
@@ -201,5 +201,5 @@ Thread thread = new BackgroundAction(locEstimator, leftMotor, rightMotor).buildT
 thread.start();
 
 // Command to start Pure Pursuit
-Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
+Command commmand = new PurePursuitAction(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
 ```
