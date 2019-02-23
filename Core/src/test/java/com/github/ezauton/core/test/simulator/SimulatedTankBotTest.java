@@ -42,7 +42,7 @@ public class SimulatedTankBotTest {
 
         TimeWarpedClock clock = new TimeWarpedClock(10);
         SimulatedTankRobot bot = new SimulatedTankRobot(0.2, clock, 3, 0.2, 4);
-
+        bot.getDefaultLocEstimator().reset();
         IVelocityMotor leftMotor = bot.getLeftMotor();
         IVelocityMotor rightMotor = bot.getRightMotor();
 
@@ -75,6 +75,7 @@ public class SimulatedTankBotTest {
 
         TimeWarpedSimulation sim = new TimeWarpedSimulation();
         SimulatedTankRobot simulatedBot = new SimulatedTankRobot(0.2, sim.getClock(), 3, -4, 4);
+        simulatedBot.getDefaultLocEstimator().reset();
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(simulatedBot.getLeftDistanceSensor(), simulatedBot.getRightDistanceSensor(), simulatedBot);
         locEstimator.reset();
 

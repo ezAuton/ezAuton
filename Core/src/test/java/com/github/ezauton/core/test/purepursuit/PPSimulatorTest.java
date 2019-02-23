@@ -30,7 +30,7 @@ public class PPSimulatorTest {
 
     private static final double LATERAL_WHEEL_DIST = 4;
 
-    //    @Test
+//    @Test
     public void testLeftToRightScale() throws TimeoutException, ExecutionException {
         PPWaypoint[] build = new PPWaypoint.Builder()
                 .add(0, 0, 16, 13, -12)
@@ -80,14 +80,15 @@ public class PPSimulatorTest {
     }
 
     private void test(String name, Path path) throws TimeoutException, ExecutionException {
-        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.1);
+
+        PurePursuitMovementStrategy ppMoveStrat = new PurePursuitMovementStrategy(path, 0.001);
 
         // Not a problem
         TimeWarpedSimulation simulation = new TimeWarpedSimulation(1);
 
         // Might be a problem
         SimulatedTankRobot simulatedRobot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getClock(), 14, 0.3, 16D);
-
+        simulatedRobot.getDefaultLocEstimator().reset();
         IVelocityMotor leftMotor = simulatedRobot.getLeftMotor();
         IVelocityMotor rightMotor = simulatedRobot.getRightMotor();
 
@@ -98,12 +99,15 @@ public class PPSimulatorTest {
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot);
 
+        Recording rec = new Recording();
+        rec.addSubRecording(new PurePursuitRecorder(simulation.getClock(), path, ppMoveStrat));
+        rec.addSubRecording(new RobotStateRecorder(simulation.getClock(), locEstimator, locEstimator, 30 / 12D, 2));
+        rec.addSubRecording(new TankDriveableRecorder("td", simulation.getClock(), simulatedRobot.getDefaultTransLocDriveable()));
+
+
         PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, simulatedRobot::update);
-
-        // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator::update);
 
         Recording recording = new Recording()
                 .addSubRecording(new RobotStateRecorder("robotstate", simulation.getClock(), locEstimator, locEstimator, simulatedRobot.getLateralWheelDistance(), 1.5))
@@ -112,28 +116,26 @@ public class PPSimulatorTest {
 
         BackgroundAction updateRecording = new BackgroundAction(20, TimeUnit.MILLISECONDS, recording::update);
 
+        // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
+        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator::update, rec::update);
+
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)
-                .with(updateRecording)
                 .with(backgroundAction)
+                .with(updateRecording)
                 .addSequential(purePursuitAction);
-
         simulation.add(group);
 
-
-        // run the simulator for 10 seconds
+        // run the simulator for 30 seconds
         try {
-            simulation.runSimulation(10, TimeUnit.SECONDS);
-        }
-        catch (TimeoutException e){
+            simulation.runSimulation(30, TimeUnit.SECONDS);
+        } finally {
             try {
-                recording.save(name+".json");
-            } catch (IOException io) {
-                io.printStackTrace();
+                recording.save(name + ".json");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-
-        // test
 
         double leftWheelVelocity = locEstimator.getLeftTranslationalWheelVelocity();
         assertEquals(0, leftWheelVelocity, 0.5D, "left wheel velocity");
@@ -146,8 +148,9 @@ public class PPSimulatorTest {
 
         // If the final loc is approximately equal to the last waypoint
         approxEqual(path.getEnd(), finalLoc, 0.2);
-        System.out.println("finalLoc = " + finalLoc);
 
+        // If the final loc is approximately equal to the last waypoint
+        approxEqual(path.getEnd(), finalLoc, 0.2);
     }
 
     /**
