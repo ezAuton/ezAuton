@@ -41,7 +41,7 @@ public class PPSimulatorTest {
                 .add(-0.5, 8.589, 16, 13, -12)
                 .add(-0.5, 12.405, 13, 13, -12)
                 .add(-0.5, 17, 8.5, 13, -12)
-                .add(1.5, 19.4, 1, 13, -12)
+                .add(1.5, 19.4, 0, 13, -12)
                 .buildArray();
 
         test("testLeftToRightScale", build);
@@ -52,7 +52,7 @@ public class PPSimulatorTest {
 
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -4);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -4);
-        PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 1, 3, -4);
+        PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 20, 0, 3, -4);
 
         test("testStraight", waypoint1, waypoint2, waypoint3);
     }
@@ -66,7 +66,7 @@ public class PPSimulatorTest {
     public void testRight() throws TimeoutException, ExecutionException {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(6, 6, 5, 3, -3);
-        PPWaypoint waypoint3 = PPWaypoint.simple2D(12, 0, 1, 3, -3);
+        PPWaypoint waypoint3 = PPWaypoint.simple2D(12, 0, 0, 3, -3);
 
         test("testRight", waypoint1, waypoint2, waypoint3);
     }
@@ -77,7 +77,7 @@ public class PPSimulatorTest {
                 .add(0, 0, 0, 15, 13, -12)
                 .add(0, 13, 0, 10, 13, -12)
                 .add(20, 17, -Math.PI / 2, 8, 13, -12)
-                .add(23, 24, 0, 1, 13, -12)
+                .add(23, 24, 0, 0, 13, -12)
                 .buildPathGenerator()
                 .generate(0.05));
     }
@@ -91,7 +91,7 @@ public class PPSimulatorTest {
 
             // Might be a problem
             SimulatedTankRobot robot = new SimulatedTankRobot(LATERAL_WHEEL_DIST, simulation.getClock(), 14, 0.3, 16D);
-
+            robot.getDefaultLocEstimator().reset();
             IVelocityMotor leftMotor = robot.getLeftMotor();
             IVelocityMotor rightMotor = robot.getRightMotor();
 
