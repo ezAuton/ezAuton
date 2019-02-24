@@ -4,13 +4,13 @@ import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.actuators.VoltageMotor;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
-import com.github.ezauton.core.localization.sensors.Encoder;
+import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor;
 import com.github.ezauton.core.utils.Clock;
 
 /**
  * Unlike {@link BaseSimulatedMotor}, this motor has static friction and finite acceleration
  */
-public class SimulatedMotor implements VelocityMotor, Encoder, VoltageMotor, Updateable {
+public class SimulatedMotor implements VelocityMotor, RotationalDistanceSensor, VoltageMotor, Updateable {
 
     private final BoundedVelocityProcessor motorConstraints;
     private final BaseSimulatedMotor motor;
