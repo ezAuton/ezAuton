@@ -1,6 +1,6 @@
 package com.github.ezauton.core.action;
 
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.core.utils.Stopwatch;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public abstract class PeriodicAction extends BaseAction {
 
     protected final long periodMillis;
     private final List<Runnable> runnables;
-    protected IClock clock;
+    protected Clock clock;
     protected Stopwatch stopwatch;
     protected boolean periodDelayAfterExecution = false;
     private int timesRun = 0;
@@ -170,7 +170,7 @@ public abstract class PeriodicAction extends BaseAction {
      *
      * @return
      */
-    public final IClock getClock() {
+    public final Clock getClock() {
         return clock;
     }
 

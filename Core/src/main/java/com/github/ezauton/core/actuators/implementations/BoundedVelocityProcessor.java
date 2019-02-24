@@ -1,6 +1,6 @@
 package com.github.ezauton.core.actuators.implementations;
 
-import com.github.ezauton.core.actuators.IVelocityMotor;
+import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.actuators.VelocityProcessor;
 
 /**
@@ -16,7 +16,7 @@ public class BoundedVelocityProcessor extends VelocityProcessor {
      * @param toApply  The motor to apply the processed velocity to
      * @param maxSpeed The maximum speed that the motor will be allowed to run at.
      */
-    public BoundedVelocityProcessor(IVelocityMotor toApply, double maxSpeed) {
+    public BoundedVelocityProcessor(VelocityMotor toApply, double maxSpeed) {
         super(toApply);
         if (maxSpeed <= 0) {
             throw new IllegalArgumentException("maxSpeed must be a positive number!");

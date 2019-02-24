@@ -1,7 +1,7 @@
 package com.github.ezauton.core.simulation;
 
 
-import com.github.ezauton.core.action.IAction;
+import com.github.ezauton.core.action.Action;
 import com.github.ezauton.core.action.tangible.MainActionScheduler;
 import com.github.ezauton.core.utils.TimeWarpedClock;
 
@@ -15,12 +15,12 @@ import java.util.concurrent.TimeoutException;
 /**
  * A simulator which allows to run in real-time or real-time*{multiplier} 🔥
  */
-public class TimeWarpedSimulation implements ISimulation {
+public class TimeWarpedSimulation implements Simulation {
 
     private final double speed;
     private final TimeWarpedClock timeWarpedClock;
 
-    private List<IAction> actions = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>();
 
     public TimeWarpedSimulation(double speed) {
         this.speed = speed;
@@ -40,7 +40,7 @@ public class TimeWarpedSimulation implements ISimulation {
         return timeWarpedClock;
     }
 
-    public TimeWarpedSimulation add(IAction action) {
+    public TimeWarpedSimulation add(Action action) {
         actions.add(action);
         return this;
     }
@@ -55,7 +55,7 @@ public class TimeWarpedSimulation implements ISimulation {
     public void runSimulation(long timeout, TimeUnit timeUnit) throws TimeoutException, ExecutionException {
         MainActionScheduler mainActionScheduler = new MainActionScheduler(timeWarpedClock);
         List<Future<Void>> futures = new ArrayList<>();
-        for (IAction action : actions) {
+        for (Action action : actions) {
             final Future<Void> future = mainActionScheduler.scheduleAction(action);
             futures.add(future);
         }

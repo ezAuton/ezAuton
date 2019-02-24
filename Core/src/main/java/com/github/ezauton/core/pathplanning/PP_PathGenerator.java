@@ -18,7 +18,7 @@ public class PP_PathGenerator implements Serializable {
     }
 
     public Path generate(double dt) {
-        List<IPathSegment> pathSegments = new ArrayList<>();
+        List<PathSegment> pathSegments = new ArrayList<>();
         double addedDistance = 0;
         for (int i = 0; i < ppWaypoints.length - 1; i++) {
             PPWaypoint from = ppWaypoints[i];

@@ -7,23 +7,23 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.ezauton.core.pathplanning.IPathSegment;
+import com.github.ezauton.core.pathplanning.PathSegment;
 
 import java.io.IOException;
 
 
-public class IPathSegmentDeserializer extends StdDeserializer<IPathSegment> {
+public class IPathSegmentDeserializer extends StdDeserializer<PathSegment> {
     public IPathSegmentDeserializer() {
         this(null);
     }
 
-    public IPathSegmentDeserializer(Class<IPathSegment> t) {
+    public IPathSegmentDeserializer(Class<PathSegment> t) {
         super(t);
     }
 
 
     @Override
-    public IPathSegment deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public PathSegment deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 
 //        System.out.println("node.getClass() = " + node.getClass());
         ObjectMapper mp = new ObjectMapper();
@@ -31,12 +31,12 @@ public class IPathSegmentDeserializer extends StdDeserializer<IPathSegment> {
         mp.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         ObjectNode node = jp.getCodec().readTree(jp);
         try {
-            Class<IPathSegment> clazz = (Class<IPathSegment>) Class.forName(node.get("@class").textValue());
+            Class<PathSegment> clazz = (Class<PathSegment>) Class.forName(node.get("@class").textValue());
             node.remove("@class");
             return mp.readValue(node.toString(), clazz);
         } catch (Exception e) {
             System.err.println(node.toString());
-            throw new IOException("Cannot deserialize alleged IPathSegment", e);
+            throw new IOException("Cannot deserialize alleged PathSegment", e);
         }
 
     }

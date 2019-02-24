@@ -3,7 +3,7 @@ import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PurePursuitAction;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.Path;
-import com.github.ezauton.core.pathplanning.purepursuit.ILookahead;
+import com.github.ezauton.core.pathplanning.purepursuit.Lookahead;
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
@@ -29,7 +29,7 @@ public class RecorderTest {
     private TimeWarpedSimulation simulation;
     private SimulatedTankRobot robot;
     private TankRobotEncoderEncoderEstimator locEstimator;
-    private ILookahead lookahead;
+    private Lookahead lookahead;
     private TankRobotTransLocDriveable tankRobotTransLocDriveable;
     private PurePursuitAction purePursuitAction;
     private BackgroundAction updateKinematics;

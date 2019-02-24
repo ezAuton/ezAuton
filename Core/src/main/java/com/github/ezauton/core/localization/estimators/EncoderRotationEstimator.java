@@ -1,9 +1,9 @@
 package com.github.ezauton.core.localization.estimators;
 
-import com.github.ezauton.core.localization.IRotationalLocationEstimator;
-import com.github.ezauton.core.localization.ITranslationalLocationEstimator;
+import com.github.ezauton.core.localization.RotationalLocationEstimator;
+import com.github.ezauton.core.localization.TranslationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
-import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
+import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 
@@ -11,10 +11,10 @@ import com.github.ezauton.core.utils.MathUtils;
  * Describes an Updateable object that can track the location and heading of the robot using a rotational device
  * which can record angle (i.e. gyro) and a device which can record translational distance (i.e., encoder).
  */
-public final class EncoderRotationEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, Updateable {
+public final class EncoderRotationEstimator implements RotationalLocationEstimator, TranslationalLocationEstimator, Updateable {
 
-    private final IRotationalLocationEstimator rotationalLocationEstimator;
-    private final ITranslationalDistanceSensor distanceSensor;
+    private final RotationalLocationEstimator rotationalLocationEstimator;
+    private final TranslationalDistanceSensor distanceSensor;
     private double velocity;
     private double lastPosition;
     private double dPos;
@@ -28,7 +28,7 @@ public final class EncoderRotationEstimator implements IRotationalLocationEstima
      * @param rotationalLocationEstimator An object that can estimate our current heading
      * @param distanceSensor              An encoder or encoder-like object.
      */
-    public EncoderRotationEstimator(IRotationalLocationEstimator rotationalLocationEstimator, ITranslationalDistanceSensor distanceSensor) {
+    public EncoderRotationEstimator(RotationalLocationEstimator rotationalLocationEstimator, TranslationalDistanceSensor distanceSensor) {
         this.rotationalLocationEstimator = rotationalLocationEstimator;
         this.distanceSensor = distanceSensor;
     }

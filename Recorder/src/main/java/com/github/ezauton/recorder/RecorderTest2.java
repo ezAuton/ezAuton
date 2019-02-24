@@ -5,7 +5,7 @@ import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PurePursuitAction;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.Path;
-import com.github.ezauton.core.pathplanning.purepursuit.ILookahead;
+import com.github.ezauton.core.pathplanning.purepursuit.Lookahead;
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
@@ -17,10 +17,7 @@ import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -50,7 +47,7 @@ public class RecorderTest2 {
         TankRobotEncoderEncoderEstimator locEstimator = robot.getDefaultLocEstimator();
         locEstimator.reset();
 
-        ILookahead lookahead = new LookaheadBounds(1, 3, 2, 10, locEstimator);
+        Lookahead lookahead = new LookaheadBounds(1, 3, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 

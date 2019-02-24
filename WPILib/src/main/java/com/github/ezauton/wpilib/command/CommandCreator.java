@@ -1,17 +1,17 @@
 package com.github.ezauton.wpilib.command;
 
-import com.github.ezauton.core.action.IAction;
+import com.github.ezauton.core.action.Action;
 import com.github.ezauton.core.simulation.ActionScheduler;
 import edu.wpi.first.wpilibj.command.Command;
 
 import java.util.concurrent.Future;
 
 /**
- * Creates a action from an {@link IAction}. This allows for abstraction and use of commands in simulators.
+ * Creates a action from an {@link Action}. This allows for abstraction and use of commands in simulators.
  */
 public class CommandCreator extends Command {
 
-    private final IAction action;
+    private final Action action;
     private final ActionScheduler actionScheduler;
     private Future<Void> voidFuture = null;
 
@@ -20,7 +20,7 @@ public class CommandCreator extends Command {
      *
      * @param action The action to run as a action
      */
-    public CommandCreator(IAction action, ActionScheduler actionScheduler) {
+    public CommandCreator(Action action, ActionScheduler actionScheduler) {
         this.action = action;
         this.actionScheduler = actionScheduler;
     }

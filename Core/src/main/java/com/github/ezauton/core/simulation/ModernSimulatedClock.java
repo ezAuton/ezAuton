@@ -1,8 +1,8 @@
 package com.github.ezauton.core.simulation;
 
-import com.github.ezauton.core.action.IAction;
+import com.github.ezauton.core.action.Action;
 import com.github.ezauton.core.action.tangible.MainActionScheduler;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.utils.Clock;
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -17,9 +17,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Often can be slower than a warped time clock and does not account
  * for time spent to process tasks
  */
-public class ModernSimulatedClock implements IClock, ISimulation {
+public class ModernSimulatedClock implements Clock, Simulation {
 
-    private final List<IAction> actions = new ArrayList<>();
+    private final List<Action> actions = new ArrayList<>();
 
     private final TreeMap<Long, Queue<Runnable>> timeToRunnableMap = new TreeMap<>();
 
@@ -65,7 +65,7 @@ public class ModernSimulatedClock implements IClock, ISimulation {
         runnables.add(runnable);
     }
 
-    public ModernSimulatedClock add(IAction action) {
+    public ModernSimulatedClock add(Action action) {
         actions.add(action);
         return this;
     }
@@ -136,7 +136,7 @@ public class ModernSimulatedClock implements IClock, ISimulation {
     }
 
     @Override
-    public IClock getClock() {
+    public Clock getClock() {
         return this;
     }
 
@@ -175,7 +175,7 @@ public class ModernSimulatedClock implements IClock, ISimulation {
          * are run instantly
          */
         private void doFirstActionCycle() {
-            for (IAction action : actions) {
+            for (Action action : actions) {
                 if (stopNow) break;
                 // Once the action is finished, we can go on to the next action
                 action.onFinish(this::notifyCurrentActionPause);

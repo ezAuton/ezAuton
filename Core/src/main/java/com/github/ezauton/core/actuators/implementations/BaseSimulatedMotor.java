@@ -1,8 +1,8 @@
 package com.github.ezauton.core.actuators.implementations;
 
-import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.actuators.VelocityMotor;
+import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
+import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.core.utils.Stopwatch;
 
 import java.util.concurrent.TimeUnit;
@@ -10,14 +10,14 @@ import java.util.concurrent.TimeUnit;
 /**
  * Describes a simulated motor with an encoder. The motor has infinite acceleration
  */
-public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanceSensor {
+public class BaseSimulatedMotor implements VelocityMotor, TranslationalDistanceSensor {
     private final Stopwatch stopwatch;
 
     /**
      * Assumed to be in dist/second
      */
     protected double velocity = 0;
-    private IVelocityMotor subscribed = null;
+    private VelocityMotor subscribed = null;
     private double position = 0;
 
     /**
@@ -25,14 +25,14 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
      *
      * @param clock The clock to keep track of time with
      */
-    public BaseSimulatedMotor(IClock clock) {
+    public BaseSimulatedMotor(Clock clock) {
         this.stopwatch = new Stopwatch(clock);
     }
 
     /**
      * @return The motor to which the velocity is being applied
      */
-    public IVelocityMotor getSubscribed() {
+    public VelocityMotor getSubscribed() {
         return subscribed;
     }
 
@@ -41,7 +41,7 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
      *
      * @param subscribed The new motor instance
      */
-    public void setSubscribed(IVelocityMotor subscribed) {
+    public void setSubscribed(VelocityMotor subscribed) {
         this.subscribed = subscribed;
     }
 

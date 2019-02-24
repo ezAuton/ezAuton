@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * A clock based off of {@link RealClock} but is warped
  */
-public class TimeWarpedClock implements IClock {
+public class TimeWarpedClock implements Clock {
     private final double speedMultiplier;
     private final RealClock realClock;
     private long startTime;

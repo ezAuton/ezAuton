@@ -9,7 +9,7 @@ import java.util.concurrent.Future;
 
 
 /**
- * Describes a group of multiple IActions which itself is also an IAction
+ * Describes a group of multiple IActions which itself is also an Action
  * <p>
  * Create a Thread from this Action group. The ActionGroup blocks until all sub actions (including parallels) are
  * finished. The reason for this is mentioned
@@ -40,7 +40,7 @@ public final class ActionGroup extends BaseAction {
      * @param actions
      * @return
      */
-    public static ActionGroup ofSequentials(IAction... actions) {
+    public static ActionGroup ofSequentials(Action... actions) {
         ActionGroup actionGroup = new ActionGroup();
         Arrays.stream(actions).forEach(actionGroup::addSequential);
         return actionGroup;
@@ -75,7 +75,7 @@ public final class ActionGroup extends BaseAction {
      * @param actions
      * @return
      */
-    public static ActionGroup ofParallels(IAction... actions) {
+    public static ActionGroup ofParallels(Action... actions) {
         ActionGroup actionGroup = new ActionGroup();
         Arrays.stream(actions).forEach(actionGroup::addParallel);
         return actionGroup;
@@ -99,7 +99,7 @@ public final class ActionGroup extends BaseAction {
      * @param action The Action to run
      * @return this
      */
-    public final ActionGroup addSequential(IAction action) {
+    public final ActionGroup addSequential(Action action) {
         this.scheduledActions.add(new ActionWrapper(action, Type.SEQUENTIAL));
 
         return this;
@@ -122,7 +122,7 @@ public final class ActionGroup extends BaseAction {
      * @param action The Action to run
      * @return this
      */
-    public final ActionGroup with(IAction action) {
+    public final ActionGroup with(Action action) {
         this.scheduledActions.add(new ActionWrapper(action, Type.WITH));
         return this;
     }
@@ -144,7 +144,7 @@ public final class ActionGroup extends BaseAction {
      * @param action The action to run
      * @return this
      */
-    public final ActionGroup addParallel(IAction action) {
+    public final ActionGroup addParallel(Action action) {
         this.scheduledActions.add(new ActionWrapper(action, Type.PARALLEL));
         return this;
     }
@@ -162,15 +162,15 @@ public final class ActionGroup extends BaseAction {
 
     class WithActionData {
 
-        private final IAction action;
+        private final Action action;
         private final Future<Void> future;
 
-        WithActionData(IAction action, Future<Void> future) {
+        WithActionData(Action action, Future<Void> future) {
             this.action = action;
             this.future = future;
         }
 
-        public IAction getAction() {
+        public Action getAction() {
             return action;
         }
 
@@ -186,7 +186,7 @@ public final class ActionGroup extends BaseAction {
         List<Future<Void>> actionFutures = new ArrayList<>();
 
         for (ActionWrapper scheduledAction : scheduledActions) {
-            IAction action = scheduledAction.getAction();
+            Action action = scheduledAction.getAction();
 
             switch (scheduledAction.getType()) {
                 case WITH:
@@ -260,16 +260,16 @@ public final class ActionGroup extends BaseAction {
     }
 
     /**
-     * Describes a wrapper class for IAction that also contains the concurrency level
+     * Describes a wrapper class for Action that also contains the concurrency level
      *
      * @see Type
      */
     public static final class ActionWrapper {
 
         private final Type type;
-        private final IAction action;
+        private final Action action;
 
-        public ActionWrapper(IAction action, Type type) {
+        public ActionWrapper(Action action, Type type) {
             this.type = type;
             this.action = action;
         }
@@ -278,7 +278,7 @@ public final class ActionGroup extends BaseAction {
             return type;
         }
 
-        public IAction getAction() {
+        public Action getAction() {
             return action;
         }
     }

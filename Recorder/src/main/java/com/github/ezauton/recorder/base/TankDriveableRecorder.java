@@ -1,7 +1,7 @@
 package com.github.ezauton.recorder.base;
 
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.recorder.SequentialDataRecorder;
 import com.github.ezauton.recorder.base.frame.TankDriveableFrame;
 
@@ -11,7 +11,7 @@ public class TankDriveableRecorder extends SequentialDataRecorder<TankDriveableF
 
     private TankRobotTransLocDriveable transLocDriveable;
 
-    public TankDriveableRecorder(String name, IClock clock, TankRobotTransLocDriveable transLocDriveable) {
+    public TankDriveableRecorder(String name, Clock clock, TankRobotTransLocDriveable transLocDriveable) {
         super(name, clock);
         this.transLocDriveable = transLocDriveable;
     }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.github.ezauton.core.localization.Updateable;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.core.utils.Stopwatch;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public abstract class SequentialDataRecorder<T extends SequentialDataFrame> impl
         this("DataSequence_" + sequenceCounter++);
     }
 
-    public SequentialDataRecorder(IClock clock) {
+    public SequentialDataRecorder(Clock clock) {
         this("DataSequence_" + sequenceCounter++, clock);
     }
 
@@ -42,7 +42,7 @@ public abstract class SequentialDataRecorder<T extends SequentialDataFrame> impl
         dataFrames = new ArrayList<>();
     }
 
-    public SequentialDataRecorder(String name, IClock clock) {
+    public SequentialDataRecorder(String name, Clock clock) {
         this(name);
         this.stopwatch = new Stopwatch(clock);
     }

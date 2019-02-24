@@ -1,16 +1,16 @@
 package com.github.ezauton.core.actuators.implementations;
 
-import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.actuators.IVoltageMotor;
+import com.github.ezauton.core.actuators.VelocityMotor;
+import com.github.ezauton.core.actuators.VoltageMotor;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
-import com.github.ezauton.core.localization.sensors.IEncoder;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor;
+import com.github.ezauton.core.utils.Clock;
 
 /**
  * Unlike {@link BaseSimulatedMotor}, this motor has static friction and finite acceleration
  */
-public class SimulatedMotor implements IVelocityMotor, IEncoder, IVoltageMotor, Updateable {
+public class SimulatedMotor implements VelocityMotor, RotationalDistanceSensor, VoltageMotor, Updateable {
 
     private final BoundedVelocityProcessor motorConstraints;
     private final BaseSimulatedMotor motor;
@@ -27,7 +27,7 @@ public class SimulatedMotor implements IVelocityMotor, IEncoder, IVoltageMotor, 
      * @param maxVel   The maximum velocity of the motor
      * @param kV       Max voltage over max velocity (see FRC Drivetrain Characterization Paper eq. 11)). Used to simulate voltage-based driving as well.
      */
-    public SimulatedMotor(IClock clock, double maxAccel, double minVel, double maxVel, double kV) {
+    public SimulatedMotor(Clock clock, double maxAccel, double minVel, double maxVel, double kV) {
         motor = new BaseSimulatedMotor(clock);
         this.kV = kV;
 

@@ -1,9 +1,9 @@
 package com.github.ezauton.core.robot.implemented;
 
-import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.localization.IRotationalLocationEstimator;
-import com.github.ezauton.core.localization.ITranslationalLocationEstimator;
-import com.github.ezauton.core.robot.ITankRobotConstants;
+import com.github.ezauton.core.actuators.VelocityMotor;
+import com.github.ezauton.core.localization.RotationalLocationEstimator;
+import com.github.ezauton.core.localization.TranslationalLocationEstimator;
+import com.github.ezauton.core.robot.TankRobotConstants;
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
@@ -18,11 +18,11 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
      */
     private static final double THRESHOLD_CURVATURE = 0.001F;
 
-    private final IVelocityMotor leftMotor;
-    private final IVelocityMotor rightMotor;
-    private final ITranslationalLocationEstimator translationalLocationEstimator;
-    private final IRotationalLocationEstimator rotationalLocationEstimator;
-    private final ITankRobotConstants tankRobotConstants;
+    private final VelocityMotor leftMotor;
+    private final VelocityMotor rightMotor;
+    private final TranslationalLocationEstimator translationalLocationEstimator;
+    private final RotationalLocationEstimator rotationalLocationEstimator;
+    private final TankRobotConstants tankRobotConstants;
     private double lastLeftTarget;
     private double lastRightTarget;
 
@@ -35,7 +35,7 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
      * @param rotationalLocationEstimator    An estimator for our heading
      * @param tankRobotConstants             A data class containing constants regarding the structure of the tank drive robot, such as lateral wheel distance
      */
-    public TankRobotTransLocDriveable(IVelocityMotor leftMotor, IVelocityMotor rightMotor, ITranslationalLocationEstimator translationalLocationEstimator, IRotationalLocationEstimator rotationalLocationEstimator, ITankRobotConstants tankRobotConstants) {
+    public TankRobotTransLocDriveable(VelocityMotor leftMotor, VelocityMotor rightMotor, TranslationalLocationEstimator translationalLocationEstimator, RotationalLocationEstimator rotationalLocationEstimator, TankRobotConstants tankRobotConstants) {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.translationalLocationEstimator = translationalLocationEstimator;

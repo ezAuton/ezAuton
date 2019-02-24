@@ -1,6 +1,6 @@
 package com.github.ezauton.core.simulation;
 
-import com.github.ezauton.core.action.IAction;
+import com.github.ezauton.core.action.Action;
 
 import java.util.concurrent.Future;
 
@@ -12,5 +12,5 @@ public interface ActionScheduler {
      * @param action
      * @return the action
      */
-    Future<Void> scheduleAction(IAction action);
+    Future<Void> scheduleAction(Action action);
 }

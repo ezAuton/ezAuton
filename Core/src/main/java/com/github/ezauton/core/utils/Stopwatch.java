@@ -3,15 +3,15 @@ package com.github.ezauton.core.utils;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A handy stopwatch for recording time in seconds since it was last polled. Requires a ⏱ {@link IClock} to keep track
+ * A handy stopwatch for recording time in seconds since it was last polled. Requires a ⏱ {@link Clock} to keep track
  * of time.
  */
 public class Stopwatch {
 
-    protected final IClock clock;
+    protected final Clock clock;
     protected long millis = -1;
 
-    public Stopwatch(IClock clock) {
+    public Stopwatch(Clock clock) {
         this.clock = clock;
     }
 
@@ -41,7 +41,7 @@ public class Stopwatch {
         return pop() / timeUnit.toMillis(1);
     }
 
-    public IClock getClock() {
+    public Clock getClock() {
         return clock;
     }
 

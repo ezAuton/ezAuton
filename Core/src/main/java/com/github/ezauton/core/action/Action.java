@@ -3,10 +3,10 @@ package com.github.ezauton.core.action;
 import java.util.List;
 
 /**
- * Describes an IAction, which is similar to a WPILib Commands, but has both linear, periodic, and other implementations.
+ * Describes an Action, which is similar to a WPILib Commands, but has both linear, periodic, and other implementations.
  * Additionally, it is not bound to the 20ms periodic timer for WPILib Commands. 👋 Commands! 🚀 🤖
  */
-public interface IAction {
+public interface Action {
     /**
      * Run the action given a clock 🏃‍️
      *
@@ -36,7 +36,7 @@ public interface IAction {
      * @param onFinish
      * @return
      */
-    IAction onFinish(Runnable onFinish);
+    Action onFinish(Runnable onFinish);
 
     List<Runnable> getFinished();
 

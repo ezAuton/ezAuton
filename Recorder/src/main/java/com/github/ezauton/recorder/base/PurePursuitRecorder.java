@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.recorder.SequentialDataRecorder;
 import com.github.ezauton.recorder.base.frame.PurePursuitFrame;
 
@@ -20,13 +20,13 @@ public class PurePursuitRecorder extends SequentialDataRecorder<PurePursuitFrame
     private PurePursuitMovementStrategy strat;
     private int i = 0;
 
-    public PurePursuitRecorder(String name, IClock clock, Path path, PurePursuitMovementStrategy strat) {
+    public PurePursuitRecorder(String name, Clock clock, Path path, PurePursuitMovementStrategy strat) {
         super(name, clock);
         this.path = path;
         this.strat = strat;
     }
 
-    public PurePursuitRecorder(IClock clock, Path path, PurePursuitMovementStrategy strat) {
+    public PurePursuitRecorder(Clock clock, Path path, PurePursuitMovementStrategy strat) {
         this("PurePursuitRecorder_" + instanceCounter++, clock, path, strat);
     }
 

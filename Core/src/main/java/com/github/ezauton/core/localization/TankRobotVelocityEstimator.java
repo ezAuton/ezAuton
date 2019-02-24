@@ -1,12 +1,12 @@
 package com.github.ezauton.core.localization;
 
-import com.github.ezauton.core.localization.sensors.IVelocityEstimator;
+import com.github.ezauton.core.localization.sensors.VelocityEstimator;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 
 /**
  * Interface for any class that knows how fast the wheels on either side of the robot are going, given that the robot has a tank drivetrain
  */
-public interface ITankRobotVelocityEstimator extends IVelocityEstimator {
+public interface TankRobotVelocityEstimator extends VelocityEstimator {
     /**
      * @return The absolute velocity of the robot
      */

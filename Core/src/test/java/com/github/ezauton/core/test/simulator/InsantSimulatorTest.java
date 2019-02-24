@@ -1,6 +1,6 @@
 package com.github.ezauton.core.test.simulator;
 
-import com.github.ezauton.core.action.IAction;
+import com.github.ezauton.core.action.Action;
 import com.github.ezauton.core.action.TimedPeriodicAction;
 import com.github.ezauton.core.simulation.ModernSimulatedClock;
 import org.junit.jupiter.api.Test;
@@ -17,12 +17,12 @@ public class InsantSimulatorTest {
 
         AtomicLong sum = new AtomicLong();
 
-        IAction actionA = new TimedPeriodicAction(20, TimeUnit.SECONDS)
+        Action actionA = new TimedPeriodicAction(20, TimeUnit.SECONDS)
                 .addRunnable(a -> () -> {
                     sum.addAndGet(a.getStopwatch().read());
                 });
 
-        IAction actionB = new TimedPeriodicAction(20, TimeUnit.SECONDS)
+        Action actionB = new TimedPeriodicAction(20, TimeUnit.SECONDS)
                 .addRunnable(a -> () -> {
                     long l = sum.addAndGet(-a.getStopwatch().read(TimeUnit.MILLISECONDS));
                     assertEquals(0, l);

@@ -1,8 +1,8 @@
 package com.github.ezauton.core.actuators.implementations;
 
-import com.github.ezauton.core.actuators.IVelocityMotor;
+import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.actuators.VelocityProcessor;
-import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
+import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
 
 /**
  * A velocity processor that does not run the motor if the target velocity is less than the minimum velocity that is required to move.
@@ -10,7 +10,7 @@ import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor
 public class StaticFrictionVelocityProcessor extends VelocityProcessor {
 
     private final double minVelMove;
-    private final ITranslationalDistanceSensor distanceSensor;
+    private final TranslationalDistanceSensor distanceSensor;
 
     /**
      * Create a StaticFrictionVelocityProcessor
@@ -19,7 +19,7 @@ public class StaticFrictionVelocityProcessor extends VelocityProcessor {
      * @param toApply        The motor to apply the processed velocity to
      * @param minVelMove     The minimum velocity to move the motor
      */
-    public StaticFrictionVelocityProcessor(ITranslationalDistanceSensor distanceSensor, IVelocityMotor toApply, double minVelMove) {
+    public StaticFrictionVelocityProcessor(TranslationalDistanceSensor distanceSensor, VelocityMotor toApply, double minVelMove) {
         super(toApply);
         this.minVelMove = minVelMove;
         this.distanceSensor = distanceSensor;

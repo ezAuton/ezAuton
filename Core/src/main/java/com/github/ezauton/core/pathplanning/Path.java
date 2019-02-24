@@ -8,16 +8,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A path is the conglomerate of several {@link IPathSegment}s, which are in turn made from two {@link ImmutableVector}s.
+ * A path is the conglomerate of several {@link PathSegment}s, which are in turn made from two {@link ImmutableVector}s.
  * Thus, a Path is the overall Path that the robot will take formed by Waypoints.
  * This class is very helpful when it comes to tracking which segment is currently on and getting the distance
  * on the path at any point (taking arclength ... basically making path 1D).
  */
 public class Path {
-    private List<IPathSegment> pathSegments;
+    private List<PathSegment> pathSegments;
 
     private int segmentOnI = -1;
-    private IPathSegment segmentOn;
+    private PathSegment segmentOn;
     private ImmutableVector closestPoint;
     private ImmutableVector robotLocationClosestPoint;
     private double length;
@@ -31,18 +31,18 @@ public class Path {
      * @param pathSegments A List of IPathSegments
      * @return A path consisting of these segments
      */
-    public static Path fromSegments(List<IPathSegment> pathSegments) {
+    public static Path fromSegments(List<PathSegment> pathSegments) {
         if (pathSegments.size() == 0) throw new IllegalArgumentException("Path must have at least one segment");
 
         Path path = new Path();
         path.pathSegments = new ArrayList<>(pathSegments);
-        IPathSegment last = pathSegments.get(pathSegments.size() - 1);
+        PathSegment last = pathSegments.get(pathSegments.size() - 1);
         path.length = last.getAbsoluteDistanceEnd();
         path.moveNextSegment();
         return path;
     }
 
-    public static Path fromSegments(IPathSegment... pathSegments) {
+    public static Path fromSegments(PathSegment... pathSegments) {
         return fromSegments(Arrays.asList(pathSegments));
     }
 
@@ -83,7 +83,7 @@ public class Path {
 //        }
 
         this.robotLocationClosestPoint = origin;
-        IPathSegment current = getCurrent();
+        PathSegment current = getCurrent();
         closestPoint = current.getClosestPoint(origin);
         return closestPoint;
     }
@@ -100,7 +100,7 @@ public class Path {
      * @return Where we should drive at
      */
     public ImmutableVector getGoalPoint(double distanceLeftCurrentSegment, double lookahead) {
-        IPathSegment current = getCurrent();
+        PathSegment current = getCurrent();
         // If our circle intersects on the assertSameDim path
         if (lookahead < distanceLeftCurrentSegment || current.isFinish()) {
             double relativeDistance = current.getLength() - distanceLeftCurrentSegment + lookahead;
@@ -111,7 +111,7 @@ public class Path {
             lookahead -= distanceLeftCurrentSegment;
 
             for (int i = segmentOnI + 1; i < pathSegments.size(); i++) {
-                IPathSegment pathSegment = pathSegments.get(i);
+                PathSegment pathSegment = pathSegments.get(i);
                 double length = pathSegment.getLength();
                 if (lookahead > length && !pathSegment.isFinish()) {
                     lookahead -= length;
@@ -132,7 +132,7 @@ public class Path {
      * @param robotPos            The location of the robot
      * @return The PathSegments that have been progressed
      */
-    public List<IPathSegment> progressIfNeeded(double distanceLeftSegment, double closestPointDist, ImmutableVector robotPos) {
+    public List<PathSegment> progressIfNeeded(double distanceLeftSegment, double closestPointDist, ImmutableVector robotPos) {
         //TODO: Move magic number
         // Move to the next segment if we are near the end of the current segment
         if (distanceLeftSegment < .16F) {
@@ -143,10 +143,10 @@ public class Path {
 
         // For all paths 2 feet ahead of us, progress on the path if we can
         //TODO: Move magic number
-        List<IPathSegment> pathSegments = nextSegmentsInclusive(2);
+        List<PathSegment> pathSegments = nextSegmentsInclusive(2);
         int i = segmentOnI;
         int j = 0;
-        for (IPathSegment pathSegment : pathSegments) {
+        for (PathSegment pathSegment : pathSegments) {
             if (shouldProgress(pathSegment, robotPos, closestPointDist)) {
                 moveSegment(i, pathSegment);
                 return pathSegments.subList(0, j + 1);
@@ -163,7 +163,7 @@ public class Path {
      * @param segmentOnI The index of the path segment
      * @param segmentOn  The instance of the path segment
      */
-    public void moveSegment(int segmentOnI, IPathSegment segmentOn) {
+    public void moveSegment(int segmentOnI, PathSegment segmentOn) {
         this.segmentOnI = segmentOnI;
         this.segmentOn = segmentOn;
     }
@@ -176,7 +176,7 @@ public class Path {
      * @param currentSegmentCPDist The distance to the closest point on the current segment
      * @return If we should progress to this "other" path segment
      */
-    public boolean shouldProgress(IPathSegment segment, ImmutableVector robotPos, double currentSegmentCPDist) {
+    public boolean shouldProgress(PathSegment segment, ImmutableVector robotPos, double currentSegmentCPDist) {
         if (segment == null) // we are on the last segment... we cannot progress
         {
             return false;
@@ -190,7 +190,7 @@ public class Path {
 
 
     public double getAbsDistanceOfClosestPoint(ImmutableVector closestPoint) {
-        IPathSegment current = getCurrent();
+        PathSegment current = getCurrent();
         ImmutableVector firstLocation = current.getFrom();
         return current.getAbsoluteDistanceStart() + firstLocation.dist(closestPoint);
     }
@@ -199,13 +199,13 @@ public class Path {
      * @param maxAheadDistance The distance to look ahead from the last segment
      * @return The segments that lay on the path between our current position and maxAheadDistance from our current position. This result includes the current path segment.
      */
-    public List<IPathSegment> nextSegmentsInclusive(double maxAheadDistance) {
-        List<IPathSegment> segments = new ArrayList<>();
-        IPathSegment startSegment = getCurrent();
+    public List<PathSegment> nextSegmentsInclusive(double maxAheadDistance) {
+        List<PathSegment> segments = new ArrayList<>();
+        PathSegment startSegment = getCurrent();
         segments.add(startSegment);
         double distanceStart = startSegment.getAbsoluteDistanceEnd();
         for (int i = segmentOnI + 1; i < pathSegments.size(); i++) {
-            IPathSegment pathSegment = pathSegments.get(i);
+            PathSegment pathSegment = pathSegments.get(i);
             if (pathSegment.getAbsoluteDistanceStart() - distanceStart < maxAheadDistance) {
                 segments.add(pathSegment);
             } else {
@@ -215,16 +215,16 @@ public class Path {
         return segments;
     }
 
-    public IPathSegment getCurrent() {
+    public PathSegment getCurrent() {
         return segmentOn;
     }
 
-    public IPathSegment getNext() {
+    public PathSegment getNext() {
         int nextSegmentI = segmentOnI + 1;
         if (nextSegmentI >= pathSegments.size()) {
             return null;
         }
-        IPathSegment nextSegment = pathSegments.get(nextSegmentI);
+        PathSegment nextSegment = pathSegments.get(nextSegmentI);
         return nextSegment;
     }
 
@@ -236,7 +236,7 @@ public class Path {
         return pathSegments.get(pathSegments.size() - 1).getTo();
     }
 
-    public List<IPathSegment> getPathSegments() {
+    public List<PathSegment> getPathSegments() {
         return pathSegments;
     }
 
