@@ -1,5 +1,10 @@
 package com.github.ezauton.core.utils;
 
+import com.github.ezauton.core.action.Action;
+import com.github.ezauton.core.simulation.ActionScheduler;
+
+import java.util.function.Supplier;
+
 public interface EzJoystickButton {
     boolean get();
 
@@ -8,7 +13,7 @@ public interface EzJoystickButton {
      *
      * @param runnable runnable to run
      */
-    void whenPressed(final Runnable runnable);
+    void whenPressed(ActionScheduler actionScheduler, final Supplier<Action> actionSupplier);
 
     /**
      * Constantly starts the given command while the button is held.
@@ -18,26 +23,26 @@ public interface EzJoystickButton {
      *
      * @param runnable the runnable to start
      */
-    void whileHeld(final Runnable runnable);
+    void whileHeld(ActionScheduler actionScheduler, final Supplier<Action> actionSupplier);
 
     /**
      * Starts the command when the button is released.
      *
      * @param runnable the runnable to start
      */
-    void whenReleased(final Runnable runnable);
+    void whenReleased(ActionScheduler actionScheduler, final Supplier<Action> actionSupplier);
 
     /**
      * Toggles the command whenever the button is pressed (on then off then on).
      *
      * @param runnable the runnable to start
      */
-    void toggleWhenPressed(final Runnable runnable);
+    void toggleWhenPressed(ActionScheduler actionScheduler, final Supplier<Action> actionSupplier);
 
     /**
      * Cancel the command when the button is pressed.
      *
      * @param runnable the runnable to start
      */
-    void cancelWhenPressed(final Runnable runnable);
+    void cancelWhenPressed(ActionScheduler actionScheduler, final Supplier<Action> actionSupplier);
 }
