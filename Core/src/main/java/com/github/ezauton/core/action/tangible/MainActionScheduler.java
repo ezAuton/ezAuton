@@ -10,15 +10,23 @@ import java.util.concurrent.Future;
 public class MainActionScheduler implements ActionScheduler {
 
     private final Clock clock;
+    private final boolean print;
 
-    public MainActionScheduler(Clock clock) {
+    public MainActionScheduler(Clock clock, boolean print) {
         this.clock = clock;
+        this.print = print;
+    }
+
+    public MainActionScheduler(Clock clock)
+    {
+        this(clock, false);
     }
 
     @Override
     public Future<Void> scheduleAction(Action action) {
-        ActionRunInfo actionRunInfo = new ActionRunInfo(clock, this);
-        final ActionCallable actionCallable = new ActionCallable(action, actionRunInfo);
+        final MainActionScheduler pass = new MainActionScheduler(clock, false);
+        ActionRunInfo actionRunInfo = new ActionRunInfo(clock,  pass);
+        final ActionCallable actionCallable = new ActionCallable(action, actionRunInfo, print);
         return ExecutorPool.getInstance().submit(actionCallable);
     }
 }

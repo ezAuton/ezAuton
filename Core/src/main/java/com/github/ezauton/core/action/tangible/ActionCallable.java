@@ -9,10 +9,16 @@ public class ActionCallable implements Callable<Void> {
 
     private final Action action;
     private final ActionRunInfo actionRunInfo;
+    private final boolean print;
 
     public ActionCallable(Action action, ActionRunInfo actionRunInfo) {
+        this(action, actionRunInfo, false);
+    }
+
+    public ActionCallable(Action action, ActionRunInfo actionRunInfo, boolean print){
         this.action = action;
         this.actionRunInfo = actionRunInfo;
+        this.print = print;
     }
 
     @Override
@@ -21,6 +27,7 @@ public class ActionCallable implements Callable<Void> {
             action.run(actionRunInfo);
         }catch (Exception e){
             action.interrupted();
+            if (print) e.printStackTrace();
             throw e;
         }
         action.end(); // end is normally called if no exception has yet been called
