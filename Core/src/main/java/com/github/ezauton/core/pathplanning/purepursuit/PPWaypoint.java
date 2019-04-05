@@ -122,5 +122,13 @@ public class PPWaypoint implements Serializable {
         public PP_PathGenerator buildPathGenerator() {
             return new PP_PathGenerator(buildArray());
         }
+
+        public Builder flipY() {
+            Builder ret = new Builder();
+            for (PPWaypoint wp :  waypointList) {
+                ret.add(-wp.getLocation().get(0), wp.getLocation().get(1), wp.getSpeed(), wp.getAcceleration(), wp.getDeceleration());
+            }
+            return ret;
+        }
     }
 }
