@@ -221,4 +221,14 @@ public class QuinticSpline implements MathUtils.Geometry.ParametricFunction {
         return last;
     }
 
+    public String getEquation()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        sb.append(String.format("%f t^5 + %f t^4 + %f t^3 + %f t^2 + %f t + %f", a.get(0), b.get(0), c.get(0), d.get(0), e.get(0), f.get(0)));
+        sb.append(",");
+        sb.append(String.format("%f t^5 + %f t^4 + %f t^3 + %f t^2 + %f t + %f", a.get(1), b.get(1), c.get(1), d.get(1), e.get(1), f.get(0)));
+        sb.append(")");
+        return sb.toString();
+    }
 }

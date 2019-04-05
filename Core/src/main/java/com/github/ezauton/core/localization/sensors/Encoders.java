@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
  * A utility class used for encoder conversion
  */
 public class Encoders {
-    public static Encoder fromTachometer(Tachometer tachometer, Stopwatch stopwatch) {
-        return new Encoder() {
+    public static RotationalDistanceSensor fromTachometer(Tachometer tachometer, Stopwatch stopwatch) {
+        return new RotationalDistanceSensor() {
 
             double position = 0;
 
@@ -36,7 +36,7 @@ public class Encoders {
      * @param enc               Reference to encoder
      * @return An TranslationalDistanceSensor
      */
-    public static TranslationalDistanceSensor toTranslationalDistanceSensor(double feetPerUnit, double fpsPerNativeSpeed, Encoder enc) {
+    public static TranslationalDistanceSensor toTranslationalDistanceSensor(double feetPerUnit, double fpsPerNativeSpeed, RotationalDistanceSensor enc) {
         return new TranslationalDistanceSensor() {
             @Override
             public double getPosition() {

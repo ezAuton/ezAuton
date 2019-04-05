@@ -7,7 +7,7 @@ package com.github.ezauton.core.localization.sensors;
 //TODO: Perhaps redundant with Encoders#fixRegEncoder
 public class EncoderWheel implements TranslationalDistanceSensor {
 
-    private final Encoder encoder;
+    private final RotationalDistanceSensor rotationalDistanceSensor;
     private final double wheelDiameter;
     private double multiplier = 1D;
     private double encoderPosMultiplied;
@@ -18,15 +18,15 @@ public class EncoderWheel implements TranslationalDistanceSensor {
      * @param encoder       The encoder for measuring revolutions
      * @param wheelDiameter The diameter of the wheel with the encoder (recommended in ft)
      */
-    public EncoderWheel(Encoder encoder, double wheelDiameter) {
-        this.encoder = encoder;
+    public EncoderWheel(RotationalDistanceSensor rotationalDistanceSensor, double wheelDiameter) {
+        this.rotationalDistanceSensor = rotationalDistanceSensor;
         this.wheelDiameter = wheelDiameter;
-        encoderPosMultiplied = encoder.getPosition() * getMultiplier();
-        encoderRawPos = encoder.getPosition();
+        encoderPosMultiplied = rotationalDistanceSensor.getPosition() * getMultiplier();
+        encoderRawPos = rotationalDistanceSensor.getPosition();
     }
 
-    public Encoder getEncoder() {
-        return encoder;
+    public RotationalDistanceSensor getRotationalDistanceSensor() {
+        return rotationalDistanceSensor;
     }
 
     public double getWheelDiameter() {
@@ -50,7 +50,7 @@ public class EncoderWheel implements TranslationalDistanceSensor {
      */
     @Override
     public double getVelocity() {
-        return encoder.getVelocity() * Math.PI * wheelDiameter * getMultiplier(); // because minute to second
+        return rotationalDistanceSensor.getVelocity() * Math.PI * wheelDiameter * getMultiplier(); // because minute to second
     }
 
     /**
@@ -58,7 +58,7 @@ public class EncoderWheel implements TranslationalDistanceSensor {
      */
     @Override
     public double getPosition() {
-        double tempRawPos = encoder.getPosition();
+        double tempRawPos = rotationalDistanceSensor.getPosition();
         encoderPosMultiplied = (tempRawPos - encoderRawPos) * getMultiplier() + encoderPosMultiplied;
         encoderRawPos = tempRawPos;
         return encoderPosMultiplied * Math.PI * wheelDiameter;

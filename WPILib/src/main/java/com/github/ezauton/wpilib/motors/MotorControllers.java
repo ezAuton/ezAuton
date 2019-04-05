@@ -2,7 +2,7 @@ package com.github.ezauton.wpilib.motors;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
-import com.github.ezauton.core.localization.sensors.Encoder;
+import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -74,8 +74,8 @@ public class MotorControllers {
         };
     }
 
-    public static Encoder fromWPILibEncoder(edu.wpi.first.wpilibj.Encoder encoder) {
-        return new Encoder() {
+    public static RotationalDistanceSensor fromWPILibEncoder(edu.wpi.first.wpilibj.Encoder encoder) {
+        return new RotationalDistanceSensor() {
             @Override
             public double getPosition() {
                 return encoder.getDistance();
