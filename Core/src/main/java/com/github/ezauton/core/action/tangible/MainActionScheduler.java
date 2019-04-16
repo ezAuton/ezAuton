@@ -29,4 +29,8 @@ public class MainActionScheduler implements ActionScheduler {
         final ActionCallable actionCallable = new ActionCallable(action, actionRunInfo, print);
         return ExecutorPool.getInstance().submit(actionCallable);
     }
+
+    public void killAll() {
+
+    }
 }
