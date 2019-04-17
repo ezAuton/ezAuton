@@ -140,6 +140,14 @@ public class SplinePPWaypoint extends PPWaypoint implements Serializable {
             return this;
         }
 
+        public Builder flipY() {
+            Builder ret = new Builder();
+            for(SplinePPWaypoint wp : waypointList) {
+                ret.add(-wp.getLocation().get(0), wp.getLocation().get(1), -wp.getTanVec().get(0), wp.getTanVec().get(1), wp.getSpeed(), wp.getAcceleration(), wp.getDeceleration());
+            }
+            return ret;
+        }
+
         public PP_PathGenerator buildPathGenerator() {
             return new PP_PathGenerator(QuinticSpline.toPathSegments(buildSplines(), waypointList));
         }
