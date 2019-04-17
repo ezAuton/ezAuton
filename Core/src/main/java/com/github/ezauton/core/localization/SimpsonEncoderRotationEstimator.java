@@ -1,28 +1,21 @@
 package com.github.ezauton.core.localization;
 
-import com.github.ezauton.core.localization.RotationalLocationEstimator;
-import com.github.ezauton.core.localization.TranslationalLocationEstimator;
-import com.github.ezauton.core.localization.Updateable;
-import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
 import com.github.ezauton.core.localization.sensors.VelocityEstimator;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.core.utils.Stopwatch;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-
-import static com.github.ezauton.core.utils.MathUtils.pow2;
-import static com.github.ezauton.core.utils.MathUtils.pow3;
 
 /**
  * Describes an Updateable object that can track the location and heading of the robot using a rotational device
  * which can record angle (i.e. gyro) and a device which can record translational distance (i.e., encoder).
- *
+ * <p>
  * This is different from EncoderRotationEstimator in that it uses Simpson's rule to acheive more accurae localization
  */
-public final class SimpsonEncoderRotationEstimator implements RotationalLocationEstimator, TranslationalLocationEstimator, Updateable {
+public final class SimpsonEncoderRotationEstimator implements RotationalLocationEstimator, TranslationalLocationEstimator, Updateable
+{
 
     private final RotationalLocationEstimator rotationalLocationEstimator;
     private final VelocityEstimator velocitySensor;
@@ -31,6 +24,8 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
     private ImmutableVector dPosVec;
     private ImmutableVector positionVec;
     private boolean init = false;
+
+    private static final double epsilon = 1e-3; // One millisecond; we can't reasonably expect our clock to have a resolution below 1 ms
 
     /**
      * The velocity vector two iterations ago
@@ -48,7 +43,8 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
      * @param rotationalLocationEstimator An object that can estimate our current heading
      * @param velocitySensor              An encoder or encoder-like object.
      */
-    public SimpsonEncoderRotationEstimator(RotationalLocationEstimator rotationalLocationEstimator, VelocityEstimator velocitySensor, Clock clock) {
+    public SimpsonEncoderRotationEstimator(RotationalLocationEstimator rotationalLocationEstimator, VelocityEstimator velocitySensor, Clock clock)
+    {
         this.rotationalLocationEstimator = rotationalLocationEstimator;
         this.velocitySensor = velocitySensor;
         this.stopwatch = new Stopwatch(clock);
@@ -67,7 +63,8 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
 
 
     @Override
-    public double estimateHeading() {
+    public double estimateHeading()
+    {
         return rotationalLocationEstimator.estimateHeading();
     }
 
@@ -75,7 +72,8 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
      * @return The current velocity vector of the robot in 2D space.
      */
     @Override
-    public ImmutableVector estimateAbsoluteVelocity() {
+    public ImmutableVector estimateAbsoluteVelocity()
+    {
         return MathUtils.Geometry.getVector(velocity, rotationalLocationEstimator.estimateHeading());
     }
 
@@ -84,7 +82,8 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
      * @return The current location as estimated from the encoders
      */
     @Override
-    public ImmutableVector estimateLocation() {
+    public ImmutableVector estimateLocation()
+    {
         return positionVec;
     }
 
@@ -94,11 +93,14 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
      * @return True
      */
     @Override
-    public boolean update() {
-        if (!init) {
+    public boolean update()
+    {
+        if(!init)
+        {
             throw new IllegalArgumentException("Must be initialized! (call reset())");
         }
-        if (rotationalLocationEstimator instanceof Updateable) {
+        if(rotationalLocationEstimator instanceof Updateable)
+        {
             ((Updateable) rotationalLocationEstimator).update();
         }
         velocity = velocitySensor.getTranslationalVelocity();
@@ -108,9 +110,8 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
 
         if(vel1ago != null && vel2ago != null)
         {
-            if(currentTime > vel1ago.getTime())
+            if(currentTime > vel1ago.getTime() + epsilon)
             {
-                System.out.println("a");
                 dPosVec = new ImmutableVector(0, 0);
 
                 Parabola xVelComponent = new Parabola(
@@ -127,7 +128,11 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
 
                 dPosVec = new ImmutableVector(xVelComponent.integrate(), yVelComponent.integrate());
 
-                if(!dPosVec.isFinite()) {
+                if(!dPosVec.isFinite())
+                {
+                    System.err.println("vel2ago = " + vel2ago);
+                    System.err.println("vel1ago = " + vel1ago);
+                    System.err.println("currentTime = " + currentTime);
                     throw new RuntimeException("Collected multiple data points at the same time. Should be impossible. File an issue on the github ezauton");
                 }
                 positionVec = positionVec.add(dPosVec);
@@ -136,14 +141,19 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
                 vel1ago = null;
             }
         }
-        else {
-            if(vel1ago == null) {
-                System.out.println("b");
-                if(vel2ago == null || currentTime > vel2ago.getTime())
+        else
+        {
+            if(vel1ago == null)
+            {
+                if(vel2ago == null || currentTime > vel2ago.getTime() + epsilon)
                 {
+//                    System.out.println("vel2ago = " + vel2ago);
+//                    System.out.println("currentTime = " + currentTime);
                     vel1ago = new TimeIndexedVelocityVec(currentTime, velVec);
                 }
-            } else if(vel2ago == null) {
+            }
+            else if(vel2ago == null)
+            {
                 vel2ago = vel1ago;
                 vel1ago = new TimeIndexedVelocityVec(currentTime, velVec);
             }
@@ -151,11 +161,13 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
         return true; //TODO: Return false sometimes?
     }
 
-    private static class TimeIndexedVelocityVec {
+    private static class TimeIndexedVelocityVec
+    {
         private final double time;
         private final ImmutableVector velVec;
 
-        TimeIndexedVelocityVec(double time, ImmutableVector velVec) {
+        TimeIndexedVelocityVec(double time, ImmutableVector velVec)
+        {
             this.time = time;
             this.velVec = velVec;
         }
@@ -181,7 +193,8 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
         }
     }
 
-    private static class Parabola {
+    private static class Parabola
+    {
         private final double a;
         private final double b;
         private final double c;
@@ -189,7 +202,8 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
         private final double lowerBound;
         private final double upperBound;
 
-        public Parabola(ImmutableVector point1, ImmutableVector point2, ImmutableVector point3) {
+        public Parabola(ImmutableVector point1, ImmutableVector point2, ImmutableVector point3)
+        {
             double x1 = point1.get(0);
             double y1 = point1.get(1);
 
@@ -202,21 +216,22 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
             lowerBound = Math.min(x1, Math.min(x2, x3));
             upperBound = Math.max(x1, Math.max(x2, x3));
 
-            double numerator =  x1 * x1 * (y2 - y3) +
-                                x3 * x3 * (y1 - y2) +
-                                x2 * x2 * (y3 - y1);
+            double numerator = x1 * x1 * (y2 - y3) +
+                               x3 * x3 * (y1 - y2) +
+                               x2 * x2 * (y3 - y1);
 
             double denominator = (x1 - x2) * (x1 - x3) * (x2 - x3);
 
-            this.b = numerator/denominator;
+            this.b = numerator / denominator;
 
             this.a = (y2 - y1 - this.b * (x2 - x1)) / (x2 * x2 - x1 * x1);
 
             this.c = y1 - a * x1 * x1 - b * x1;
         }
 
-        public double integrate() {
-            MathUtils.Function antiderivative = (x) -> ( (a * x * x * x) / 3 + (b * x * x) / 2 + (c * x));
+        public double integrate()
+        {
+            MathUtils.Function antiderivative = (x) -> ((a * x * x * x) / 3 + (b * x * x) / 2 + (c * x));
             return antiderivative.get(upperBound) - antiderivative.get(lowerBound);
         }
     }
