@@ -17,6 +17,7 @@ import java.util.concurrent.Future;
  */
 public final class ActionGroup extends BaseAction {
     private Queue<ActionWrapper> scheduledActions;
+    private boolean interrupted = false;
 
     /**
      * Creates an Action Group comprised of different kinds of commands (i.e sequential, parallel, with)
@@ -182,10 +183,12 @@ public final class ActionGroup extends BaseAction {
     @Override
     public final void run(ActionRunInfo actionRunInfo) throws ExecutionException {
         List<WithActionData> withActions = new ArrayList<>();
-//        List<Future<Void>> withActionFutures = new ArrayList<>();
         List<Future<Void>> actionFutures = new ArrayList<>();
 
         for (ActionWrapper scheduledAction : scheduledActions) {
+            if(interrupted) { // stop scheduling new actions
+                break;
+            }
             Action action = scheduledAction.getAction();
 
             switch (scheduledAction.getType()) {
@@ -234,6 +237,11 @@ public final class ActionGroup extends BaseAction {
         }
     }
 
+    @Override
+    public void interrupted() throws Exception
+    {
+        this.interrupted = true;
+    }
 
     private void finishUp(Collection<Future<Void>> futures) {
         futures.forEach(voidFuture -> voidFuture.cancel(true));
