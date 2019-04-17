@@ -30,7 +30,4 @@ public class MainActionScheduler implements ActionScheduler {
         return ExecutorPool.getInstance().submit(actionCallable);
     }
 
-    public void killAll() {
-
-    }
 }
