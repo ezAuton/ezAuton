@@ -4,7 +4,7 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
-public interface IEnvironment {
+public interface Environment {
     /**
      * This returns the anchor-pane with the field as a background. This will allow you to draw lines and rectangles.
      *

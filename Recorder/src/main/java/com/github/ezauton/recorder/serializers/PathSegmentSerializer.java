@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class IPathSegmentSerializer extends StdSerializer<PathSegment> {
-    public IPathSegmentSerializer() {
+public class PathSegmentSerializer extends StdSerializer<PathSegment> {
+    public PathSegmentSerializer() {
         this(null);
     }
 
-    public IPathSegmentSerializer(Class<PathSegment> t) {
+    public PathSegmentSerializer(Class<PathSegment> t) {
         super(t);
     }
 

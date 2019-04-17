@@ -4,8 +4,8 @@ import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.frame.PurePursuitFrame;
-import com.github.ezauton.visualizer.util.IDataProcessor;
-import com.github.ezauton.visualizer.util.IEnvironment;
+import com.github.ezauton.visualizer.util.DataProcessor;
+import com.github.ezauton.visualizer.util.Environment;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PurePursuitDataProcessor implements IDataProcessor {
+public class PurePursuitDataProcessor implements DataProcessor {
 
     private final PurePursuitRecorder ppRec;
     private final Circle goalPoint;
@@ -63,7 +63,7 @@ public class PurePursuitDataProcessor implements IDataProcessor {
     }
 
     @Override
-    public void initEnvironment(IEnvironment environment) {
+    public void initEnvironment(Environment environment) {
         this.spatialScaleFactorX = environment.getScaleFactorX();
         this.spatialScaleFactorY = environment.getScaleFactorY();
 

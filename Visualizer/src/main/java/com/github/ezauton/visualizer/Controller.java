@@ -3,12 +3,12 @@ package com.github.ezauton.visualizer;
 import javafx.animation.*;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
-import com.github.ezauton.recorder.ISubRecording;
+import com.github.ezauton.recorder.SubRecording;
 import com.github.ezauton.recorder.JsonUtils;
 import com.github.ezauton.recorder.Recording;
 import com.github.ezauton.visualizer.processor.factory.FactoryMap;
-import com.github.ezauton.visualizer.util.IDataProcessor;
-import com.github.ezauton.visualizer.util.IEnvironment;
+import com.github.ezauton.visualizer.util.DataProcessor;
+import com.github.ezauton.visualizer.util.Environment;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -27,8 +27,6 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -242,7 +240,7 @@ public class Controller implements Initializable {
         // Clear everything
         clear();
 
-        for (Map.Entry<String, ISubRecording> entry : currentRecording.getRecordingMap().entrySet()) {
+        for (Map.Entry<String, SubRecording> entry : currentRecording.getRecordingMap().entrySet()) {
             // Add new tab for each sub-recording
             GridPane content = new GridPane();
             content.setAlignment(Pos.CENTER);
@@ -253,8 +251,8 @@ public class Controller implements Initializable {
         FactoryMap factory = Visualizer.getInstance().getFactory();
 
         // currentRecorder... holds values of RECORDINGS... maps to RECORDING PROCESSORS
-        IDataProcessor dataProcessor = factory.getProcessor(currentRecording).orElseThrow(IllegalStateException::new);
-        IEnvironment env = getEnvironment();
+        DataProcessor dataProcessor = factory.getProcessor(currentRecording).orElseThrow(IllegalStateException::new);
+        Environment env = getEnvironment();
         dataProcessor.initEnvironment(env);
         List<Map.Entry<Double, List<KeyValue>>> keyValues = new ArrayList<>(dataProcessor.generateKeyValues(interpolator).entrySet());
 
@@ -400,8 +398,8 @@ public class Controller implements Initializable {
         }
     }
 
-    private IEnvironment getEnvironment() {
-        return new IEnvironment() {
+    private Environment getEnvironment() {
+        return new Environment() {
             @Override
             public AnchorPane getFieldAnchorPane() {
                 return backdrop;

@@ -12,10 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class Recording implements ISubRecording, Updateable {
+public class Recording implements SubRecording, Updateable {
     private static int recordingCounter = 0;
     @JsonProperty("recordingData")
-    private Map<String, ISubRecording> recordingMap = new HashMap<>();
+    private Map<String, SubRecording> recordingMap = new HashMap<>();
     @JsonProperty("name")
     private String name;
 
@@ -23,18 +23,18 @@ public class Recording implements ISubRecording, Updateable {
         name = "Recording_" + recordingCounter++;
     }
 
-    public Recording(ISubRecording... recordings) {
+    public Recording(SubRecording... recordings) {
         this("Recording_" + recordingCounter++, recordings);
     }
 
-    public Recording(String name, ISubRecording... recordings) {
+    public Recording(String name, SubRecording... recordings) {
         this.name = name;
-        for (ISubRecording recording : recordings) {
+        for (SubRecording recording : recordings) {
             recordingMap.put(recording.getName(), recording);
         }
     }
 
-    public Recording addSubRecording(ISubRecording subRecording) {
+    public Recording addSubRecording(SubRecording subRecording) {
         Optional.ofNullable(subRecording).ifPresent(r -> recordingMap.put(r.getName(), r));
         return this;
     }
@@ -49,14 +49,14 @@ public class Recording implements ISubRecording, Updateable {
         return JsonUtils.toStringUnchecked(this);
     }
 
-    public Map<String, ISubRecording> getRecordingMap() {
+    public Map<String, SubRecording> getRecordingMap() {
         return recordingMap;
     }
 
     @Override
     public boolean update() {
         boolean ret = false;
-        for (ISubRecording recording : recordingMap.values()) {
+        for (SubRecording recording : recordingMap.values()) {
             if (recording instanceof Updateable) {
                 // If the update method returns true
                 if (((Updateable) recording).update()) {
