@@ -44,11 +44,6 @@ public class CommandCreator extends Command {
     @Override
     protected void interrupted() {
         if(voidFuture == null) throw new IllegalStateException("somehow command has not been initialized before running");
-        try {
-            action.interrupted();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         voidFuture.cancel(true);
     }
 }
