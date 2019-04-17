@@ -12,12 +12,12 @@ import com.github.ezauton.core.pathplanning.PathSegment;
 import java.io.IOException;
 
 
-public class IPathSegmentDeserializer extends StdDeserializer<PathSegment> {
-    public IPathSegmentDeserializer() {
+public class PathSegmentDeserializer extends StdDeserializer<PathSegment> {
+    public PathSegmentDeserializer() {
         this(null);
     }
 
-    public IPathSegmentDeserializer(Class<PathSegment> t) {
+    public PathSegmentDeserializer(Class<PathSegment> t) {
         super(t);
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
  * @param <T> The type of SequentialDataFrame this DataSequence contains.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-public abstract class SequentialDataRecorder<T extends SequentialDataFrame> implements ISubRecording, Updateable, Iterable<T> {
+public abstract class SequentialDataRecorder<T extends SequentialDataFrame> implements SubRecording, Updateable, Iterable<T> {
     @JsonIgnore
     private static int sequenceCounter = 0;
     @JsonProperty("dataSequence")

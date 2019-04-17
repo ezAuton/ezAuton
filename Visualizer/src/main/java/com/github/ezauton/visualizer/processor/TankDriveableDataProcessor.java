@@ -1,8 +1,8 @@
 package com.github.ezauton.visualizer.processor;
 
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
-import com.github.ezauton.visualizer.util.IDataProcessor;
-import com.github.ezauton.visualizer.util.IEnvironment;
+import com.github.ezauton.visualizer.util.DataProcessor;
+import com.github.ezauton.visualizer.util.Environment;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TankDriveableDataProcessor implements IDataProcessor {
+public class TankDriveableDataProcessor implements DataProcessor {
 
     private final TankDriveableRecorder recorder;
     private Label leftVel;
@@ -23,7 +23,7 @@ public class TankDriveableDataProcessor implements IDataProcessor {
     }
 
     @Override
-    public void initEnvironment(IEnvironment environment) {
+    public void initEnvironment(Environment environment) {
         // heading info
         leftVel = new Label("0");
 

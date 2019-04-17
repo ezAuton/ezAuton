@@ -2,8 +2,8 @@ package com.github.ezauton.visualizer.processor;
 
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.frame.RobotStateFrame;
-import com.github.ezauton.visualizer.util.IDataProcessor;
-import com.github.ezauton.visualizer.util.IEnvironment;
+import com.github.ezauton.visualizer.util.DataProcessor;
+import com.github.ezauton.visualizer.util.Environment;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RobotStateDataProcessor implements IDataProcessor {
+public class RobotStateDataProcessor implements DataProcessor {
     private final RobotStateRecorder robotRec;
     private final List<RobotStateFrame> dataFrames;
 
@@ -47,7 +47,7 @@ public class RobotStateDataProcessor implements IDataProcessor {
     }
 
     @Override
-    public void initEnvironment(IEnvironment environment) {
+    public void initEnvironment(Environment environment) {
         this.spatialScaleFactorX = environment.getScaleFactorX();
         this.spatialScaleFactorY = environment.getScaleFactorY();
 
