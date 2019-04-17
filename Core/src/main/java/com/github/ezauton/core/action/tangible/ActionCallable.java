@@ -26,7 +26,6 @@ public class ActionCallable implements Callable<Void> {
         try {
             action.run(actionRunInfo);
         }catch (Exception e){
-            action.interrupted();
             if (print) e.printStackTrace();
             throw e;
         }

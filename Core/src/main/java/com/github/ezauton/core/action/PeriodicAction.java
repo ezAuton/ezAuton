@@ -148,11 +148,19 @@ public abstract class PeriodicAction extends BaseAction {
                     clock.sleep(wait, TimeUnit.MILLISECONDS);
                 }
             } catch (InterruptedException e) {
+                loopWaitInterrupted();
                 return;
             }
         }
         while (!isFinished());
     }
+
+    /**
+     * Called when the action is ended violently 💥
+     *
+     * @throws Exception
+     */
+    void loopWaitInterrupted(){}
 
     /**
      * A stopwatch which returns the time since the action started running (unless popped)

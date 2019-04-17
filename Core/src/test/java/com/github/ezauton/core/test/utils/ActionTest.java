@@ -88,8 +88,11 @@ public class ActionTest {
     }
 
     @Test
-    public void testActionGroupSingleNoSim() throws ExecutionException {
+    public void testActionGroupSingleNoSim() throws ExecutionException, TimeoutException, InterruptedException {
+
         TimeWarpedClock clock = new TimeWarpedClock(10);
+
+        ActionScheduler actionScheduler = new MainActionScheduler(clock);
 
         AtomicInteger count = new AtomicInteger(0);
         count.compareAndSet(0, 1);
@@ -101,7 +104,8 @@ public class ActionTest {
                 .addSequential(action);
 
 
-        group.run(new ActionRunInfo(clock, null));
+        final Future<Void> voidFuture = actionScheduler.scheduleAction(group);
+        voidFuture.get(10, TimeUnit.SECONDS);
         assertEquals(4, count.get());
     }
 
@@ -294,33 +298,38 @@ public class ActionTest {
 
 
     @Test
-    public void testKillingActionGroups() throws Exception
-    {
+    public void testKillingActionGroups() throws Exception {
         TimeWarpedClock clock = new TimeWarpedClock(10);
 
         MainActionScheduler actionScheduler = new MainActionScheduler(clock);
 
-        AtomicDouble number1 = new AtomicDouble();
-        ActionGroup ag = new ActionGroup()
-                .addSequential(() -> number1.getAndAdd(1))
-                .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
-                .addSequential(() -> number1.getAndAdd(1))
-                .addSequential(new TimedPeriodicAction(1000, TimeUnit.MILLISECONDS))
-                .addSequential(() -> number1.getAndAdd(1))
-                .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
-                .addSequential(() -> number1.getAndAdd(1));
+        AtomicDouble counter = new AtomicDouble();
 
-        Future<Void> voidFuture = actionScheduler.scheduleAction(ag);
-        while(true) {
-            if(number1.get() == 2)
-            {
-                ag.interrupted();
+        ActionGroup actionGroup = new ActionGroup()
+                .addSequential(() -> counter.getAndAdd(1))
+                .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
+
+
+                .addSequential(() -> counter.getAndAdd(1))
+
+                .addSequential(new TimedPeriodicAction(1000, TimeUnit.MILLISECONDS))
+
+                .addSequential(() -> counter.getAndAdd(1))
+                .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
+
+                .addSequential(() -> counter.getAndAdd(1));
+
+        Future<Void> voidFuture = actionScheduler.scheduleAction(actionGroup);
+
+        while (true) {
+            if (counter.get() == 2) {
                 voidFuture.cancel(true);
                 break;
             }
         }
-
+        assertEquals(2, counter.get());
         Thread.sleep(1000);
-        assertEquals(2, number1.get());
+
+        assertEquals(2, counter.get());
     }
 }

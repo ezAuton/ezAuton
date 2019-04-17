@@ -17,7 +17,6 @@ import java.util.concurrent.Future;
  */
 public final class ActionGroup extends BaseAction {
     private Queue<ActionWrapper> scheduledActions;
-    private boolean interrupted = false;
 
     /**
      * Creates an Action Group comprised of different kinds of commands (i.e sequential, parallel, with)
@@ -186,26 +185,40 @@ public final class ActionGroup extends BaseAction {
         List<Future<Void>> actionFutures = new ArrayList<>();
 
         for (ActionWrapper scheduledAction : scheduledActions) {
-            if(interrupted) { // stop scheduling new actions
-                break;
+            if(Thread.interrupted()){
+                cancelAll(actionFutures);
+                return;
             }
             Action action = scheduledAction.getAction();
 
+            final Future<Void> submit = actionRunInfo.getActionScheduler().scheduleAction(action);
+            actionFutures.add(submit);
+
             switch (scheduledAction.getType()) {
                 case WITH:
+                    withActions.add(new WithActionData(action, submit));
+                    break;
                 case PARALLEL:
-
-                    final Future<Void> submit = actionRunInfo.getActionScheduler().scheduleAction(action);
-
-                    actionFutures.add(submit);
-
-                    if (scheduledAction.getType() == Type.WITH) withActions.add(new WithActionData(action, submit));
                     break;
                 case SEQUENTIAL:
                     try {
-                        new ActionCallable(action, actionRunInfo).call();
-                    } catch (Exception e) {
-                        finishUp(actionFutures);
+                        /*
+                        It might seem odd why we are scheduling even sequential actions.
+                        You might ask — "why can't we just run the callable directly?"
+
+                        The reason is we would never get the interruption exception...SA WOULD
+                        we are not the ones blocking ... THE SA is.
+                        Thus, to be able to process InterruptedExceptions, the action must be running detached from
+                        the action group.
+                         */
+                        submit.get();
+                    }
+                    catch (InterruptedException e){
+                        cancelAll(actionFutures);
+                        return;
+                    }
+                    catch (CancellationException e) {
+                        cancelAll(actionFutures);
                         throw new ExecutionException("A sequential action threw an exception", e);
                     }
 
@@ -213,7 +226,6 @@ public final class ActionGroup extends BaseAction {
                         final Future<Void> future = withAction.getFuture();
                         if (!future.isDone()) {
                             try {
-                                withAction.getAction().interrupted();
                                 future.cancel(true);
                             } catch (Exception e) {
                                 throw new ExecutionException("Exception in interrupt()", e);
@@ -232,18 +244,13 @@ public final class ActionGroup extends BaseAction {
                 }
             }
         } catch (InterruptedException e) {
+            System.out.println("reeeee");
             // If we get interrupted
-            finishUp(actionFutures);
+            cancelAll(actionFutures);
         }
     }
 
-    @Override
-    public void interrupted() throws Exception
-    {
-        this.interrupted = true;
-    }
-
-    private void finishUp(Collection<Future<Void>> futures) {
+    private void cancelAll(Collection<Future<Void>> futures) {
         futures.forEach(voidFuture -> voidFuture.cancel(true));
     }
 

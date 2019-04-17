@@ -21,15 +21,6 @@ public interface Action {
     }
 
     /**
-     * Called when the action is ended violently 💥
-     *
-     * @throws Exception
-     */
-    default void interrupted() throws Exception {
-    }
-
-
-    /**
      * Returns self. Will run onFinish when finished 🏁. Should not overwrite previous runnables, but instead append to
      * list of runnables to run when finished.
      *
