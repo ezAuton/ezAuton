@@ -9,6 +9,7 @@ import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.utils.RealClock;
 import com.github.ezauton.core.utils.Stopwatch;
 import com.github.ezauton.core.utils.TimeWarpedClock;
+import com.google.common.util.concurrent.AtomicDouble;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -291,4 +292,35 @@ public class ActionTest {
         assertTrue(list.isEmpty());
     }
 
+
+    @Test
+    public void testKillingActionGroups() throws Exception
+    {
+        TimeWarpedClock clock = new TimeWarpedClock(10);
+
+        MainActionScheduler actionScheduler = new MainActionScheduler(clock);
+
+        AtomicDouble number1 = new AtomicDouble();
+        ActionGroup ag = new ActionGroup()
+                .addSequential(() -> number1.getAndAdd(1))
+                .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
+                .addSequential(() -> number1.getAndAdd(1))
+                .addSequential(new TimedPeriodicAction(1000, TimeUnit.MILLISECONDS))
+                .addSequential(() -> number1.getAndAdd(1))
+                .addSequential(new TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
+                .addSequential(() -> number1.getAndAdd(1));
+
+        Future<Void> voidFuture = actionScheduler.scheduleAction(ag);
+        while(true) {
+            if(number1.get() == 2)
+            {
+                ag.interrupted();
+                voidFuture.cancel(true);
+                break;
+            }
+        }
+
+        Thread.sleep(1000);
+        assertEquals(2, number1.get());
+    }
 }
