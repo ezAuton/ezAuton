@@ -4,6 +4,7 @@ package com.github.ezauton.core.simulation;
 import com.github.ezauton.core.action.Action;
 import com.github.ezauton.core.action.tangible.MainActionScheduler;
 import com.github.ezauton.core.utils.TimeWarpedClock;
+import kotlin.Deprecated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,10 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * A simulator which allows to run in real-time or real-time*{multiplier} 🔥
+ *
+ * @deprecated Use {@link ActionScheduler}
  */
-public class TimeWarpedSimulation implements Simulation {
+public final class TimeWarpedSimulation implements Simulation {
 
     private final double speed;
     private final TimeWarpedClock timeWarpedClock;

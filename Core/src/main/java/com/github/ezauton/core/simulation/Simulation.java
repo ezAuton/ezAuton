@@ -8,6 +8,7 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * A simulator for actions
+ * @deprecated Use {@link ActionScheduler}
  */
 public interface Simulation {
 

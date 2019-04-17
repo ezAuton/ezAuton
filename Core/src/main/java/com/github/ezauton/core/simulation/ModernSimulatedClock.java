@@ -16,8 +16,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Can also operate as a clock, even outside the simulator.
  * Often can be slower than a warped time clock and does not account
  * for time spent to process tasks
+ *
+ * @deprecated Use {@link ActionScheduler}
+ *
  */
-public class ModernSimulatedClock implements Clock, Simulation {
+public final class ModernSimulatedClock implements Clock, Simulation {
 
     private final List<Action> actions = new ArrayList<>();
 
