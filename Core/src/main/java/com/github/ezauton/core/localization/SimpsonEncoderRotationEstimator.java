@@ -110,6 +110,7 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
         {
             if(currentTime > vel1ago.getTime())
             {
+                System.out.println("a");
                 dPosVec = new ImmutableVector(0, 0);
 
                 Parabola xVelComponent = new Parabola(
@@ -125,15 +126,23 @@ public final class SimpsonEncoderRotationEstimator implements RotationalLocation
                 );
 
                 dPosVec = new ImmutableVector(xVelComponent.integrate(), yVelComponent.integrate());
+
+                if(!dPosVec.isFinite()) {
+                    throw new RuntimeException("Collected multiple data points at the same time. Should be impossible. File an issue on the github ezauton");
+                }
                 positionVec = positionVec.add(dPosVec);
 
-                vel2ago = vel1ago;
-                vel1ago = new TimeIndexedVelocityVec(currentTime, velVec);
+                vel2ago = new TimeIndexedVelocityVec(currentTime, velVec);
+                vel1ago = null;
             }
         }
         else {
             if(vel1ago == null) {
-                vel1ago = new TimeIndexedVelocityVec(currentTime, velVec);
+                System.out.println("b");
+                if(vel2ago == null || currentTime > vel2ago.getTime())
+                {
+                    vel1ago = new TimeIndexedVelocityVec(currentTime, velVec);
+                }
             } else if(vel2ago == null) {
                 vel2ago = vel1ago;
                 vel1ago = new TimeIndexedVelocityVec(currentTime, velVec);
