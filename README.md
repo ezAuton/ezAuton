@@ -6,6 +6,9 @@
 # ezAuton
 A collection of tools to help with FRC autonomous for Java robots. 
 
+## Resources to Learn
+- [Medium — How to use ezAuton to write cleaner code for FRC](https://medium.com/@andrew.gazelka/how-to-use-ezauton-to-write-cleaner-code-for-frc-ea18d0243936)
+
 ## Included
 
 #### Localization
