@@ -143,7 +143,7 @@ public abstract class PeriodicAction extends BaseAction {
             try {
                 if (wait < 0) {
                     // TODO: probably should be an exception or a better way of displaying than this. (needs to be catchable though)
-                    System.out.printf("The action is executing slower than the set period! milliseconds behind: %d\n", -wait);
+//                    System.out.printf("The action is executing slower than the set period! milliseconds behind: %d\n", -wait);
                 } else if (wait > 0) {
                     clock.sleep(wait, TimeUnit.MILLISECONDS);
                 }
