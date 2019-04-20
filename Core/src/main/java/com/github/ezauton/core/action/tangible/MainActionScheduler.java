@@ -5,12 +5,15 @@ import com.github.ezauton.core.action.Action;
 import com.github.ezauton.core.simulation.ActionScheduler;
 import com.github.ezauton.core.utils.Clock;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 
 public class MainActionScheduler implements ActionScheduler {
 
     private final Clock clock;
     private final boolean print;
+    private final List<ActionDescriptor> allFutures = new ArrayList<>();
 
     public MainActionScheduler(Clock clock, boolean print) {
         this.clock = clock;
@@ -27,7 +30,29 @@ public class MainActionScheduler implements ActionScheduler {
         final MainActionScheduler pass = new MainActionScheduler(clock, false);
         ActionRunInfo actionRunInfo = new ActionRunInfo(clock,  pass);
         final ActionCallable actionCallable = new ActionCallable(action, actionRunInfo, print);
-        return ExecutorPool.getInstance().submit(actionCallable);
+        Future<Void> future = ExecutorPool.getInstance().submit(actionCallable);
+        allFutures.add(new ActionDescriptor(action, future));
+        return future;
+    }
+
+    public void killAll() throws Exception
+    {
+        for(ActionDescriptor desc : allFutures)
+        {
+            desc.future.cancel(true);
+        }
+        allFutures.clear();
+
+    }
+
+    private static class ActionDescriptor {
+        private final Action action;
+        private final Future<Void> future;
+
+        private ActionDescriptor(Action action, Future<Void> future) {
+            this.action = action;
+            this.future = future;
+        }
     }
 
 }
