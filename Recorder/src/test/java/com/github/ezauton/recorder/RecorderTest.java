@@ -1,3 +1,5 @@
+package com.github.ezauton.recorder;
+
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PurePursuitAction;
