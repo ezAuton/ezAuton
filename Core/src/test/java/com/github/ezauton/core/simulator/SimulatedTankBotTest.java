@@ -9,7 +9,7 @@ import com.github.ezauton.core.pathplanning.purepursuit.Lookahead;
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
-import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
+import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
@@ -52,7 +52,7 @@ public class SimulatedTankBotTest {
 
         Lookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
-        TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, bot);
+        TankRobotTransLocDrivable tankRobotTransLocDriveable = new TankRobotTransLocDrivable(leftMotor, rightMotor, locEstimator, locEstimator, bot);
 
         PurePursuitAction purePursuitAction = new PurePursuitAction(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 

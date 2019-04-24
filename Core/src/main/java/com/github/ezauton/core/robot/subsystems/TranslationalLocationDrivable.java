@@ -5,7 +5,7 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 /**
  * Maps a speed of travel and a location to an action from the robot to go towards that location with the given speed.
  */
-public interface TranslationalLocationDriveable {
+public interface TranslationalLocationDrivable {
     /**
      * Move the robot from our current location to a target location while respecting a maximum speed
      *

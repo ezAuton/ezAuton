@@ -47,8 +47,7 @@ public class PurePursuitMovementStrategy {
      * @see <a href="https://www.chiefdelphi.com/forums/showthread.php?threadid=162713">Velocity and End Behavior (Chief Delphi)</a>
      */
     private ImmutableVector calculateAbsoluteGoalPoint(double distanceCurrentSegmentLeft, double lookAheadDistance) {
-        if (!Double.isFinite(distanceCurrentSegmentLeft))
-            throw new IllegalArgumentException("distanceCurrentSegmentLeft (" + distanceCurrentSegmentLeft + ") must be finite");
+        if (!Double.isFinite(distanceCurrentSegmentLeft)) throw new IllegalArgumentException("distanceCurrentSegmentLeft (" + distanceCurrentSegmentLeft + ") must be finite");
         // The intersections with the path we are following and the circle around the robot of
         // radius lookAheadDistance. These intersections will determine the "goal point" we
         // will generate an arc to go to.

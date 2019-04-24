@@ -1,6 +1,6 @@
 package com.github.ezauton.recorder.base;
 
-import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
+import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable;
 import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.recorder.SequentialDataRecorder;
 import com.github.ezauton.recorder.base.frame.TankDriveableFrame;
@@ -9,9 +9,9 @@ import java.util.concurrent.TimeUnit;
 
 public class TankDriveableRecorder extends SequentialDataRecorder<TankDriveableFrame> {
 
-    private TankRobotTransLocDriveable transLocDriveable;
+    private TankRobotTransLocDrivable transLocDriveable;
 
-    public TankDriveableRecorder(String name, Clock clock, TankRobotTransLocDriveable transLocDriveable) {
+    public TankDriveableRecorder(String name, Clock clock, TankRobotTransLocDrivable transLocDriveable) {
         super(name, clock);
         this.transLocDriveable = transLocDriveable;
     }

@@ -9,7 +9,7 @@ import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEs
 import com.github.ezauton.core.pathplanning.PP_PathGenerator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.purepursuit.*;
-import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
+import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
@@ -97,7 +97,7 @@ public class PPSimulatorTest {
 
         Lookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
 
-        TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot);
+        TankRobotTransLocDrivable tankRobotTransLocDriveable = new TankRobotTransLocDrivable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot);
 
         Recording rec = new Recording();
         rec.addSubRecording(new PurePursuitRecorder(simulation.getClock(), path, ppMoveStrat));

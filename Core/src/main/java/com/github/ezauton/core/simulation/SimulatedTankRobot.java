@@ -8,7 +8,7 @@ import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEs
 import com.github.ezauton.core.localization.sensors.Encoders;
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
 import com.github.ezauton.core.robot.TankRobotConstants;
-import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
+import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable;
 import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.core.utils.Stopwatch;
 
@@ -25,7 +25,7 @@ public class SimulatedTankRobot implements TankRobotConstants, Updateable {
     private final TranslationalDistanceSensor leftTDS;
     private final TranslationalDistanceSensor rightTDS;
     private final TankRobotEncoderEncoderEstimator defaultLocationEstimator;
-    private final TankRobotTransLocDriveable defaultTranslationalLocationDriveable
+    private final TankRobotTransLocDrivable defaultTranslationalLocationDriveable
             ;
 //    public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
     private UpdateableGroup toUpdate = new UpdateableGroup();
@@ -51,7 +51,7 @@ public class SimulatedTankRobot implements TankRobotConstants, Updateable {
         this.lateralWheelDistance = lateralWheelDistance;
 
         this.defaultLocationEstimator = new TankRobotEncoderEncoderEstimator(getLeftDistanceSensor(), getRightDistanceSensor(), this);
-        this.defaultTranslationalLocationDriveable = new TankRobotTransLocDriveable(left, right, defaultLocationEstimator, defaultLocationEstimator, this);
+        this.defaultTranslationalLocationDriveable = new TankRobotTransLocDrivable(left, right, defaultLocationEstimator, defaultLocationEstimator, this);
 
     }
 
@@ -62,7 +62,7 @@ public class SimulatedTankRobot implements TankRobotConstants, Updateable {
         return defaultLocationEstimator;
     }
 
-    public TankRobotTransLocDriveable getDefaultTransLocDriveable() {
+    public TankRobotTransLocDrivable getDefaultTransLocDriveable() {
         return defaultTranslationalLocationDriveable;
     }
 

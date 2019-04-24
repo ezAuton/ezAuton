@@ -1,24 +1,19 @@
-package com.github.ezauton.core.action;
-
-import java.util.List;
+package com.github.ezauton.core.action
 
 /**
  * Describes an Action, which is similar to a WPILib Commands, but has both linear, periodic, and other implementations.
  * Additionally, it is not bound to the 20ms periodic timer for WPILib Commands. 👋 Commands! 🚀 🤖
  */
-public interface Action {
+interface Action {
+
+    val finished: List<Runnable>
     /**
      * Run the action given a clock 🏃‍️
      *
      * @param actionRunInfo The clock to run the action
      */
-    void run(ActionRunInfo actionRunInfo) throws Exception;
-
-    /**
-     * Called when the action is ended peacefully ✌️
-     */
-    default void end() throws Exception {
-    }
+    @Throws(Exception::class)
+    suspend fun run(actionRunInfo: ActionRunInfo)
 
     /**
      * Returns self. Will run onFinish when finished 🏁. Should not overwrite previous runnables, but instead append to
@@ -27,9 +22,6 @@ public interface Action {
      * @param onFinish
      * @return
      */
-    Action onFinish(Runnable onFinish);
-
-    List<Runnable> getFinished();
+    fun onFinish(onFinish: Runnable): Action
 
 }
-

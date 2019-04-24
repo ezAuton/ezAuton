@@ -4,14 +4,14 @@ import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.localization.RotationalLocationEstimator;
 import com.github.ezauton.core.localization.TranslationalLocationEstimator;
 import com.github.ezauton.core.robot.TankRobotConstants;
-import com.github.ezauton.core.robot.subsystems.TranslationalLocationDriveable;
+import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 
 /**
  * Describes the kinematics for a robot with a tank drivetrain
  */
-public class TankRobotTransLocDriveable implements TranslationalLocationDriveable {
+public class TankRobotTransLocDrivable implements TranslationalLocationDrivable {
 
     /**
      * The minimum curvature, below which we are driving on a straight line
@@ -35,7 +35,7 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
      * @param rotationalLocationEstimator    An estimator for our heading
      * @param tankRobotConstants             A data class containing constants regarding the structure of the tank drive robot, such as lateral wheel distance
      */
-    public TankRobotTransLocDriveable(VelocityMotor leftMotor, VelocityMotor rightMotor, TranslationalLocationEstimator translationalLocationEstimator, RotationalLocationEstimator rotationalLocationEstimator, TankRobotConstants tankRobotConstants) {
+    public TankRobotTransLocDrivable(VelocityMotor leftMotor, VelocityMotor rightMotor, TranslationalLocationEstimator translationalLocationEstimator, RotationalLocationEstimator rotationalLocationEstimator, TankRobotConstants tankRobotConstants) {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.translationalLocationEstimator = translationalLocationEstimator;
