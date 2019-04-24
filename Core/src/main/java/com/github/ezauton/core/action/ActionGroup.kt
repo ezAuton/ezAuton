@@ -104,13 +104,13 @@ class ActionGroup : BaseAction {
 
     internal inner class WithActionData(val action: Action, val future: Future<Void>)
 
-    override suspend fun run(actionRunInfo: ActionRunInfo) = coroutineScope {
+    override suspend fun run() = coroutineScope {
         val withActions = ArrayList<Job>()
         val jobs = ArrayList<Job>()
 
         for (scheduledAction in scheduledActions) {
             val action = scheduledAction.action
-            val submit = launch { action.run(actionRunInfo) }
+            val submit = launch { action.run() }
 
             jobs.add(submit)
 

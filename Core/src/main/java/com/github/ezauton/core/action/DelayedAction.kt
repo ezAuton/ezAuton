@@ -22,7 +22,7 @@ class DelayedAction(waitDuration: Duration) : BaseAction() {
         runnable?.run()
     }
 
-    override suspend fun run(actionRunInfo: ActionRunInfo) {
+    override suspend fun run() {
         try {
             delay(millis)
         } catch (e: InterruptedException) {

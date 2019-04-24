@@ -112,7 +112,7 @@ abstract class PeriodicAction
         runnables.forEach { it.run() }
     }
 
-    override suspend fun run(actionRunInfo: ActionRunInfo) {
+    override suspend fun run() {
         val clock = RealClock.CLOCK
 
         stopwatch = Stopwatch(clock)

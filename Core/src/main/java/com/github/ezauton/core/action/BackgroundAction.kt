@@ -12,5 +12,5 @@ class BackgroundAction
  */
 (period: Duration, vararg runnables: Runnable) : PeriodicAction(period, *runnables) {
 
-    override val isFinished: Boolean get() = false
+    override fun isFinished() = false
 }
