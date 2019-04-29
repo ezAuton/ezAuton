@@ -1,0 +1,45 @@
+package com.github.ezauton.core.localization.sensors
+
+/**
+ * The combination of an encoder and a wheel. This allows to calculate translational distance. An encoder without
+ * wheel specifications can only calculate revolutions.
+ */
+//TODO: Perhaps redundant with Encoders#fixRegEncoder
+class EncoderWheel
+/**
+ * @param encoder       The encoder for measuring revolutions
+ * @param wheelDiameter The diameter of the wheel with the encoder (recommended in ft)
+ */
+(val rotationalDistanceSensor: RotationalDistanceSensor, val wheelDiameter: Double) : TranslationalDistanceSensor {
+    /**
+     * @param multiplier If there are additional gear ratios to consider, this is the multiplier
+     * (wheel rev / encoder rev)
+     */
+    var multiplier = 1.0
+    private var encoderPosMultiplied: Double = 0.toDouble()
+    private var encoderRawPos: Double = 0.toDouble()
+
+    /**
+     * @return velocity (probably in ft/s)
+     */
+    override// because minute to second
+    val velocity: Double
+        get() = rotationalDistanceSensor.velocity * Math.PI * wheelDiameter * multiplier
+
+    /**
+     * @return position (probably in ft)
+     */
+    override val position: Double
+        get() {
+            val tempRawPos = rotationalDistanceSensor.position
+            encoderPosMultiplied = (tempRawPos - encoderRawPos) * multiplier + encoderPosMultiplied
+            encoderRawPos = tempRawPos
+            return encoderPosMultiplied * Math.PI * wheelDiameter
+        }
+
+
+    init {
+        encoderPosMultiplied = rotationalDistanceSensor.position * multiplier
+        encoderRawPos = rotationalDistanceSensor.position
+    }
+}

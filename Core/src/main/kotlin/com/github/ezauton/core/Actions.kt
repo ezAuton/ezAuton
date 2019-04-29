@@ -1,9 +1,6 @@
 package com.github.ezauton.core
 
-import com.github.ezauton.core.action.ActionGroup
-import com.github.ezauton.core.action.ActionRunInfo
-import com.github.ezauton.core.action.BaseAction
-import com.github.ezauton.core.action.Action
+import com.github.ezauton.core.action.*
 
 /**
  *  Create a base action whilst having access to a clock ⏱
@@ -14,6 +11,10 @@ fun baseAction(block: (ActionRunInfo) -> Unit): BaseAction {
             block(actionRunInfo)
         }
     }
+}
+
+interface ResourceManager {
+
 }
 
 /**
