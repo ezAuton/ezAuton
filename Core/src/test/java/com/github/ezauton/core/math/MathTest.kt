@@ -2,11 +2,11 @@ package com.github.ezauton.core.math
 
 import com.github.ezauton.core.pathplanning.LinearPathSegment
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-import com.github.ezauton.core.utils.MathUtils
 import com.google.common.collect.ImmutableMap
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 class MathTest {
     private val DELTA = 1E-5
@@ -33,7 +33,6 @@ class MathTest {
         val absoluteDistance = pathSegment.getAbsoluteDistance(closestPoint)
 
         //        System.out.println(absoluteDistance);
-
 
         // path = PathSegment{from=ImmutableVector{elements=[-0.5, 8.589]}, to=ImmutableVector{elements=[-0.5, 12.405]}}
         // getClosestPoint() ==> distance along
@@ -86,7 +85,6 @@ class MathTest {
         assertEquals(distance, relativeCoord.get(1), 0.001)
         assertEquals(0.0, absoluteCoord.sub(absCoord).mag2(), 1E-7)
     }
-
 
     /**
      * Should be a complete rotation around a circle (dpos = 0)
@@ -225,7 +223,6 @@ class MathTest {
         assertEquals(0.0, MathUtils.shiftRadiansBounded(0.0, MathUtils.TAU), DELTA)
         assertEquals(Math.PI, MathUtils.shiftRadiansBounded(Math.PI / 2, Math.PI / 2), DELTA)
         assertEquals(0.0, MathUtils.shiftRadiansBounded(Math.PI / 2, 3 * Math.PI / 2), DELTA)
-
     }
 
     @Test
@@ -335,7 +332,6 @@ class MathTest {
         assertEquals(3 * Math.PI / 4, MathUtils.Geometry.getThetaFromPoints(i, j), DELTA)
         assertEquals(-Math.PI / 4, MathUtils.Geometry.getThetaFromPoints(i.mul(-1.0), j.mul(-1.0)), DELTA)
         assertEquals(0.0, MathUtils.Geometry.getThetaFromPoints(j, diag), DELTA) // line from j to diag is flat
-
     }
 
     @Test
@@ -366,8 +362,6 @@ class MathTest {
         val segment = MathUtils.Geometry.LineR2(testCases[3][0], testCases[3][1])
         val perp = segment.getPerp(robotPos)
         vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[3][0], testCases[3][1], robotPos), segment.intersection(perp))
-
-
     }
 
     @Test
@@ -462,9 +456,7 @@ class MathTest {
         assertTrue(MathUtils.Algebra.hasOddSymmetry(map))
     }
 
-
     private fun vectorsCloseEnough(a: ImmutableVector, b: ImmutableVector?) {
         assertTrue(MathUtils.epsilonEquals(a, b!!, 1E-3))
     }
-
 }

@@ -1,35 +1,33 @@
 package com.github.ezauton.core.simulator
 
-import com.github.ezauton.core.action.*
-import com.github.ezauton.core.actuators.VelocityMotor
+import com.github.ezauton.core.action.ActionGroup
+import com.github.ezauton.core.action.DelayedAction
+import com.github.ezauton.core.action.PurePursuitAction
+import com.github.ezauton.core.action.TimedPeriodicAction
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.pathplanning.PP_PathGenerator
-import com.github.ezauton.core.pathplanning.Path
-import com.github.ezauton.core.pathplanning.purepursuit.Lookahead
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.TimeWarpedSimulation
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
 import com.github.ezauton.core.utils.TimeWarpedClock
-import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-
 import java.io.IOException
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-
 class SimulatedTankBotTest {
     @Test
     @Throws(IOException::class, TimeoutException::class, ExecutionException::class)
     fun testStraight2() {
+
+        val test = atomic(1)
+
         val waypoint1 = PPWaypoint.simple2D(0.0, 0.0, 0.0, 3.0, -4.0)
         val waypoint2 = PPWaypoint.simple2D(0.0, 6.0, 1.0, 3.0, -4.0)
         val waypoint3 = PPWaypoint.simple2D(0.0, 20.0, 0.0, 3.0, -4.0)
@@ -65,9 +63,7 @@ class SimulatedTankBotTest {
 
         sim.add(actionGroup)
 
-
         sim.runSimulation(12, TimeUnit.SECONDS)
-
     }
 
     @Test
@@ -99,6 +95,5 @@ class SimulatedTankBotTest {
 
         assertTrue(estimatedLocation.get(1) > 5)
         assertTrue(Math.abs(estimatedLocation.get(0)) < 0.1)
-
     }
 }

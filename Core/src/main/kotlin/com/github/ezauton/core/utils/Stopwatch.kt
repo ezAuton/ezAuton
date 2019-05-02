@@ -1,7 +1,6 @@
 package com.github.ezauton.core.utils
 
-
-import com.github.ezauton.core.utils.units.Duration
+import com.github.ezauton.conversion.Duration
 
 /**
  * A handy stopwatch for recording time in seconds since it was last polled. Requires a ⏱ [Clock] to keep track

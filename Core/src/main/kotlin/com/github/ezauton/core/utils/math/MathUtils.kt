@@ -33,10 +33,10 @@ private val SIN_TABLE by lazy {
         array[i] = Math.sin(i.toDouble() * Math.PI * 2.0 / 65536.0)
     }
 
-    array[0] = 0.0       /* 0π */
-    array[16384] = 1.0   /* π/2 */
-    array[32768] = 0.0   /* 2π */
-    array[49152] = -1.0  /* 3π/2 */
+    array[0] = 0.0 /* 0π */
+    array[16384] = 1.0 /* π/2 */
+    array[32768] = 0.0 /* 2π */
+    array[49152] = -1.0 /* 3π/2 */
     array
 }
 
@@ -75,7 +75,11 @@ fun perp(immutableVector: ImmutableVector): ImmutableVector {
 fun cross(a: ImmutableVector, b: ImmutableVector): ImmutableVector {
     a.assertDimension(3)
     b.assertDimension(3)
-    return ImmutableVector(a.get(1) * b.get(2) - b.get(1) * a.get(2), a.get(0) * b.get(2) - b.get(0) * a.get(2), a.get(0) * b.get(1) - b.get(0) * a.get(1))
+    return ImmutableVector(
+        a.get(1) * b.get(2) - b.get(1) * a.get(2),
+        a.get(0) * b.get(2) - b.get(0) * a.get(2),
+        a.get(0) * b.get(1) - b.get(0) * a.get(1)
+    )
 }
 
 fun shiftRadiansBounded(initRadians: Double, shift: Double): Double {
@@ -88,7 +92,11 @@ fun shiftRadiansBounded(initRadians: Double, shift: Double): Double {
  * @return Returns true if numbers are assertSameDim sign
  */
 fun signSame(x: Double, y: Double): Boolean {
-    return java.lang.Long.signum(java.lang.Double.doubleToLongBits(x)) == java.lang.Long.signum(java.lang.Double.doubleToLongBits(y))
+    return java.lang.Long.signum(java.lang.Double.doubleToLongBits(x)) == java.lang.Long.signum(
+        java.lang.Double.doubleToLongBits(
+            y
+        )
+    )
 }
 
 /**
@@ -159,7 +167,6 @@ fun rad2Deg(rad: Double): Double {
     return rad * 57.29577951308233
 }
 
-
 fun epsilonEquals(vecA: ImmutableVector, vecB: ImmutableVector): Boolean {
     return epsilonEquals(vecA.get(0), vecB.get(0)) && epsilonEquals(vecA.get(1), vecB.get(1))
 }
@@ -174,9 +181,7 @@ fun epsilonEquals(vecA: ImmutableVector, vecB: ImmutableVector, delta: Double): 
  *
  * @return x ~= y
  */
-fun epsilonEquals(x: Double, y: Double): Boolean {
-    return Math.abs(y - x) < 1.0E-5
-}
+infix fun Double.epsilonEquals(other: Double) = Math.abs(other - this) < 1.0E-5
 
 /**
  * Checks if two numbers are equal while accounting for
@@ -187,7 +192,6 @@ fun epsilonEquals(x: Double, y: Double): Boolean {
 fun epsilonEquals(x: Double, y: Double, delta: Double): Boolean {
     return Math.abs(y - x) < delta
 }
-
 
 /**
  * Returns the greatest integer less than or equal to the double argument
@@ -212,14 +216,13 @@ fun decimalComponent(number: Double): Double {
     return number - floor(number)
 }
 
-
 //region Logarithmic Functions
 
 /**
  * Allows for the calculate of logX(in), may have minor performance boost from using direct call to StrictMath lowering stack overhead.
  *
  * @param base The base of the logPop.
- * @param in   The value to find the logPop of.
+ * @param in The value to find the logPop of.
  * @return The logX(in)
  */
 fun log(base: Double, `in`: Double): Double {
@@ -315,7 +318,6 @@ fun log9(`in`: Double): Double {
 fun log10(`in`: Double): Double {
     return StrictMath.log10(`in`)
 }
-
 
 /**
  * Calculates the natural logarithm (base e).

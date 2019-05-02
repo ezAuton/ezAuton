@@ -10,7 +10,7 @@ class BoundedVelocityProcessor
 /**
  * Create a BoundedVelocityProcessor
  *
- * @param toApply  The motor to apply the processed velocity to
+ * @param toApply The motor to apply the processed velocity to
  * @param maxSpeed The maximum speed that the motor will be allowed to run at.
  */
 (toApply: VelocityMotor, private val maxSpeed: Double) : VelocityProcessor(toApply) {

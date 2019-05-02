@@ -11,6 +11,11 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    jcenter()
+}
+
+configurations {
+    ktlint
 }
 configurations {
     fatCompile
@@ -23,12 +28,14 @@ jar {
 }
 
 dependencies {
+    ktlint "com.pinterest:ktlint:0.32.0"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testCompile project(":Recorder")
     testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
     fatCompile group: 'com.google.guava', name: 'guava', version: '19.0'
     testCompile project(":Recorder")
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0'
+    compile project(':Conversion')
 }
 
 compileKotlin {
@@ -43,4 +50,23 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
+}
+
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "src/**/*.kt"
+    // to generate report in checkstyle format prepend following args:
+    // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
+    // see https://github.com/pinterest/ktlint#usage for more
+}
+check.dependsOn ktlint
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "-F", "src/**/*.kt"
 }

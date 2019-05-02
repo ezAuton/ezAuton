@@ -5,11 +5,8 @@ import com.github.ezauton.core.utils.math.Integrable
 import com.github.ezauton.core.utils.math.LineR2
 import com.github.ezauton.core.utils.math.length
 import java.io.Serializable
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.Map
-import kotlin.collections.isNotEmpty
-import kotlin.collections.sort
+import java.util.Comparator
+import java.util.TreeMap
 
 /**
  * Make a new interpolating map. You need 2 key/value pairs to interpolate properly.
@@ -25,8 +22,8 @@ import kotlin.collections.sort
 open class LinearInterpolationMap private constructor(private val sortedMap: TreeMap<Double, Double>) : Integrable, Serializable, InterpolationMap //TODO: Remove redundant methods defined in HashMap, also maybe extends HashMap<Double, Double>?
 {
     override fun integrate(range: ClosedRange<Double>): Double {
-        if(sortedMap.size == 1) return range.length() * sortedMap.values.first()
-        if(sortedMap)
+        if (sortedMap.size == 1) return range.length() * sortedMap.values.first()
+        if (sortedMap)
     }
 
     companion object {
@@ -44,10 +41,10 @@ open class LinearInterpolationMap private constructor(private val sortedMap: Tre
     val dataPoints get() = sortedMap.entries
 
     override fun integrate(a: Double, b: Double): Double {
-        if(sortedMap.size == 1) return (a*b) *
-        for (entry in sortedMap) {
-            entry.key
-        }
+        if (sortedMap.size == 1) return (a * b) *
+                for (entry in sortedMap) {
+                    entry.key
+                }
 
 
         val lines = java.util.ArrayList<LineR2>()
@@ -92,7 +89,7 @@ open class LinearInterpolationMap private constructor(private val sortedMap: Tre
 
         }
 
-        lines.sort(Comparator.comparingDouble<MathUtils.Geometry.LineR2> { line -> line.x1 })
+        lines.sortWith(Comparator.comparingDouble<MathUtils.Geometry.LineR2> { line -> line.x1 })
 
 
         for (line in lines) {

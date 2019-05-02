@@ -1,6 +1,5 @@
 package com.github.ezauton.core.localization
 
-import com.github.ezauton.core.localization.TankRobotVelocityEstimator
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -22,7 +21,6 @@ class LocationEstimatorTest {
             override fun getLeftTranslationalWheelVelocity(): Double {
                 return -3.0
             }
-
         }
 
         assertEquals(3.0, estimator1.avgTranslationalWheelSpeed)

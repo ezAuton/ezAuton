@@ -8,37 +8,30 @@ import com.github.ezauton.core.utils.LinearInterpolationMap
  * relies on finding motion states every dt and from this
  * using an interpolation map to see what desired motion states
  * should be for certain distances.
+ *
+ * @param from Starting location of the path segment
+ * @param to Ending location of the path segment
+ * @param finish If this is the last path segment
+ * @param beginning If this is the first path segment
+ * @param distanceStart Distance along the path from the beginning to `from`
+ * @param speedStart Target speed to go at the start of the path
+ * @param speedStop Target speed to go at the end of the path
+ * @param dt The difference in time should be extrapolated
  */
-class PathSegmentInterpolated : LinearPathSegment {
+class PathSegmentInterpolated(
+    from: ImmutableVector,
+    to: ImmutableVector,
+    finish: Boolean,
+    beginning: Boolean,
+    distanceStart: Double,
+    val speedStart: Double,
+    val speedStop: Double,
+    val dt: Double,
+    val maxAccel: Double,
+    val maxDecel: Double
+) : LinearPathSegment(from, to, finish, beginning, distanceStart) {
 
-    private val speedStart: Double
-    private val speedStop: Double
-    private val dt: Double
-    private val maxAccel: Double
-    private val maxDecel: Double
-    var speedInterpolator: LinearInterpolationMap? = null
-        private set
-
-    /**
-     * @param from          Starting location of the path segment
-     * @param to            Ending location of the path segment
-     * @param finish        If this is the last path segment
-     * @param beginning     If this is the first path segment
-     * @param distanceStart Distance along the path from the beginning to `from`
-     * @param speedStart    Target speed to go at the start of the path
-     * @param speedStop     Target speed to go at the end of the path
-     * @param dt            The difference in time should be extrapolated
-     */
-    constructor(from: ImmutableVector, to: ImmutableVector, finish: Boolean, beginning: Boolean, distanceStart: Double, speedStart: Double, speedStop: Double, dt: Double, maxAccel: Double, maxDecel: Double) : super(from, to, finish, beginning, distanceStart) {
-        this.speedStart = speedStart
-        this.speedStop = speedStop
-        this.dt = dt
-        this.maxAccel = maxAccel
-        this.maxDecel = maxDecel
-        extrap()
-    }
-
-    private constructor() {}
+    private lateinit var speedInterpolator: LinearInterpolationMap
 
     /**
      * Build this.speedInterpolator
@@ -48,7 +41,7 @@ class PathSegmentInterpolated : LinearPathSegment {
         // However, we are not having constant acceleration... so we need
 
         // Make extrapolation for speed
-        speedInterpolator = LinearInterpolationMap(0.0, speedStart)
+        speedInterpolator = LinearInterpolationMap.from(mapOf(0.0 to speedStart))
 
         // Use kinematics equations built into the MotionState class to build speedInterpolator
         if (speedStart < speedStop)
@@ -61,10 +54,15 @@ class PathSegmentInterpolated : LinearPathSegment {
                 if (position > length) {
                     val velLeft = speedStop - motionState.speed
                     if (velLeft < 0) return
-                    val msg = String.format("Acceleration value too low to execute trajectory from %s To: %s. At max accelerate still needed to accelerate: %.2f", from, to, velLeft)
+                    val msg = String.format(
+                        "Acceleration value too low to execute trajectory from %s To: %s. At max accelerate still needed to accelerate: %.2f",
+                        from,
+                        to,
+                        velLeft
+                    )
                     throw IllegalStateException(msg)
                 }
-                speedInterpolator!![position] = Math.min(speedStop, motionState.speed)
+                speedInterpolator[position] = Math.min(speedStop, motionState.speed)
             }
         } else if (speedStart > speedStop)
         // decel
@@ -77,7 +75,12 @@ class PathSegmentInterpolated : LinearPathSegment {
                 if (position < 0) {
                     val velLeft = speedStart - motionState.speed
                     if (velLeft < 0) return
-                    val msg = String.format("Deceleration (magnitude) value too low to execute trajectory from %s to %s. At max deceleration still needed to decelerate: %.2f", from, to, velLeft)
+                    val msg = String.format(
+                        "Deceleration (magnitude) value too low to execute trajectory from %s to %s. At max deceleration still needed to decelerate: %.2f",
+                        from,
+                        to,
+                        velLeft
+                    )
                     throw IllegalStateException(msg)
                 }
                 speedInterpolator!![position] = Math.min(speedStart, motionState.speed)
@@ -87,6 +90,6 @@ class PathSegmentInterpolated : LinearPathSegment {
 
     override fun getSpeed(absoluteDistance: Double): Double {
         val relativeDistance = getRelativeDistance(absoluteDistance)
-        return speedInterpolator!!.get(relativeDistance)!!
+        return speedInterpolator!!.get(relativeDistance)
     }
 }

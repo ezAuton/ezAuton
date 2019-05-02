@@ -2,7 +2,6 @@ package com.github.ezauton.core.pathplanning.purepursuit
 
 import com.github.ezauton.core.pathplanning.PP_PathGenerator
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-
 import java.io.Serializable
 import java.util.ArrayList
 
@@ -13,12 +12,12 @@ open class PPWaypoint
 /**
  * Create a waypoint for Pure Pursuit to drive to
  *
- * @param location     Where the waypoint is, given that the Y axis is the forward axis
- * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
+ * @param location Where the waypoint is, given that the Y axis is the forward axis
+ * @param speed Approximately how fast the robot should be going by the time it reaches this waypoint
  * @param acceleration Maximum acceleration allowed to reach the target speed
  * @param deceleration Maximum deceleration allowed to reach the target speed
  */
-//TODO: Confirm documentation is accurate
+// TODO: Confirm documentation is accurate
 (val location: ImmutableVector, val speed: Double, val acceleration: Double, val deceleration: Double) : Serializable {
 
     override fun toString(): String {
@@ -34,7 +33,7 @@ open class PPWaypoint
         private val waypointList = ArrayList<PPWaypoint>()
 
         fun add(x: Double, y: Double, speed: Double, acceleration: Double, deceleration: Double): Builder {
-            val waypoint = PPWaypoint.simple2D(x, y, speed, acceleration, deceleration)
+            val waypoint = simple2D(x, y, speed, acceleration, deceleration)
             waypointList.add(waypoint)
             return this
         }
@@ -61,9 +60,9 @@ open class PPWaypoint
         /**
          * A shortcut to making a 2D waypoint
          *
-         * @param x            X-coordinate for the location of this waypoint
-         * @param y            Y-coordinate for the location of this waypoint
-         * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
+         * @param x X-coordinate for the location of this waypoint
+         * @param y Y-coordinate for the location of this waypoint
+         * @param speed Approximately how fast the robot should be going by the time it reaches this waypoint
          * @param acceleration Maximum acceleration allowed to reach the target speed
          * @param deceleration Maximum deceleration allowed to reach the target speed
          * @return A waypoint with the specified properties
@@ -95,10 +94,10 @@ open class PPWaypoint
          * ⠀⠀⠛⢿⣿⣿⣿⣿⣿⣿⡿⠟
          * ⠀⠀⠀⠀⠀⠉⠉⠉
          *
-         * @param x            X-coordinate for the location of this waypoint
-         * @param y            Y-coordinate for the location of this waypoint
-         * @param z            Z-coordinate for the location of this waypoint
-         * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
+         * @param x X-coordinate for the location of this waypoint
+         * @param y Y-coordinate for the location of this waypoint
+         * @param z Z-coordinate for the location of this waypoint
+         * @param speed Approximately how fast the robot should be going by the time it reaches this waypoint
          * @param acceleration Maximum acceleration allowed to reach the target speed
          * @param deceleration Maximum deceleration allowed to reach the target speed
          * @return A waypoint with the specified properties

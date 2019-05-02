@@ -8,11 +8,9 @@ interface Action { // In the purest form an action is of type: suspend () -> Uni
     /**
      * Run the action given a clock 🏃‍️
      *
-     * @param actionRunInfo The clock to run the action
      */
     @Throws(Exception::class)
     suspend fun ActionContext.run()
-
 }
 
 typealias ActionFunc = suspend ActionContext.() -> Unit

@@ -2,18 +2,14 @@ package com.github.ezauton.core.utils
 
 import com.github.ezauton.core.action.DelayedAction
 import com.github.ezauton.core.simulation.TimeWarpedSimulation
-import com.github.ezauton.core.utils.Stopwatch
-import com.github.ezauton.core.utils.TimeWarpedClock
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
 import java.util.ArrayList
 import java.util.Arrays
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicLong
-
-import org.junit.jupiter.api.Assertions.assertEquals
 
 class TimeWarpedClockTest {
     @Test
@@ -57,7 +53,6 @@ class TimeWarpedClockTest {
         for (i in expectedNums.indices) {
             assertEquals(expectedNums[i].toDouble(), nums[i].toDouble(), 100.0)
         }
-
     }
 
     @Test
@@ -76,6 +71,5 @@ class TimeWarpedClockTest {
         //        System.out.println("time.get - init = " + (time.get() - init));
 
         assertEquals(1000f, (time.get() - init).toFloat(), 100f)
-
     }
 }

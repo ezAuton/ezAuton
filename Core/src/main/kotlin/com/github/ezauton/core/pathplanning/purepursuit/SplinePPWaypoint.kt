@@ -1,11 +1,8 @@
 package com.github.ezauton.core.pathplanning.purepursuit
 
-
 import com.github.ezauton.core.pathplanning.PP_PathGenerator
 import com.github.ezauton.core.pathplanning.QuinticSpline
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-import com.github.ezauton.core.utils.MathUtils
-
 import java.io.Serializable
 import java.util.ArrayList
 
@@ -18,13 +15,13 @@ class SplinePPWaypoint : PPWaypoint, Serializable {
     /**
      * Create a waypoint for Pure Pursuit to drive to
      *
-     * @param location     Where the waypoint is, given that the Y axis is the forward axis
-     * @param tanVec       The direction the robot should be pointing in at this waypoint. A larger magnitude means the spline is straighter.
-     * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
+     * @param location Where the waypoint is, given that the Y axis is the forward axis
+     * @param tanVec The direction the robot should be pointing in at this waypoint. A larger magnitude means the spline is straighter.
+     * @param speed Approximately how fast the robot should be going by the time it reaches this waypoint
      * @param acceleration Maximum acceleration allowed to reach the target speed
      * @param deceleration Maximum deceleration allowed to reach the target speed
      */
-    //TODO: Confirm documentation is accurate
+    // TODO: Confirm documentation is accurate
     constructor(location: ImmutableVector, tanVec: ImmutableVector, speed: Double, acceleration: Double, deceleration: Double) : super(location, speed, acceleration, deceleration) {
         this.tanVec = tanVec
     }
@@ -59,7 +56,7 @@ class SplinePPWaypoint : PPWaypoint, Serializable {
          *
          * @param x
          * @param y
-         * @param theta        Radians, rotated such that up is 0, left is Math.PI / 2, etc.
+         * @param theta Radians, rotated such that up is 0, left is Math.PI / 2, etc.
          * @param speed
          * @param acceleration
          * @param deceleration
@@ -113,10 +110,10 @@ class SplinePPWaypoint : PPWaypoint, Serializable {
         /**
          * A shortcut to making a 2D waypoint
          *
-         * @param x            X-coordinate for the location of this waypoint
-         * @param y            Y-coordinate for the location of this waypoint
-         * @param theta        Angle that the robot should be at when it reaches this waypoint
-         * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
+         * @param x X-coordinate for the location of this waypoint
+         * @param y Y-coordinate for the location of this waypoint
+         * @param theta Angle that the robot should be at when it reaches this waypoint
+         * @param speed Approximately how fast the robot should be going by the time it reaches this waypoint
          * @param acceleration Maximum acceleration allowed to reach the target speed
          * @param deceleration Maximum deceleration allowed to reach the target speed
          * @return A waypoint with the specified properties
@@ -150,12 +147,12 @@ class SplinePPWaypoint : PPWaypoint, Serializable {
          * ⠀⠀⠛⢿⣿⣿⣿⣿⣿⣿⡿⠟
          * ⠀⠀⠀⠀⠀⠉⠉⠉
          *
-         * @param x            X-coordinate for the location of this waypoint
-         * @param y            Y-coordinate for the location of this waypoint
-         * @param z            Z-coordinate for the location of this waypoint
-         * @param theta        Heading at this waypoint
-         * @param phi          Azimuth at this waypoint
-         * @param speed        Approximately how fast the robot should be going by the time it reaches this waypoint
+         * @param x X-coordinate for the location of this waypoint
+         * @param y Y-coordinate for the location of this waypoint
+         * @param z Z-coordinate for the location of this waypoint
+         * @param theta Heading at this waypoint
+         * @param phi Azimuth at this waypoint
+         * @param speed Approximately how fast the robot should be going by the time it reaches this waypoint
          * @param acceleration Maximum acceleration allowed to reach the target speed
          * @param deceleration Maximum deceleration allowed to reach the target speed
          * @return A waypoint with the specified properties

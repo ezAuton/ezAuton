@@ -1,12 +1,15 @@
 package com.github.ezauton.core.math
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.ArrayList
+import java.util.Arrays
 
 class ImmutableVectorTest {
-
 
     @Test
     fun testWrongSize() {
@@ -21,6 +24,7 @@ class ImmutableVectorTest {
             vectors.add(ImmutableVector(1.0, 2.0, 3.0, 4.0))
         }
         vectors.add(oddOneOut)
+        // aaaaaaaaa
 
         assertThrows(IllegalArgumentException::class.java) { ImmutableVector.assertSameDim(vectors) }
     }
@@ -33,6 +37,9 @@ class ImmutableVectorTest {
 
     @Test
     fun testOf() {
+        // test
+
+        // aaaaaaaaaaaa
         assertEquals(ImmutableVector(4.0, 4.0, 4.0), ImmutableVector.of(4.0, 3))
     }
 

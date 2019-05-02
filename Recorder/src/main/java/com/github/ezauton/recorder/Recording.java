@@ -1,7 +1,7 @@
 package com.github.ezauton.recorder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.ezauton.core.localization.Updateable;
+import com.github.ezauton.core.localization.Updatable;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class Recording implements SubRecording, Updateable {
+public class Recording implements SubRecording, Updatable {
     private static int recordingCounter = 0;
     @JsonProperty("recordingData")
     private Map<String, SubRecording> recordingMap = new HashMap<>();
@@ -57,9 +57,9 @@ public class Recording implements SubRecording, Updateable {
     public boolean update() {
         boolean ret = false;
         for (SubRecording recording : recordingMap.values()) {
-            if (recording instanceof Updateable) {
+            if (recording instanceof Updatable) {
                 // If the update method returns true
-                if (((Updateable) recording).update()) {
+                if (((Updatable) recording).update()) {
                     ret = true;
                 }
             }

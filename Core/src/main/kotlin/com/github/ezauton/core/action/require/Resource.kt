@@ -8,7 +8,6 @@ interface Resource {
     suspend fun take(priority: Int = 0): ResourceHold
 }
 
-
 interface ResourceHold {
     fun giveBack()
 }
@@ -19,7 +18,6 @@ fun ResourceHold.combine(other: ResourceHold): ResourceHold {
             this@combine.giveBack()
             other.giveBack()
         }
-
     }
 }
 

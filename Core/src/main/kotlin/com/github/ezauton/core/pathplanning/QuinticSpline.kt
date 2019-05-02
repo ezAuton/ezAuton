@@ -1,11 +1,8 @@
 package com.github.ezauton.core.pathplanning
 
-
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
 import com.github.ezauton.core.utils.LinearInterpolationMap
-import com.github.ezauton.core.utils.MathUtils
-
 import java.util.ArrayList
 
 class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val firstSlope: ImmutableVector, val lastSlope: ImmutableVector) : MathUtils.Geometry.ParametricFunction {
@@ -54,7 +51,6 @@ class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val f
             return sb.toString()
         }
 
-
     init {
 
         // -3 (2p_0 - 2p_1 + p'_0 + p'_1)
@@ -62,7 +58,6 @@ class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val f
                 .sub(last.mul(2.0))
                 .add(firstSlope)
                 .add(lastSlope).mul(-3.0)
-
 
         //  15 p_0 - 15 p_1 + 8p'_0 + 7p'_1
         b = first.mul(15.0)
@@ -84,15 +79,13 @@ class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val f
 
         // p_0
         f = first
-
     }
 
     constructor(first: ImmutableVector, last: ImmutableVector, firstTheta: Double, lastTheta: Double) : this(first,
             last,
             ImmutableVector(Math.cos(firstTheta), Math.sin(firstTheta)).mul(1.2 * first.dist(last)),
             ImmutableVector(Math.cos(lastTheta), Math.sin(lastTheta)).mul(1.2 * first.dist(last))
-    ) {
-    }
+    )
 
     fun getPoint(relativeDistance: Double): ImmutableVector {
         return fromArcLength(relativeDistance)
@@ -138,7 +131,7 @@ class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val f
          * Using a few linear path segments (for motion information) and a few splines (for location information), create lots of small linear path segments
          * in the shape of the splines.
          *
-         * @param splines  A list of splines
+         * @param splines A list of splines
          * @param segments A list of path segments
          * @return An array of spline-shaped path segments
          */
@@ -163,10 +156,9 @@ class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val f
                 }
 
                 if (isError) {
-                    //TODO: More descriptive error message
+                    // TODO: More descriptive error message
                     throw RuntimeException("your splines don't intersect your path at the right spots (the waypoints")
                 }
-
             } catch (e: IndexOutOfBoundsException) {
                 throw RuntimeException("your splines don't intersect your path at the right spots (the waypoints", e)
             }
@@ -194,7 +186,7 @@ class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val f
                 var t = 0.0
                 while (t < end) {
                     val loc = currentSpline.get(t)
-                    val newWaypoint = PPWaypoint(loc, speedMap.get(t)!!, fromWaypoint.acceleration, fromWaypoint.deceleration)
+                    val newWaypoint = PPWaypoint(loc, speedMap.get(t), fromWaypoint.acceleration, fromWaypoint.deceleration)
                     retList.add(newWaypoint)
                     t += tInterval
                 }
@@ -202,7 +194,6 @@ class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val f
             val retArray = arrayOfNulls<PPWaypoint>(retList.size)
             retList.toTypedArray()
             return retArray
-
         }
     }
 }

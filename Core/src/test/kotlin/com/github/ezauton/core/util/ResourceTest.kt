@@ -37,7 +37,6 @@ class ResourceTest {
             resource1.giveBack()
             val toAdd = arrayOf(resource, resource1, resource2, resource3).map { !it.isTakenByAnyone }
             list.addAll(toAdd)
-
         }.join()
 
         list.forEachIndexed { i, bool ->

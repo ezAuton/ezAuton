@@ -12,8 +12,8 @@ class StaticFrictionVelocityProcessor
  * Create a StaticFrictionVelocityProcessor
  *
  * @param distanceSensor An encoder
- * @param toApply        The motor to apply the processed velocity to
- * @param minVelMove     The minimum velocity to move the motor
+ * @param toApply The motor to apply the processed velocity to
+ * @param minVelMove The minimum velocity to move the motor
  */
 (private val distanceSensor: TranslationalDistanceSensor, toApply: VelocityMotor, private val minVelMove: Double) : VelocityProcessor(toApply) {
 

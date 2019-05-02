@@ -1,6 +1,6 @@
 package com.github.ezauton.core.pathplanning.purepursuit
 
-import com.github.ezauton.core.utils.units.Distance
+import com.github.ezauton.conversion.Distance
 
 /**
  * The distance to lookahead on the path in the Pure Pursuit control law. This is comparable to how

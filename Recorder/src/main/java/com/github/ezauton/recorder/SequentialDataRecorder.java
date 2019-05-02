@@ -3,7 +3,7 @@ package com.github.ezauton.recorder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.github.ezauton.core.localization.Updateable;
+import com.github.ezauton.core.localization.Updatable;
 import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.core.utils.Stopwatch;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * @param <T> The type of SequentialDataFrame this DataSequence contains.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-public abstract class SequentialDataRecorder<T extends SequentialDataFrame> implements SubRecording, Updateable, Iterable<T> {
+public abstract class SequentialDataRecorder<T extends SequentialDataFrame> implements SubRecording, Updatable, Iterable<T> {
     @JsonIgnore
     private static int sequenceCounter = 0;
     @JsonProperty("dataSequence")

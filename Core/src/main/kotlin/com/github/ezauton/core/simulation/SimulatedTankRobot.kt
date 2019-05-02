@@ -2,8 +2,8 @@ package com.github.ezauton.core.simulation
 
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.actuators.implementations.SimulatedMotor
-import com.github.ezauton.core.localization.Updateable
 import com.github.ezauton.core.localization.UpdatableGroup
+import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.localization.sensors.Encoders
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
@@ -15,11 +15,11 @@ import com.github.ezauton.core.utils.Stopwatch
 class SimulatedTankRobot
 /**
  * @param lateralWheelDistance The lateral wheel distance between the wheels of the robot
- * @param clock                The clock that the simulated tank robot is using
- * @param maxAccel             The max acceleration of the motors
- * @param minVel               The minimum velocity the robot can continuously drive at (i.e. the robot cannot drive at 0.0001 ft/s)
+ * @param clock The clock that the simulated tank robot is using
+ * @param maxAccel The max acceleration of the motors
+ * @param minVel The minimum velocity the robot can continuously drive at (i.e. the robot cannot drive at 0.0001 ft/s)
  */
-(override val lateralWheelDistance: Double, clock: Clock, maxAccel: Double, minVel: Double, maxVel: Double) : TankRobotConstants, Updateable {
+(override val lateralWheelDistance: Double, clock: Clock, maxAccel: Double, minVel: Double, maxVel: Double) : TankRobotConstants, Updatable {
 
     private val left: SimulatedMotor
     private val right: SimulatedMotor
@@ -34,7 +34,6 @@ class SimulatedTankRobot
     val defaultTransLocDriveable: TankRobotTransLocDrivable
     //    public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
     private val toUpdate = UpdatableGroup()
-
 
     val leftMotor: VelocityMotor
         get() = left
@@ -57,7 +56,6 @@ class SimulatedTankRobot
 
         this.defaultLocEstimator = TankRobotEncoderEncoderEstimator(leftDistanceSensor, rightDistanceSensor, this)
         this.defaultTransLocDriveable = TankRobotTransLocDrivable(left, right, defaultLocEstimator, defaultLocEstimator, this)
-
     }
 
     fun run(leftV: Double, rightV: Double) {

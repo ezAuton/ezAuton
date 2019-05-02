@@ -436,7 +436,7 @@ public class Controller implements Initializable {
      * Handles pausing/playing the timeline based on the rate slider
      */
     private void actOnTimeline(Timeline timeline, double value) {
-        if (MathUtils.epsilonEquals(0, value)) {
+        if (MathUtils.INSTANCE.epsilonEquals(0, value)) {
             timeline.pause();
         } else {
             play();
@@ -449,7 +449,7 @@ public class Controller implements Initializable {
         double xFt = (e.getX() - originX) / spatialScaleFactor;
         double yFt = ( originY - e.getY()) / spatialScaleFactor;
 
-        if(MathUtils.epsilonEquals(originX, -1234) && MathUtils.epsilonEquals(originY, -1234)) {
+        if(MathUtils.INSTANCE.epsilonEquals(originX, -1234) && MathUtils.INSTANCE.epsilonEquals(originY, -1234)) {
             clickedCoordsDisplay.setText("Select a starting position first.");
         }
         else

@@ -6,7 +6,7 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector
  * Rotate the input vector theta radians counterclockwise
  *
  * @param vector The input vecto
- * @param theta  How much to rotate it by (radians)
+ * @param theta How much to rotate it by (radians)
  * @return The rotated vector
  */
 fun ImmutableVector.rotate2D(theta: Double): ImmutableVector {
@@ -20,8 +20,8 @@ fun ImmutableVector.rotate2D(theta: Double): ImmutableVector {
  * Turn absolute coordinates into coordinates relative to the robot
  *
  * @param coordinateAbsolute The absolute coordinates
- * @param robotCoordAbs      The robot's absolute position
- * @param robotHeading       The robot's heading (radians)
+ * @param robotCoordAbs The robot's absolute position
+ * @param robotHeading The robot's heading (radians)
  * @return `coordinateAbsolute` but relative to the robot
  */
 fun absoluteToRelativeCoord(coordinateAbsolute: ImmutableVector, robotCoordAbs: ImmutableVector, robotHeading: Double): ImmutableVector {

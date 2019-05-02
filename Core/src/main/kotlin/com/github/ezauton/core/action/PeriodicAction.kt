@@ -1,13 +1,12 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.core.utils.units.Duration
+import com.github.ezauton.conversion.Duration
+import com.github.ezauton.conversion.millis
+import com.github.ezauton.conversion.now
 import com.github.ezauton.core.action.require.combine
-import com.github.ezauton.core.utils.units.millis
-import com.github.ezauton.core.utils.units.now
 import com.github.ezauton.core.utils.RealClock
 import com.github.ezauton.core.utils.Stopwatch
 import kotlinx.coroutines.CancellationException
-
 
 enum class ResourceManagement {
     UNTIL_FINISH,
@@ -32,8 +31,6 @@ abstract class PeriodicAction
 
     /**
      * A stopwatch which returns the time since the action started running (unless popped)
-     * TODO Should probably have a stopwatch cannot be reset (which is public) and another one which can
-     * TODO (and is protected) due to encapsulation
      *
      * @return
      */
@@ -44,10 +41,11 @@ abstract class PeriodicAction
      *
      * @return true if period is calculated after execution or false if the period counts execution time
      */
+
     /**
      * The action will attempt to try to run as close as it can to the given period.
      *
-     * @param periodDelayAfterExecution true if period is calculated after execution or false if the period counts execution time
+     * @param isPeriodDelayAfterExecution true if period is calculated after execution or false if the period counts execution time
      */
     var isPeriodDelayAfterExecution = false
     var timesRun = 0
@@ -109,13 +107,12 @@ abstract class PeriodicAction
         stopwatch = Stopwatch(RealClock.CLOCK)
         stopwatch.reset()
 
-
-        suspend fun letGoEachCycle(){
+        suspend fun letGoEachCycle() {
             val held = doHold()
             init()
             var ranOnce = false
             do {
-                if(!ranOnce){
+                if (!ranOnce) {
                     ranOnce = true
                 } else held.giveBack()
                 execute()
@@ -129,7 +126,7 @@ abstract class PeriodicAction
             } while (!isFinished())
         }
 
-        suspend fun untilFinish(){
+        suspend fun untilFinish() {
             val held = doHold()
             init()
             do {
@@ -145,7 +142,7 @@ abstract class PeriodicAction
             held.giveBack()
         }
 
-        when(resourceManagement){
+        when (resourceManagement) {
             ResourceManagement.LET_GO_EACH_CYCLE -> letGoEachCycle()
             ResourceManagement.UNTIL_FINISH -> untilFinish()
         }
@@ -157,5 +154,4 @@ abstract class PeriodicAction
      * @throws Exception
      */
     protected open fun onInterrupted() {}
-
 }

@@ -2,7 +2,7 @@ package com.github.ezauton.core.actuators.implementations
 
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.actuators.VelocityProcessor
-import com.github.ezauton.core.localization.Updateable
+import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
 
@@ -16,10 +16,10 @@ class RampUpVelocityProcessor
  * Create a RampUpVelocity processor
  *
  * @param velocityMotor The motor to apply the processed velocity to
- * @param clock         The clock to keep time with
- * @param maxAccel      The maximum acceleration of this motor.
+ * @param clock The clock to keep time with
+ * @param maxAccel The maximum acceleration of this motor.
  */
-(velocityMotor: VelocityMotor, clock: Clock, private val maxAccel: Double) : VelocityProcessor(velocityMotor), Updateable {
+(velocityMotor: VelocityMotor, clock: Clock, private val maxAccel: Double) : VelocityProcessor(velocityMotor), Updatable {
     private val accelStopwatch: Stopwatch = Stopwatch(clock).reset()
 
     var lastVelocity = 0.0

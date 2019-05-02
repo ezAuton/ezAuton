@@ -1,53 +1,48 @@
 package com.github.ezauton.core.pathplanning
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-import com.github.ezauton.core.utils.MathUtils
+import com.github.ezauton.core.utils.math.epsilonEquals
+import com.github.ezauton.core.utils.math.getClosestPointLineSegments
 
 /**
  * A mostly-implemented linear PathSegment which contains all methods save getSpeed(...).
+ *
+ *
+ * Create a LinearPathSegment
+ *
+ * @param from Starting location
+ * @param to Ending location
+ * @param finish If this is the last path segment in the path
+ * @param beginning If this is the first path segment in the path
+ * @param distanceStart How far along the path the starting location is (arclength)
  */
-abstract class LinearPathSegment : PathSegment {
-    override val from: ImmutableVector
-    override val to: ImmutableVector
-    override val isFinish: Boolean
-    override val isBeginning: Boolean
+abstract class LinearPathSegment(
+    final override val from: ImmutableVector,
+    final override val to: ImmutableVector,
+    override val isFinish: Boolean,
+    override val isBeginning: Boolean,
+    distanceStart: Double
+) : PathSegment {
+
     /**
      * @return How far along the entire path that the from point is
      */
-    override val absoluteDistanceStart: Double
+    final override val absoluteDistanceStart: Double
     /**
      * @return How far along the entire path that the end point is
      */
-    override val absoluteDistanceEnd: Double
+    final override val absoluteDistanceEnd: Double
     private val dPos: ImmutableVector
-    override val length: Double
+    final override val length: Double = this.from.dist(this.to)
 
-    /**
-     * Create a LinearPathSegment
-     *
-     * @param from          Starting location
-     * @param to            Ending location
-     * @param finish        If this is the last path segment in the path
-     * @param beginning     If this is the first path segment in the path
-     * @param distanceStart How far along the path the starting location is (arclength)
-     */
-    protected constructor(from: ImmutableVector, to: ImmutableVector, finish: Boolean, beginning: Boolean, distanceStart: Double) {
-        //        this.maxSpeed = maxSpeed;
-        this.isFinish = finish
-        this.from = from
-        this.to = to
-        //        differenceVec = to.sub(from);
-        this.length = this.from.dist(this.to)
-        if (MathUtils.epsilonEquals(0.0, length)) {
+    init {
+        if (0.0 epsilonEquals length) {
             throw IllegalArgumentException("PathSegment length must be non-zero.")
         }
-        this.isBeginning = beginning
         this.absoluteDistanceStart = distanceStart
         this.absoluteDistanceEnd = distanceStart + length
         dPos = to.sub(from)
     }
-
-    protected constructor() {}
 
     /**
      * Get the point on the line segment that is the closest to the robot
@@ -56,7 +51,7 @@ abstract class LinearPathSegment : PathSegment {
      * @return The point on the line segment that is the closest to the robot
      */
     override fun getClosestPoint(robotPos: ImmutableVector): ImmutableVector {
-        return MathUtils.Geometry.getClosestPointLineSegments(from, to, robotPos)
+        return getClosestPointLineSegments(from, to, robotPos)
     }
 
     /**
@@ -76,7 +71,7 @@ abstract class LinearPathSegment : PathSegment {
 
         // The difference between from, truncating 0
         val dif = linePos.sub(from)
-        for (i in 0 until dif.elements!!.size) {
+        for (i in 0 until dif.elements.size) {
             val difElement = dif.get(i)
             if (difElement != 0.0) {
                 val dPosElement = dPos.get(i)
@@ -108,9 +103,7 @@ abstract class LinearPathSegment : PathSegment {
      * @throws IllegalArgumentException
      */
     private fun checkDistance(absoluteDistance: Double) {
-        if (!MathUtils.Algebra.bounded(absoluteDistanceStart, absoluteDistance, absoluteDistanceEnd)) {
-            throw IllegalArgumentException("Must be within bounds")
-        }
+        if (absoluteDistance in absoluteDistanceStart..absoluteDistanceEnd) throw IllegalArgumentException("Must be within bounds")
     }
 
     /**
@@ -120,7 +113,7 @@ abstract class LinearPathSegment : PathSegment {
      * @return The aboslute location of the point
      */
     override fun getPoint(relativeDistance: Double): ImmutableVector {
-        return dPos.mul(relativeDistance / length).add(from)
+        return dPos.mul(relativeDistance / length).plus(from)
     }
 
     /**
@@ -134,16 +127,10 @@ abstract class LinearPathSegment : PathSegment {
         return to.sub(point).mag2()
     }
 
-    fun getdPos(): ImmutableVector {
-        return dPos
-    }
-
     override fun toString(): String {
         return "PathSegment{" +
-                "from=" + from +
-                ", to=" + to +
-                '}'.toString()
+            "from=" + from +
+            ", to=" + to +
+            '}'.toString()
     }
-
-
 }

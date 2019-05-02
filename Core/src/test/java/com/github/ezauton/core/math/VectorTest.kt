@@ -1,11 +1,10 @@
 package com.github.ezauton.core.math
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-import com.github.ezauton.core.utils.MathUtils
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
-
 
 class VectorTest {
 

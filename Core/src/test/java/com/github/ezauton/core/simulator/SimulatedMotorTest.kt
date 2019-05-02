@@ -1,15 +1,10 @@
 package com.github.ezauton.core.simulator
 
-import com.github.ezauton.core.action.Action
-import com.github.ezauton.core.action.BaseAction
 import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor
-import com.github.ezauton.core.simulation.ModernSimulatedClock
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-
-import org.junit.jupiter.api.Assertions.assertEquals
 
 class SimulatedMotorTest {
     @Test
@@ -53,6 +48,5 @@ class SimulatedMotorTest {
 
         clock.add(action)
         clock.runSimulation(5, TimeUnit.SECONDS)
-
     }
 }

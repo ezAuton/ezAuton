@@ -1,6 +1,6 @@
 package com.github.ezauton.conversion
 
-class Duration private constructor(private val millis: Long): Value<Duration> {
+class Duration private constructor(val millis: Long): Value<Duration> {
     override fun Number.wrap(): Duration = fromLongMillis(this.toLong())
 
     override val value get() = millis
@@ -26,6 +26,10 @@ val millis = 1.millis
 val second = 1.seconds
 val minute  = 1.minutes
 val hour = 1.hours
+
+fun Duration.toSeconds() = convert(second)
+fun Duration.toMinutes() = convert(minute)
+fun Duration.toHours() = convert(hour)
 
 val Int.millis: Duration get() = Duration.fromLongMillis(this.toLong())
 val Int.seconds: Duration get() = (this * 1000).millis

@@ -1,13 +1,14 @@
 package com.github.ezauton.core.utils
 
-import com.github.ezauton.core.utils.units.Duration
-import com.github.ezauton.core.utils.units.now
+import com.github.ezauton.conversion.Duration
+import com.github.ezauton.conversion.now
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.util.*
+import java.util.LinkedList
+import java.util.Queue
+import java.util.TreeMap
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-
 
 /**
  * ⏰ A clock where the time is manually changed.

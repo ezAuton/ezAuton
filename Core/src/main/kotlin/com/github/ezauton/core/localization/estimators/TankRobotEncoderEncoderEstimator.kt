@@ -3,11 +3,13 @@ package com.github.ezauton.core.localization.estimators
 import com.github.ezauton.core.localization.RotationalLocationEstimator
 import com.github.ezauton.core.localization.TankRobotVelocityEstimator
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
-import com.github.ezauton.core.localization.Updateable
+import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
 import com.github.ezauton.core.robot.TankRobotConstants
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-import com.github.ezauton.core.utils.MathUtils
+import com.github.ezauton.core.utils.math.getAbsoluteDPosCurve
+import com.github.ezauton.core.utils.math.getAngularDistance
+import com.github.ezauton.core.utils.math.polarVector2D
 
 /**
  * Describes an object that can estimate the heading and absolute position of the robot solely using the encoders
@@ -16,11 +18,15 @@ class TankRobotEncoderEncoderEstimator
 /**
  * Create a TankRobotEncoderEstimator
  *
- * @param left      A reference to the encoder on the left side of the robot
- * @param right     A reference to the encoder on the right side of the robot
+ * @param left A reference to the encoder on the left side of the robot
+ * @param right A reference to the encoder on the right side of the robot
  * @param tankRobot A reference to an object containing data about the structure of the drivetrain
  */
-(private val left: TranslationalDistanceSensor, private val right: TranslationalDistanceSensor, private val tankRobot: TankRobotConstants) : RotationalLocationEstimator, TranslationalLocationEstimator, TankRobotVelocityEstimator, Updateable {
+    (
+    private val left: TranslationalDistanceSensor,
+    private val right: TranslationalDistanceSensor,
+    private val tankRobot: TankRobotConstants
+) : RotationalLocationEstimator, TranslationalLocationEstimator, TankRobotVelocityEstimator, Updatable {
     private var lastPosLeft: Double = 0.toDouble()
     private var lastPosRight: Double = 0.toDouble()
     private var init = false
@@ -36,11 +42,10 @@ class TankRobotEncoderEncoderEstimator
     /**
      * Reset the heading and position of the location estimator
      */
-    fun reset() //TODO: Suggestion -- Have an IPoseEstimator that implements Updateable, IRotationalEstimator, TranslationalLocationEstimator that also has a reset method
-    {
+    fun reset() {
         lastPosLeft = left.position
         lastPosRight = right.position
-        location = ImmutableVector(0, 0)
+        location = ImmutableVector(0.0, 0.0)
         heading = 0.0
         init = true
     }
@@ -71,12 +76,13 @@ class TankRobotEncoderEncoderEstimator
         lastPosLeft = leftPosition
         lastPosRight = rightPosition
 
-        val dLocation = MathUtils.Kinematics.getAbsoluteDPosCurve(dl, dr, tankRobot.lateralWheelDistance, heading)
+        val dLocation = getAbsoluteDPosCurve(dl, dr, tankRobot.lateralWheelDistance, heading)
+
         if (!dLocation.isFinite) {
             throw IllegalStateException("dLocation is $dLocation, which is not finite! dl = $dl, dr = $dr, heading = $heading")
         }
-        location = location.add(dLocation)
-        heading += MathUtils.Kinematics.getAngularDistance(dl, dr, tankRobot.lateralWheelDistance)
+        location += dLocation
+        heading += getAngularDistance(dl, dr, tankRobot.lateralWheelDistance)
         return true
     }
 
@@ -84,6 +90,6 @@ class TankRobotEncoderEncoderEstimator
      * @return The current velocity vector of the robot in 2D space.
      */
     override fun estimateAbsoluteVelocity(): ImmutableVector {
-        return MathUtils.Geometry.getVector(avgTranslationalWheelVelocity, heading)
+        return polarVector2D(magnitude = avgTranslationalWheelVelocity, theta = heading)
     }
 }

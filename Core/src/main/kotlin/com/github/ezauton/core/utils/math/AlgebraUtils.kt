@@ -1,6 +1,6 @@
 package com.github.ezauton.core.utils.math
 
-import java.util.*
+import java.util.HashSet
 
 /**
  * @param map
@@ -70,15 +70,4 @@ fun discriminate(a: Double, b: Double, c: Double): Double {
  */
 fun between(a: Double, x: Double, b: Double): Boolean {
     return bounded(a, x, b) || bounded(b, x, a)
-}
-
-
-/**
- * @param a lower bound
- * @param x some number
- * @param b upper bound
- * @return if x is between lower and upper bound
- */
-fun bounded(a: Double, x: Double, b: Double): Boolean {
-    return x in a..b
 }

@@ -1,7 +1,6 @@
 package com.github.ezauton.core.pathplanning
 
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
-
 import java.io.Serializable
 import java.util.ArrayList
 
@@ -23,11 +22,10 @@ class PP_PathGenerator(vararg ppWaypoints: PPWaypoint) : Serializable {
             val from = ppWaypoints[i]
             val to = ppWaypoints[i + 1]
 
-            //TODO: Update from RobotCode2018 style pathsegments
+            // TODO: Update from RobotCode2018 style pathsegments
             val pathSegment: LinearPathSegment
             if (i == 0) {
                 val beginningSpeed = if (from.speed == 0.0) to.speed else from.speed
-
 
                 pathSegment = PathSegmentInterpolated(
                         from.location, to.location, i == ppWaypoints.size - 2, true, addedDistance,

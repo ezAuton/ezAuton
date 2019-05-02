@@ -1,14 +1,15 @@
 package com.github.ezauton.core.purepursuit
 
 import com.github.ezauton.core.action.ActionGroup
-import com.github.ezauton.core.action.BackgroundAction
 import com.github.ezauton.core.action.PurePursuitAction
-import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.helper.PathHelper
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.pathplanning.PP_PathGenerator
 import com.github.ezauton.core.pathplanning.Path
-import com.github.ezauton.core.pathplanning.purepursuit.*
+import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
+import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy
+import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.TimeWarpedSimulation
@@ -17,14 +18,12 @@ import com.github.ezauton.recorder.Recording
 import com.github.ezauton.recorder.base.PurePursuitRecorder
 import com.github.ezauton.recorder.base.RobotStateRecorder
 import com.github.ezauton.recorder.base.TankDriveableRecorder
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
 import java.io.IOException
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-
-import org.junit.jupiter.api.Assertions.assertEquals
 
 class PPSimulatorTest {
 
@@ -108,7 +107,6 @@ class PPSimulatorTest {
         rec.addSubRecording(RobotStateRecorder(simulation.clock, locEstimator, locEstimator, 30 / 12.0, 2.0))
         rec.addSubRecording(TankDriveableRecorder("td", simulation.clock, simulatedRobot.defaultTransLocDriveable))
 
-
         val purePursuitAction = PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable)
 
         val updateKinematics = BackgroundAction(2, TimeUnit.MILLISECONDS, Runnable { simulatedRobot.update() })
@@ -139,7 +137,6 @@ class PPSimulatorTest {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-
         }
 
         val leftWheelVelocity = locEstimator.leftTranslationalWheelVelocity
@@ -173,8 +170,8 @@ class PPSimulatorTest {
     private fun approxEqual(a: ImmutableVector, b: ImmutableVector, epsilon: Double) {
         val bElements = b.elements
         val aElements = a.elements
-        for (i in aElements!!.indices) {
-            assertEquals(aElements[i], bElements!![i], epsilon)
+        for (i in aElements.indices) {
+            assertEquals(aElements[i], bElements[i], epsilon)
         }
     }
 

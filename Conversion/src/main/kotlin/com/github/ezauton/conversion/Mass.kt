@@ -7,4 +7,3 @@ class Mass(override val value: Double) : Value<Mass> {
 
 val Number.kg get() = Mass(toDouble())
 val Number.g get() = (toDouble() / 1_000).kg
-

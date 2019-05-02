@@ -1,15 +1,14 @@
 package com.github.ezauton.core.localization
 
 import com.github.ezauton.core.localization.sensors.VelocityEstimator
-import com.github.ezauton.core.utils.units.toSeconds
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.core.trajectory.geometry.vec
 import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
 import com.github.ezauton.core.utils.math.polarVector2D
-import com.github.ezauton.core.vec
 
 /**
- * Describes an Updateable object that can track the location and heading of the robot using a rotational device
+ * Describes an Updatable object that can track the location and heading of the robot using a rotational device
  * which can record angle (i.e. gyro) and a device which can record translational distance (i.e., encoder).
  *
  *
@@ -20,9 +19,13 @@ class SimpsonEncoderRotationEstimator
  * Create an EncoderRotationEstimator
  *
  * @param rotationalLocationEstimator An object that can estimate our current heading
- * @param velocitySensor              An encoder or encoder-like object.
+ * @param velocitySensor An encoder or encoder-like object.
  */
-(private val rotationalLocationEstimator: RotationalLocationEstimator, private val velocitySensor: VelocityEstimator, clock: Clock) : RotationalLocationEstimator, TranslationalLocationEstimator, Updateable {
+    (
+    private val rotationalLocationEstimator: RotationalLocationEstimator,
+    private val velocitySensor: VelocityEstimator,
+    clock: Clock
+) : RotationalLocationEstimator, TranslationalLocationEstimator, Updatable {
     private val stopwatch: Stopwatch = Stopwatch(clock)
     private var velocity: Double = 0.toDouble()
     private lateinit var dPosVec: ImmutableVector
@@ -42,14 +45,12 @@ class SimpsonEncoderRotationEstimator
     /**
      * Set the current position to <0, 0>, in effect resetting the location estimator
      */
-    fun reset() //TODO: Reset heading
-    {
+    fun reset() { // TODO: Reset heading
         dPosVec = vec(0.0, 0.0)
         positionVec = vec(0.0, 0.0)
         init = true
         stopwatch.reset()
     }
-
 
     override fun estimateHeading(): Double {
         return rotationalLocationEstimator.estimateHeading()
@@ -58,8 +59,8 @@ class SimpsonEncoderRotationEstimator
     /**
      * @return The current velocity vector of the robot in 2D space.
      */
-    override fun estimateAbsoluteVelocity() = polarVector2D(magnitude = velocity, theta = rotationalLocationEstimator.estimateHeading())
-
+    override fun estimateAbsoluteVelocity() =
+        polarVector2D(magnitude = velocity, theta = rotationalLocationEstimator.estimateHeading())
 
     /**
      * @return The current location as estimated from the encoders
@@ -75,8 +76,8 @@ class SimpsonEncoderRotationEstimator
         if (!init) {
             throw IllegalArgumentException("Must be initialized! (call reset())")
         }
-        if (rotationalLocationEstimator is Updateable) {
-            (rotationalLocationEstimator as Updateable).update()
+        if (rotationalLocationEstimator is Updatable) {
+            (rotationalLocationEstimator as Updatable).update()
         }
         velocity = velocitySensor.translationalVelocity
         val velVec = polarVector2D(magnitude = velocity, theta = rotationalLocationEstimator.estimateHeading())
@@ -88,15 +89,15 @@ class SimpsonEncoderRotationEstimator
                 dPosVec = vec(0.0, 0.0)
 
                 val xVelComponent = Parabola(
-                        vec(vel2ago!!.time, vel2ago!!.velVec[0]),
-                        vec(vel1ago!!.time, vel1ago!!.velVec[0]),
-                        vec(currentTime, velVec[0])
+                    vec(vel2ago!!.time, vel2ago!!.velVec[0]),
+                    vec(vel1ago!!.time, vel1ago!!.velVec[0]),
+                    vec(currentTime, velVec[0])
                 )
 
                 val yVelComponent = Parabola(
-                        ImmutableVector(vel2ago!!.time, vel2ago!!.velVec[1]),
-                        ImmutableVector(vel1ago!!.time, vel1ago!!.velVec[1]),
-                        ImmutableVector(currentTime, velVec[1])
+                    ImmutableVector(vel2ago!!.time, vel2ago!!.velVec[1]),
+                    ImmutableVector(vel1ago!!.time, vel1ago!!.velVec[1]),
+                    ImmutableVector(currentTime, velVec[1])
                 )
 
                 dPosVec = ImmutableVector(xVelComponent.integrate(), yVelComponent.integrate())
@@ -124,7 +125,7 @@ class SimpsonEncoderRotationEstimator
                 vel1ago = TimeIndexedVelocityVec(currentTime, velVec)
             }
         }
-        return true //TODO: Return false sometimes?
+        return true // TODO: Return false sometimes?
     }
 
     private class TimeIndexedVelocityVec internal constructor(val time: Double, val velVec: ImmutableVector) {
@@ -160,8 +161,8 @@ class SimpsonEncoderRotationEstimator
             upperBound = Math.max(x1, Math.max(x2, x3))
 
             val numerator = x1 * x1 * (y2 - y3) +
-                    x3 * x3 * (y1 - y2) +
-                    x2 * x2 * (y3 - y1)
+                x3 * x3 * (y1 - y2) +
+                x2 * x2 * (y3 - y1)
 
             val denominator = (x1 - x2) * (x1 - x3) * (x2 - x3)
 
@@ -180,7 +181,8 @@ class SimpsonEncoderRotationEstimator
 
     companion object {
 
-        private const val epsilon = 1e-3 // One millisecond; we can't reasonably expect our clock to have a resolution below 1 ms
+        private const val epsilon =
+            1e-3 // One millisecond; we can't reasonably expect our clock to have a resolution below 1 ms
 
         @JvmStatic
         fun main(args: Array<String>) {

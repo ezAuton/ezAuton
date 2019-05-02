@@ -2,7 +2,6 @@ package com.github.ezauton.core.actuators.implementations
 
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
-import com.github.ezauton.core.utils.units.toSeconds
 import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
 
@@ -26,10 +25,11 @@ class BaseSimulatedMotor
     /**
      * @return The motor to which the velocity is being applied
      */
+
+
     /**
-     * Change the motor to which the velocity will be applied
+     * The motor to which the velocity will be applied
      *
-     * @param subscribed The new motor instance
      */
     var subscribed: VelocityMotor? = null
     override var position = 0.0

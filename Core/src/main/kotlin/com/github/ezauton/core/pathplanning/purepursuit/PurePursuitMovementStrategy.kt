@@ -1,8 +1,8 @@
 package com.github.ezauton.core.pathplanning.purepursuit
 
+import com.github.ezauton.conversion.Distance
 import com.github.ezauton.core.pathplanning.Path
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-import com.github.ezauton.core.utils.units.Distance
 import kotlinx.coroutines.channels.Channel
 
 /**
@@ -13,10 +13,9 @@ class PurePursuitMovementStrategy
 /**
  * Strategize your movement!
  *
- * @param path          The path to drive along
+ * @param path The path to drive along
  * @param stopTolerance How close we need to be to the final waypoint for us to decide that we are finished
- */
-(
+ */(
         /**
          * The path that we're driving on
          */
@@ -25,13 +24,14 @@ class PurePursuitMovementStrategy
          * How close we need to be to the final waypoint for us to decide that we are finished
          */
         private val stopTolerance: Double,
-        private val dataChannel: Channel<PurePursuitData>? = null) {
+        private val dataChannel: Channel<PurePursuitData>? = null
+) {
 
     var isFinished = false
         private set
 
     init {
-        require(stopTolerance <= 0){"stopTolerance must be a positive number!"}
+        require(stopTolerance <= 0) { "stopTolerance must be a positive number!" }
     }
 
     /**
@@ -52,9 +52,8 @@ class PurePursuitMovementStrategy
         return goalPoint
     }
 
-
     /**
-     * @param loc       Current position of the robot
+     * @param loc Current position of the robot
      * @param lookahead Current lookahead as given by an Lookahead instance
      * @return The wanted pose of the robot at a certain location
      */

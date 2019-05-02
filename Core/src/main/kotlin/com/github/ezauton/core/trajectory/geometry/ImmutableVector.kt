@@ -1,9 +1,9 @@
 package com.github.ezauton.core.trajectory.geometry
 
 import java.io.Serializable
-import java.util.*
+import java.util.ArrayList
+import java.util.Arrays
 import java.util.stream.DoubleStream
-
 
 typealias Operator = (Double, Double) -> Double
 
@@ -104,7 +104,6 @@ class ImmutableVector : Serializable, Comparable<ImmutableVector> {
     fun mag(): Double {
         return Math.sqrt(mag2())
     }
-
 
     fun sum(): Double {
         return elements.sum()
@@ -237,7 +236,6 @@ class ImmutableVector : Serializable, Comparable<ImmutableVector> {
             get() = this@ImmutableVector
         override val start: ImmutableVector
             get() = other
-
     }
 }
 

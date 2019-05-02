@@ -1,13 +1,11 @@
 package com.github.ezauton.core.action.require
 
 import kotlinx.coroutines.sync.Mutex
-import java.util.*
-
+import java.util.PriorityQueue
 
 data class LockInfo(val mutex: Mutex?, val priority: Int)
 
 class BaseResource(private vararg val subResources: Resource) : Resource {
-
 
     private val lowestPriority get() = queue.first().priority
     private val queue = PriorityQueue<LockInfo> { o1, o2 -> o1.priority - o2.priority }

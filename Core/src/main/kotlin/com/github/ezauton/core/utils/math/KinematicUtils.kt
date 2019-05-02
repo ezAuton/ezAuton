@@ -2,7 +2,6 @@ package com.github.ezauton.core.utils.math
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
 
-
 /**
  * Get the 1D position of the robot given p0, v0, a0, and dt. Uses elementary physics formulas.
  *
@@ -63,7 +62,6 @@ fun getRelativeDPosCurve(distanceLeft: Double, distanceRight: Double, lateralWhe
 fun getTangentialSpeed(wheelL: Double, wheelR: Double): Double {
     return (wheelL + wheelR) / 2.0
 }
-
 
 fun getAbsoluteDPosLine(vL: Double, vR: Double, dt: Double, robotHeading: Double): ImmutableVector {
     val tangentialSpeed = getTangentialSpeed(vL, vR)

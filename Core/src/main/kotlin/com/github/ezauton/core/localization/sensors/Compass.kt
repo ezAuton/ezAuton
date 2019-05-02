@@ -13,5 +13,5 @@ interface Compass : Sensor {
      * @return Robot angle in radians. In front of robot is 0. To left is Math.PI / 2. etc . .
      */
     val radians: Double
-        get() = degrees / 180f * Math.PI
+        get() = degrees / 180.0 * Math.PI
 }

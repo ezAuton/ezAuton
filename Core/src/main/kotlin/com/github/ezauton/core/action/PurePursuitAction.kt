@@ -1,6 +1,6 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.core.utils.units.Duration
+import com.github.ezauton.conversion.Duration
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.pathplanning.purepursuit.Lookahead
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy
@@ -13,18 +13,18 @@ class PurePursuitAction
 /**
  * Create a PP Command
  *
- * @param period                         How often to update estimated position, robot control, etc
- * @param timeUnit                       The timeunit that period is in
- * @param purePursuitMovementStrategy    Our movement strategy.
+ * @param period How often to update estimated position, robot control, etc
+ * @param purePursuitMovementStrategy Our movement strategy.
  * @param translationalLocationEstimator An object that knows where we are on a 2D plane
- * @param lookahead                      An instance of [Lookahead] that can tell us how far along the path to look ahead
+ * @param lookahead An instance of [Lookahead] that can tell us how far along the path to look ahead
  * @param translationalLocationDrivable The drivetrain of the robot
- */
-(period: Duration,
- private val purePursuitMovementStrategy: PurePursuitMovementStrategy,
- private val translationalLocationEstimator: TranslationalLocationEstimator,
- private val lookahead: Lookahead,
- private val translationalLocationDrivable: TranslationalLocationDrivable) : PeriodicAction(period) {
+ */(
+        period: Duration,
+        private val purePursuitMovementStrategy: PurePursuitMovementStrategy,
+        private val translationalLocationEstimator: TranslationalLocationEstimator,
+        private val lookahead: Lookahead,
+        private val translationalLocationDrivable: TranslationalLocationDrivable
+) : PeriodicAction(period) {
 
     override fun execute() {
         // Find out where to drive to

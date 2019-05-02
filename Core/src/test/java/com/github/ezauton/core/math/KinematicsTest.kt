@@ -1,12 +1,9 @@
 package com.github.ezauton.core.math
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-import com.github.ezauton.core.utils.MathUtils
-import org.junit.jupiter.api.Test
-
-import com.github.ezauton.core.utils.MathUtils.ROOT_2
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
 class KinematicsTest {
     @Test
@@ -15,7 +12,7 @@ class KinematicsTest {
         assertEquals(14.0, MathUtils.Kinematics.navXBound(14.0), 0.001)
     }
 
-    @Test //fail
+    @Test // fail
     fun testAbsoluteDPos45() {
         val dPos = MathUtils.Kinematics.getAbsoluteDPosLine(1.0, 1.0, 1.0, Math.PI / 4f)
 
@@ -91,7 +88,6 @@ class KinematicsTest {
         vectorsCloseEnough(j, MathUtils.Geometry.getVector(1.0, 0.0))
         vectorsCloseEnough(i, MathUtils.Geometry.getVector(1.0, -Math.PI / 2))
         vectorsCloseEnough(i.add(j), MathUtils.Geometry.getVector(ROOT_2, -Math.PI / 4))
-
     }
 
     @Test
@@ -137,5 +133,4 @@ class KinematicsTest {
         assertEquals(a.get(0), b.get(0), 1E-3)
         assertEquals(a.get(1), b.get(1), 1E-3)
     }
-
 }

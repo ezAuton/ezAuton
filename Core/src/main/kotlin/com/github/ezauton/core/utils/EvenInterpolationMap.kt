@@ -1,15 +1,13 @@
 package com.github.ezauton.core.utils
 
-import java.util.Objects
-
 /**
  * An interpolation map that has even symmetry https://en.wikipedia.org/wiki/Even_and_odd_functions
  */
 class EvenInterpolationMap : LinearInterpolationMap {
 
-    constructor(firstKey: Double?, firstValue: Double?) : super(firstKey, firstValue) {}
+    constructor(firstKey: Double?, firstValue: Double?) : super(firstKey, firstValue)
 
-    constructor(initTable: Map<Double, Double>) : super(initTable) {}
+    constructor(initTable: Map<Double, Double>) : super(initTable)
 
     override fun putAll(m: Map<out Double, Double>) {
         if (m == null) {
@@ -22,6 +20,4 @@ class EvenInterpolationMap : LinearInterpolationMap {
         super.put((-key)!!, value)
         return super.put(key, value)
     }
-
-
 }

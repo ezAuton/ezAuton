@@ -1,10 +1,10 @@
 package com.github.ezauton.core.math
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-import com.github.ezauton.core.utils.MathUtils
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 class LineTest {
     private val DELTA = 1e-5
@@ -32,7 +32,6 @@ class LineTest {
             assertEquals(line.evaluateY(ax), ay, DELTA)
             assertEquals(line.evaluateY(bx), by, DELTA)
         }
-
     }
 
     @Test
@@ -68,7 +67,6 @@ class LineTest {
         assertEquals(horizontal, horizontal)
 
         assertNotEquals(horizontal, vertical)
-
     }
 
     //    @Test //TODO: fix

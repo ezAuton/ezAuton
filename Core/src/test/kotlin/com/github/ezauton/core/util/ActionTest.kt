@@ -1,14 +1,11 @@
 package com.github.ezauton.core.util
 
 import com.github.ezauton.core.action.ActionGroup
-import com.github.ezauton.core.action.BaseAction
 import com.github.ezauton.core.action.DelayedAction
 import com.github.ezauton.core.action.TimedPeriodicAction
-import com.github.ezauton.core.action.tangible.MainActionScheduler
-import com.github.ezauton.core.wrapType
-import com.github.ezauton.core.simulation.ModernSimulatedClock
 import com.github.ezauton.core.utils.RealClock
 import com.github.ezauton.core.utils.TimeWarpedClock
+import com.github.ezauton.core.wrapType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.concurrent.TimeUnit
@@ -43,7 +40,6 @@ class ActionTest {
 
         var counter = 0
 
-
         val actionGroup = ActionGroup.ofParallels(
                 BaseAction { counter++ },
                 BaseAction { counter++ },
@@ -58,7 +54,6 @@ class ActionTest {
 
     @Test
     fun `action group of wrappers test`() {
-
 
         var counter = 0
 
@@ -78,13 +73,10 @@ class ActionTest {
 
         val clock = TimeWarpedClock(10.0, 0)
 
-
         val warpedScheduler = MainActionScheduler(clock)
 
         warpedScheduler.scheduleAction(actionGroup).get(4_000, TimeUnit.MILLISECONDS)
 
         assertEquals(2, counter)
-
-
     }
 }

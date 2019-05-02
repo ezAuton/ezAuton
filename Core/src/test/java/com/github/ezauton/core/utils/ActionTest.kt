@@ -1,21 +1,26 @@
 package com.github.ezauton.core.utils
 
-import com.github.ezauton.core.action.*
-import com.github.ezauton.core.action.tangible.MainActionScheduler
+import com.github.ezauton.core.action.Action
+import com.github.ezauton.core.action.ActionGroup
+import com.github.ezauton.core.action.DelayedAction
+import com.github.ezauton.core.action.TimedPeriodicAction
 import com.github.ezauton.core.localization.UpdatableGroup
 import com.github.ezauton.core.simulation.TimeWarpedSimulation
 import com.google.common.util.concurrent.AtomicDouble
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-
 import java.util.ArrayList
 import java.util.Arrays
-import java.util.concurrent.*
+import java.util.concurrent.CancellationException
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
-
-import org.junit.jupiter.api.Assertions.*
-
 
 class ActionTest {
 
@@ -95,7 +100,6 @@ class ActionTest {
         val group = ActionGroup()
                 .addSequential(action)
 
-
         val voidFuture = actionScheduler.scheduleAction(group)
         voidFuture.get(10, TimeUnit.SECONDS)
         assertEquals(4, count.get())
@@ -116,7 +120,6 @@ class ActionTest {
         sim.add(group)
         sim.runSimulation(3, TimeUnit.SECONDS)
         assertEquals(4, count.get())
-
     }
 
     @Test
@@ -136,7 +139,6 @@ class ActionTest {
             count.compareAndSet(2, 3)
         }
 
-
         val group = ActionGroup()
                 .addSequential(two)
                 .addSequential(three)
@@ -144,7 +146,6 @@ class ActionTest {
                     //                    System.out.println("all done");
 
                     count.compareAndSet(3, 4)
-
                 }
 
         //        new ProcessBuilder(group).startAndWait(1, TimeUnit.SECONDS);
@@ -157,7 +158,7 @@ class ActionTest {
     fun testActionGroup() {
         val count = AtomicInteger(0)
 
-        val five = DelayedAction(5, TimeUnit.SECONDS) //then
+        val five = DelayedAction(5, TimeUnit.SECONDS) // then
         five.onFinish { count.compareAndSet(3, 5) }
         //        five.onFinish(() -> System.out.println("five finished"));
 
@@ -206,7 +207,6 @@ class ActionTest {
             count.compareAndSet(2, 3)
         }
 
-
         val group = ActionGroup()
                 .addSequential(two)
                 .addSequential(three)
@@ -214,7 +214,6 @@ class ActionTest {
                     //                    System.out.println("all done");
 
                     count.compareAndSet(3, 4)
-
                 }
 
         val simulation = TimeWarpedSimulation()
@@ -266,8 +265,6 @@ class ActionTest {
         //        sim.run(TimeUnit.SECONDS, 12);
         //        System.out.println("count.get() - initmillis = " + (count.get() - initmillis));
         //        assertEquals(expectedDTms, count.get() - initmillis, 50);
-
-
     }
 
     @Test
@@ -293,7 +290,6 @@ class ActionTest {
         assertTrue(list.isEmpty())
     }
 
-
     @Test
     @Throws(Exception::class)
     fun testKillingActionGroups() {
@@ -306,7 +302,6 @@ class ActionTest {
         val actionGroup = ActionGroup()
                 .addSequential({ counter.getAndAdd(1.0) })
                 .addSequential(TimedPeriodicAction(250, TimeUnit.MILLISECONDS))
-
 
                 .addSequential({ counter.getAndAdd(1.0) })
 

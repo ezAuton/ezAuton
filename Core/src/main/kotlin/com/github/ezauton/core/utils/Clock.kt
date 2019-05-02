@@ -1,6 +1,6 @@
 package com.github.ezauton.core.utils
 
-import com.github.ezauton.core.utils.units.Duration
+import com.github.ezauton.conversion.Duration
 
 /**
  * Describes a Clock. The clock can be real or simulated. The purpose of a clock is to support a [Stopwatch]
@@ -14,9 +14,9 @@ interface Clock {
     suspend fun delayFor(duration: Duration)
 }
 
-suspend fun Clock.delayUntil(timeUntil: Duration){
+suspend fun Clock.delayUntil(timeUntil: Duration) {
     val dt = timeUntil - time
-    require(dt >= Duration.NONE){"the duration must be non-negative"}
-    if(dt == Duration.NONE) return
+    require(dt >= Duration.NONE) { "the duration must be non-negative" }
+    if (dt == Duration.NONE) return
     delayFor(dt)
 }

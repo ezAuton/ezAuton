@@ -3,8 +3,10 @@ package com.github.ezauton.core.action
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import java.util.*
-
+import java.util.ArrayList
+import java.util.Arrays
+import java.util.LinkedList
+import java.util.Queue
 
 /**
  * Describes a group of multiple IActions which itself is also an Action
@@ -130,7 +132,7 @@ class ActionGroup : Action {
                     the action group.
                      */
 
-                    submit.join() // TODO: should auto cancel since in coroutine scope... right?
+                    submit.join()
 
                     withActions.forEach { it.cancel() }
                     withActions.clear()
@@ -165,5 +167,4 @@ class ActionGroup : Action {
      * @see Type
      */
     data class ActionWrapper(val action: Action, val type: Type)
-
 }

@@ -1,19 +1,20 @@
 package com.github.ezauton.core.simulator
 
-import com.github.ezauton.core.action.*
+import com.github.ezauton.core.action.ActionGroup
+import com.github.ezauton.core.action.DelayedAction
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.TimeWarpedSimulation
 import com.github.ezauton.core.utils.ManualClock
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-
-import org.junit.jupiter.api.Assertions.*
 
 class SimulatorTest {
 
@@ -55,7 +56,7 @@ class SimulatorTest {
         val delayedAction3 = DelayedAction(500, TimeUnit.MILLISECONDS, { atomicInteger.compareAndSet(1, 2) })
         delayedAction3.onFinish({ })
 
-        //TODO: Order matters? See github #35
+        // TODO: Order matters? See github #35
         actionGroup.addParallel(delayedAction3) // second
         actionGroup.with(delayedAction2) // first
         actionGroup.addSequential(delayedAction) // last
@@ -64,7 +65,6 @@ class SimulatorTest {
         simulation.runSimulation(100, TimeUnit.SECONDS)
         assertEquals(3, atomicInteger.get())
     }
-
 
     @Test
     fun testStraight() {
@@ -90,7 +90,7 @@ class SimulatorTest {
 
         val action = BackgroundAction(20, TimeUnit.MILLISECONDS, Runnable { atomicInteger.incrementAndGet() })
 
-        //TODO: Order matters? See github #35
+        // TODO: Order matters? See github #35
         actionGroup.addSequential(action)
 
         simulation.add(actionGroup)

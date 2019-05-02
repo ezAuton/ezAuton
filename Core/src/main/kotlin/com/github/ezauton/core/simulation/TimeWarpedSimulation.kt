@@ -1,10 +1,7 @@
 package com.github.ezauton.core.simulation
 
-
 import com.github.ezauton.core.action.Action
-import com.github.ezauton.core.action.tangible.MainActionScheduler
 import com.github.ezauton.core.utils.TimeWarpedClock
-
 import java.util.ArrayList
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Future
@@ -33,7 +30,7 @@ class TimeWarpedSimulation @JvmOverloads constructor(val speed: Double = 1.0) : 
     /**
      * Run your simulation and blocks until done
      *
-     * @param timeout  The amoount of **real** time that you want your simulation to cap out at.
+     * @param timeout The amoount of **real** time that you want your simulation to cap out at.
      * @param timeUnit The timeunit that the timeout is in
      */
     @Throws(TimeoutException::class, ExecutionException::class)
@@ -50,7 +47,6 @@ class TimeWarpedSimulation @JvmOverloads constructor(val speed: Double = 1.0) : 
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
-
         }
     }
 }

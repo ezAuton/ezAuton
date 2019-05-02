@@ -10,7 +10,7 @@ interface TranslationalLocationDrivable {
      * Move the robot from our current location to a target location while respecting a maximum speed
      *
      * @param speed The maximum speed of the robot
-     * @param loc   The target location of the robot
+     * @param loc The target location of the robot
      * @return If the movement is possible
      */
     fun driveTowardTransLoc(speed: Double, loc: ImmutableVector): Boolean

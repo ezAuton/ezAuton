@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="com.github.ezauton.ezAuton.Core.main" target="1.8" />
+      <module name="com.github.ezauton.ezAuton.Core.test" target="1.8" />
+      <module name="com.github.ezauton.ezAuton.Recorder.main" target="1.8" />
+      <module name="com.github.ezauton.ezAuton.Recorder.test" target="1.8" />
+      <module name="com.github.ezauton.ezAuton.Visualizer.main" target="1.8" />
+      <module name="com.github.ezauton.ezAuton.Visualizer.test" target="1.8" />
+      <module name="com.github.ezauton.ezAuton.WPILib.main" target="1.8" />
+      <module name="com.github.ezauton.ezAuton.WPILib.test" target="1.8" />
+      <module name="ezAuton.Conversion.main" target="1.8" />
+      <module name="ezAuton.Conversion.test" target="1.8" />
+      <module name="ezAuton.Core.main" target="1.8" />
+      <module name="ezAuton.Core.test" target="1.8" />
+      <module name="ezAuton.main" target="1.8" />
+      <module name="ezAuton.Recorder.main" target="1.8" />
+      <module name="ezAuton.Recorder.test" target="1.8" />
+      <module name="ezAuton.test" target="1.8" />
+      <module name="ezAuton.Visualizer.main" target="1.8" />
+      <module name="ezAuton.Visualizer.test" target="1.8" />
+      <module name="ezAuton.WPILib.main" target="1.8" />
+      <module name="ezAuton.WPILib.test" target="1.8" />
+      <module name="Projects.ezAuton.Conversion.main" target="1.8" />
+      <module name="Projects.ezAuton.Conversion.test" target="1.8" />
+      <module name="Projects.ezAuton.main" target="1.8" />
+      <module name="Projects.ezAuton.test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

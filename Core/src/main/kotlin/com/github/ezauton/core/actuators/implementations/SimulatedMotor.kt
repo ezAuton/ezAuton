@@ -2,8 +2,8 @@ package com.github.ezauton.core.actuators.implementations
 
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.actuators.VoltageMotor
-import com.github.ezauton.core.localization.Updateable
 import com.github.ezauton.core.localization.UpdatableGroup
+import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor
 import com.github.ezauton.core.utils.Clock
 
@@ -14,13 +14,13 @@ class SimulatedMotor
 /**
  * Create a simulated motor
  *
- * @param clock    The clock to keep track of time with
+ * @param clock The clock to keep track of time with
  * @param maxAccel The maximum acceleration of the motor in its gearbox.
- * @param minVel   The minimum velocity of the motor to achieve a non-zero speed outside of the gearbox.
- * @param maxVel   The maximum velocity of the motor
- * @param kV       Max voltage over max velocity (see FRC Drivetrain Characterization Paper eq. 11)). Used to simulate voltage-based driving as well.
+ * @param minVel The minimum velocity of the motor to achieve a non-zero speed outside of the gearbox.
+ * @param maxVel The maximum velocity of the motor
+ * @param kV Max voltage over max velocity (see FRC Drivetrain Characterization Paper eq. 11)). Used to simulate voltage-based driving as well.
  */
-(clock: Clock, maxAccel: Double, minVel: Double, maxVel: Double, private val kV: Double) : VelocityMotor, RotationalDistanceSensor, VoltageMotor, Updateable {
+(clock: Clock, maxAccel: Double, minVel: Double, maxVel: Double, private val kV: Double) : VelocityMotor, RotationalDistanceSensor, VoltageMotor, Updatable {
 
     private val motorConstraints: BoundedVelocityProcessor
     private val motor: BaseSimulatedMotor = BaseSimulatedMotor(clock)
@@ -41,7 +41,6 @@ class SimulatedMotor
         val leftSF = StaticFrictionVelocityProcessor(motor, leftRampUpMotor, minVel)
         motorConstraints = BoundedVelocityProcessor(leftSF, maxVel)
         maxVoltage = maxVel * kV
-
     }
 
     override fun runVelocity(targetVelocity: Double) {

@@ -5,7 +5,6 @@ import com.github.ezauton.core.localization.sensors.Compass
 
 class CompassRotationalLocationEstimator(private val compass: Compass) : RotationalLocationEstimator {
 
-
     override fun estimateHeading(): Double {
         return compass.radians
     }

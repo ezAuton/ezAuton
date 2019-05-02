@@ -1,9 +1,6 @@
 package com.github.ezauton.core.util
 
 import com.github.ezauton.core.action.ActionGroup
-import com.github.ezauton.core.action.ActionRunInfo
-import com.github.ezauton.core.action.BaseAction
-import com.github.ezauton.core.simulation.ModernSimulatedClock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -11,7 +8,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-
 
 class ClockTest {
 
@@ -84,7 +80,6 @@ class ClockTest {
     @Test
     fun `test modern clock actustion group parallel`() {
 
-
         var counter = 0
         val sim = newSim()
 
@@ -100,7 +95,6 @@ class ClockTest {
                 .addSequential { /* do nothing */ }
 //                .addSequential( TestBaseAction(1,30) )
 
-
         assertEquals(0, counter)
 
         sim.add(action)
@@ -114,7 +108,6 @@ class ClockTest {
 
         assertThrows<IllegalArgumentException> { newSim().runSimulation(0, TimeUnit.MILLISECONDS) }
         assertThrows<IllegalArgumentException> { newSim().runSimulation(-1, TimeUnit.MILLISECONDS) }
-
 
         val action = BaseAction { Thread.sleep(3) } // note this is A HORRIBLE PRACTICE, just for unit testing...
 

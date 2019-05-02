@@ -3,7 +3,7 @@ package com.github.ezauton.core.localization
 /**
  * Any class which can be regularly updated
  */
-interface Updateable {
+interface Updatable {
     /**
      * @return If could update successfully
      */
