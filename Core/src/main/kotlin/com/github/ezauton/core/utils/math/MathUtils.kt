@@ -398,4 +398,3 @@ interface Integrable {
 }
 
 fun ClosedRange<Double>.length() = endInclusive - start
-fun

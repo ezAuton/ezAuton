@@ -3,6 +3,7 @@ package com.github.ezauton.core.simulator
 import com.github.ezauton.core.action.Action
 import com.github.ezauton.core.action.TimedPeriodicAction
 import com.github.ezauton.core.simulation.ModernSimulatedClock
+import kotlinx.atomicfu.AtomicRef
 import org.junit.jupiter.api.Test
 
 import java.util.concurrent.TimeUnit

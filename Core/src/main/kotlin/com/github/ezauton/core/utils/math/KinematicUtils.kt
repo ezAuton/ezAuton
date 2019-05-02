@@ -69,12 +69,11 @@ fun getAbsoluteDPosLine(vL: Double, vR: Double, dt: Double, robotHeading: Double
     val tangentialSpeed = getTangentialSpeed(vL, vR)
     val tangentialDPos = getTangentialSpeed(vL, vR) * dt
     val dPos = VECTOR_FORWARD.mul(tangentialDPos)
-    return LinearAlgebra.rotate2D(dPos, robotHeading)
+    return dPos.rotate2D(robotHeading)
 }
 
 fun getAbsoluteDPosCurve(vL: Double, vR: Double, l: Double, robotHeading: Double): ImmutableVector {
-    val relativeDPos = getRelativeDPosCurve(vL, vR, l)
-    return LinearAlgebra.rotate2D(relativeDPos, robotHeading)
+    return getRelativeDPosCurve(vL, vR, l).rotate2D(robotHeading)
 }
 
 /**

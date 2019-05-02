@@ -107,13 +107,13 @@ fun getClosestPointLineSegments(linea: ImmutableVector, lineb: ImmutableVector, 
 }
 
 /**
- * @param distance The length of the vector
+ * @param magnitude The length of the vector
  * @param angle    The angle of the vector
  * @return A vector in <x></x>, y> form
  * @see ImmutableVector
  */
-fun getVector(distance: Double, angle: Double): ImmutableVector {
-    return VECTOR_FORWARD.rotate2D(angle).mul(distance)
+fun polarVector2D(magnitude: Double, theta: Double): ImmutableVector {
+    return VECTOR_FORWARD.rotate2D(theta).mul(magnitude)
 }
 
 /**

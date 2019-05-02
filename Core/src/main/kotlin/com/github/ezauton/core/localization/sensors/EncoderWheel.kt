@@ -10,7 +10,7 @@ class EncoderWheel
  * @param encoder       The encoder for measuring revolutions
  * @param wheelDiameter The diameter of the wheel with the encoder (recommended in ft)
  */
-(val rotationalDistanceSensor: RotationalDistanceSensor, val wheelDiameter: Double) : TranslationalDistanceSensor {
+(private val rotationalDistanceSensor: RotationalDistanceSensor, private val wheelDiameter: Double) : TranslationalDistanceSensor {
     /**
      * @param multiplier If there are additional gear ratios to consider, this is the multiplier
      * (wheel rev / encoder rev)
@@ -32,7 +32,7 @@ class EncoderWheel
     override val position: Double
         get() {
             val tempRawPos = rotationalDistanceSensor.position
-            encoderPosMultiplied = (tempRawPos - encoderRawPos) * multiplier + encoderPosMultiplied
+            encoderPosMultiplied += (tempRawPos - encoderRawPos) * multiplier
             encoderRawPos = tempRawPos
             return encoderPosMultiplied * Math.PI * wheelDiameter
         }

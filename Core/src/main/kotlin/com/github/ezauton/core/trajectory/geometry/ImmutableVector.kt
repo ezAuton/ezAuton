@@ -240,3 +240,5 @@ class ImmutableVector : Serializable, Comparable<ImmutableVector> {
 
     }
 }
+
+fun vec(vararg x: Double) = ImmutableVector(*x)

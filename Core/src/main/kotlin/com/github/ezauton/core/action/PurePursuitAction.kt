@@ -1,6 +1,6 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.core.Duration
+import com.github.ezauton.core.utils.units.Duration
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.pathplanning.purepursuit.Lookahead
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy

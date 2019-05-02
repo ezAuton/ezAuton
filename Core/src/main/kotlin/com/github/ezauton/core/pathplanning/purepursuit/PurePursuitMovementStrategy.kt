@@ -2,6 +2,7 @@ package com.github.ezauton.core.pathplanning.purepursuit
 
 import com.github.ezauton.core.pathplanning.Path
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.core.utils.units.Distance
 import kotlinx.coroutines.channels.Channel
 
 /**
@@ -57,7 +58,7 @@ class PurePursuitMovementStrategy
      * @param lookahead Current lookahead as given by an Lookahead instance
      * @return The wanted pose of the robot at a certain location
      */
-    fun update(loc: ImmutableVector, lookahead: Double): ImmutableVector? {
+    fun update(loc: ImmutableVector, lookahead: Distance): ImmutableVector? {
         val current = path.current
         val segmentOnI = path.segmentOnI
         val currentClosestPoint = current.getClosestPoint(loc)

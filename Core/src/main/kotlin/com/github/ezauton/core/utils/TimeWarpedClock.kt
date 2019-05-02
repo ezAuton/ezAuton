@@ -1,7 +1,7 @@
 package com.github.ezauton.core.utils
 
-import com.github.ezauton.core.Duration
-import com.github.ezauton.core.now
+import com.github.ezauton.core.utils.units.Duration
+import com.github.ezauton.core.utils.units.now
 import kotlinx.coroutines.delay
 
 /**

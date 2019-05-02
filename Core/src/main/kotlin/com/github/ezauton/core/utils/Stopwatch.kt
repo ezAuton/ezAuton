@@ -1,23 +1,22 @@
 package com.github.ezauton.core.utils
 
-import java.util.concurrent.TimeUnit
+
+import com.github.ezauton.core.utils.units.Duration
 
 /**
  * A handy stopwatch for recording time in seconds since it was last polled. Requires a ⏱ [Clock] to keep track
  * of time.
  */
 class Stopwatch(val clock: Clock) {
-    protected var millis: Long = -1
+    private lateinit var startDuration: Duration
 
     /**
      * @return If this stopwatch is initialized
      */
-    val isInit: Boolean
-        get() = millis != -1
+    val isInit: Boolean get() = ::startDuration.isInitialized
 
     fun init() {
-        millis = clock.time
-
+        startDuration = clock.time
     }
 
     /**
@@ -25,20 +24,10 @@ class Stopwatch(val clock: Clock) {
      *
      * @return The value of the stopwatch (ms)
      */
-    fun pop(): Double {
-        val readVal = read().toDouble()
+    fun pop(): Duration {
+        val readVal = read()
         reset()
         return readVal
-    }
-
-    /**
-     * Read and reset
-     *
-     * @param timeUnit The time unit you would like to get the result in
-     * @return Value of stopwatch (in specified timeunit)
-     */
-    fun pop(timeUnit: TimeUnit): Double {
-        return pop() / timeUnit.toMillis(1)
     }
 
     /**
@@ -46,20 +35,16 @@ class Stopwatch(val clock: Clock) {
      *
      * @return The value of the stopwatch (ms)
      */
-    fun read(): Long {
+    fun read(): Duration {
         if (!isInit) throw IllegalArgumentException("Stopwatch must be initialized to use")
-        return clock.time - millis
-    }
-
-    fun read(timeUnit: TimeUnit): Long {
-        return timeUnit.convert(read(), TimeUnit.MILLISECONDS)
+        return clock.time - startDuration
     }
 
     /**
      * Reset without reading
      */
     fun reset(): Stopwatch {
-        millis = clock.time
+        startDuration = clock.time
         return this
     }
 

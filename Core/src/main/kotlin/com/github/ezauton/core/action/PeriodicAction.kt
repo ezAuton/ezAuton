@@ -1,22 +1,18 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.core.Duration
-import com.github.ezauton.core.action.require.Resource
+import com.github.ezauton.core.utils.units.Duration
 import com.github.ezauton.core.action.require.combine
-import com.github.ezauton.core.millis
-import com.github.ezauton.core.now
+import com.github.ezauton.core.utils.units.millis
+import com.github.ezauton.core.utils.units.now
 import com.github.ezauton.core.utils.RealClock
 import com.github.ezauton.core.utils.Stopwatch
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.delay
 
 
 enum class ResourceManagement {
     UNTIL_FINISH,
     LET_GO_EACH_CYCLE
 }
-
-data class ResourcePriority(val resource: Resource, val priority: Int)
 
 /**
  * An action which runs at recurring intervals 🔁. Will run all [Runnable]s sequentially every period timeUnit.
@@ -27,10 +23,11 @@ abstract class PeriodicAction
  *
  * @param period
  */
-(private val period: Duration, private val resourceManagement: ResourceManagement = ResourceManagement.UNTIL_FINISH, vararg val resourcePriorities: ResourcePriority) : Action {
+(private val period: Duration, private val resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT, private vararg val resourcePriorities: ResourcePriority) : Action {
 
     companion object {
         val DEFAULT_PERIOD = 20.millis
+        val DEFAULT_RESOURCE_MANAGEMENT = ResourceManagement.UNTIL_FINISH
     }
 
     /**
@@ -79,7 +76,7 @@ abstract class PeriodicAction
     @Throws(Exception::class)
     abstract fun execute()
 
-    override suspend fun run() {
+    override suspend fun ActionContext.run() {
 
         val start = now()
 

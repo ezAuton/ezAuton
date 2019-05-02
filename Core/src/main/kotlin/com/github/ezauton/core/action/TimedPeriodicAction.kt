@@ -1,43 +1,20 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.core.Duration
-import java.util.concurrent.TimeUnit
+import com.github.ezauton.core.utils.units.Duration
 
 /**
  * Describes an action that ends after a certain amount of time has elapsed
  */
-class TimedPeriodicAction : PeriodicAction {
-
-    private var durationMillis: Long = 0
-
-    /**
-     * @param period       How long to (repeatedly) run the runnables for
-     * @param periodUnit
-     * @param duration     The timeunit that period is
-     * @param durationUnit
-     */
-    constructor(period: Duration = DEFAULT_PERIOD, duration: Duration , vararg runnables: Runnable) : super(period, *runnables) {
-        durationMillis = duration.millis
-    }
-
-    /**
-     * @param duration     The timeunit that period is
-     * @param durationUnit
-     */
-    constructor(duration: Duration, vararg runnables: Runnable) : super(*runnables) {
-        durationMillis = duration.millis
-    }
-
-    /**
-     * @param duration     The timeunit that period is
-     * @param durationUnit
-     */
-    constructor(duration: Long, durationUnit: TimeUnit) : super() {
-        durationMillis = durationUnit.toMillis(duration)
-    }
+abstract class TimedPeriodicAction
+/**
+ * @param period       How long to (repeatedly) run the runnables for
+ * @param periodUnit
+ * @param waitDuration     The timeunit that period is
+ * @param durationUnit
+ */(period: Duration = DEFAULT_PERIOD, private val waitDuration: Duration, resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT, vararg resourcePriorities: ResourcePriority) : PeriodicAction(period, resourceManagement, *resourcePriorities) {
 
     override fun isFinished(): Boolean {
-        return this.stopwatch.read() > durationMillis
+        return this.stopwatch.read() > waitDuration
     }
 
 }

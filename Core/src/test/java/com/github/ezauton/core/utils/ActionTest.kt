@@ -2,19 +2,13 @@ package com.github.ezauton.core.utils
 
 import com.github.ezauton.core.action.*
 import com.github.ezauton.core.action.tangible.MainActionScheduler
-import com.github.ezauton.core.localization.Updateable
-import com.github.ezauton.core.localization.UpdateableGroup
-import com.github.ezauton.core.simulation.ActionScheduler
+import com.github.ezauton.core.localization.UpdatableGroup
 import com.github.ezauton.core.simulation.TimeWarpedSimulation
-import com.github.ezauton.core.utils.RealClock
-import com.github.ezauton.core.utils.Stopwatch
-import com.github.ezauton.core.utils.TimeWarpedClock
 import com.google.common.util.concurrent.AtomicDouble
 import org.junit.jupiter.api.Test
 
 import java.util.ArrayList
 import java.util.Arrays
-import java.util.Collections
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -284,7 +278,7 @@ class ActionTest {
         val three = { list.add(3) }
         val four = { list.add(4) }
 
-        val group = UpdateableGroup(one, two, three, four)
+        val group = UpdatableGroup(one, two, three, four)
         assertTrue(group.update())
         assertEquals(list, Arrays.asList(1, 2, 3, 4))
         list.clear()

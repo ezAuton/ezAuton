@@ -2,10 +2,9 @@ package com.github.ezauton.core.actuators.implementations
 
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
+import com.github.ezauton.core.utils.units.toSeconds
 import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
-
-import java.util.concurrent.TimeUnit
 
 /**
  * Describes a simulated motor with an encoder. The motor has infinite acceleration
@@ -36,7 +35,7 @@ class BaseSimulatedMotor
     override var position = 0.0
         get(): Double {
             stopwatch.resetIfNotInit()
-            field += velocity * stopwatch.pop(TimeUnit.SECONDS) // Convert millis to seconds
+            field += velocity * stopwatch.pop().toSeconds()
             return field
         }
         private set
@@ -49,7 +48,7 @@ class BaseSimulatedMotor
         if (subscribed != null) {
             subscribed!!.runVelocity(targetVelocity)
         }
-        val popped = stopwatch.pop(TimeUnit.SECONDS)
+        val popped = stopwatch.pop().toSeconds()
         position += velocity * popped
         this.velocity = targetVelocity
     }

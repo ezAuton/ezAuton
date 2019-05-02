@@ -10,7 +10,7 @@ class ImmutableVectorTest {
 
     @Test
     fun testWrongSize() {
-        assertThrows<IllegalArgumentException>(IllegalArgumentException::class.java) { ImmutableVector(1.0, 1.0).assertSize(1) }
+        assertThrows<IllegalArgumentException>(IllegalArgumentException::class.java) { ImmutableVector(1.0, 1.0).assertDimension(1) }
     }
 
     fun testCollectionWrongSize() {

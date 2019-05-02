@@ -1,7 +1,7 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.core.Duration
-import com.github.ezauton.core.millis
+import com.github.ezauton.core.utils.units.Duration
+import com.github.ezauton.core.utils.units.millis
 import com.github.ezauton.core.utils.Clock
 
 data class ActionContext(val clock: Clock) {

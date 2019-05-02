@@ -3,21 +3,6 @@ package com.github.ezauton.core
 import com.github.ezauton.core.action.*
 
 /**
- *  Create a base action whilst having access to a clock ⏱
- */
-fun baseAction(block: (ActionRunInfo) -> Unit): BaseAction {
-    return object : BaseAction() {
-        override fun run(actionRunInfo: ActionRunInfo) {
-            block(actionRunInfo)
-        }
-    }
-}
-
-interface ResourceManager {
-
-}
-
-/**
  * Converts an Action into an ActionWrapper which is used for ActionGroups.
  */
 fun Action.wrapType(type: ActionGroup.Type): ActionGroup.ActionWrapper {

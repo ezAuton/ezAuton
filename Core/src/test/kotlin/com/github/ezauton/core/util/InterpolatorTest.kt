@@ -1,7 +1,7 @@
 package com.github.ezauton.core.util
 
 import com.github.ezauton.core.utils.EvenInterpolationMap
-import com.github.ezauton.core.utils.InterpolationMap
+import com.github.ezauton.core.utils.LinearInterpolationMap
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -14,7 +14,7 @@ class InterpolatorTest {
                 2.0 to 1.0,
                 4.0 to 3.0
         )
-        InterpolationMap(map)
+        LinearInterpolationMap(map)
     }
 
     private val interpMapEven by lazy {

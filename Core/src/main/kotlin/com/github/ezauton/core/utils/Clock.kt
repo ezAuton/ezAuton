@@ -1,6 +1,6 @@
 package com.github.ezauton.core.utils
 
-import com.github.ezauton.core.Duration
+import com.github.ezauton.core.utils.units.Duration
 
 /**
  * Describes a Clock. The clock can be real or simulated. The purpose of a clock is to support a [Stopwatch]

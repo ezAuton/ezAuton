@@ -14,6 +14,8 @@ import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.TimeWarpedSimulation
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
 import com.github.ezauton.core.utils.TimeWarpedClock
+import kotlinx.atomicfu.AtomicRef
+import kotlinx.atomicfu.atomic
 import org.junit.jupiter.api.Test
 
 import java.io.IOException

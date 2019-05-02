@@ -11,15 +11,14 @@ object Encoders {
     fun fromTachometer(tachometer: Tachometer, stopwatch: Stopwatch): RotationalDistanceSensor {
         return object : RotationalDistanceSensor {
 
-            internal var position = 0.0
+            override var position = 0.0
+                get() {
+                    field += stopwatch.pop(TimeUnit.SECONDS) * tachometer.velocity
+                    return field
+                }
 
             override val velocity: Double
                 get() = tachometer.velocity
-
-            override fun getPosition(): Double {
-                position += stopwatch.pop(TimeUnit.SECONDS) * tachometer.velocity
-                return position
-            }
         }
     }
 
