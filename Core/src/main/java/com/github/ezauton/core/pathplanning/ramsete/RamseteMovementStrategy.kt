@@ -17,8 +17,10 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
 
         var k: Double = 2 * zeta * Math.sqrt(w_d * w_d + b * v_d * v_d)
 
-        var v_output: Double = v_d * Math.cos(theta_e) + k * (Math.cos(x_e) + Math.sin(y_e))
-        var w_output: Double = w_d + b * v_d * sinc(theta_e) * (Math.cos(x_e) - Math.sin(y_e)) + k * theta_e
+        val robotTheta = robotPose.theta // radians
+
+        var v_output: Double = v_d * Math.cos(theta_e) + k * (x_e * Math.cos(robotTheta) + y_e * Math.sin(robotTheta))
+        var w_output: Double = w_d + b * v_d * sinc(theta_e) * (y_e * Math.cos(robotTheta) - x_e * Math.sin(robotTheta)) + k * theta_e
 
         //TODO: Velocity bounding?
         return calculateInverseKinematics(ControlOutput(v_output, w_output))
