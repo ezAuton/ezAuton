@@ -2,10 +2,7 @@ package com.github.ezauton.core.pathplanning;
 
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * A path is the conglomerate of several {@link PathSegment}s, which are in turn made from two {@link ImmutableVector}s.
@@ -13,7 +10,7 @@ import java.util.List;
  * This class is very helpful when it comes to tracking which segment is currently on and getting the distance
  * on the path at any point (taking arclength ... basically making path 1D).
  */
-public class Path {
+public class Path implements Iterable<PathSegment> {
     private List<PathSegment> pathSegments;
 
     private int segmentOnI = -1;
@@ -249,5 +246,10 @@ public class Path {
         path.closestPoint = closestPoint;
         path.robotLocationClosestPoint = robotLocationClosestPoint;
         return path;
+    }
+
+    @Override
+    public Iterator<PathSegment> iterator() {
+        return pathSegments.iterator();
     }
 }
