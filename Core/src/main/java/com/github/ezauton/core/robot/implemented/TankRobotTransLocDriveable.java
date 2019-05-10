@@ -3,6 +3,7 @@ package com.github.ezauton.core.robot.implemented;
 import com.github.ezauton.core.actuators.VelocityMotor;
 import com.github.ezauton.core.localization.RotationalLocationEstimator;
 import com.github.ezauton.core.localization.TranslationalLocationEstimator;
+import com.github.ezauton.core.pathplanning.ramsete.RamseteMovementStrategy;
 import com.github.ezauton.core.robot.TankRobotConstants;
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDriveable;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
@@ -176,5 +177,14 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
 
     public double getLastRightTarget() {
         return lastRightTarget;
+    }
+
+    public void driveEachMotor(RamseteMovementStrategy.Output ramseteOutput) {
+        leftMotor.runVelocity(ramseteOutput.getLeftVelocity());
+        rightMotor.runVelocity(ramseteOutput.getRightVelocity());
+    }
+
+    public TankRobotConstants getTankRobotConstants() {
+        return tankRobotConstants;
     }
 }
