@@ -93,4 +93,29 @@ public class PathSegmentInterpolated extends LinearPathSegment {
         double relativeDistance = getRelativeDistance(absoluteDistance);
         return speedInterpolator.get(relativeDistance);
     }
+
+    public double getSpeedStart()
+    {
+        return speedStart;
+    }
+
+    public double getSpeedStop()
+    {
+        return speedStop;
+    }
+
+    public double getDt()
+    {
+        return dt;
+    }
+
+    public double getMaxAccel()
+    {
+        return maxAccel;
+    }
+
+    public double getMaxDecel()
+    {
+        return maxDecel;
+    }
 }
