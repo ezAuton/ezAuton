@@ -1,24 +1,23 @@
 package com.github.ezauton.core.actuators.implementations;
 
-import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.actuators.VelocityMotor;
+import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
+import com.github.ezauton.core.utils.Clock;
 import com.github.ezauton.core.utils.Stopwatch;
-import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
 
 import java.util.concurrent.TimeUnit;
 
 /**
  * Describes a simulated motor with an encoder. The motor has infinite acceleration
  */
-public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanceSensor
-{
+public class BaseSimulatedMotor implements VelocityMotor, TranslationalDistanceSensor {
     private final Stopwatch stopwatch;
 
     /**
      * Assumed to be in dist/second
      */
     protected double velocity = 0;
-    private IVelocityMotor subscribed = null;
+    private VelocityMotor subscribed = null;
     private double position = 0;
 
     /**
@@ -26,16 +25,14 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
      *
      * @param clock The clock to keep track of time with
      */
-    public BaseSimulatedMotor(IClock clock)
-    {
+    public BaseSimulatedMotor(Clock clock) {
         this.stopwatch = new Stopwatch(clock);
     }
 
     /**
      * @return The motor to which the velocity is being applied
      */
-    public IVelocityMotor getSubscribed()
-    {
+    public VelocityMotor getSubscribed() {
         return subscribed;
     }
 
@@ -44,21 +41,17 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
      *
      * @param subscribed The new motor instance
      */
-    public void setSubscribed(IVelocityMotor subscribed)
-    {
+    public void setSubscribed(VelocityMotor subscribed) {
         this.subscribed = subscribed;
     }
 
     /**
-     *
      * @param targetVelocity The target speed for the motor to be ran at
      */
     @Override
-    public void runVelocity(double targetVelocity)
-    {
+    public void runVelocity(double targetVelocity) {
         stopwatch.resetIfNotInit();
-        if(subscribed != null)
-        {
+        if (subscribed != null) {
             subscribed.runVelocity(targetVelocity);
         }
         double popped = stopwatch.pop(TimeUnit.SECONDS);
@@ -67,16 +60,14 @@ public class BaseSimulatedMotor implements IVelocityMotor, ITranslationalDistanc
     }
 
     @Override
-    public double getPosition()
-    {
+    public double getPosition() {
         stopwatch.resetIfNotInit();
         position += velocity * stopwatch.pop(TimeUnit.SECONDS); // Convert millis to seconds
         return position;
     }
 
     @Override
-    public double getVelocity()
-    {
+    public double getVelocity() {
         return velocity;
     }
 }

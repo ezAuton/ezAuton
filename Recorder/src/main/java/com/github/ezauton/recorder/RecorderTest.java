@@ -1,33 +1,31 @@
 package com.github.ezauton.recorder;
 
+import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
-import com.github.ezauton.core.action.PPCommand;
+import com.github.ezauton.core.action.PurePursuitAction;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.Path;
-import com.github.ezauton.core.pathplanning.purepursuit.ILookahead;
+import com.github.ezauton.core.pathplanning.purepursuit.Lookahead;
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds;
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
+import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
+import com.github.ezauton.core.simulation.SimulatedTankRobot;
+import com.github.ezauton.core.simulation.TimeWarpedSimulation;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.core.action.ActionGroup;
-import com.github.ezauton.core.simulation.TimeWarpedSimulation;
-import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
-import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-public class RecorderTest
-{
-    public static void main(String[] args) throws IOException
-    {
+public class RecorderTest {
+    public static void main(String[] args) throws IOException, TimeoutException, ExecutionException {
 
-        ImmutableVector immutableVector = new ImmutableVector(0,0);
+        ImmutableVector immutableVector = new ImmutableVector(0, 0);
         immutableVector.isFinite();
 
         Path path = new PPWaypoint.Builder()
@@ -51,11 +49,11 @@ public class RecorderTest
         TankRobotEncoderEncoderEstimator locEstimator = robot.getDefaultLocEstimator();
         locEstimator.reset();
 
-        ILookahead lookahead = new LookaheadBounds(1, 7, 2, 10, locEstimator);
+        Lookahead lookahead = new LookaheadBounds(1, 7, 2, 10, locEstimator);
 
-        TankRobotTransLocDriveable  tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
+        TankRobotTransLocDriveable tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
-        PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         Recording recording = new Recording();
 
@@ -74,7 +72,7 @@ public class RecorderTest
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)
                 .with(recAction)
-                .addSequential(ppCommand);
+                .addSequential(purePursuitAction);
 
         simulation.add(group);
 
@@ -84,23 +82,6 @@ public class RecorderTest
 
 //        System.out.println("locEstimator.estimateLocation() = " + locEstimator.estimateLocation());
 
-        // save recording
-        {
-            String homeDir = System.getProperty("user.home");
-            java.nio.file.Path filePath = Paths.get(homeDir, ".ezauton", "loggy.json");
-
-            Files.createDirectories(filePath.getParent());
-
-            BufferedWriter writer = Files.newBufferedWriter(filePath);
-            String json = recording.toJson();
-
-            writer.write(json);
-
-            writer.close();
-
-            JsonUtils.toObject(Recording.class, json);
-        }
-
-
+        recording.save("loggy.json");
     }
 }

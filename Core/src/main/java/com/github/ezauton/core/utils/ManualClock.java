@@ -8,23 +8,20 @@ import java.util.concurrent.TimeUnit;
 /**
  * ⏰ A clock where the time is manually changed.
  */
-public class ManualClock implements IClock
-{
-
-    private long time = 0;
+public class ManualClock implements Clock {
 
     private final TreeMap<Long, Queue<Runnable>> timeToRunnableMap = new TreeMap<>();
+    private long time = 0;
 
 
-    public ManualClock() {}
+    public ManualClock() {
+    }
 
-    public void init()
-    {
+    public void init() {
         init(System.currentTimeMillis());
     }
 
-    public void init(long time)
-    {
+    public void init(long time) {
         setTime(time);
     }
 
@@ -34,8 +31,7 @@ public class ManualClock implements IClock
      * @param dt millisecond increase
      * @return The new time
      */
-    public long addTime(long dt)
-    {
+    public long addTime(long dt) {
         setTime(getTime() + dt);
         return getTime();
     }
@@ -46,8 +42,7 @@ public class ManualClock implements IClock
      * @param value
      * @param timeUnit
      */
-    public void addTime(long value, TimeUnit timeUnit)
-    {
+    public void addTime(long value, TimeUnit timeUnit) {
         addTime(timeUnit.toMillis(value));
     }
 
@@ -56,21 +51,17 @@ public class ManualClock implements IClock
      *
      * @return The new time
      */
-    public long incAndGet()
-    {
+    public long incAndGet() {
         return addTime(1);
     }
 
     @Override
-    public long getTime()
-    {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(long time)
-    {
-        while (!timeToRunnableMap.isEmpty() && timeToRunnableMap.firstKey() <= time)
-        {
+    public void setTime(long time) {
+        while (!timeToRunnableMap.isEmpty() && timeToRunnableMap.firstKey() <= time) {
             Map.Entry<Long, Queue<Runnable>> entry = timeToRunnableMap.pollFirstEntry();
             Queue<Runnable> queue = entry.getValue();
             queue.removeIf(runnable -> {
@@ -88,21 +79,17 @@ public class ManualClock implements IClock
      * @deprecated Does not currently return a Future
      */
     @Override
-    public void scheduleAt(long millis, Runnable runnable)
-    {
-        if(millis < getTime())
-        {
+    public void scheduleAt(long millis, Runnable runnable) {
+        if (millis < getTime()) {
             throw new IllegalArgumentException("You are scheduling a task for before the current time!");
         }
-        if(millis == getTime()) runnable.run();
+        if (millis == getTime()) runnable.run();
     }
 
     @Override
-    public void sleep(long dt, TimeUnit timeUnit) throws InterruptedException
-    {
+    public void sleep(long dt, TimeUnit timeUnit) throws InterruptedException {
         long startTime = getTime();
-        while(startTime + timeUnit.toMillis(dt) < getTime())
-        {
+        while (startTime + timeUnit.toMillis(dt) < getTime()) {
             wait();
         }
     }

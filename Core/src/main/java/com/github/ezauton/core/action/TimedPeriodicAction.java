@@ -5,8 +5,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Describes an action that ends after a certain amount of time has elapsed
  */
-public final class TimedPeriodicAction extends PeriodicAction
-{
+public class TimedPeriodicAction extends PeriodicAction {
 
     private long durationMillis;
 
@@ -16,8 +15,7 @@ public final class TimedPeriodicAction extends PeriodicAction
      * @param duration     The timeunit that period is
      * @param durationUnit
      */
-    public TimedPeriodicAction(long period, TimeUnit periodUnit, long duration, TimeUnit durationUnit, Runnable... runnables)
-    {
+    public TimedPeriodicAction(long period, TimeUnit periodUnit, long duration, TimeUnit durationUnit, Runnable... runnables) {
         super(period, periodUnit, runnables);
         durationMillis = durationUnit.toMillis(duration);
     }
@@ -28,8 +26,7 @@ public final class TimedPeriodicAction extends PeriodicAction
      * @param duration     The timeunit that period is
      * @param durationUnit
      */
-    public TimedPeriodicAction(long period, TimeUnit periodUnit, long duration, TimeUnit durationUnit)
-    {
+    public TimedPeriodicAction(long period, TimeUnit periodUnit, long duration, TimeUnit durationUnit) {
         super(period, periodUnit);
         durationMillis = durationUnit.toMillis(duration);
     }
@@ -38,8 +35,7 @@ public final class TimedPeriodicAction extends PeriodicAction
      * @param duration     The timeunit that period is
      * @param durationUnit
      */
-    public TimedPeriodicAction(long duration, TimeUnit durationUnit, Runnable... runnables)
-    {
+    public TimedPeriodicAction(long duration, TimeUnit durationUnit, Runnable... runnables) {
         super(runnables);
         durationMillis = durationUnit.toMillis(duration);
     }
@@ -48,15 +44,13 @@ public final class TimedPeriodicAction extends PeriodicAction
      * @param duration     The timeunit that period is
      * @param durationUnit
      */
-    public TimedPeriodicAction(long duration, TimeUnit durationUnit)
-    {
+    public TimedPeriodicAction(long duration, TimeUnit durationUnit) {
         super();
         durationMillis = durationUnit.toMillis(duration);
     }
 
     @Override
-    protected boolean isFinished()
-    {
+    protected boolean isFinished() {
         return this.stopwatch != null && this.stopwatch.read() > durationMillis;
     }
 

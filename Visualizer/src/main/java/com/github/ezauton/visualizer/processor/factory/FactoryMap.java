@@ -1,29 +1,26 @@
 package com.github.ezauton.visualizer.processor.factory;
 
-import com.github.ezauton.recorder.ISubRecording;
-import com.github.ezauton.visualizer.util.IDataProcessor;
+import com.github.ezauton.recorder.SubRecording;
+import com.github.ezauton.visualizer.util.DataProcessor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class FactoryMap implements IDataProcessorFactory
-{
+public class FactoryMap implements DataProcessorFactory {
 
 
-    private Map<Class<? extends ISubRecording>, Function<ISubRecording, IDataProcessor>> classMap = new HashMap<>();
+    private Map<Class<? extends SubRecording>, Function<SubRecording, DataProcessor>> classMap = new HashMap<>();
 
     @Override
-    public Optional<IDataProcessor> getProcessor(ISubRecording subRecording)
-    {
-        Function<ISubRecording, IDataProcessor> func = classMap.get(subRecording.getClass());
-        if(func == null) return Optional.empty();
+    public Optional<DataProcessor> getProcessor(SubRecording subRecording) {
+        Function<SubRecording, DataProcessor> func = classMap.get(subRecording.getClass());
+        if (func == null) return Optional.empty();
         return Optional.ofNullable(func.apply(subRecording));
     }
 
-    public <T extends ISubRecording> void register(Class<T> recordingClass, Function<T,IDataProcessor> function)
-    {
+    public <T extends SubRecording> void register(Class<T> recordingClass, Function<T, DataProcessor> function) {
 
         // JANK AF JAVA WHY YOU HAVE TO BE SO BAD AT GENERICS REEEEEEEEEEEEEEEEEEEEEEEE
         classMap.put(recordingClass, subRecording -> {

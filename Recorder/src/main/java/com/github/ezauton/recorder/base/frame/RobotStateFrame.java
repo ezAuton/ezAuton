@@ -1,8 +1,8 @@
 package com.github.ezauton.recorder.base.frame;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.ezauton.recorder.SequentialDataFrame;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.recorder.SequentialDataFrame;
 
 import java.io.Serializable;
 
@@ -11,8 +11,7 @@ import java.io.Serializable;
  * <p>
  * Generic drivetrain format
  */
-public class RobotStateFrame extends SequentialDataFrame implements Serializable
-{
+public class RobotStateFrame extends SequentialDataFrame implements Serializable {
     @JsonProperty
     private ImmutableVector pos;
 
@@ -36,8 +35,7 @@ public class RobotStateFrame extends SequentialDataFrame implements Serializable
      * @param robotWidth  The width of the robot in feet (the x-component of the robot)
      * @param robotLength The height of the robot in feet (the y-component of the robot)
      */
-    public RobotStateFrame(double time, ImmutableVector pos, double heading, double robotWidth, double robotLength, ImmutableVector robotVelocity)
-    {
+    public RobotStateFrame(double time, ImmutableVector pos, double heading, double robotWidth, double robotLength, ImmutableVector robotVelocity) {
         super(time);
         this.pos = pos;
         this.heading = heading;
@@ -46,42 +44,37 @@ public class RobotStateFrame extends SequentialDataFrame implements Serializable
         this.robotVelocity = robotVelocity;
     }
 
-    protected RobotStateFrame() {}
+    protected RobotStateFrame() {
+    }
 
-    public ImmutableVector getPos()
-    {
+    public ImmutableVector getPos() {
         return pos;
     }
 
-    public double getHeading()
-    {
+    public double getHeading() {
         return heading;
     }
 
-    public double getRobotWidth()
-    {
+    public double getRobotWidth() {
         return robotWidth;
     }
 
-    public double getRobotLength()
-    {
+    public double getRobotLength() {
         return robotLength;
     }
 
-    public ImmutableVector getRobotVelocity()
-    {
+    public ImmutableVector getRobotVelocity() {
         return robotVelocity;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "RobotState{" +
-               "pos=" + pos +
-               ", heading=" + heading +
-               ", robotWidth=" + robotWidth +
-               ", robotLength=" + robotLength +
-               ", time=" + time +
-               '}';
+                "pos=" + pos +
+                ", heading=" + heading +
+                ", robotWidth=" + robotWidth +
+                ", robotLength=" + robotLength +
+                ", time=" + time +
+                '}';
     }
 }

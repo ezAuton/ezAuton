@@ -6,6 +6,9 @@
 # ezAuton
 A collection of tools to help with FRC autonomous for Java robots. 
 
+## Resources to Learn
+- [Medium — How to use ezAuton to write cleaner code for FRC](https://medium.com/@andrew.gazelka/how-to-use-ezauton-to-write-cleaner-code-for-frc-ea18d0243936)
+
 ## Included
 
 #### Localization
@@ -70,7 +73,7 @@ ILookahead lookahead = new LookaheadBounds(1, 7, 2, 10, locEstimator);
 
 TankRobotTransLocDriveable  tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
-PPCommand ppCommand = new PPCommand(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
 
 Recording recording = new Recording();
 
@@ -89,7 +92,7 @@ BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECOND
 ActionGroup group = new ActionGroup()
         .with(updateKinematics)
         .with(recAction)
-        .addSequential(ppCommand);
+        .addSequential(purePursuitAction);
 
 simulation.add(group);
 
@@ -111,11 +114,11 @@ writer.close();
 ### Visualizer
 - Once you record, you can _play_ the recording as well. Built to be extendible, so you can implement your own 
 visualizer modules as well (use `ISubRecording` in the "Recording" module and `IDataProcessor` in the "Visualizer" module).
-- ![Visualizer in Action](https://i.imgur.com/OCRWotR.gif)
+- ![Visualizer in Action](https://thumbs.gfycat.com/LimpSplendidGuanaco-size_restricted.gif)
  
 
 ## Examples
-Look at [unit tests](https://github.com/ezAuton/ezAuton/tree/master/Core/src/test/java/org/github/ezauton/ezauton/test) to get several documented examples on what is possible to do with ezAuton. Note ezAuton is **NOT STABLE**. We are still in a development stage, so we encourage you to contribute and test with your robot so we can get an official release as soon as possible.
+Look at [unit tests](https://github.com/ezAuton/ezAuton/tree/d2e62895b3cf2d2a30720f6809d8e5ab0856a1d9/Core/src/test) to get several documented examples on what is possible to do with ezAuton. Note ezAuton is **NOT STABLE**. We are still in a development stage, so we encourage you to contribute and test with your robot so we can get an official release as soon as possible.
 
 ### Tank robot Pure Pursuit no helpers
 This is code for encoder-encoder localization with a tank robot with no helper classes. The code is overly-verbose for most scenarios; it is usually not needed.
@@ -165,7 +168,7 @@ Thread thread = new BackgroundAction(locEstimator).buildThread(10);
 thread.start();
 
 // Command to start Pure Pursuit
-Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
+Command commmand = new PurePursuitAction(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
  ```
  
  ### Tank robot voltage localization
@@ -201,5 +204,5 @@ Thread thread = new BackgroundAction(locEstimator, leftMotor, rightMotor).buildT
 thread.start();
 
 // Command to start Pure Pursuit
-Command commmand = new PPCommand(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
+Command commmand = new PurePursuitAction(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
 ```

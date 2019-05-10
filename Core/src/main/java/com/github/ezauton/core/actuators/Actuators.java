@@ -6,8 +6,7 @@ import com.github.ezauton.core.utils.OddInterpolationMap;
 /**
  * Take in an input and have a mechanical input
  */
-public class Actuators
-{
+public class Actuators {
     /**
      * Converts voltage drive to velocity drive. This is not 100% as it does not use encoders. The
      * interpolating map allows for mapping voltage to velocity if the relationship is non-linear
@@ -17,8 +16,7 @@ public class Actuators
      * @param velToVoltage
      * @return
      */
-    public static IVelocityMotor roughConvertVoltageToVel(IVoltageMotor voltageMotor, InterpolationMap velToVoltage)
-    {
+    public static VelocityMotor roughConvertVoltageToVel(VoltageMotor voltageMotor, InterpolationMap velToVoltage) {
         return velocity -> voltageMotor.runVoltage(velToVoltage.get(velocity));
     }
 
@@ -30,8 +28,7 @@ public class Actuators
      * @param maxSpeed
      * @return
      */
-    public static IVelocityMotor roughConvertVoltageToVel(IVoltageMotor voltageMotor, double maxSpeed)
-    {
+    public static VelocityMotor roughConvertVoltageToVel(VoltageMotor voltageMotor, double maxSpeed) {
         InterpolationMap interpolationMap = new OddInterpolationMap(0D, 0D);
         interpolationMap.put(maxSpeed, 1D);
         return roughConvertVoltageToVel(voltageMotor, interpolationMap);

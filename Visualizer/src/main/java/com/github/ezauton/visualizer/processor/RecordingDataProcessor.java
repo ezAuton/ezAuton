@@ -1,21 +1,19 @@
 package com.github.ezauton.visualizer.processor;
 
+import com.github.ezauton.recorder.Recording;
+import com.github.ezauton.visualizer.processor.factory.DataProcessorFactory;
+import com.github.ezauton.visualizer.util.DataProcessor;
+import com.github.ezauton.visualizer.util.Environment;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
-import com.github.ezauton.recorder.Recording;
-import com.github.ezauton.visualizer.util.IDataProcessor;
-import com.github.ezauton.visualizer.util.IEnvironment;
-import com.github.ezauton.visualizer.processor.factory.IDataProcessorFactory;
 
 import java.util.*;
 
-public class RecordingDataProcessor implements IDataProcessor
-{
+public class RecordingDataProcessor implements DataProcessor {
 
-    final List<IDataProcessor> childDataProcessors = new ArrayList<>();
+    final List<DataProcessor> childDataProcessors = new ArrayList<>();
 
-    public RecordingDataProcessor(Recording recording, IDataProcessorFactory factory)
-    {
+    public RecordingDataProcessor(Recording recording, DataProcessorFactory factory) {
         recording.getRecordingMap()
                 .values()
                 .stream()
@@ -26,9 +24,8 @@ public class RecordingDataProcessor implements IDataProcessor
     }
 
     @Override
-    public void initEnvironment(IEnvironment environment)
-    {
-        for (IDataProcessor d : childDataProcessors) {
+    public void initEnvironment(Environment environment) {
+        for (DataProcessor d : childDataProcessors) {
             if (d != null) {
                 d.initEnvironment(environment);
             }
@@ -36,10 +33,9 @@ public class RecordingDataProcessor implements IDataProcessor
     }
 
     @Override
-    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator)
-    {
+    public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator) {
         Map<Double, List<KeyValue>> ret = new HashMap<>();
-        for (IDataProcessor dataProcessor : childDataProcessors) {
+        for (DataProcessor dataProcessor : childDataProcessors) {
             if (dataProcessor != null) {
                 Map<Double, List<KeyValue>> keyValMap = dataProcessor.generateKeyValues(interpolator);
                 if (keyValMap != null) {

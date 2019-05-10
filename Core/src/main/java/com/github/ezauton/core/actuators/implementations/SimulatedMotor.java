@@ -1,17 +1,16 @@
 package com.github.ezauton.core.actuators.implementations;
 
-import com.github.ezauton.core.actuators.IVelocityMotor;
-import com.github.ezauton.core.actuators.IVoltageMotor;
+import com.github.ezauton.core.actuators.VelocityMotor;
+import com.github.ezauton.core.actuators.VoltageMotor;
 import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
-import com.github.ezauton.core.localization.sensors.IEncoder;
-import com.github.ezauton.core.utils.IClock;
+import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor;
+import com.github.ezauton.core.utils.Clock;
 
 /**
  * Unlike {@link BaseSimulatedMotor}, this motor has static friction and finite acceleration
  */
-public class SimulatedMotor implements IVelocityMotor, IEncoder, IVoltageMotor, Updateable
-{
+public class SimulatedMotor implements VelocityMotor, RotationalDistanceSensor, VoltageMotor, Updateable {
 
     private final BoundedVelocityProcessor motorConstraints;
     private final BaseSimulatedMotor motor;
@@ -22,14 +21,13 @@ public class SimulatedMotor implements IVelocityMotor, IEncoder, IVoltageMotor, 
     /**
      * Create a simulated motor
      *
-     * @param clock The clock to keep track of time with
+     * @param clock    The clock to keep track of time with
      * @param maxAccel The maximum acceleration of the motor in its gearbox.
-     * @param minVel The minimum velocity of the motor to achieve a non-zero speed outside of the gearbox.
-     * @param maxVel The maximum velocity of the motor
-     * @param kV Max voltage over max velocity (see FRC Drivetrain Characterization Paper eq. 11)). Used to simulate voltage-based driving as well.
+     * @param minVel   The minimum velocity of the motor to achieve a non-zero speed outside of the gearbox.
+     * @param maxVel   The maximum velocity of the motor
+     * @param kV       Max voltage over max velocity (see FRC Drivetrain Characterization Paper eq. 11)). Used to simulate voltage-based driving as well.
      */
-    public SimulatedMotor(IClock clock, double maxAccel, double minVel, double maxVel, double kV)
-    {
+    public SimulatedMotor(Clock clock, double maxAccel, double minVel, double maxVel, double kV) {
         motor = new BaseSimulatedMotor(clock);
         this.kV = kV;
 
@@ -43,32 +41,27 @@ public class SimulatedMotor implements IVelocityMotor, IEncoder, IVoltageMotor, 
     }
 
     @Override
-    public void runVelocity(double targetVelocity)
-    {
+    public void runVelocity(double targetVelocity) {
         motorConstraints.runVelocity(targetVelocity);
     }
 
     @Override
-    public void runVoltage(double percentVoltage)
-    {
-        motorConstraints.runVelocity((maxVoltage * percentVoltage)/kV);
+    public void runVoltage(double percentVoltage) {
+        motorConstraints.runVelocity((maxVoltage * percentVoltage) / kV);
     }
 
     @Override
-    public boolean update()
-    {
+    public boolean update() {
         return updateableGroup.update();
     }
 
     @Override
-    public double getPosition()
-    {
+    public double getPosition() {
         return motor.getPosition();
     }
 
     @Override
-    public double getVelocity()
-    {
+    public double getVelocity() {
         return motor.getVelocity();
     }
 }

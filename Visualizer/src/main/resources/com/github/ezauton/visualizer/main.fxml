@@ -12,63 +12,72 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.shape.Path?>
-<?import javafx.scene.shape.Rectangle?>
 
-<SplitPane dividerPositions="0.33333, 0.5" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.github.ezauton.visualizer.Controller">
-    <GridPane fx:id="leftInfoPane" maxHeight="492" maxWidth="443.0" minHeight="492" minWidth="443.0" prefHeight="492.0"
-              prefWidth="443.0">
+<SplitPane dividerPositions="0.33333, 0.5" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.ezauton.visualizer.Controller">
+    <GridPane fx:id="leftInfoPane" maxHeight="492" maxWidth="443.0" minHeight="492" minWidth="443.0" prefHeight="492.0" prefWidth="443.0">
         <columnConstraints>
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"/>
-            <ColumnConstraints halignment="CENTER"/>
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"/>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+            <ColumnConstraints halignment="CENTER" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
-            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
-            <RowConstraints valignment="CENTER" vgrow="NEVER"/> <!--Only has separators-->
-            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
-            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
-            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
-            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
-            <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints valignment="CENTER" vgrow="NEVER" /> <!--Only has separators-->
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
         <children>
+            <Separator orientation="VERTICAL" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label text="Select Starting position" GridPane.rowIndex="1" />
+            <Separator orientation="VERTICAL" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ChoiceBox fx:id="posChooser" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
-            <Label text="Select CSV" GridPane.columnIndex="0"/>
-            <Separator orientation="VERTICAL" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Label text="Select Starting position" GridPane.columnIndex="2"/>
-
-            <ChoiceBox fx:id="fileChooser" prefWidth="150.0" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <Separator orientation="VERTICAL" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            <ChoiceBox fx:id="posChooser" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-
-            <Separator orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <Separator orientation="HORIZONTAL" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <Separator orientation="HORIZONTAL" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Separator orientation="HORIZONTAL" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Label GridPane.columnIndex="0" GridPane.rowIndex="3">Time Elapsed</Label>
-            <Label fx:id="timeElapsed" GridPane.columnIndex="2" GridPane.rowIndex="3">0 seconds</Label>
 
             <Label GridPane.columnIndex="0" GridPane.rowIndex="4">Rate</Label>
-            <Slider fx:id="rateSlider" majorTickUnit="0.2" max="1.0" minorTickCount="2" showTickLabels="true"
-                    showTickMarks="true" value="1.0" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+            <Slider fx:id="rateSlider" majorTickUnit="0.2" max="2.0" minorTickCount="2" showTickLabels="true" showTickMarks="true" value="1.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
 
-            <Button onMouseClicked="#animateSquareKeyframe" GridPane.columnIndex="1" GridPane.rowIndex="7">Start!
+            <Button fx:id="btnPlayPause" text="Play" GridPane.columnIndex="1" GridPane.rowIndex="6">
             </Button>
+
+            <Label prefHeight="16.0" prefWidth="128.0" text="Select JSON log file" GridPane.columnIndex="0" />
+            <Label text="You clicked on:" GridPane.rowIndex="7" />
+            <Label fx:id="clickedCoordsDisplay" prefHeight="12.0" prefWidth="220.0" text="You haven't clicked anywhere yet" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <Button fx:id="btnAdvanceOneFrame" mnemonicParsing="false" text="Advance one frame" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Button fx:id="btnRewindOneFrame" mnemonicParsing="false" text="Rewind one frame" GridPane.rowIndex="6" />
+            <Button fx:id="btnSkipToStart" layoutX="24.0" layoutY="388.0" mnemonicParsing="false" text="Skip to Beginning" GridPane.rowIndex="5" />
+            <Button fx:id="btnSkipToEnd" layoutX="24.0" layoutY="322.0" mnemonicParsing="false" text="Skip to end" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Button fx:id="btnSelectJsonLogFile" mnemonicParsing="false" onMouseClicked="#selectFile" text="Select File. . ." GridPane.columnIndex="2" />
+         <GridPane prefHeight="0.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+           <columnConstraints>
+             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+            <children>
+               <Label fx:id="timeElapsed" alignment="CENTER" text="0 seconds" textAlignment="CENTER" />
+               <Slider fx:id="timeSlider" showTickLabels="true" showTickMarks="true"  GridPane.rowIndex="1" />
+            </children>
+         </GridPane>
 
 
         </children>
     </GridPane>
-    <AnchorPane id="backdrop" fx:id="backdrop" maxHeight="492.0" maxWidth="443.0" minHeight="492" minWidth="443"
-                prefHeight="492.0" prefWidth="443.0">
+    <AnchorPane id="backdrop" fx:id="backdrop" maxHeight="492.0" maxWidth="443.0" minHeight="492" minWidth="443" onMouseClicked="#displayRealWorldCoordsOnClick" prefHeight="492.0" prefWidth="443.0">
         <children>
 
         </children>
         <stylesheets>
-            <URL value="@application.css"/>
+            <URL value="@application.css" />
         </stylesheets>
     </AnchorPane>
-    <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE"/>
+    <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
 </SplitPane>

@@ -1,23 +1,22 @@
 package com.github.ezauton.core.localization.estimators;
 
-import com.github.ezauton.core.localization.IRotationalLocationEstimator;
-import com.github.ezauton.core.localization.ITankRobotVelocityEstimator;
-import com.github.ezauton.core.localization.ITranslationalLocationEstimator;
+import com.github.ezauton.core.localization.RotationalLocationEstimator;
+import com.github.ezauton.core.localization.TankRobotVelocityEstimator;
+import com.github.ezauton.core.localization.TranslationalLocationEstimator;
 import com.github.ezauton.core.localization.Updateable;
-import com.github.ezauton.core.localization.sensors.ITranslationalDistanceSensor;
-import com.github.ezauton.core.robot.ITankRobotConstants;
+import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
+import com.github.ezauton.core.robot.TankRobotConstants;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 
 /**
  * Describes an object that can estimate the heading and absolute position of the robot solely using the encoders
  */
-public final class TankRobotEncoderEncoderEstimator implements IRotationalLocationEstimator, ITranslationalLocationEstimator, ITankRobotVelocityEstimator, Updateable
-{
+public final class TankRobotEncoderEncoderEstimator implements RotationalLocationEstimator, TranslationalLocationEstimator, TankRobotVelocityEstimator, Updateable {
 
-    private final ITankRobotConstants tankRobot;
-    private final ITranslationalDistanceSensor left;
-    private final ITranslationalDistanceSensor right;
+    private final TankRobotConstants tankRobot;
+    private final TranslationalDistanceSensor left;
+    private final TranslationalDistanceSensor right;
     private double lastPosLeft;
     private double lastPosRight;
     private boolean init = false;
@@ -31,8 +30,7 @@ public final class TankRobotEncoderEncoderEstimator implements IRotationalLocati
      * @param right     A reference to the encoder on the right side of the robot
      * @param tankRobot A reference to an object containing data about the structure of the drivetrain
      */
-    public TankRobotEncoderEncoderEstimator(ITranslationalDistanceSensor left, ITranslationalDistanceSensor right, ITankRobotConstants tankRobot)
-    {
+    public TankRobotEncoderEncoderEstimator(TranslationalDistanceSensor left, TranslationalDistanceSensor right, TankRobotConstants tankRobot) {
         this.left = left;
         this.right = right;
         this.tankRobot = tankRobot;
@@ -41,7 +39,7 @@ public final class TankRobotEncoderEncoderEstimator implements IRotationalLocati
     /**
      * Reset the heading and position of the location estimator
      */
-    public void reset() //TODO: Suggestion -- Have an IPoseEstimator that implements Updateable, IRotationalEstimator, ITranslationalLocationEstimator that also has a reset method
+    public void reset() //TODO: Suggestion -- Have an IPoseEstimator that implements Updateable, IRotationalEstimator, TranslationalLocationEstimator that also has a reset method
     {
         lastPosLeft = left.getPosition();
         lastPosRight = right.getPosition();
@@ -51,14 +49,12 @@ public final class TankRobotEncoderEncoderEstimator implements IRotationalLocati
     }
 
     @Override
-    public double estimateHeading()
-    {
+    public double estimateHeading() {
         return heading;
     }
 
     @Override
-    public ImmutableVector estimateLocation()
-    {
+    public ImmutableVector estimateLocation() {
         return location;
     }
 
@@ -68,10 +64,8 @@ public final class TankRobotEncoderEncoderEstimator implements IRotationalLocati
      * @return True
      */
     @Override
-    public boolean update()
-    {
-        if(!init)
-        {
+    public boolean update() {
+        if (!init) {
             throw new IllegalArgumentException("Must be initialized! (call reset())");
         }
 
@@ -84,6 +78,9 @@ public final class TankRobotEncoderEncoderEstimator implements IRotationalLocati
         lastPosRight = rightPosition;
 
         ImmutableVector dLocation = MathUtils.Kinematics.getAbsoluteDPosCurve(dl, dr, tankRobot.getLateralWheelDistance(), heading);
+        if(!dLocation.isFinite()) {
+            throw new IllegalStateException("dLocation is " + dLocation + ", which is not finite! dl = " + dl + ", dr = " + dr + ", heading = " + heading );
+        }
         location = location.add(dLocation);
         heading += MathUtils.Kinematics.getAngularDistance(dl, dr, tankRobot.getLateralWheelDistance());
         return true;
@@ -93,20 +90,17 @@ public final class TankRobotEncoderEncoderEstimator implements IRotationalLocati
      * @return The current velocity vector of the robot in 2D space.
      */
     @Override
-    public ImmutableVector estimateAbsoluteVelocity()
-    {
+    public ImmutableVector estimateAbsoluteVelocity() {
         return MathUtils.Geometry.getVector(getAvgTranslationalWheelVelocity(), heading);
     }
 
     @Override
-    public double getLeftTranslationalWheelVelocity()
-    {
+    public double getLeftTranslationalWheelVelocity() {
         return left.getVelocity();
     }
 
     @Override
-    public double getRightTranslationalWheelVelocity()
-    {
+    public double getRightTranslationalWheelVelocity() {
         return right.getVelocity();
     }
 }

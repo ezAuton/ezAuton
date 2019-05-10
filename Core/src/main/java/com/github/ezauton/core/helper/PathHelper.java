@@ -11,15 +11,13 @@ import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint;
  * <br/>
  * Useful for testing ezAuton on a new robot.
  */
-public class PathHelper
-{
+public class PathHelper {
     /**
      * Describes a path 12 (ft? m?) long reaching a max velocity of 5 (ft/s? m/s?) with a max accel and decel of 3 (ft/s^2? m/s^2)
      */
     public static Path STRAIGHT_12UNITS;
 
-    static
-    {
+    static {
         PPWaypoint waypoint1 = PPWaypoint.simple2D(0, 0, 0, 3, -3);
         PPWaypoint waypoint2 = PPWaypoint.simple2D(0, 6, 5, 3, -3);
         PPWaypoint waypoint3 = PPWaypoint.simple2D(0, 12, 0, 3, -3);
