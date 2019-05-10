@@ -249,8 +249,7 @@ public class Path implements Iterable<PathSegment> {
     }
 
     @Override
-    public Iterator<PathSegment> iterator()
-    {
+    public Iterator<PathSegment> iterator() {
         return pathSegments.iterator();
     }
 }

@@ -9,16 +9,13 @@ import com.github.ezauton.core.utils.InterpolationMap;
 import com.github.ezauton.core.utils.MathUtils;
 
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Describes a movement strategy that is non linear in terms if the mathematics behind it; NOT necessarily the way it will move the robot (although it does support any {@link Path} shape)
  * <br  />
  * Currently supports tank only
  */
-public class NonLinearMovementStrategy
-{
+public class NonLinearMovementStrategy {
     private final double b;
     private final double zeta;
     private final Path path;
@@ -29,10 +26,10 @@ public class NonLinearMovementStrategy
 
     public NonLinearMovementStrategy(double b, double zeta, Path path) {
         this.path = path;
-        if(b <= 0) {
+        if (b <= 0) {
             throw new IllegalArgumentException("NonLinearMovementStrategy constructor parameters violate b > 0");
         }
-        if(! (0 <= zeta && zeta <= 1)) {
+        if (!(0 <= zeta && zeta <= 1)) {
             throw new IllegalArgumentException("NonLinearMovementStrategy constructor parameters violate 0 <= zeta <= 1");
         }
 
@@ -47,6 +44,7 @@ public class NonLinearMovementStrategy
 
     /**
      * Calculate the direction in which a linear path segment is pointing
+     *
      * @param segment The linear path segment
      * @return The direction it is pointing, with 0 radians being parallel to the y axis.
      */
@@ -54,28 +52,28 @@ public class NonLinearMovementStrategy
         double dy = segment.getTo().get(1) - segment.getFrom().get(1);
         double dx = segment.getTo().get(0) - segment.getFrom().get(0);
 
-        return Math.atan2(dy, dx) - Math.PI /2;
+        return Math.atan2(dy, dx) - Math.PI / 2;
     }
 
     /**
      * Create reference states (i.e the robot should be at (x, y) location pointing in (theta) direction at (t) time)
+     *
      * @param dt The timestep (in milliseconds) to use in order to generate these reference states.
      */
     void updateInterpolationMaps(double dt) {
         Iterator<PathSegmentInterpolated> pathSegments = new Iterator<PathSegmentInterpolated>() {
             Iterator<PathSegment> dumb = path.iterator();
+
             @Override
-            public boolean hasNext()
-            {
+            public boolean hasNext() {
                 return dumb.hasNext();
             }
 
             @Override
-            public PathSegmentInterpolated next()
-            {
+            public PathSegmentInterpolated next() {
                 return (PathSegmentInterpolated) dumb.next();
             }
-        } ;
+        };
 
         PathSegmentInterpolated currentPathSegment = pathSegments.next();
         timeStateMap_X = new InterpolationMap(0D, currentPathSegment.getFrom().get(0));
@@ -89,13 +87,12 @@ public class NonLinearMovementStrategy
         double absoluteDistance = 0;
         double timer = 0;
 
-        while(pathSegments.hasNext()) {
+        while (pathSegments.hasNext()) {
             // Accelerate our simulated robot
             double currentAcc = 0;
-            if(simulatedSpeed < currentPathSegment.getSpeed(absoluteDistance)) {
+            if (simulatedSpeed < currentPathSegment.getSpeed(absoluteDistance)) {
                 currentAcc = currentPathSegment.getMaxAccel();
-            }
-            else if(simulatedSpeed < currentPathSegment.getSpeed(absoluteDistance)) {
+            } else if (simulatedSpeed < currentPathSegment.getSpeed(absoluteDistance)) {
                 currentAcc = currentPathSegment.getMaxDecel();
             }
 
@@ -106,7 +103,7 @@ public class NonLinearMovementStrategy
             simulatedSpeed += currentAcc * dt;
             absoluteDistance += deltaAbsoluteDistance;
 
-            double theta =  calculateThetaOfLinearPathSegment(currentPathSegment);
+            double theta = calculateThetaOfLinearPathSegment(currentPathSegment);
             ImmutableVector deltaPosition = MathUtils.Geometry.getVector(deltaAbsoluteDistance, theta);
             simulatedPosition = simulatedPosition.add(deltaPosition);
 
@@ -119,19 +116,19 @@ public class NonLinearMovementStrategy
             // Progress forwards in time, space
             timer += dt;
 
-            if(absoluteDistance >= currentPathSegment.getAbsoluteDistanceEnd()) {
+            if (absoluteDistance >= currentPathSegment.getAbsoluteDistanceEnd()) {
                 currentPathSegment = pathSegments.next();
             }
         }
     }
 
     @Deprecated
-    //TOOD: Remove, for testing only
+        //TOOD: Remove, for testing only
     void printCSV() {
         System.out.println("t,x,y,theta");
         String formatString = "%f, %f, %f, %f\n";
 
-        for(double time : timeStateMap_X.keySet()) {
+        for (double time : timeStateMap_X.keySet()) {
             System.out.printf(formatString, time, timeStateMap_X.get(time), timeStateMap_Y.get(time), timeStateMap_THETA.get(time));
         }
     }
