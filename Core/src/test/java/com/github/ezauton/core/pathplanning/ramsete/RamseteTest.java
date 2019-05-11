@@ -3,6 +3,8 @@ package com.github.ezauton.core.pathplanning.ramsete;
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.RamseteAction;
+import com.github.ezauton.core.localization.RotationalLocationEstimator;
+import com.github.ezauton.core.localization.TranslationalLocationEstimator;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.pathplanning.LinearPathSegment;
 import com.github.ezauton.core.pathplanning.Path;
@@ -12,6 +14,8 @@ import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint;
 import com.github.ezauton.core.robot.TankRobotConstants;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.recorder.Recording;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
@@ -70,39 +74,51 @@ public class RamseteTest {
     @Test
     public void testBasicLinearPath() throws TimeoutException, ExecutionException {
         Path path = new PPWaypoint.Builder()
-                .add(0, 0, 10, 10, -10)
+                .add(0, 0, 3, 10, -10)
                 .add(0, 10, 0, 10, -10)
                 .buildPathGenerator().generate(0.05);
 
-        test("basicLinearPath", path);
+        test("basicLinearPath", path, 3, 1);
     }
 
     @Test
     public void testBasicSplinePath() throws TimeoutException, ExecutionException {
-        Path path = new SplinePPWaypoint.Builder()
-                .add(0, 0, 0, 3, 10, -10)
-                .add(0, 10, -Math.PI / 2, 3, 10, -10)
-                .add(-7, 3, Math.PI / 2, 0, 10, -10)
-                .buildPathGenerator().generate(0.05);
 
-        test("basicSplinePath", path);
+            Path path = new SplinePPWaypoint.Builder()
+                    .add(0, 0, 0, 3, 10, -10)
+                    .add(0, 10, -Math.PI / 2, 3, 10, -10)
+                    .add(-7, 3, Math.PI / 2, 0, 10, -10)
+                    .buildPathGenerator().generate(0.05);
+            test("basicSplinePath", path, 0.44, .56);
     }
 
-    private void test(String name, Path path) throws TimeoutException, ExecutionException {
-        TimeWarpedSimulation sim = new TimeWarpedSimulation(10);
+    @Test
+    public void testMoreComplexSplinePath() throws TimeoutException, ExecutionException {
 
-        SimulatedTankRobot robot = new SimulatedTankRobot(1, sim.getClock(), 1000, 0, 1000);
+        Path path = new SplinePPWaypoint.Builder()
+                .add(0, 0, 0, 10, 3, 10, -10)
+                .add(0, 10, 0, 10, 3, 10, -10)
+                .add(10, 10,    0, 10, 3, 10, -10)
+                .add(10, 20,    0, 10, 0, 10, -10)
+                .buildPathGenerator().generate(0.05);
+        test("complexSplinePath", path, 0.25, 0.05);
+    }
+
+    private void test(String name, Path path, double b, double zeta) throws TimeoutException, ExecutionException {
+        TimeWarpedSimulation sim = new TimeWarpedSimulation(1);
+
+        SimulatedTankRobot robot = new SimulatedTankRobot(1, sim.getClock(), 35, 0, 1000000000);
         TankRobotConstants tankRobotConstants = robot.getDefaultTransLocDriveable().getTankRobotConstants();
-        RamseteMovementStrategy ramseteMovementStrategy = new RamseteMovementStrategy(0.1, 0.7, 0.05, tankRobotConstants, path, 0.05);
+        RamseteMovementStrategy ramseteMovementStrategy = new RamseteMovementStrategy(b, zeta, 0.25, tankRobotConstants, path, 0.05);
 
-        PurePursuitMovementStrategy ppms = new PurePursuitMovementStrategy(path, 0.01);
+        PurePursuitMovementStrategy ppms = new PurePursuitMovementStrategy(path, 0.1);
 
         TankRobotEncoderEncoderEstimator locEstimator = robot.getDefaultLocEstimator();
         locEstimator.reset();
 
         TankRobotEncoderEncoderEstimator rotEstimator = robot.getDefaultLocEstimator();
         RamseteAction ramseteAction = new RamseteAction(
-                10,
+                1,
                 TimeUnit.MILLISECONDS,
                 ramseteMovementStrategy,
                 locEstimator,
@@ -112,11 +128,30 @@ public class RamseteTest {
 
         Recording rec = new Recording()
                 .addSubRecording(new RobotStateRecorder("robotstate", sim.getClock(), locEstimator, rotEstimator, tankRobotConstants.getLateralWheelDistance(), 1.5))
+                .addSubRecording(new RobotStateRecorder("referenceState", sim.getClock(),
+                        new TranslationalLocationEstimator() {
+                            @Override
+                            public ImmutableVector estimateLocation() {
+                                RamseteMovementStrategy.Pose desiredPose = ramseteMovementStrategy.getRamsetePath().getDesiredPose(ramseteAction.getStopwatch().read() / 1000D).getPose();
+                                return new ImmutableVector(desiredPose.getX(), desiredPose.getY());
+                            }
+
+                            @Override
+                            public ImmutableVector estimateAbsoluteVelocity() {
+                                RamseteMovementStrategy.ControlOutput controlOutput = ramseteMovementStrategy.getRamsetePath().getDesiredPose(ramseteAction.getStopwatch().read() / 1000D).getDesiredOutput();
+                                RamseteMovementStrategy.Pose pose = ramseteMovementStrategy.getRamsetePath().getDesiredPose(ramseteAction.getStopwatch().read() / 1000D).getPose();
+                                return MathUtils.Geometry.getVector(controlOutput.getVelocity(), pose.getTheta());
+                            }
+                        },
+                        () -> {
+                            RamseteMovementStrategy.Pose desiredPose = ramseteMovementStrategy.getRamsetePath().getDesiredPose(ramseteAction.getStopwatch().read() / 1000D).getPose();
+                            return desiredPose.getTheta();
+                        }, 0.01, 0.01))
                 .addSubRecording(new PurePursuitRecorder(sim.getClock(), path, ppms))
                 .addSubRecording(new TankDriveableRecorder("tankrobot", sim.getClock(), robot.getDefaultTransLocDriveable()));
 
         BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot::update);
-        BackgroundAction updateRecording = new BackgroundAction(20, TimeUnit.MILLISECONDS, rec::update);
+        BackgroundAction updateRecording = new BackgroundAction(10, TimeUnit.MILLISECONDS, rec::update);
 
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics).with(updateRecording)
@@ -125,7 +160,7 @@ public class RamseteTest {
         sim.add(group);
         // run the simulator for 30 seconds
         try {
-            sim.runSimulation(5, TimeUnit.SECONDS);
+            sim.runSimulation(10, TimeUnit.SECONDS);
         } finally {
             try {
                 rec.save(name + ".json");

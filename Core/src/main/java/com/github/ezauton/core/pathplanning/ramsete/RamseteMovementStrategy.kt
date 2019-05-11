@@ -13,7 +13,8 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
     fun recalculate(time: Double, robotPose: Pose): Output {
         val (desiredPose, desiredOutput) = ramsetePath.getDesiredPose(time)
         val (v_d, w_d) = desiredOutput
-        var (x_e: Double, y_e: Double, theta_e: Double) = desiredPose - robotPose
+        var (x_e: Double, y_e: Double, _) = desiredPose - robotPose
+        var theta_e: Double = MathUtils.Geometry.getDAngle(desiredPose.theta, robotPose.theta) // Account for circular nature of angles
 
         var k: Double = 2 * zeta * Math.sqrt(w_d * w_d + b * v_d * v_d)
 
@@ -37,19 +38,6 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
         return output
     }
 
-    /**
-     * @return tracking error (x, y, theta)
-     */
-    fun error(currentPose: Pose, desiredPose: Pose): Pose {
-        return desiredPose - currentPose;
-        // I think it's supposed to be in absolute coordinates?
-//        val dPose = desiredPose - currentPose
-//        val theta = currentPose.theta
-//
-//        val rotate2DCW = ImmutableVector(dPose.x, dPose.y).rotate2DCW(theta)
-//
-//        return Pose(rotate2DCW[0], rotate2DCW[1], dPose.theta)
-    }
 
     private fun sinc(double: Double): Double {
         if (MathUtils.epsilonEquals(double, 0.0)) {

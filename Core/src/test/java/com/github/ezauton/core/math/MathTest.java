@@ -477,4 +477,16 @@ public class MathTest {
         assertTrue(MathUtils.epsilonEquals(a, b, 1E-3));
     }
 
+    @Test
+    public void testAngleSimplificationRadians() {
+        assertEquals(Math.PI, MathUtils.Geometry.simplifyAngle(3 * Math.PI), 1e-5);
+        assertEquals(Math.PI, MathUtils.Geometry.simplifyAngle(- Math.PI), 1e-5);
+    }
+
+    @Test
+    public void testAngleDifferenceRadians() {
+        System.out.println("MathUtils.Geometry.getDAngle(-3 * Math.PI / 2,  Math.PI / 4) = " + MathUtils.Geometry.getDThetaRadians(-3 * Math.PI / 2, Math.PI / 4));
+        System.out.println("Math.PI/4 = " + Math.PI/4);
+
+    }
 }
