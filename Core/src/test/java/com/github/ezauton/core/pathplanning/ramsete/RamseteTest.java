@@ -78,7 +78,7 @@ public class RamseteTest {
                 .add(0, 10, 0, 10, -10)
                 .buildPathGenerator().generate(0.05);
 
-        test("basicLinearPath", path, 3, 1);
+        test("basicLinearPath", path, 2, 0.5);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class RamseteTest {
                     .add(0, 10, -Math.PI / 2, 3, 10, -10)
                     .add(-7, 3, Math.PI / 2, 0, 10, -10)
                     .buildPathGenerator().generate(0.05);
-            test("basicSplinePath", path, 0.44, .56);
+            test("basicSplinePath", path, 0.3, 0);
     }
 
     @Test
@@ -104,10 +104,41 @@ public class RamseteTest {
         test("complexSplinePath", path, 0.25, 0.05);
     }
 
-    private void test(String name, Path path, double b, double zeta) throws TimeoutException, ExecutionException {
-        TimeWarpedSimulation sim = new TimeWarpedSimulation(1);
+    @Test
+    public void testRightCurlingPath() throws TimeoutException, ExecutionException {
 
-        SimulatedTankRobot robot = new SimulatedTankRobot(1, sim.getClock(), 35, 0, 1000000000);
+        Path path = new SplinePPWaypoint.Builder()
+                .add(0, 0, 0, 10, 3, 10, -10)
+                .add(0, 10, 0, 10, 3, 10, -10)
+                .add(10, 10,    10, 0, 3, 10, -10)
+                .add(10, 0,    0, -10, 0, 10, -10)
+                .add(0, 0,    -10, 0, 0, 10, -10)
+                .buildPathGenerator().generate(0.05);
+        test("testRightCurlingPath", path, 0, 10);
+    }
+
+    @Test
+    public void testLeftCurlingPath() throws TimeoutException, ExecutionException {
+
+        Path path = new SplinePPWaypoint.Builder()
+                .add(0, 0, 0, 10, 3, 10, -10)
+                .add(0, 10, 0, 10, 3, 10, -10)
+                .add(-10, 10,    -10, 0, 3, 10, -10)
+                .add(-10, 0,    0, -10, 0, 10, -10)
+                .add(0, 0,    10, 0, 0, 10, -10)
+                .buildPathGenerator().generate(0.05);
+        test("testLeftCurlingPath", path, 0, 10);
+    }
+
+
+
+
+    private void test(String name, Path path, double b, double zeta) throws TimeoutException, ExecutionException {
+        System.out.println("b = " + b);
+        System.out.println("zeta = " + zeta);
+        TimeWarpedSimulation sim = new TimeWarpedSimulation(3);
+
+        SimulatedTankRobot robot = new SimulatedTankRobot(1, sim.getClock(), 35, 0, 15  );
         TankRobotConstants tankRobotConstants = robot.getDefaultTransLocDriveable().getTankRobotConstants();
         RamseteMovementStrategy ramseteMovementStrategy = new RamseteMovementStrategy(b, zeta, 0.25, tankRobotConstants, path, 0.05);
 
@@ -160,7 +191,7 @@ public class RamseteTest {
         sim.add(group);
         // run the simulator for 30 seconds
         try {
-            sim.runSimulation(10, TimeUnit.SECONDS);
+            sim.runSimulation(3, TimeUnit.SECONDS);
         } finally {
             try {
                 rec.save(name + ".json");

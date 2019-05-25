@@ -7,8 +7,10 @@ import com.github.ezauton.core.pathplanning.PathSegmentInterpolated;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.InterpolationMap;
 import com.github.ezauton.core.utils.MathUtils;
+import com.google.common.util.concurrent.AtomicDouble;
 
 import java.util.Iterator;
+import java.util.stream.DoubleStream;
 
 public class TimeStateSeries {
     private final Path path;
@@ -101,7 +103,7 @@ public class TimeStateSeries {
             timeStateMap_Y.put(timer, simulatedPosition.get(1));
             timeStateMap_THETA.put(timer, theta);
             timeStateMap_linearVel.put(timer, simulatedSpeed);
-            timeStateMap_angVel.put(timer, (theta - lastTheta) / dt);
+            timeStateMap_angVel.put(timer + dt/2, (theta - lastTheta) / dt);
 
 
             // Progress forwards in time, space
@@ -153,4 +155,7 @@ public class TimeStateSeries {
         }
     }
 
+    public double getLastTime() {
+        return timeStateMap_Y.keySet().stream().reduce(Math::max).get();
+    }
 }
