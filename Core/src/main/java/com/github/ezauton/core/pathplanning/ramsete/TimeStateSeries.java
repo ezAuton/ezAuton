@@ -30,7 +30,7 @@ public class TimeStateSeries {
 
     public RamseteMovementStrategy.DesiredState getDesiredPose(double time_seconds) {
         return new RamseteMovementStrategy.DesiredState(
-                new RamseteMovementStrategy.Pose(
+                RamseteMovementStrategy.Pose.Companion.from(
                         timeStateMap_X.get(time_seconds),
                         timeStateMap_Y.get(time_seconds),
                         timeStateMap_THETA.get(time_seconds)

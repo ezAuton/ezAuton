@@ -665,16 +665,16 @@ public final class MathUtils {
     public static class Geometry {
         /**
          * Calculate the difference between two angles. Will wrap around and whatnot.
+         *
          * @param a
          * @param b
          * @return
          */
         public static double getDThetaRadians(double a, double b) {
-            double dif  = simplifyAngle(a) - simplifyAngle(b);
-            if(dif > Math.PI) {
+            double dif = simplifyAngleStarting0(a) - simplifyAngleStarting0(b);
+            if (dif > Math.PI) {
                 dif -= 2 * Math.PI;
-            }
-            else if (dif < -Math.PI) {
+            } else if (dif < -Math.PI) {
                 dif += 2 * Math.PI;
             }
             return dif;
@@ -682,15 +682,26 @@ public final class MathUtils {
 
         /**
          * Given an angle, express the same angle between 0 and 2 PI
+         *
          * @param radians Some angle in radians
          * @return The same angle (geometrically), but numerically between 0 and 2PI
          */
-        public static double simplifyAngle(double radians){
+        public static double simplifyAngleStarting0(double radians) {
             radians = radians % (2 * Math.PI);
-            if(radians < 0) {
+            if (radians < 0) {
                 radians += 2 * Math.PI;
             }
             return radians;
+        }
+
+        public static double simplifyAngleCentered0(double radians){
+            double result = simplifyAngleStarting0(radians);
+            if(result  > Math.PI) {
+                result  -= 2 * Math.PI;
+            } else if(result  < -Math.PI) {
+                result  += 2 * Math.PI;
+            }
+            return result;
         }
 
         /**

@@ -30,7 +30,7 @@ public class RamseteAction extends PeriodicAction {
         double x = translationalLocationEstimator.estimateLocation().get(0);
         double y = translationalLocationEstimator.estimateLocation().get(1);
         double theta = rotationalLocationEstimator.estimateHeading();
-        currentPose = new RamseteMovementStrategy.Pose(x, y, theta);
+        currentPose = RamseteMovementStrategy.Pose.Companion.from(x, y, theta);
         RamseteMovementStrategy.Output newOutput = ramseteMovementStrategy.recalculate(this.getStopwatch().read(TimeUnit.MILLISECONDS) / 1000D, currentPose, 3,3);
         tankRobotTransLocDriveable.driveEachMotor(newOutput);
     }

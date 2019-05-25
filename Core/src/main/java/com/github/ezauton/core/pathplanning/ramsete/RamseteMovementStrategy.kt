@@ -4,29 +4,23 @@ import com.github.ezauton.core.pathplanning.Path
 import com.github.ezauton.core.robot.TankRobotConstants
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector
 import com.github.ezauton.core.utils.MathUtils
-import com.github.ezauton.core.utils.MathUtils.Algebra.between
 import kotlin.math.max
 
 //TODO: move to src/main/kotlin? not sure about good kotlin practices when interop'ing with java -- rm
 class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance: Double, val tankRobotConstants: TankRobotConstants, path: Path, dt: Double) {
 
     val ramsetePath: TimeStateSeries = TimeStateSeries(path, dt)
-    var lastOutput: Output? = null;
-    var lastTime = 0.0;
+    var lastOutput: Output? = null
+    var lastTime = 0.0
 
     fun recalculate(time: Double, robotPose: Pose, max_left: Double, max_right: Double): Output {
         lastTime = time;
         val (desiredPose, desiredOutput) = ramsetePath.getDesiredPose(time)
         val (v_d, w_d) = desiredOutput
         var (x_e: Double, y_e: Double, theta_e) = error(robotPose, desiredPose)
-        theta_e = MathUtils.Geometry.simplifyAngle(theta_e)// Account for circular nature of angles
-        if(theta_e > Math.PI) {
-            theta_e -= 2 * Math.PI
-        } else if(theta_e < -Math.PI) {
-            theta_e += 2 * Math.PI
-        }
+        theta_e = MathUtils.Geometry.simplifyAngleCentered0(theta_e)// Account for circular nature of angles
 
-        var k: Double = 2 * zeta * Math.sqrt(w_d * w_d + b * v_d * v_d)
+        var k = 2 * zeta * Math.sqrt(w_d * w_d + b * v_d * v_d)
 
         var robotTheta = robotPose.theta // radians
         if(robotTheta < -Math.PI) robotTheta += 2 * Math.PI
@@ -100,20 +94,19 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
     }
 
     fun error(currentPose: Pose, desiredPose: Pose): Pose {
-        val dPose = desiredPose - currentPose
-        val theta = currentPose.theta
-
-        val rotate2DCW = ImmutableVector(dPose.x, dPose.y).rotate2DCW(theta)
-
-        return Pose(rotate2DCW[0], rotate2DCW[1], dPose.theta)
+        return desiredPose - currentPose
+        // val currentTheta = currentPose.theta
+        // val rotate2DCW  = dPoseAbs.run { ImmutableVector(x,y) }
+        //
+        // return Pose.from(rotate2DCW[0], rotate2DCW[1], dPoseAbs.theta)
     }
 
     private fun sinc(double: Double): Double {
-        if (MathUtils.epsilonEquals(double, 0.0)) {
+        return if (MathUtils.epsilonEquals(double, 0.0)) {
             // maclaurin series approximation for sinx/x
-            return 1.0 - 1.0 / 6.0 * double * double
+            1.0 - 1.0 / 6.0 * double * double
         } else {
-            return MathUtils.sin(double) / double
+            MathUtils.sin(double) / double
         }
     }
 
@@ -124,9 +117,17 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
         return false
     }
 
-    data class Pose(val x: Double, val y: Double, val theta: Double) {
+    data class Pose private constructor(val x: Double, val y: Double, val theta: Double) {
+
+        companion object {
+            fun from(x: Double, y: Double, theta: Double): Pose {
+                return Pose(x,y,MathUtils.Geometry.simplifyAngleCentered0(theta))
+            }
+        }
+
+
         operator fun minus(other: Pose): Pose {
-            return Pose(x - other.x, y - other.y, theta - other.theta)
+            return from(x - other.x, y - other.y, theta - other.theta)
         }
 
         fun dist(other: Pose): Double {

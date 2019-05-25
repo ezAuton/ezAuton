@@ -479,8 +479,8 @@ public class MathTest {
 
     @Test
     public void testAngleSimplificationRadians() {
-        assertEquals(Math.PI, MathUtils.Geometry.simplifyAngle(3 * Math.PI), 1e-5);
-        assertEquals(Math.PI, MathUtils.Geometry.simplifyAngle(- Math.PI), 1e-5);
+        assertEquals(Math.PI, MathUtils.Geometry.simplifyAngleStarting0(3 * Math.PI), 1e-5);
+        assertEquals(Math.PI, MathUtils.Geometry.simplifyAngleStarting0(- Math.PI), 1e-5);
     }
 
     @Test
