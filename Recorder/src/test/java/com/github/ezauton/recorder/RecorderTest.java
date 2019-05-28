@@ -14,15 +14,20 @@ import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.recorder.JsonUtils;
 import com.github.ezauton.recorder.Recording;
+import com.github.ezauton.recorder.base.GenericNumberRecorder;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
+import com.google.common.util.concurrent.AtomicDouble;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.DoubleSupplier;
 
 public class RecorderTest {
 
@@ -73,16 +78,22 @@ public class RecorderTest {
     @Test
     public void testRecording() throws TimeoutException, ExecutionException {
 
-
+        AtomicDouble i = new AtomicDouble(0);
         Recording recording = new Recording();
         RobotStateRecorder posRec = new RobotStateRecorder("robotstate", simulation.getClock(), locEstimator, locEstimator, robot.getLateralWheelDistance(), 1.5);
         PurePursuitRecorder ppRec = new PurePursuitRecorder("pp", simulation.getClock(), path, ppMoveStrat);
         TankDriveableRecorder tankRobot = new TankDriveableRecorder("td", simulation.getClock(), tankRobotTransLocDriveable);
 
+        HashMap<String, DoubleSupplier> numberSuppliers = new HashMap<>();
+        numberSuppliers.put("raw i", () -> i.addAndGet(1));
+        numberSuppliers.put("half of i", () -> i.get()/2);
+        GenericNumberRecorder numRecorder = new GenericNumberRecorder("gnr", simulation.getClock(), numberSuppliers);
+
         recording
                 .addSubRecording(posRec)
                 .addSubRecording(ppRec)
-                .addSubRecording(tankRobot);
+                .addSubRecording(tankRobot)
+                .addSubRecording(numRecorder);
 
         BackgroundAction recAction = new BackgroundAction(10, TimeUnit.MILLISECONDS, recording::update);
 
@@ -97,6 +108,11 @@ public class RecorderTest {
         // run the simulator with a timeout of 20 seconds
         simulation.runSimulation(30, TimeUnit.SECONDS);
 
+        try {
+            recording.save("unittest_testRecording.json");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         String json = recording.toJson();
 
         JsonUtils.toObject(Recording.class, json);
