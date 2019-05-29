@@ -9,7 +9,10 @@ import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GenericNumberProcessor implements DataProcessor {
 
@@ -43,7 +46,7 @@ public class GenericNumberProcessor implements DataProcessor {
         for (GenericNumberFrame dataFrame : gnRec.getDataFrames()) {
             List<KeyValue> keyValues = new ArrayList<>();
             for (String name : valueLabelHashMap.keySet()) {
-                keyValues.add(new KeyValue(valueLabelHashMap.get(name).textProperty(), dataFrame.getNamedNumbers().get(name).toString()));
+                keyValues.add(new KeyValue(valueLabelHashMap.get(name).textProperty(), String.format("%.04f", dataFrame.getNamedNumbers().get(name))));
             }
             ret.put(dataFrame.getTime(), keyValues);
         }
