@@ -2,7 +2,6 @@ package com.github.ezauton.core.pathplanning.ramsete
 
 import com.github.ezauton.core.pathplanning.Path
 import com.github.ezauton.core.robot.TankRobotConstants
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
 import com.github.ezauton.core.utils.MathUtils
 import kotlin.math.max
 
@@ -12,6 +11,22 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
     val ramsetePath: TimeStateSeries = TimeStateSeries(path, dt)
     var lastOutput: Output? = null
     var lastTime = 0.0
+
+    var ramseteFrame: Map<String, Double> = mapOf(
+            "v_d" to 0.0, //
+            "w_d" to 0.0, //
+            "x_e" to 0.0, //
+            "y_e" to 0.0, //
+            "theta_e" to 0.0, //
+            "robot_theta" to 0.0, //
+            "k" to 0.0, //
+            "ramv_first" to 0.0,
+            "ramv_second" to 0.0,
+            "ramv" to 0.0, //
+            "ramw_second" to 0.0,
+            "ramw_third" to 0.0,
+            "ramw" to 0.0 //
+    )
 
     fun recalculate(time: Double, robotPose: Pose, max_left: Double, max_right: Double): Output {
         lastTime = time;
@@ -23,12 +38,17 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
         var k = 2 * zeta * Math.sqrt(w_d * w_d + b * v_d * v_d)
 
         var robotTheta = robotPose.theta // radians
-        if(robotTheta < -Math.PI) robotTheta += 2 * Math.PI
-        else if(robotTheta > Math.PI) robotTheta -= 2 * Math.PI
+        if (robotTheta < -Math.PI) robotTheta += 2 * Math.PI
+        else if (robotTheta > Math.PI) robotTheta -= 2 * Math.PI
 
         //FIXME works only on left turns. for right turns to work, x_e and y_e  must be swapped. I think this is an angle issue? help!!! --rm
-        var ramv: Double = v_d * Math.cos(theta_e) + k * (x_e * Math.cos(robotTheta) + y_e * Math.sin(robotTheta))
-        var ramw: Double = w_d + b * v_d * sinc(theta_e) * (y_e * Math.cos(robotTheta) - x_e * Math.sin(robotTheta)) + k * theta_e
+        var ramv_first = v_d * Math.cos(theta_e)
+        var ramv_second = k * (x_e * Math.cos(robotTheta) + y_e * Math.sin(robotTheta))
+        var ramv: Double = ramv_first + ramv_second
+
+        var ramw_second = b * v_d * sinc(theta_e) * (y_e * Math.cos(robotTheta) - x_e * Math.sin(robotTheta))
+        var ramw_third = k * theta_e
+        var ramw: Double = w_d + ramw_second + ramw_third
 
 
         //TODO: Velocity bounding?
@@ -36,25 +56,43 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
 //        println("v, w = ${ramv}, ${ramw}, l+r=${invKinematics.leftVelocity},${invKinematics.rightVelocity}")
 
         println("ramv = ${ramv}")
-        if(ramv < 0) {
+        if (ramv < 0) {
             println("\n\n\n")
             println("WARN: ramv < 0")
             println("k = ${k}")
             println("robotTheta = ${robotTheta}")
             println("x_e = ${x_e}")
             println("y_e = ${y_e}")
-            println("second = ${k * (x_e * Math.cos(robotTheta) + y_e * Math.sin(robotTheta))}")
+            println("second = $ramv_second")
             println("\n\n\n")
         }
-        if(Math.abs(ramw)< Math.abs(w_d)) {
+        if (Math.abs(ramw) < Math.abs(w_d)) {
             println("\n\n\n")
             println("WARN: w_d adjusted to be less aggressive")
             println("w_d = ${w_d}")
-            println("first = ${ b * v_d * sinc(theta_e) * (y_e * Math.cos(robotTheta) - x_e * Math.sin(robotTheta))}")
-            println("second = ${k * theta_e}")
+            println("first = $ramw_second")
+            println("second = $ramw_third")
             println("theta_e = ${theta_e}")
             println("\n\n\n")
         }
+
+        ramseteFrame = mapOf(
+                "v_d" to v_d, //
+                "w_d" to w_d, //
+                "x_e" to x_e, //
+                "y_e" to y_e, //
+                "theta_e" to theta_e, //
+                "robot_theta" to robotTheta, //
+                "k" to k, //
+                "ramv_first" to ramv_first,
+                "ramv_second" to ramv_second,
+                "ramv" to ramv, //
+                "ramw_second" to ramw_second,
+                "ramw_third" to ramw_third,
+                "ramw" to ramw//
+        )
+
+
         return invKinematics
     }
 
@@ -68,22 +106,22 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
         val min_left = -max_left
 
         var scaling_ratio_fromright = Double.MIN_VALUE
-        if(v_right > max_right) {
+        if (v_right > max_right) {
             scaling_ratio_fromright = max_right / v_right;
-        } else if(v_right < min_right) {
+        } else if (v_right < min_right) {
             scaling_ratio_fromright = min_right / v_right;
         }
 
         var scaling_ratio_fromleft = Double.MIN_VALUE
-        if(v_left > max_left) {
+        if (v_left > max_left) {
             scaling_ratio_fromleft = max_left / v_left;
-        } else if(v_left < min_left) {
+        } else if (v_left < min_left) {
             scaling_ratio_fromleft = min_left / v_left;
         }
 
         var scaling_ratio = max(scaling_ratio_fromleft, scaling_ratio_fromright)
 
-        if(scaling_ratio > Double.MIN_VALUE) {
+        if (scaling_ratio > Double.MIN_VALUE) {
             v_left *= scaling_ratio
             v_right *= scaling_ratio
         }
@@ -121,7 +159,7 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
 
         companion object {
             fun from(x: Double, y: Double, theta: Double): Pose {
-                return Pose(x,y,MathUtils.Geometry.simplifyAngleCentered0(theta))
+                return Pose(x, y, MathUtils.Geometry.simplifyAngleCentered0(theta))
             }
         }
 

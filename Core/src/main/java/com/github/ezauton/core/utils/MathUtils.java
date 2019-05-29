@@ -671,12 +671,9 @@ public final class MathUtils {
          * @return
          */
         public static double getDThetaRadians(double a, double b) {
-            double dif = simplifyAngleStarting0(a) - simplifyAngleStarting0(b);
-            if (dif > Math.PI) {
-                dif -= 2 * Math.PI;
-            } else if (dif < -Math.PI) {
-                dif += 2 * Math.PI;
-            }
+            double dif = b - a;
+            dif = (dif + Math.PI) % (2 * Math.PI) - Math.PI;
+
             return dif;
         }
 
@@ -695,8 +692,8 @@ public final class MathUtils {
         }
 
         public static double simplifyAngleCentered0(double radians){
-            double result = simplifyAngleStarting0(radians);
-            if(result  > Math.PI) {
+            double result = radians % (2 * Math.PI);
+            if (result > Math.PI) {
                 result  -= 2 * Math.PI;
             } else if(result  < -Math.PI) {
                 result  += 2 * Math.PI;
