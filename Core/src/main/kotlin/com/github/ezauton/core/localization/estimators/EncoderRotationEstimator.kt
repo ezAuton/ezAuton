@@ -4,7 +4,7 @@ import com.github.ezauton.core.localization.RotationalLocationEstimator
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.core.utils.math.polarVector2D
 
 /**
@@ -25,8 +25,8 @@ class EncoderRotationEstimator
     private var velocity: Double = 0.toDouble()
     private var lastPosition: Double = 0.toDouble()
     private var dPos: Double = 0.toDouble()
-    private lateinit var dPosVec: ImmutableVector
-    private lateinit var positionVec: ImmutableVector
+    private lateinit var dPosVec: ScalarVector
+    private lateinit var positionVec: ScalarVector
     private var init = false
 
     /**
@@ -34,8 +34,8 @@ class EncoderRotationEstimator
      */
     fun reset() { // TODO: Reset heading
         lastPosition = distanceSensor.position
-        dPosVec = ImmutableVector(0.0, 0.0)
-        positionVec = ImmutableVector(0.0, 0.0)
+        dPosVec = ScalarVector(0.0, 0.0)
+        positionVec = ScalarVector(0.0, 0.0)
         init = true
     }
 
@@ -46,7 +46,7 @@ class EncoderRotationEstimator
     /**
      * @return The current velocity vector of the robot in 2D space.
      */
-    override fun estimateAbsoluteVelocity(): ImmutableVector {
+    override fun estimateAbsoluteVelocity(): ScalarVector {
         return polarVector2D(velocity, rotationalLocationEstimator.estimateHeading())
     }
 

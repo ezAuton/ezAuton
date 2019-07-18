@@ -1,6 +1,6 @@
 package com.github.ezauton.core.pathplanning
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.core.utils.LinearInterpolationMap
 
 /**
@@ -19,16 +19,16 @@ import com.github.ezauton.core.utils.LinearInterpolationMap
  * @param dt The difference in time should be extrapolated
  */
 class PathSegmentInterpolated(
-    from: ImmutableVector,
-    to: ImmutableVector,
-    finish: Boolean,
-    beginning: Boolean,
-    distanceStart: Double,
-    val speedStart: Double,
-    val speedStop: Double,
-    val dt: Double,
-    val maxAccel: Double,
-    val maxDecel: Double
+        from: ScalarVector,
+        to: ScalarVector,
+        finish: Boolean,
+        beginning: Boolean,
+        distanceStart: Double,
+        val speedStart: Double,
+        val speedStop: Double,
+        val dt: Double,
+        val maxAccel: Double,
+        val maxDecel: Double
 ) : LinearPathSegment(from, to, finish, beginning, distanceStart) {
 
     private lateinit var speedInterpolator: LinearInterpolationMap

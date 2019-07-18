@@ -1,6 +1,6 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.conversion.Duration
+import com.github.ezauton.conversion.Time
 import com.github.ezauton.conversion.millis
 import com.github.ezauton.conversion.now
 import com.github.ezauton.core.action.require.combine
@@ -22,7 +22,7 @@ abstract class PeriodicAction
  *
  * @param period
  */
-(private val period: Duration, private val resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT, private vararg val resourcePriorities: ResourcePriority) : Action {
+(private val period: Time, private val resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT, private vararg val resourcePriorities: ResourcePriority) : Action {
 
     companion object {
         val DEFAULT_PERIOD = 20.millis
@@ -82,7 +82,7 @@ abstract class PeriodicAction
             resource.take(priority)
         }.combine()
 
-        fun waitTime(): Duration {
+        fun waitTime(): Time {
             val afterExecution = now()
 
             return if (isPeriodDelayAfterExecution) {
@@ -96,7 +96,7 @@ abstract class PeriodicAction
         }
 
         suspend fun doDelay() {
-            val waitMillis = waitTime().millis
+            val waitMillis = waitTime().millisL
             if (waitMillis < 0) {
                 System.out.printf("The action is executing slower than the set period! milliseconds behind: %d\n", -waitMillis)
             } else if (waitMillis > 0) {

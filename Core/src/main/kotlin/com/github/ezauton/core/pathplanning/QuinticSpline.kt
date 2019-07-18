@@ -1,41 +1,41 @@
 package com.github.ezauton.core.pathplanning
 
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.core.utils.LinearInterpolationMap
 import java.util.ArrayList
 
-class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val firstSlope: ImmutableVector, val lastSlope: ImmutableVector) : MathUtils.Geometry.ParametricFunction {
+class QuinticSpline(val first: ScalarVector, val last: ScalarVector, val firstSlope: ScalarVector, val lastSlope: ScalarVector) : MathUtils.Geometry.ParametricFunction {
 
     /**
      * t^5 coefficient for the quintic spline equation
      */
-    private val a: ImmutableVector
+    private val a: ScalarVector
 
     /**
      * t^4 coefficient for the quintic spline equation
      */
-    private val b: ImmutableVector
+    private val b: ScalarVector
 
     /**
      * t^3 coefficient for the quintic spline equation
      */
-    private val c: ImmutableVector
+    private val c: ScalarVector
 
     /**
      * t^2 coefficient for the quintic spline equation
      */
-    private val d: ImmutableVector
+    private val d: ScalarVector
 
     /**
      * t^1 coefficient for the quintic spline equation
      */
-    private val e: ImmutableVector
+    private val e: ScalarVector
 
     /**
      * t^0 coefficient for the quintic spline equation
      */
-    private val f: ImmutableVector
+    private val f: ScalarVector
 
     val length: Double
         get() = getArcLength(0.0, 1.0)
@@ -72,7 +72,7 @@ class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val f
                 .add(lastSlope.mul(2.0)).mul(-2.0)
 
         // 0
-        d = ImmutableVector(0, 0)
+        d = ScalarVector(0, 0)
 
         // p'_0
         e = firstSlope
@@ -81,21 +81,21 @@ class QuinticSpline(val first: ImmutableVector, val last: ImmutableVector, val f
         f = first
     }
 
-    constructor(first: ImmutableVector, last: ImmutableVector, firstTheta: Double, lastTheta: Double) : this(first,
+    constructor(first: ScalarVector, last: ScalarVector, firstTheta: Double, lastTheta: Double) : this(first,
             last,
-            ImmutableVector(Math.cos(firstTheta), Math.sin(firstTheta)).mul(1.2 * first.dist(last)),
-            ImmutableVector(Math.cos(lastTheta), Math.sin(lastTheta)).mul(1.2 * first.dist(last))
+            ScalarVector(Math.cos(firstTheta), Math.sin(firstTheta)).mul(1.2 * first.dist(last)),
+            ScalarVector(Math.cos(lastTheta), Math.sin(lastTheta)).mul(1.2 * first.dist(last))
     )
 
-    fun getPoint(relativeDistance: Double): ImmutableVector {
+    fun getPoint(relativeDistance: Double): ScalarVector {
         return fromArcLength(relativeDistance)
     }
 
-    fun getDistanceLeft2(point: ImmutableVector): Double {
+    fun getDistanceLeft2(point: ScalarVector): Double {
         return MathUtils.pow2(getDistanceLeft(point))
     }
 
-    fun getDistanceLeft(point: ImmutableVector): Double {
+    fun getDistanceLeft(point: ScalarVector): Double {
         return getArcLength(0.0, 1.0) - getArcLength(0.0, getT(point, 0.0, 1.0))
     }
 

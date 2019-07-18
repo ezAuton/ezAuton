@@ -1,5 +1,6 @@
 package com.github.ezauton.core.actuators.implementations
 
+import com.github.ezauton.conversion.*
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
 import com.github.ezauton.core.utils.Clock
@@ -20,7 +21,7 @@ class BaseSimulatedMotor
     /**
      * Assumed to be in dist/second
      */
-    override var velocity = 0.0
+    override var velocity: LinearVelocity = Units.mps(0.0)
         private set
     /**
      * @return The motor to which the velocity is being applied
@@ -32,10 +33,10 @@ class BaseSimulatedMotor
      *
      */
     var subscribed: VelocityMotor? = null
-    override var position = 0.0
-        get(): Double {
+    override var position = 0.0.meters
+        get(): Distance {
             stopwatch.resetIfNotInit()
-            field += velocity * stopwatch.pop().toSeconds()
+            field += velocity * stopwatch.pop()
             return field
         }
         private set
@@ -43,12 +44,12 @@ class BaseSimulatedMotor
     /**
      * @param targetVelocity The target speed for the motor to be ran at
      */
-    override fun runVelocity(targetVelocity: Double) {
+    override fun runVelocity(targetVelocity: LinearVelocity) {
         stopwatch.resetIfNotInit()
         if (subscribed != null) {
             subscribed!!.runVelocity(targetVelocity)
         }
-        val popped = stopwatch.pop().toSeconds()
+        val popped = stopwatch.pop()
         position += velocity * popped
         this.velocity = targetVelocity
     }

@@ -1,6 +1,6 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.conversion.Duration
+import com.github.ezauton.conversion.Time
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.pathplanning.purepursuit.Lookahead
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy
@@ -19,7 +19,7 @@ class PurePursuitAction
  * @param lookahead An instance of [Lookahead] that can tell us how far along the path to look ahead
  * @param translationalLocationDrivable The drivetrain of the robot
  */(
-        period: Duration,
+        period: Time,
         private val purePursuitMovementStrategy: PurePursuitMovementStrategy,
         private val translationalLocationEstimator: TranslationalLocationEstimator,
         private val lookahead: Lookahead,

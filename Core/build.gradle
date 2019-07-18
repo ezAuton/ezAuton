@@ -35,7 +35,8 @@ dependencies {
     fatCompile group: 'com.google.guava', name: 'guava', version: '19.0'
     testCompile project(":Recorder")
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0'
-    compile project(':Conversion')
+    implementation "com.github.ezauton:Conversion:1.0-SNAPSHOT"
+//    compile project(name = "Conversion")
 }
 
 compileKotlin {

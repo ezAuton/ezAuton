@@ -2,6 +2,10 @@ package com.github.ezauton.core
 
 import com.github.ezauton.core.action.Action
 import com.github.ezauton.core.action.ActionGroup
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * Converts an Action into an ActionWrapper which is used for ActionGroups.

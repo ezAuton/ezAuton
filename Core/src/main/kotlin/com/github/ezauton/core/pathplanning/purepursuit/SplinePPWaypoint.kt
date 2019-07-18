@@ -2,7 +2,7 @@ package com.github.ezauton.core.pathplanning.purepursuit
 
 import com.github.ezauton.core.pathplanning.PP_PathGenerator
 import com.github.ezauton.core.pathplanning.QuinticSpline
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import java.io.Serializable
 import java.util.ArrayList
 
@@ -10,7 +10,7 @@ import java.util.ArrayList
  * Waypoint used in Pure Pursuit
  */
 class SplinePPWaypoint : PPWaypoint, Serializable {
-    val tanVec: ImmutableVector
+    val tanVec: ScalarVector
 
     /**
      * Create a waypoint for Pure Pursuit to drive to
@@ -22,12 +22,12 @@ class SplinePPWaypoint : PPWaypoint, Serializable {
      * @param deceleration Maximum deceleration allowed to reach the target speed
      */
     // TODO: Confirm documentation is accurate
-    constructor(location: ImmutableVector, tanVec: ImmutableVector, speed: Double, acceleration: Double, deceleration: Double) : super(location, speed, acceleration, deceleration) {
+    constructor(location: ScalarVector, tanVec: ScalarVector, speed: Double, acceleration: Double, deceleration: Double) : super(location, speed, acceleration, deceleration) {
         this.tanVec = tanVec
     }
 
-    constructor(location: ImmutableVector, theta: Double, speed: Double, acceleration: Double, deceleration: Double) : super(location, speed, acceleration, deceleration) {
-        this.tanVec = ImmutableVector(Math.cos(theta) * kTheta, Math.sin(theta) * kTheta)
+    constructor(location: ScalarVector, theta: Double, speed: Double, acceleration: Double, deceleration: Double) : super(location, speed, acceleration, deceleration) {
+        this.tanVec = ScalarVector(Math.cos(theta) * kTheta, Math.sin(theta) * kTheta)
     }
 
     override fun toString(): String {
@@ -46,7 +46,7 @@ class SplinePPWaypoint : PPWaypoint, Serializable {
 
         @Deprecated("")
         fun add(x: Double, y: Double, xPrime: Double, yPrime: Double, speed: Double, acceleration: Double, deceleration: Double): Builder {
-            val waypoint = SplinePPWaypoint(ImmutableVector(x, y), ImmutableVector(xPrime, yPrime), speed, acceleration, deceleration)
+            val waypoint = SplinePPWaypoint(ScalarVector(x, y), ScalarVector(xPrime, yPrime), speed, acceleration, deceleration)
             waypointList.add(waypoint)
             return this
         }
@@ -122,7 +122,7 @@ class SplinePPWaypoint : PPWaypoint, Serializable {
             if (deceleration > 0) {
                 throw IllegalArgumentException("Deceleration cannot be positive!")
             }
-            return SplinePPWaypoint(ImmutableVector(x, y), theta, speed, acceleration, deceleration)
+            return SplinePPWaypoint(ScalarVector(x, y), theta, speed, acceleration, deceleration)
         }
 
         /**
@@ -159,12 +159,12 @@ class SplinePPWaypoint : PPWaypoint, Serializable {
          * @see [Spherical Coordinates](http://mathworld.wolfram.com/SphericalCoordinates.html)
          */
         fun simple3D(x: Double, y: Double, z: Double, theta: Double, phi: Double, speed: Double, acceleration: Double, deceleration: Double): SplinePPWaypoint {
-            val tanVec = ImmutableVector(
+            val tanVec = ScalarVector(
                     kTheta * Math.sin(phi) * Math.cos(theta),
                     kTheta * Math.sin(phi) * Math.sin(theta),
                     kTheta * Math.cos(phi)
             )
-            return SplinePPWaypoint(ImmutableVector(x, y, z), tanVec, speed, acceleration, deceleration)
+            return SplinePPWaypoint(ScalarVector(x, y, z), tanVec, speed, acceleration, deceleration)
         }
     }
 }

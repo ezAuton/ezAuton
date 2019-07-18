@@ -13,7 +13,7 @@ import com.github.ezauton.core.pathplanning.purepursuit.SplinePPWaypoint
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.TimeWarpedSimulation
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.recorder.Recording
 import com.github.ezauton.recorder.base.PurePursuitRecorder
 import com.github.ezauton.recorder.base.RobotStateRecorder
@@ -167,7 +167,7 @@ class PPSimulatorTest {
         test(name, path)
     }
 
-    private fun approxEqual(a: ImmutableVector, b: ImmutableVector, epsilon: Double) {
+    private fun approxEqual(a: ScalarVector, b: ScalarVector, epsilon: Double) {
         val bElements = b.elements
         val aElements = a.elements
         for (i in aElements.indices) {

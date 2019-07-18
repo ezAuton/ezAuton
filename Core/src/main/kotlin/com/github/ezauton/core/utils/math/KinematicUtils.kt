@@ -1,6 +1,6 @@
 package com.github.ezauton.core.utils.math
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 
 /**
  * Get the 1D position of the robot given p0, v0, a0, and dt. Uses elementary physics formulas.
@@ -43,11 +43,11 @@ fun getTrajectoryRadius(vL: Double, vR: Double, l: Double): Double {
  * @param lateralWheelDistance
  * @return
  */
-fun getRelativeDPosCurve(distanceLeft: Double, distanceRight: Double, lateralWheelDistance: Double): ImmutableVector {
+fun getRelativeDPosCurve(distanceLeft: Double, distanceRight: Double, lateralWheelDistance: Double): ScalarVector {
     // To account for an infinite pathplanning radius when going straight
     if (Math.abs(distanceLeft - distanceRight) <= Math.abs(distanceLeft + distanceRight) * 1E-2) {
         // Probably average is not needed, but it may be useful over long distances
-        return ImmutableVector(0.0, (distanceLeft + distanceRight) / 2.0)
+        return ScalarVector(0.0, (distanceLeft + distanceRight) / 2.0)
     }
     val w = getAngularDistance(distanceLeft, distanceRight, lateralWheelDistance)
 
@@ -56,21 +56,21 @@ fun getRelativeDPosCurve(distanceLeft: Double, distanceRight: Double, lateralWhe
     val dxRelative = -r * (1 - ecos(-w))
     val dyRelative = -r * esin(-w)
 
-    return ImmutableVector(dxRelative, dyRelative)
+    return ScalarVector(dxRelative, dyRelative)
 }
 
 fun getTangentialSpeed(wheelL: Double, wheelR: Double): Double {
     return (wheelL + wheelR) / 2.0
 }
 
-fun getAbsoluteDPosLine(vL: Double, vR: Double, dt: Double, robotHeading: Double): ImmutableVector {
+fun getAbsoluteDPosLine(vL: Double, vR: Double, dt: Double, robotHeading: Double): ScalarVector {
     val tangentialSpeed = getTangentialSpeed(vL, vR)
     val tangentialDPos = getTangentialSpeed(vL, vR) * dt
     val dPos = VECTOR_FORWARD.mul(tangentialDPos)
     return dPos.rotate2D(robotHeading)
 }
 
-fun getAbsoluteDPosCurve(vL: Double, vR: Double, l: Double, robotHeading: Double): ImmutableVector {
+fun getAbsoluteDPosCurve(vL: Double, vR: Double, l: Double, robotHeading: Double): ScalarVector {
     return getRelativeDPosCurve(vL, vR, l).rotate2D(robotHeading)
 }
 

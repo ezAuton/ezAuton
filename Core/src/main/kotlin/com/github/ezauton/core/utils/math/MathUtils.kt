@@ -1,6 +1,6 @@
 package com.github.ezauton.core.utils.math
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 
 val PHI = 1.618033989
 val ROOT_2 = 1.414213562
@@ -10,7 +10,7 @@ val EPSILON = 1E-6
 
 const val TAU = 2 * Math.PI
 
-val VECTOR_FORWARD = ImmutableVector(0.0, 1.0)
+val VECTOR_FORWARD = ScalarVector(0.0, 1.0)
 
 private val ln2 = StrictMath.log(2.0)
 private val ln3 = StrictMath.log(3.0)
@@ -49,7 +49,7 @@ private val SIN_TABLE by lazy {
  *
  * @see MathUtils.LinearAlgebra.absoluteToRelativeCoord
  */
-fun calculateCurvature(relativeGoalPoint: ImmutableVector): Double {
+fun calculateCurvature(relativeGoalPoint: ScalarVector): Double {
     val lSquared = relativeGoalPoint.mag2() // x^2 + y^2 = l^2 (length)
 
     // curvature = 2x / l^2 (from Pure Pursuit paper)
@@ -67,15 +67,15 @@ fun init() {}
  * @param immutableVector
  * @return
  */
-fun perp(immutableVector: ImmutableVector): ImmutableVector {
+fun perp(immutableVector: ScalarVector): ScalarVector {
     immutableVector.assertDimension(2)
-    return ImmutableVector(immutableVector.get(1), -immutableVector.get(0))
+    return ScalarVector(immutableVector.get(1), -immutableVector.get(0))
 }
 
-fun cross(a: ImmutableVector, b: ImmutableVector): ImmutableVector {
+fun cross(a: ScalarVector, b: ScalarVector): ScalarVector {
     a.assertDimension(3)
     b.assertDimension(3)
-    return ImmutableVector(
+    return ScalarVector(
         a.get(1) * b.get(2) - b.get(1) * a.get(2),
         a.get(0) * b.get(2) - b.get(0) * a.get(2),
         a.get(0) * b.get(1) - b.get(0) * a.get(1)
@@ -133,7 +133,7 @@ fun ecos(value: Double): Double {
 
 /**
  * @param a Lower/Upper bound
- * @param x ImmutableVector to check
+ * @param x ScalarVector to check
  * @param c Upper/Lower bound
  * @return Returns true if x's x-component is in between that of a and c AND if x's y component is in between that of a and c.
  * @see MathUtils.Algebra.between
@@ -167,12 +167,9 @@ fun rad2Deg(rad: Double): Double {
     return rad * 57.29577951308233
 }
 
-fun epsilonEquals(vecA: ImmutableVector, vecB: ImmutableVector): Boolean {
-    return epsilonEquals(vecA.get(0), vecB.get(0)) && epsilonEquals(vecA.get(1), vecB.get(1))
-}
 
-fun epsilonEquals(vecA: ImmutableVector, vecB: ImmutableVector, delta: Double): Boolean {
-    return epsilonEquals(vecA.get(0), vecB.get(0), delta) && epsilonEquals(vecA.get(1), vecB.get(1), delta)
+fun epsilonEquals(vecA: ScalarVector, vecB: ScalarVector, delta: Double = 1E-6): Boolean {
+    return epsilonEquals(vecA[0], vecB[0], delta) && epsilonEquals(vecA[1], vecB[1], delta)
 }
 
 /**

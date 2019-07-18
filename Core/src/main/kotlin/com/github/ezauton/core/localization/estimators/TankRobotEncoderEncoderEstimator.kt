@@ -6,7 +6,7 @@ import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
 import com.github.ezauton.core.robot.TankRobotConstants
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.core.utils.math.getAbsoluteDPosCurve
 import com.github.ezauton.core.utils.math.getAngularDistance
 import com.github.ezauton.core.utils.math.polarVector2D
@@ -31,7 +31,7 @@ class TankRobotEncoderEncoderEstimator
     private var lastPosRight: Double = 0.toDouble()
     private var init = false
     private var heading = 0.0
-    private var location = ImmutableVector.origin(2)
+    private var location = ScalarVector.origin(2)
 
     override val leftTranslationalWheelVelocity: Double
         get() = left.velocity
@@ -45,7 +45,7 @@ class TankRobotEncoderEncoderEstimator
     fun reset() {
         lastPosLeft = left.position
         lastPosRight = right.position
-        location = ImmutableVector(0.0, 0.0)
+        location = ScalarVector(0.0, 0.0)
         heading = 0.0
         init = true
     }
@@ -54,7 +54,7 @@ class TankRobotEncoderEncoderEstimator
         return heading
     }
 
-    override fun estimateLocation(): ImmutableVector {
+    override fun estimateLocation(): ScalarVector {
         return location
     }
 
@@ -89,7 +89,7 @@ class TankRobotEncoderEncoderEstimator
     /**
      * @return The current velocity vector of the robot in 2D space.
      */
-    override fun estimateAbsoluteVelocity(): ImmutableVector {
+    override fun estimateAbsoluteVelocity(): ScalarVector {
         return polarVector2D(magnitude = avgTranslationalWheelVelocity, theta = heading)
     }
 }

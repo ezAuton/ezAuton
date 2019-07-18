@@ -1,7 +1,7 @@
 package com.github.ezauton.core.math
 
 import com.github.ezauton.core.pathplanning.LinearPathSegment
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import com.google.common.collect.ImmutableMap
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 class MathTest {
     private val DELTA = 1E-5
-    private val e1 = ImmutableVector(1, 0)
+    private val e1 = ScalarVector(1, 0)
 
     init {
         MathUtils.init()
@@ -18,23 +18,23 @@ class MathTest {
 
     @Test
     fun test1() {
-        // robot Location ImmutableVector{elements=[-0.008823892537926835, 8.750675036640743]}
-        val robotPos = ImmutableVector(-0.008823892537926835, 8.750675036640743)
-        val pathSegment = object : LinearPathSegment(ImmutableVector(-0.5, 8.589), ImmutableVector(-0.5, 12.405), false, false, 0.0) {
+        // robot Location ScalarVector{elements=[-0.008823892537926835, 8.750675036640743]}
+        val robotPos = ScalarVector(-0.008823892537926835, 8.750675036640743)
+        val pathSegment = object : LinearPathSegment(ScalarVector(-0.5, 8.589), ScalarVector(-0.5, 12.405), false, false, 0.0) {
             override fun getSpeed(absoluteDistance: Double): Double {
                 return 0.0
             }
         }
 
-        // latest closest point ImmutableVector{elements=[-0.5116462707519531, 8.695889472961426]}
+        // latest closest point ScalarVector{elements=[-0.5116462707519531, 8.695889472961426]}
 
-        val closestPoint = pathSegment.getClosestPoint(robotPos) // ImmutableVector{elements=[-0.5, 8.644769668579102]}
+        val closestPoint = pathSegment.getClosestPoint(robotPos) // ScalarVector{elements=[-0.5, 8.644769668579102]}
         //        System.out.println(closestPoint);
         val absoluteDistance = pathSegment.getAbsoluteDistance(closestPoint)
 
         //        System.out.println(absoluteDistance);
 
-        // path = PathSegment{from=ImmutableVector{elements=[-0.5, 8.589]}, to=ImmutableVector{elements=[-0.5, 12.405]}}
+        // path = PathSegment{from=ScalarVector{elements=[-0.5, 8.589]}, to=ScalarVector{elements=[-0.5, 12.405]}}
         // getClosestPoint() ==> distance along
     }
 
@@ -56,9 +56,9 @@ class MathTest {
 
     @Test
     fun testPosRotationCoordinateTransform() {
-        val robotLocation = ImmutableVector(1, 1)
+        val robotLocation = ScalarVector(1, 1)
         val robotHeading = 7f * Math.PI / 4
-        val absoluteCoord = ImmutableVector(2, 2)
+        val absoluteCoord = ScalarVector(2, 2)
 
         val distance = robotLocation.dist(absoluteCoord)
 
@@ -72,9 +72,9 @@ class MathTest {
 
     @Test
     fun testNegRotationCoordinateTransform() {
-        val robotLocation = ImmutableVector(1, 1)
+        val robotLocation = ScalarVector(1, 1)
         val robotHeading = -Math.PI / 4
-        val absoluteCoord = ImmutableVector(2, 2)
+        val absoluteCoord = ScalarVector(2, 2)
 
         val distance = robotLocation.dist(absoluteCoord)
 
@@ -194,8 +194,8 @@ class MathTest {
             val ay = Math.random() * 360
             val by = Math.sqrt(ay * ay) * 3.0 / 3 + 1.987 - 1.0 - 0.987 // try to accumulate FP errors
 
-            val vecA = ImmutableVector(ax, ay)
-            val vecB = ImmutableVector(bx, by)
+            val vecA = ScalarVector(ax, ay)
+            val vecB = ScalarVector(bx, by)
 
             assertEquals(vecA, vecB)
             assertTrue(MathUtils.epsilonEquals(vecA, vecB))
@@ -230,20 +230,20 @@ class MathTest {
         for (i in 0..39) {
             val ax = Math.random() * 10
             val ay = Math.random() * 10
-            val a = ImmutableVector(ax, ay)
+            val a = ScalarVector(ax, ay)
 
             val bx = Math.random() * 10 + 10
             val by = Math.random() * 10 + 10
-            val b = ImmutableVector(bx, by)
+            val b = ScalarVector(bx, by)
 
             val cx = (ax + bx) / 2
             val cy = (ay + by) / 2
-            val c1 = ImmutableVector(cx, cy)
+            val c1 = ScalarVector(cx, cy)
 
-            val c2 = ImmutableVector(ax, cy)
-            val c3 = ImmutableVector(cx, ay)
-            val c4 = ImmutableVector(bx, cy)
-            val c5 = ImmutableVector(cx, by)
+            val c2 = ScalarVector(ax, cy)
+            val c3 = ScalarVector(cx, ay)
+            val c4 = ScalarVector(bx, cy)
+            val c5 = ScalarVector(cx, by)
             assertTrue(MathUtils.between(a, c1, b))
             assertTrue(MathUtils.between(a, c2, b))
             assertTrue(MathUtils.between(a, c3, b))
@@ -312,22 +312,22 @@ class MathTest {
     //    @Test
     //    public void testCircleLineIntersection()
     //    {
-    //        ImmutableVector i = new ImmutableVector(1, 0);
-    //        ImmutableVector j = new ImmutableVector(0, 1);
-    //        ImmutableVector origin = new ImmutableVector(0, 0);
+    //        ScalarVector i = new ScalarVector(1, 0);
+    //        ScalarVector j = new ScalarVector(0, 1);
+    //        ScalarVector origin = new ScalarVector(0, 0);
     //        MathUtils.Geometry.Line horizontal = new MathUtils.Geometry.Line(origin, i);
     //        MathUtils.Geometry.Line vertical = new MathUtils.Geometry.Line(origin, j);
     //
-    //        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(horizontal, origin, 1), new ImmutableVector[] { i.mul(-1), i });
-    //        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(vertical, origin, 1), new ImmutableVector[] { j.mul(-1), j });
+    //        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(horizontal, origin, 1), new ScalarVector[] { i.mul(-1), i });
+    //        assertArrayEquals(MathUtils.Geometry.getCircleLineIntersectionPoint(vertical, origin, 1), new ScalarVector[] { j.mul(-1), j });
     //    }
 
     @Test
     fun testAngleFromPoints() {
-        val i = ImmutableVector(1, 0)
-        val j = ImmutableVector(0, 1)
-        val diag = ImmutableVector(1, 1)
-        val origin = ImmutableVector(0, 0)
+        val i = ScalarVector(1, 0)
+        val j = ScalarVector(0, 1)
+        val diag = ScalarVector(1, 1)
+        val origin = ScalarVector(0, 0)
 
         assertEquals(3 * Math.PI / 4, MathUtils.Geometry.getThetaFromPoints(i, j), DELTA)
         assertEquals(-Math.PI / 4, MathUtils.Geometry.getThetaFromPoints(i.mul(-1.0), j.mul(-1.0)), DELTA)
@@ -349,10 +349,10 @@ class MathTest {
 
     //    @Test //TODO: fix
     fun testClosestPointOnLine() {
-        val robotPos = ImmutableVector(0, 0)
+        val robotPos = ScalarVector(0, 0)
 
-        val testCases = arrayOf(arrayOf(ImmutableVector(1, 1), ImmutableVector(3, 3)), // point a should be closest
-                arrayOf(ImmutableVector(-1, -1), ImmutableVector(1, 1)), arrayOf(ImmutableVector(-5, -5), ImmutableVector(-3, -3)), arrayOf(ImmutableVector(-1, 0), ImmutableVector(1, 2)))
+        val testCases = arrayOf(arrayOf(ScalarVector(1, 1), ScalarVector(3, 3)), // point a should be closest
+                arrayOf(ScalarVector(-1, -1), ScalarVector(1, 1)), arrayOf(ScalarVector(-5, -5), ScalarVector(-3, -3)), arrayOf(ScalarVector(-1, 0), ScalarVector(1, 2)))
 
         vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[0][0], testCases[0][1], robotPos), testCases[0][0])
         vectorsCloseEnough(MathUtils.Geometry.getClosestPointLineSegments(testCases[1][0], testCases[1][1], robotPos), robotPos)
@@ -456,7 +456,7 @@ class MathTest {
         assertTrue(MathUtils.Algebra.hasOddSymmetry(map))
     }
 
-    private fun vectorsCloseEnough(a: ImmutableVector, b: ImmutableVector?) {
+    private fun vectorsCloseEnough(a: ScalarVector, b: ScalarVector?) {
         assertTrue(MathUtils.epsilonEquals(a, b!!, 1E-3))
     }
 }

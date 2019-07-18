@@ -1,5 +1,7 @@
 package com.github.ezauton.core.utils
 
+import com.github.ezauton.conversion.Time
+import com.github.ezauton.conversion.now
 import kotlinx.coroutines.delay
 
 /**
@@ -7,8 +9,8 @@ import kotlinx.coroutines.delay
  */
 class RealClock private constructor() : Clock {
 
-    override suspend fun delayFor(duration: Duration) {
-        delay(duration.millis)
+    override suspend fun delayFor(duration: Time) {
+        delay(duration.millisL)
     }
 
     override val time get() = now()

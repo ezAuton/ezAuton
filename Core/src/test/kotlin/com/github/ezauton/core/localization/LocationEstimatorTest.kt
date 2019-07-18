@@ -1,6 +1,6 @@
 package com.github.ezauton.core.localization
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -10,8 +10,8 @@ class LocationEstimatorTest {
     fun `tank robot estimator interface`() {
 
         val estimator1 = object : TankRobotVelocityEstimator {
-            override fun estimateAbsoluteVelocity(): ImmutableVector {
-                return ImmutableVector(0.0, -3.0)
+            override fun estimateAbsoluteVelocity(): ScalarVector {
+                return ScalarVector(0.0, -3.0)
             }
 
             override fun getRightTranslationalWheelVelocity(): Double {

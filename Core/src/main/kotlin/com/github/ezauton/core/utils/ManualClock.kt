@@ -1,6 +1,6 @@
 package com.github.ezauton.core.utils
 
-import com.github.ezauton.conversion.Duration
+import com.github.ezauton.conversion.Time
 import com.github.ezauton.conversion.now
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.LinkedList
@@ -16,9 +16,9 @@ import kotlin.coroutines.suspendCoroutine
 @ExperimentalCoroutinesApi
 class ManualClock : Clock {
 
-    private val timeToRunnableMap = TreeMap<Duration, Queue<Continuation<Unit>>>()
+    private val timeToRunnableMap = TreeMap<Time, Queue<Continuation<Unit>>>()
 
-    override suspend fun delayFor(duration: Duration) {
+    override suspend fun delayFor(duration: Time) {
         return suspendCoroutine { cont ->
             val absoluteTime = duration + time
             val queue = timeToRunnableMap.getOrPut(absoluteTime) { LinkedList() }
@@ -27,7 +27,7 @@ class ManualClock : Clock {
     }
 
     override
-    var time: Duration = Duration.NONE
+    var time: Time = Time.NONE
         set(time) {
             while (!timeToRunnableMap.isEmpty() && timeToRunnableMap.firstKey() <= time) {
                 val entry = timeToRunnableMap.pollFirstEntry()
@@ -41,7 +41,7 @@ class ManualClock : Clock {
         }
 
     @JvmOverloads
-    fun init(time: Duration = now()) {
+    fun init(time: Time = now()) {
         this.time = time
     }
 
@@ -51,7 +51,7 @@ class ManualClock : Clock {
      * @param dt duration
      * @return The new time
      */
-    fun addTime(dt: Duration): Duration {
+    fun addTime(dt: Time): Time {
         time += dt
         return time
     }

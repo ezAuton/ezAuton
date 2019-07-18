@@ -1,11 +1,15 @@
 package com.github.ezauton.core.robot.implemented
 
+import com.github.ezauton.conversion.ConcreteVector
+import com.github.ezauton.conversion.LinearVelocity
+import com.github.ezauton.conversion.SIUnit
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.localization.RotationalLocationEstimator
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.robot.TankRobotConstants
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
+import com.github.ezauton.core.utils.math.absoluteToRelativeCoord
 
 /**
  * Describes the kinematics for a robot with a tank drivetrain
@@ -33,10 +37,9 @@ class TankRobotTransLocDrivable
      * @param loc The absolute coordinates of the target location
      * @return True
      */
-    override fun driveTowardTransLoc(speed: Double, loc: ImmutableVector): Boolean {
+    override fun <T : SIUnit<T>> driveTowardTransLoc(speed: LinearVelocity, loc: ConcreteVector<T>): Boolean {
         if (loc.dimension != 2) throw IllegalArgumentException("target location must be in R2")
-        if (!java.lang.Double.isFinite(loc.get(0)) || !java.lang.Double.isFinite(loc.get(1)))
-            throw IllegalArgumentException("target location $loc must contain real, finite numbers")
+        if (!loc[0].isFinite || !loc[1].isFinite) throw IllegalArgumentException("target location $loc must contain real, finite numbers")
 
         val wheelVelocities = getWheelVelocities(speed, loc)
 
@@ -69,10 +72,10 @@ class TankRobotTransLocDrivable
      * @param loc THe absolute coordinates of the goal point
      * @return The wheel speeds in a vector where the 0th element is the left wheel speed and the 1st element is the right wheel speed
      */
-    private fun getWheelVelocities(speed: Double, loc: ImmutableVector): ImmutableVector {
-        val relativeCoord = MathUtils.LinearAlgebra.absoluteToRelativeCoord(loc, translationalLocationEstimator.estimateLocation(), rotationalLocationEstimator.estimateHeading())
+    private fun <T : SIUnit<T>> getWheelVelocities(speed: LinearVelocity, loc: ConcreteVector<T>): ConcreteVector<T> {
+        val relativeCoord = absoluteToRelativeCoord(loc, translationalLocationEstimator.estimateLocation(), rotationalLocationEstimator.estimateHeading())
         val curvature = MathUtils.calculateCurvature(relativeCoord)
-        var bestVector: ImmutableVector? = null
+        var bestVector: ScalarVector? = null
 
         val v_lMin = -speed
         val v_rMin = -speed
@@ -82,7 +85,7 @@ class TankRobotTransLocDrivable
         if (Math.abs(curvature) < THRESHOLD_CURVATURE)
         // if we are a straight line ish (lines are not curvy -> low curvature)
         {
-            return ImmutableVector(speed, speed)
+            return ScalarVector(speed, speed)
         } else
         // if we need to go in a circle, we should calculate the wheel velocities so we hit our target radius AND our target tangential speed
         {
@@ -106,7 +109,7 @@ class TankRobotTransLocDrivable
 
             if (MathUtils.Algebra.between(v_rMin, v_r, speed) || MathUtils.Algebra.between(speed, v_r, v_rMin)) {
                 score = Math.abs(speed + v_r)
-                bestVector = ImmutableVector(speed, v_r)
+                bestVector = ScalarVector(speed, v_r)
             }
 
             v_r = v_lMin * velLeftToRightRatio
@@ -114,7 +117,7 @@ class TankRobotTransLocDrivable
                 val tempScore = Math.abs(v_lMin + v_r)
                 if (tempScore > score) {
                     score = tempScore
-                    bestVector = ImmutableVector(v_lMin, v_r)
+                    bestVector = ScalarVector(v_lMin, v_r)
                 }
             }
 
@@ -123,7 +126,7 @@ class TankRobotTransLocDrivable
                 val tempScore = Math.abs(speed + v_l)
                 if (tempScore > score) {
                     score = tempScore
-                    bestVector = ImmutableVector(v_l, speed)
+                    bestVector = ScalarVector(v_l, speed)
                 }
             }
 
@@ -131,7 +134,7 @@ class TankRobotTransLocDrivable
             if (MathUtils.Algebra.between(v_lMin, v_l, speed) || MathUtils.Algebra.between(speed, v_l, v_lMin)) {
                 val tempScore = Math.abs(v_lMin + v_l)
                 if (tempScore > score) {
-                    bestVector = ImmutableVector(v_l, v_rMin)
+                    bestVector = ScalarVector(v_l, v_rMin)
                 }
             }
 

@@ -1,6 +1,8 @@
 package com.github.ezauton.core.utils.math
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ConcreteVector
+import com.github.ezauton.conversion.SIUnit
+import com.github.ezauton.conversion.ScalarVector
 
 /**
  * Rotate the input vector theta radians counterclockwise
@@ -9,10 +11,10 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector
  * @param theta How much to rotate it by (radians)
  * @return The rotated vector
  */
-fun ImmutableVector.rotate2D(theta: Double): ImmutableVector {
+fun ScalarVector.rotate2D(theta: Double): ScalarVector {
     val sin = esin(theta)
     val cos = ecos(theta)
-    return ImmutableVector(get(0) * cos - get(1) * sin,
+    return ScalarVector(get(0) * cos - get(1) * sin,
             get(0) * sin + get(1) * cos)
 }
 
@@ -24,10 +26,14 @@ fun ImmutableVector.rotate2D(theta: Double): ImmutableVector {
  * @param robotHeading The robot's heading (radians)
  * @return `coordinateAbsolute` but relative to the robot
  */
-fun absoluteToRelativeCoord(coordinateAbsolute: ImmutableVector, robotCoordAbs: ImmutableVector, robotHeading: Double): ImmutableVector {
-    return coordinateAbsolute.sub(robotCoordAbs).rotate2D(-robotHeading)
+fun absoluteToRelativeCoord(coordinateAbsolute: ScalarVector, robotCoordAbs: ScalarVector, robotHeading: Double): ScalarVector {
+    return coordinateAbsolute.minus(robotCoordAbs).rotate2D(-robotHeading)
 }
 
-fun relativeToAbsoluteCoord(coordinateRelative: ImmutableVector, robotCoordAbs: ImmutableVector, robotHeading: Double): ImmutableVector {
+fun <T : SIUnit<T>> absoluteToRelativeCoord(coordinateAbsolute: ConcreteVector<T>, robotCoordAbs: ConcreteVector<T>, robotHeading: Double): ScalarVector {
+    return coordinateAbsolute.minus(robotCoordAbs).rotate2D(-robotHeading)
+}
+
+fun relativeToAbsoluteCoord(coordinateRelative: ScalarVector, robotCoordAbs: ScalarVector, robotHeading: Double): ScalarVector {
     return coordinateRelative.rotate2D(robotHeading) + robotCoordAbs
 }

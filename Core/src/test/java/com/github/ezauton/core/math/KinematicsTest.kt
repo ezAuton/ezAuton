@@ -1,6 +1,6 @@
 package com.github.ezauton.core.math
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -63,27 +63,27 @@ class KinematicsTest {
 
     @Test
     fun testAbsoluteToRelativeCoord() {
-        val robotPos = ImmutableVector(4, 4)
+        val robotPos = ScalarVector(4, 4)
 
         // We will convert this to absolute coords
         var targetPos = robotPos
 
-        assertEquals(ImmutableVector(0, 0), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, 0.0))
-        assertEquals(ImmutableVector(0, 0), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, 35.0))
-        assertEquals(ImmutableVector(0, 0), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, -180.0))
+        assertEquals(ScalarVector(0, 0), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, 0.0))
+        assertEquals(ScalarVector(0, 0), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, 35.0))
+        assertEquals(ScalarVector(0, 0), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, -180.0))
 
-        targetPos = ImmutableVector(5, 5)
+        targetPos = ScalarVector(5, 5)
 
         // (1, 1)
-        vectorsCloseEnough(ImmutableVector(1, 1), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, 0.0))
-        vectorsCloseEnough(ImmutableVector(-1, -1), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, -Math.PI))
-        vectorsCloseEnough(ImmutableVector(ROOT_2, 0), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, Math.PI / 4))
+        vectorsCloseEnough(ScalarVector(1, 1), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, 0.0))
+        vectorsCloseEnough(ScalarVector(-1, -1), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, -Math.PI))
+        vectorsCloseEnough(ScalarVector(ROOT_2, 0), MathUtils.LinearAlgebra.absoluteToRelativeCoord(targetPos, robotPos, Math.PI / 4))
     }
 
     @Test
     fun testGetSpeedVector() {
-        val i = ImmutableVector(1, 0)
-        val j = ImmutableVector(0, 1)
+        val i = ScalarVector(1, 0)
+        val j = ScalarVector(0, 1)
 
         vectorsCloseEnough(j, MathUtils.Geometry.getVector(1.0, 0.0))
         vectorsCloseEnough(i, MathUtils.Geometry.getVector(1.0, -Math.PI / 2))
@@ -121,15 +121,15 @@ class KinematicsTest {
     @Test
     fun testRelativeDPosCurve() {
         // straight
-        vectorsCloseEnough(ImmutableVector(0, 1), MathUtils.Kinematics.getRelativeDPosCurve(1.0, 1.0, 1.0))
+        vectorsCloseEnough(ScalarVector(0, 1), MathUtils.Kinematics.getRelativeDPosCurve(1.0, 1.0, 1.0))
 
         // full circle
-        vectorsCloseEnough(ImmutableVector(0, 0), MathUtils.Kinematics.getRelativeDPosCurve(Math.PI, 0.0, (1 / 2f).toDouble()))
+        vectorsCloseEnough(ScalarVector(0, 0), MathUtils.Kinematics.getRelativeDPosCurve(Math.PI, 0.0, (1 / 2f).toDouble()))
 
-        vectorsCloseEnough(ImmutableVector(0.5, 0), MathUtils.Kinematics.getRelativeDPosCurve(Math.PI / 2, 0.0, (1 / 2f).toDouble()))
+        vectorsCloseEnough(ScalarVector(0.5, 0), MathUtils.Kinematics.getRelativeDPosCurve(Math.PI / 2, 0.0, (1 / 2f).toDouble()))
     }
 
-    private fun vectorsCloseEnough(a: ImmutableVector, b: ImmutableVector) {
+    private fun vectorsCloseEnough(a: ScalarVector, b: ScalarVector) {
         assertEquals(a.get(0), b.get(0), 1E-3)
         assertEquals(a.get(1), b.get(1), 1E-3)
     }

@@ -1,7 +1,7 @@
 package com.github.ezauton.core.pathplanning.purepursuit
 
 import com.github.ezauton.core.pathplanning.PP_PathGenerator
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import java.io.Serializable
 import java.util.ArrayList
 
@@ -18,7 +18,7 @@ open class PPWaypoint
  * @param deceleration Maximum deceleration allowed to reach the target speed
  */
 // TODO: Confirm documentation is accurate
-(val location: ImmutableVector, val speed: Double, val acceleration: Double, val deceleration: Double) : Serializable {
+(val location: ScalarVector, val speed: Double, val acceleration: Double, val deceleration: Double) : Serializable {
 
     override fun toString(): String {
         return "PPWaypoint{" +
@@ -69,7 +69,7 @@ open class PPWaypoint
          */
         fun simple2D(x: Double, y: Double, speed: Double, acceleration: Double, deceleration: Double): PPWaypoint {
             if (deceleration > 0) throw IllegalArgumentException("Deceleration cannot be positive!")
-            return PPWaypoint(ImmutableVector(x, y), speed, acceleration, deceleration)
+            return PPWaypoint(ScalarVector(x, y), speed, acceleration, deceleration)
         }
 
         /**
@@ -103,7 +103,7 @@ open class PPWaypoint
          * @return A waypoint with the specified properties
          */
         fun simple3D(x: Double, y: Double, z: Double, speed: Double, acceleration: Double, deceleration: Double): PPWaypoint {
-            return PPWaypoint(ImmutableVector(x, y, z), speed, acceleration, deceleration)
+            return PPWaypoint(ScalarVector(x, y, z), speed, acceleration, deceleration)
         }
     }
 }

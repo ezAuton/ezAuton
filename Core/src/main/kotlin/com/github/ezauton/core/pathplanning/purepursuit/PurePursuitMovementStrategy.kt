@@ -2,7 +2,7 @@ package com.github.ezauton.core.pathplanning.purepursuit
 
 import com.github.ezauton.conversion.Distance
 import com.github.ezauton.core.pathplanning.Path
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import kotlinx.coroutines.channels.Channel
 
 /**
@@ -40,7 +40,7 @@ class PurePursuitMovementStrategy
      * We want to drive at it.
      * @see [Velocity and End Behavior
     ](https://www.chiefdelphi.com/forums/showthread.php?threadid=162713) */
-    private fun calculateAbsoluteGoalPoint(distanceCurrentSegmentLeft: Double, lookAheadDistance: Double): ImmutableVector {
+    private fun calculateAbsoluteGoalPoint(distanceCurrentSegmentLeft: Double, lookAheadDistance: Double): ScalarVector {
         if (!distanceCurrentSegmentLeft.isFinite()) throw IllegalArgumentException("distanceCurrentSegmentLeft ($distanceCurrentSegmentLeft) must be finite")
 
         // The intersections with the path we are following and the circle around the robot of
@@ -57,7 +57,7 @@ class PurePursuitMovementStrategy
      * @param lookahead Current lookahead as given by an Lookahead instance
      * @return The wanted pose of the robot at a certain location
      */
-    fun update(loc: ImmutableVector, lookahead: Distance): ImmutableVector? {
+    fun update(loc: ScalarVector, lookahead: Distance): ScalarVector? {
         val current = path.current
         val segmentOnI = path.segmentOnI
         val currentClosestPoint = current.getClosestPoint(loc)
@@ -98,4 +98,4 @@ class PurePursuitMovementStrategy
     }
 }
 
-data class PurePursuitData(val goalPoint: ImmutableVector, val finished: Boolean, val lookahead: Double, val closestPoint: ImmutableVector, val closestPointDist: Double, val currentSegmentIndex: Int)
+data class PurePursuitData(val goalPoint: ScalarVector, val finished: Boolean, val lookahead: Double, val closestPoint: ScalarVector, val closestPointDist: Double, val currentSegmentIndex: Int)

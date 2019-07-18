@@ -1,9 +1,6 @@
 package com.github.ezauton.core.pathplanning
 
-import com.github.ezauton.conversion.Acceleration
-import com.github.ezauton.conversion.Distance
-import com.github.ezauton.conversion.Duration
-import com.github.ezauton.conversion.Velocity
+import com.github.ezauton.conversion.*
 import com.github.ezauton.core.utils.math.quadratic
 import java.util.Collections
 
@@ -12,16 +9,20 @@ import java.util.Collections
  * for extrapolating future/previous MotionStates based on distances/times.
  */
 // TODO: Make a subclass for the purposes of PP Logging, ala RC2018:PurePursuitFrame
-class MotionState(val position: Distance, val speed: Velocity, val acceleration: Acceleration, val time: Duration) {
+class MotionState(val position: SIUnit<Distance>, val speed: SIUnit<Velocity>, val acceleration: SIUnit<Acceleration>, val time: SIUnit<Time>) {
 
     /**
      * @param time
      * @return The future Motion State given a time
      */
-    fun extrapolateTime(time: Double): MotionState {
+    fun extrapolateTime(time: SIUnit<Time>): MotionState {
         val dt = time - this.time
+        val siUnit = (speed * dt)
+
+        val b = (((1 / 2.0) * acceleration * dt).s()*dt).s()
+
         return MotionState(
-            position + speed * dt + 1 / 2.0 * acceleration * dt * dt,
+            position + siUnit + b,
             speed + acceleration * dt, acceleration, time
         )
     }

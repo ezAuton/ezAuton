@@ -1,6 +1,6 @@
 package com.github.ezauton.core.utils
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.core.utils.math.Integrable
 import com.github.ezauton.core.utils.math.LineR2
 import com.github.ezauton.core.utils.math.length
@@ -56,8 +56,8 @@ open class LinearInterpolationMap private constructor(private val sortedMap: Tre
 
         if (dataPoints.isEmpty()) throw IllegalArgumentException("Data points must not be empty")
         if (dataPoints.size == 1) {
-            lines.add(MathUtils.Geometry.LineR2(ImmutableVector(a.toFloat(), get(a).toFloat()),
-                    ImmutableVector(b.toFloat(), get(b).toFloat())))
+            lines.add(MathUtils.Geometry.LineR2(ScalarVector(a.toFloat(), get(a).toFloat()),
+                    ScalarVector(b.toFloat(), get(b).toFloat())))
         } else {
             val firstX = dataPoints.get(0)
             val lastX = dataPoints.get(dataPoints.size - 1)
@@ -82,8 +82,8 @@ open class LinearInterpolationMap private constructor(private val sortedMap: Tre
                     x2 = Math.min(b, x2)
 
                     // use "entire" line
-                    lines.add(MathUtils.Geometry.LineR2(ImmutableVector(x1.toFloat(), get(x1)),
-                            ImmutableVector(x2.toFloat(), get(x2))))
+                    lines.add(MathUtils.Geometry.LineR2(ScalarVector(x1.toFloat(), get(x1)),
+                            ScalarVector(x2.toFloat(), get(x2))))
                 }
             }
 

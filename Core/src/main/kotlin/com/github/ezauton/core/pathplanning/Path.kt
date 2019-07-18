@@ -1,11 +1,11 @@
 package com.github.ezauton.core.pathplanning
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import java.util.ArrayList
 import java.util.Arrays
 
 /**
- * A path is the conglomerate of several [PathSegment]s, which are in turn made from two [ImmutableVector]s.
+ * A path is the conglomerate of several [PathSegment]s, which are in turn made from two [ScalarVector]s.
  * Thus, a Path is the overall Path that the robot will take formed by Waypoints.
  * This class is very helpful when it comes to tracking which segment is currently on and getting the distance
  * on the path at any point (taking arclength ... basically making path 1D).
@@ -15,8 +15,8 @@ class Path private constructor(private val pathSegments: List<PathSegment>) : It
     override fun iterator(): Iterator<PathSegment> {
         var segmentOnI = -1
         lateinit var current: PathSegment
-        private var closestPoint: ImmutableVector? = null
-        private var robotLocationClosestPoint: ImmutableVector? = null
+        private var closestPoint: ScalarVector? = null
+        private var robotLocationClosestPoint: ScalarVector? = null
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
 
         val next: PathSegment
@@ -39,10 +39,10 @@ class Path private constructor(private val pathSegments: List<PathSegment>) : It
         moveNextSegment()
     }
 
-    val start: ImmutableVector
+    val start: ScalarVector
         get() = pathSegments[0].from
 
-    val end: ImmutableVector
+    val end: ScalarVector
         get() = pathSegments[pathSegments.size - 1].to
 
     /**
@@ -63,7 +63,7 @@ class Path private constructor(private val pathSegments: List<PathSegment>) : It
         return pathSegments.isNotEmpty()
     }
 
-    fun getClosestPoint(origin: ImmutableVector) // TODO: it might be better to not look purely at the current pathsegment and instead previous path segments: ImmutableVector? {
+    fun getClosestPoint(origin: ScalarVector) // TODO: it might be better to not look purely at the current pathsegment and instead previous path segments: ScalarVector? {
 
     // Commented out because if the PATH changes, this will not give the right result, even if the LOCATION is the same.
     // TODO: figure out a way to put some type of cache back in
@@ -86,7 +86,7 @@ class Path private constructor(private val pathSegments: List<PathSegment>) : It
  * @param lookahead Our current lookahead distance
  * @return Where we should drive at
  */
-fun getGoalPoint(distanceLeftCurrentSegment: Double, lookahead: Double): ImmutableVector? {
+fun getGoalPoint(distanceLeftCurrentSegment: Double, lookahead: Double): ScalarVector? {
     var lookaheadCounter = lookahead
     val current = current
     // If our circle intersects on the assertSameDim path
@@ -116,7 +116,7 @@ fun getGoalPoint(distanceLeftCurrentSegment: Double, lookahead: Double): Immutab
  * @param robotPos The location of the robot
  * @return The PathSegments that have been progressed
  */
-fun progressIfNeeded(distanceLeftSegment: Double, closestPointDist: Double, robotPos: ImmutableVector): List<PathSegment> {
+fun progressIfNeeded(distanceLeftSegment: Double, closestPointDist: Double, robotPos: ScalarVector): List<PathSegment> {
     // TODO: Move magic number
     // Move to the next segment if we are near the end of the current segment
     if (distanceLeftSegment < .16f) {
@@ -158,7 +158,7 @@ fun moveSegment(segmentOnI: Int, segmentOn: PathSegment) {
  * @param currentSegmentCPDist The distance to the closest point on the current segment
  * @return If we should progress to this "other" path segment
  */
-fun shouldProgress(segment: PathSegment?, robotPos: ImmutableVector, currentSegmentCPDist: Double): Boolean {
+fun shouldProgress(segment: PathSegment?, robotPos: ScalarVector, currentSegmentCPDist: Double): Boolean {
     if (segment == null)
     // we are on the last segment... we cannot progress
     {
@@ -171,7 +171,7 @@ fun shouldProgress(segment: PathSegment?, robotPos: ImmutableVector, currentSegm
     return currentSegmentCPDist > nextClosestPointDistance + 0.5f
 }
 
-fun getAbsDistanceOfClosestPoint(closestPoint: ImmutableVector): Double {
+fun getAbsDistanceOfClosestPoint(closestPoint: ScalarVector): Double {
     val current = current
     val firstLocation = current.from
     return current.absoluteDistanceStart + firstLocation.dist(closestPoint)

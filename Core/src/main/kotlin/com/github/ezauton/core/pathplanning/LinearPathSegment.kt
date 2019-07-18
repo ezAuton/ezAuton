@@ -1,6 +1,6 @@
 package com.github.ezauton.core.pathplanning
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.core.utils.math.epsilonEquals
 import com.github.ezauton.core.utils.math.getClosestPointLineSegments
 
@@ -17,11 +17,11 @@ import com.github.ezauton.core.utils.math.getClosestPointLineSegments
  * @param distanceStart How far along the path the starting location is (arclength)
  */
 abstract class LinearPathSegment(
-    final override val from: ImmutableVector,
-    final override val to: ImmutableVector,
-    override val isFinish: Boolean,
-    override val isBeginning: Boolean,
-    distanceStart: Double
+        final override val from: ScalarVector,
+        final override val to: ScalarVector,
+        override val isFinish: Boolean,
+        override val isBeginning: Boolean,
+        distanceStart: Double
 ) : PathSegment {
 
     /**
@@ -32,7 +32,7 @@ abstract class LinearPathSegment(
      * @return How far along the entire path that the end point is
      */
     final override val absoluteDistanceEnd: Double
-    private val dPos: ImmutableVector
+    private val dPos: ScalarVector
     final override val length: Double = this.from.dist(this.to)
 
     init {
@@ -50,7 +50,7 @@ abstract class LinearPathSegment(
      * @param robotPos The position of the robot
      * @return The point on the line segment that is the closest to the robot
      */
-    override fun getClosestPoint(robotPos: ImmutableVector): ImmutableVector {
+    override fun getClosestPoint(robotPos: ScalarVector): ScalarVector {
         return getClosestPointLineSegments(from, to, robotPos)
     }
 
@@ -60,7 +60,7 @@ abstract class LinearPathSegment(
      * @param linePos The point on the line
      * @return How far it is along the line segment
      */
-    override fun getAbsoluteDistance(linePos: ImmutableVector): Double {
+    override fun getAbsoluteDistance(linePos: ScalarVector): Double {
         if (to == linePos) {
             return absoluteDistanceEnd
         }
@@ -112,7 +112,7 @@ abstract class LinearPathSegment(
      * @param relativeDistance How far the point is along this path segment
      * @return The aboslute location of the point
      */
-    override fun getPoint(relativeDistance: Double): ImmutableVector {
+    override fun getPoint(relativeDistance: Double): ScalarVector {
         return dPos.mul(relativeDistance / length).plus(from)
     }
 
@@ -123,7 +123,7 @@ abstract class LinearPathSegment(
      * @return The distance left on the path segment, squared
      */
     @Deprecated("")
-    fun getDistanceLeft2(point: ImmutableVector): Double {
+    fun getDistanceLeft2(point: ScalarVector): Double {
         return to.sub(point).mag2()
     }
 

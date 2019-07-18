@@ -1,6 +1,6 @@
 package com.github.ezauton.core.robot.subsystems
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 
 /**
  * Maps a speed of travel and a location to an action from the robot to go towards that location with the given speed.
@@ -13,7 +13,7 @@ interface TranslationalLocationDrivable {
      * @param loc The target location of the robot
      * @return If the movement is possible
      */
-    fun driveTowardTransLoc(speed: Double, loc: ImmutableVector): Boolean
+    fun driveTowardTransLoc(speed: Double, loc: ScalarVector): Boolean
 
     /**
      * Drive in any direction (normally straight) at a certain speed. Good for low speeds

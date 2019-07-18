@@ -1,6 +1,9 @@
 package com.github.ezauton.core.utils.math
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.Angle
+import com.github.ezauton.conversion.ConcreteVector
+import com.github.ezauton.conversion.SIUnit
+import com.github.ezauton.conversion.ScalarVector
 
 
 /**
@@ -62,7 +65,7 @@ fun isCCWQuickest(angleInit: Double, angleFinal: Double): Boolean {
  * <br></br>
  * Equivalent to arctan((start - end))
  */
-fun getThetaFromPoints(start: ImmutableVector, end: ImmutableVector): Double {
+fun getThetaFromPoints(start: ScalarVector, end: ScalarVector): Double {
     val dx = end.get(0) - start.get(0)
     val dy = end.get(1) - start.get(1)
     return Math.atan2(dy, dx)
@@ -77,7 +80,7 @@ fun getThetaFromPoints(start: ImmutableVector, end: ImmutableVector): Double {
  * @param robotPos The point at which our robot is
  * @return The point on the line closest to the robot
  */
-fun getClosestPointLineSegments(linea: ImmutableVector, lineb: ImmutableVector, robotPos: ImmutableVector): ImmutableVector {
+fun getClosestPointLineSegments(linea: ScalarVector, lineb: ScalarVector, robotPos: ScalarVector): ScalarVector {
 
     val d1 = Math.hypot(linea.get(0) - robotPos.get(0), linea.get(1) - robotPos.get(1))
     val d2 = Math.hypot(lineb.get(0) - robotPos.get(0), lineb.get(1) - robotPos.get(1))
@@ -101,7 +104,7 @@ fun getClosestPointLineSegments(linea: ImmutableVector, lineb: ImmutableVector, 
         lineb
     } else {
         if (lineSegment.slope == 0.0) {
-            ImmutableVector(robotPos[0], lineSegment.evaluateY(robotPos[0]))
+            ScalarVector(robotPos[0], lineSegment.evaluateY(robotPos[0]))
         } else intersect
     }
 }
@@ -110,10 +113,10 @@ fun getClosestPointLineSegments(linea: ImmutableVector, lineb: ImmutableVector, 
  * @param magnitude The length of the vector
  * @param angle    The angle of the vector
  * @return A vector in <x></x>, y> form
- * @see ImmutableVector
+ * @see ScalarVector
  */
-fun polarVector2D(magnitude: Double, theta: Double): ImmutableVector {
-    return VECTOR_FORWARD.rotate2D(theta).mul(magnitude)
+fun <T : Any> polarVector2D(magnitude: SIUnit<T>, angle: SIUnit<Angle>): ConcreteVector<T> {
+    return VECTOR_FORWARD.rotate2D(angle.value).times(magnitude)
 }
 
 /**
@@ -125,7 +128,7 @@ fun polarVector2D(magnitude: Double, theta: Double): ImmutableVector {
  * @param radius The radius of the circle
  * @return All points on both the line and circle, should they exist.
  */
-fun getCircleLineIntersectionPoint(pointA: ImmutableVector, pointB: ImmutableVector, center: ImmutableVector, radius: Double): List<ImmutableVector> {
+fun getCircleLineIntersectionPoint(pointA: ScalarVector, pointB: ScalarVector, center: ScalarVector, radius: Double): List<ScalarVector> {
     val baX = pointB[0] - pointA.get(0)
     val baY = pointB.get(1) - pointA.get(1)
 
@@ -147,18 +150,18 @@ fun getCircleLineIntersectionPoint(pointA: ImmutableVector, pointB: ImmutableVec
     val tmpSqrt = Math.sqrt(disc)
     val abScalingFactor1 = tmpSqrt - pBy2
 
-    val p1 = ImmutableVector(pointA[0] - baX * abScalingFactor1, pointA[1] - baY * abScalingFactor1)
+    val p1 = ScalarVector(pointA[0] - baX * abScalingFactor1, pointA[1] - baY * abScalingFactor1)
     if (disc == 0.0) {
         return listOf(p1)
     }
 
     val abScalingFactor2 = -pBy2 - tmpSqrt
-    val p2 = ImmutableVector(pointA[0] - baX * abScalingFactor2, pointA[1] - baY * abScalingFactor2)
+    val p2 = ScalarVector(pointA[0] - baX * abScalingFactor2, pointA[1] - baY * abScalingFactor2)
     return listOf(p1, p2)
 }
 
 
-typealias ParametricFunction = (Double) -> ImmutableVector
+typealias ParametricFunction = (Double) -> ScalarVector
 
 
 fun ParametricFunction.arcLength(bounds: ClosedRange<Double>, delta: Double = ParametricFunction.DELTA): Double {
@@ -190,8 +193,8 @@ fun getX(t: Double): Double
 
 fun getY(t: Double): Double
 
-operator fun get(t: Double): ImmutableVector {
-    return ImmutableVector(getX(t), getY(t))
+operator fun get(t: Double): ScalarVector {
+    return ScalarVector(getX(t), getY(t))
 }
 
 fun arcLength(lowerBound: Double, upperBound: Double, delta: Double = DELTA): Double {
@@ -210,7 +213,7 @@ fun arcLength(lowerBound: Double, upperBound: Double, delta: Double = DELTA): Do
     return resultLength
 }
 
-fun getT(point: ImmutableVector, lowerBound: Double, upperBound: Double): Double {
+fun getT(point: ScalarVector, lowerBound: Double, upperBound: Double): Double {
     var t = lowerBound
     while (t <= upperBound) {
         if (get(t) == point)
@@ -220,11 +223,11 @@ fun getT(point: ImmutableVector, lowerBound: Double, upperBound: Double): Double
     return java.lang.Double.NaN
 }
 
-fun fromArcLength(arcLength: Double): ImmutableVector {
+fun fromArcLength(arcLength: Double): ScalarVector {
     return fromArcLength(0.0, arcLength, DELTA)
 }
 
-fun fromArcLength(lowerBound: Double, arcLength: Double, delta: Double = DELTA): ImmutableVector {
+fun fromArcLength(lowerBound: Double, arcLength: Double, delta: Double = DELTA): ScalarVector {
     var arcLength = arcLength
     var lastX = getX(lowerBound)
     var lastY = getY(lowerBound)
@@ -249,7 +252,7 @@ companion object {
 
 }
 
-class LineR2(internal val a: ImmutableVector, internal val b: ImmutableVector) : Integrable {
+class LineR2(internal val a: ScalarVector, internal val b: ScalarVector) : Integrable {
     internal val slope: Double
     internal val y_intercept: Double
     internal val x_intercept: Double
@@ -296,37 +299,37 @@ class LineR2(internal val a: ImmutableVector, internal val b: ImmutableVector) :
         return integrate(x1, x2)
     }
 
-    fun getPerp(point: ImmutableVector): LineR2 {
+    fun getPerp(point: ScalarVector): LineR2 {
         val perpSlope: Double
         if (java.lang.Double.isNaN(slope)) {
             perpSlope = 0.0
         } else {
             perpSlope = -1 / slope
         }
-        return LineR2(point, ImmutableVector(point.get(0) + 1, (point.get(1) + perpSlope).toFloat()))
+        return LineR2(point, ScalarVector(point.get(0) + 1, (point.get(1) + perpSlope).toFloat()))
     }
 
-    fun intersection(other: LineR2): ImmutableVector? {
+    fun intersection(other: LineR2): ScalarVector? {
         if (other.slope == slope) {
             return if (other.x_intercept != other.x_intercept) {
                 null
             } else {
                 // TODO: is this a good idea to return?
-                ImmutableVector(other.x1.toFloat(), other.y2.toFloat())
+                ScalarVector(other.x1.toFloat(), other.y2.toFloat())
             }
         }
         if (java.lang.Double.isNaN(slope)) {
-            return ImmutableVector(a.get(0), other.evaluateY(a.get(0)).toFloat())
+            return ScalarVector(a.get(0), other.evaluateY(a.get(0)).toFloat())
         }
 
         if (java.lang.Double.isNaN(other.slope)) {
-            return ImmutableVector(other.a.get(0), evaluateY(other.a.get(0)).toFloat())
+            return ScalarVector(other.a.get(0), evaluateY(other.a.get(0)).toFloat())
         }
         // mx + b = cx + d
         // (m-c) x = d - b
         val x = (other.y_intercept - this.y_intercept) / (this.slope - other.slope)
         val y = evaluateY(x)
-        return ImmutableVector(x.toFloat(), y.toFloat())
+        return ScalarVector(x.toFloat(), y.toFloat())
 
 
     }

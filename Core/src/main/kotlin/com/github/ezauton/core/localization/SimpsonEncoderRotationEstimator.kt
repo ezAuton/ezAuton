@@ -1,11 +1,12 @@
 package com.github.ezauton.core.localization
 
+import com.github.ezauton.conversion.*
 import com.github.ezauton.core.localization.sensors.VelocityEstimator
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
-import com.github.ezauton.core.trajectory.geometry.vec
 import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
 import com.github.ezauton.core.utils.math.polarVector2D
+
+typealias TimeIndexedVelocityVec = Pair<SIUnit<Time>, ConcreteVector<Velocity>>
 
 /**
  * Describes an Updatable object that can track the location and heading of the robot using a rotational device
@@ -26,10 +27,11 @@ class SimpsonEncoderRotationEstimator
     private val velocitySensor: VelocityEstimator,
     clock: Clock
 ) : RotationalLocationEstimator, TranslationalLocationEstimator, Updatable {
+
     private val stopwatch: Stopwatch = Stopwatch(clock)
-    private var velocity: Double = 0.toDouble()
-    private lateinit var dPosVec: ImmutableVector
-    private lateinit var positionVec: ImmutableVector
+    private var velocity: SIUnit<Velocity> = Double.NaN.mps
+    private var dPosVec = ConcreteVector.empty<Distance>()
+    private var positionVec = ConcreteVector.empty<Distance>()
     private var init = false
 
     /**
@@ -46,13 +48,13 @@ class SimpsonEncoderRotationEstimator
      * Set the current position to <0, 0>, in effect resetting the location estimator
      */
     fun reset() { // TODO: Reset heading
-        dPosVec = vec(0.0, 0.0)
-        positionVec = vec(0.0, 0.0)
+        dPosVec = cvec(0.0, 0.0)
+        positionVec = cvec(0.0, 0.0)
         init = true
         stopwatch.reset()
     }
 
-    override fun estimateHeading(): Double {
+    override fun estimateHeading(): SIUnit<Angle> {
         return rotationalLocationEstimator.estimateHeading()
     }
 
@@ -60,12 +62,12 @@ class SimpsonEncoderRotationEstimator
      * @return The current velocity vector of the robot in 2D space.
      */
     override fun estimateAbsoluteVelocity() =
-        polarVector2D(magnitude = velocity, theta = rotationalLocationEstimator.estimateHeading())
+        polarVector2D(magnitude = velocity, angle = rotationalLocationEstimator.estimateHeading())
 
     /**
      * @return The current location as estimated from the encoders
      */
-    override fun estimateLocation() = positionVec
+    override fun estimateLocation(): ConcreteVector<Distance> = positionVec
 
     /**
      * Update the calculation for the current heading and position. Call this as frequently as possible to ensure optimal results
@@ -80,13 +82,13 @@ class SimpsonEncoderRotationEstimator
             (rotationalLocationEstimator as Updatable).update()
         }
         velocity = velocitySensor.translationalVelocity
-        val velVec = polarVector2D(magnitude = velocity, theta = rotationalLocationEstimator.estimateHeading())
+        val velVec = polarVector2D(magnitude = velocity, angle = rotationalLocationEstimator.estimateHeading())
 
-        val currentTime = stopwatch.read().toSeconds()
+        val currentTime = stopwatch.read()
 
         if (vel1ago != null && vel2ago != null) {
-            if (currentTime > vel1ago!!.time + epsilon) {
-                dPosVec = vec(0.0, 0.0)
+            if (currentTime > vel1ago!!.first + epsilon.seconds) {
+                dPosVec = cvec(0.0, 0.0)
 
                 val xVelComponent = Parabola(
                     vec(vel2ago!!.time, vel2ago!!.velVec[0]),
@@ -95,12 +97,12 @@ class SimpsonEncoderRotationEstimator
                 )
 
                 val yVelComponent = Parabola(
-                    ImmutableVector(vel2ago!!.time, vel2ago!!.velVec[1]),
-                    ImmutableVector(vel1ago!!.time, vel1ago!!.velVec[1]),
-                    ImmutableVector(currentTime, velVec[1])
+                    ScalarVector(vel2ago!!.time, vel2ago!!.velVec[1]),
+                    ScalarVector(vel1ago!!.time, vel1ago!!.velVec[1]),
+                    ScalarVector(currentTime, velVec[1])
                 )
 
-                dPosVec = ImmutableVector(xVelComponent.integrate(), yVelComponent.integrate())
+                dPosVec = ScalarVector(xVelComponent.integrate(), yVelComponent.integrate())
 
                 if (!dPosVec.isFinite) {
                     System.err.println("vel2ago = " + vel2ago!!)
@@ -128,24 +130,13 @@ class SimpsonEncoderRotationEstimator
         return true // TODO: Return false sometimes?
     }
 
-    private class TimeIndexedVelocityVec internal constructor(val time: Double, val velVec: ImmutableVector) {
-
-        override fun toString(): String {
-            val sb = StringBuilder("TimeIndexedVelocityVec{")
-            sb.append("time=").append(time)
-            sb.append(", velVec=").append(velVec)
-            sb.append('}')
-            return sb.toString()
-        }
-    }
-
-    private class Parabola(point1: ImmutableVector, point2: ImmutableVector, point3: ImmutableVector) {
+    private class Parabola<T : Any>(point1: ConcreteVector<T>, point2: ConcreteVector<T>, point3: ConcreteVector<T>) {
         private val a: Double
         private val b: Double
         private val c: Double
 
-        private val lowerBound: Double
-        private val upperBound: Double
+        private val lowerBound: SIUnit<T>
+        private val upperBound: SIUnit<T>
 
         init {
             val x1 = point1[0]
@@ -157,12 +148,12 @@ class SimpsonEncoderRotationEstimator
             val x3 = point3[0]
             val y3 = point3[1]
 
-            lowerBound = Math.min(x1, Math.min(x2, x3))
-            upperBound = Math.max(x1, Math.max(x2, x3))
+            lowerBound = min(x1, min(x2, x3))
+            upperBound = max(x1, max(x2, x3))
 
-            val numerator = x1 * x1 * (y2 - y3) +
-                x3 * x3 * (y1 - y2) +
-                x2 * x2 * (y3 - y1)
+            val numerator =
+                    x1 * x1 * (y2 - y3) + x3 * x3 * (y1 - y2) +
+                            x2 * x2 * (y3 - y1)
 
             val denominator = (x1 - x2) * (x1 - x3) * (x2 - x3)
 
@@ -186,7 +177,7 @@ class SimpsonEncoderRotationEstimator
 
         @JvmStatic
         fun main(args: Array<String>) {
-            val parabola = Parabola(vec(0.0, 2.0), ImmutableVector(4.0, 6.0), ImmutableVector(10.0, 2.0))
+            val parabola = Parabola(vec(0.0, 2.0), ScalarVector(4.0, 6.0), ScalarVector(10.0, 2.0))
             println("parabola = " + parabola.integrate())
         }
     }

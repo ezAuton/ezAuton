@@ -1,6 +1,6 @@
 package com.github.ezauton.core.pathplanning
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector
+import com.github.ezauton.conversion.ScalarVector
 
 import java.io.Serializable
 
@@ -14,23 +14,23 @@ interface PathSegment : Serializable {
 
     val isFinish: Boolean
 
-    val from: ImmutableVector
+    val from: ScalarVector
 
-    val to: ImmutableVector
+    val to: ScalarVector
 
     val length: Double
 
     val absoluteDistanceStart: Double
 
-    fun getPoint(relativeDistance: Double): ImmutableVector
+    fun getPoint(relativeDistance: Double): ScalarVector
 
-    fun getClosestPoint(robotPos: ImmutableVector): ImmutableVector
+    fun getClosestPoint(robotPos: ScalarVector): ScalarVector
 
     /**
      * @param linePos
      * @return The absolute distance on the path of a point on the line
      */
-    fun getAbsoluteDistance(linePos: ImmutableVector): Double
+    fun getAbsoluteDistance(linePos: ScalarVector): Double
 
     fun getSpeed(absoluteDistance: Double): Double
 }

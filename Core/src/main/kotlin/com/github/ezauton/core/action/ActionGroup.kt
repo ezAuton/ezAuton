@@ -26,7 +26,7 @@ class ActionGroup : Action {
      * @param scheduledActions The ActionWrappers to run
      */
     constructor(vararg scheduledActions: ActionWrapper) {
-        this.scheduledActions = LinkedList(Arrays.asList(*scheduledActions))
+        this.scheduledActions = LinkedList(listOf(*scheduledActions))
     }
 
     /**

@@ -2,7 +2,6 @@ package com.github.ezauton.core.simulation
 
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.actuators.implementations.SimulatedMotor
-import com.github.ezauton.core.localization.UpdatableGroup
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.localization.sensors.Encoders
@@ -33,7 +32,7 @@ class SimulatedTankRobot
     val defaultLocEstimator: TankRobotEncoderEncoderEstimator
     val defaultTransLocDriveable: TankRobotTransLocDrivable
     //    public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
-    private val toUpdate = UpdatableGroup()
+    private val toUpdate: Set<Updatable>
 
     val leftMotor: VelocityMotor
         get() = left
@@ -51,8 +50,7 @@ class SimulatedTankRobot
         right = SimulatedMotor(clock, maxAccel, minVel, maxVel, 1.0)
         rightDistanceSensor = Encoders.toTranslationalDistanceSensor(1.0, 1.0, right)
 
-        toUpdate.add(left)
-        toUpdate.add(right)
+        toUpdate = setOf(left, right)
 
         this.defaultLocEstimator = TankRobotEncoderEncoderEstimator(leftDistanceSensor, rightDistanceSensor, this)
         this.defaultTransLocDriveable = TankRobotTransLocDrivable(left, right, defaultLocEstimator, defaultLocEstimator, this)
@@ -66,7 +64,7 @@ class SimulatedTankRobot
     override fun update(): Boolean {
         //        long read = stopwatch.read(TimeUnit.SECONDS);
         //        log.append(read).append(", ").append(leftTDS.getVelocity()).append(", ").append(rightTDS.getVelocity()).append("\n");
-        toUpdate.update()
+        toUpdate.forEach { it.update() }
         defaultLocEstimator.update()
         return true
     }
