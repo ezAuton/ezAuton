@@ -11,7 +11,7 @@ data class ActionContext(val clock: Clock) {
         delay(Units.ms(millis))
     }
 
-    suspend fun delay(duration: SIUnit<Time>) {
+    suspend fun delay(duration: Time) {
         clock.delayFor(duration)
     }
 }

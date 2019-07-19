@@ -1,7 +1,7 @@
 package com.github.ezauton.visualizer;
 
 import javafx.animation.*;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.conversion.ScalarVector;
 import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.recorder.SubRecording;
 import com.github.ezauton.recorder.JsonUtils;
@@ -426,8 +426,8 @@ public class Controller implements Initializable {
             }
 
             @Override
-            public ImmutableVector getOrigin() {
-                return new ImmutableVector(originX, originY);
+            public ScalarVector getOrigin() {
+                return new ScalarVector(originX, originY);
             }
         };
     }

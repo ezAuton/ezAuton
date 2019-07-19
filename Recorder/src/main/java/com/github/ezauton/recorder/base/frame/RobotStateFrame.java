@@ -1,7 +1,7 @@
 package com.github.ezauton.recorder.base.frame;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.conversion.ScalarVector;
 import com.github.ezauton.recorder.SequentialDataFrame;
 
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 public class RobotStateFrame extends SequentialDataFrame implements Serializable {
     @JsonProperty
-    private ImmutableVector pos;
+    private ScalarVector pos;
 
     @JsonProperty
     private double heading;
@@ -25,7 +25,7 @@ public class RobotStateFrame extends SequentialDataFrame implements Serializable
     private double robotLength;
 
     @JsonProperty
-    private ImmutableVector robotVelocity;
+    private ScalarVector robotVelocity;
 
     /**
      * An immutable
@@ -35,7 +35,7 @@ public class RobotStateFrame extends SequentialDataFrame implements Serializable
      * @param robotWidth  The width of the robot in feet (the x-component of the robot)
      * @param robotLength The height of the robot in feet (the y-component of the robot)
      */
-    public RobotStateFrame(double time, ImmutableVector pos, double heading, double robotWidth, double robotLength, ImmutableVector robotVelocity) {
+    public RobotStateFrame(double time, ScalarVector pos, double heading, double robotWidth, double robotLength, ScalarVector robotVelocity) {
         super(time);
         this.pos = pos;
         this.heading = heading;
@@ -47,7 +47,7 @@ public class RobotStateFrame extends SequentialDataFrame implements Serializable
     protected RobotStateFrame() {
     }
 
-    public ImmutableVector getPos() {
+    public ScalarVector getPos() {
         return pos;
     }
 
@@ -63,7 +63,7 @@ public class RobotStateFrame extends SequentialDataFrame implements Serializable
         return robotLength;
     }
 
-    public ImmutableVector getRobotVelocity() {
+    public ScalarVector getRobotVelocity() {
         return robotVelocity;
     }
 

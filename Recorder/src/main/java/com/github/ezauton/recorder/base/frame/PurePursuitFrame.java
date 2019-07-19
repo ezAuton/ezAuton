@@ -1,7 +1,7 @@
 package com.github.ezauton.recorder.base.frame;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.conversion.ScalarVector;
 import com.github.ezauton.recorder.SequentialDataFrame;
 
 public class PurePursuitFrame extends SequentialDataFrame {
@@ -9,10 +9,10 @@ public class PurePursuitFrame extends SequentialDataFrame {
     private double lookahead;
 
     @JsonProperty
-    private ImmutableVector closestPoint;
+    private ScalarVector closestPoint;
 
     @JsonProperty
-    private ImmutableVector goalPoint;
+    private ScalarVector goalPoint;
 
     @JsonProperty
     private double dCP;
@@ -20,7 +20,7 @@ public class PurePursuitFrame extends SequentialDataFrame {
     @JsonProperty
     private int currentSegmentIndex;
 
-    public PurePursuitFrame(double time, double lookahead, ImmutableVector closestPoint, ImmutableVector goalPoint, double dCP, int currentSegmentIndex) {
+    public PurePursuitFrame(double time, double lookahead, ScalarVector closestPoint, ScalarVector goalPoint, double dCP, int currentSegmentIndex) {
         super(time);
 
         this.lookahead = lookahead;
@@ -37,11 +37,11 @@ public class PurePursuitFrame extends SequentialDataFrame {
         return lookahead;
     }
 
-    public ImmutableVector getClosestPoint() {
+    public ScalarVector getClosestPoint() {
         return closestPoint;
     }
 
-    public ImmutableVector getGoalPoint() {
+    public ScalarVector getGoalPoint() {
         return goalPoint;
     }
 

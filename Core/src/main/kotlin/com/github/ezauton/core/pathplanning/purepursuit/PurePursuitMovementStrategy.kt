@@ -1,5 +1,6 @@
 package com.github.ezauton.core.pathplanning.purepursuit
 
+import com.github.ezauton.conversion.ConcreteVector
 import com.github.ezauton.conversion.Distance
 import com.github.ezauton.core.pathplanning.Path
 import com.github.ezauton.conversion.ScalarVector
@@ -19,7 +20,7 @@ class PurePursuitMovementStrategy
         /**
          * The path that we're driving on
          */
-        val path: Path,
+        val path: Path<Distance>,
         /**
          * How close we need to be to the final waypoint for us to decide that we are finished
          */
@@ -40,8 +41,8 @@ class PurePursuitMovementStrategy
      * We want to drive at it.
      * @see [Velocity and End Behavior
     ](https://www.chiefdelphi.com/forums/showthread.php?threadid=162713) */
-    private fun calculateAbsoluteGoalPoint(distanceCurrentSegmentLeft: Double, lookAheadDistance: Double): ScalarVector {
-        if (!distanceCurrentSegmentLeft.isFinite()) throw IllegalArgumentException("distanceCurrentSegmentLeft ($distanceCurrentSegmentLeft) must be finite")
+    private fun calculateAbsoluteGoalPoint(distanceCurrentSegmentLeft: Double, lookAheadDistance: Distance): ScalarVector {
+        require(distanceCurrentSegmentLeft.isFinite()) { "distanceCurrentSegmentLeft ($distanceCurrentSegmentLeft) must be finite" }
 
         // The intersections with the path we are following and the circle around the robot of
         // radius lookAheadDistance. These intersections will determine the "goal point" we
@@ -57,8 +58,8 @@ class PurePursuitMovementStrategy
      * @param lookahead Current lookahead as given by an Lookahead instance
      * @return The wanted pose of the robot at a certain location
      */
-    fun update(loc: ScalarVector, lookahead: Distance): ScalarVector? {
-        val current = path.current
+    fun update(loc: ConcreteVector<Distance>, lookahead: Distance): ConcreteVector<Distance>? {
+        val current = path
         val segmentOnI = path.segmentOnI
         val currentClosestPoint = current.getClosestPoint(loc)
         val closestPoint = path.getClosestPoint(loc) // why do we not get closest point on current line segment???
@@ -98,4 +99,4 @@ class PurePursuitMovementStrategy
     }
 }
 
-data class PurePursuitData(val goalPoint: ScalarVector, val finished: Boolean, val lookahead: Double, val closestPoint: ScalarVector, val closestPointDist: Double, val currentSegmentIndex: Int)
+data class PurePursuitData(val goalPoint: ConcreteVector<Distance>, val finished: Boolean, val lookahead: Distance, val closestPoint: ScalarVector, val closestPointDist: Double, val currentSegmentIndex: Int)

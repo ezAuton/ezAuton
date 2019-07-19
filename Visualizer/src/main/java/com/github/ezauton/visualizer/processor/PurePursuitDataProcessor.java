@@ -1,7 +1,7 @@
 package com.github.ezauton.visualizer.processor;
 
 import com.github.ezauton.core.pathplanning.PathSegment;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.conversion.ScalarVector;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.frame.PurePursuitFrame;
 import com.github.ezauton.visualizer.util.DataProcessor;
@@ -58,8 +58,8 @@ public class PurePursuitDataProcessor implements DataProcessor {
         return -feetY * spatialScaleFactorY + originYPx;
     }
 
-    private ImmutableVector toPixels(ImmutableVector feet) {
-        return new ImmutableVector(getX(feet.get(0)), getY(feet.get(1)));
+    private ScalarVector toPixels(ScalarVector feet) {
+        return new ScalarVector(getX(feet.get(0)), getY(feet.get(1)));
     }
 
     @Override
@@ -72,11 +72,11 @@ public class PurePursuitDataProcessor implements DataProcessor {
 
         AnchorPane anchorPane = environment.getFieldAnchorPane();
 
-        ImmutableVector startingPos = ppRec.getPath().getPathSegments().get(0).getFrom();
+        ScalarVector startingPos = ppRec.getPath().getPathSegments().get(0).getFrom();
         waypointPath.getElements().add(new MoveTo((getX(startingPos.get(0))), (getY(startingPos.get(1)))));
 
         for (PathSegment segment : ppRec.getPath().getPathSegments()) {
-            ImmutableVector to = segment.getTo();
+            ScalarVector to = segment.getTo();
             double x = to.get(0);
             double y = to.get(1);
             waypointPath.getElements().add(new LineTo(getX(x), getY(y)));

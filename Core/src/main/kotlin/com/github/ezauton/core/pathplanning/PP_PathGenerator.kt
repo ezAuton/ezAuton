@@ -24,15 +24,15 @@ class PP_PathGenerator(vararg ppWaypoints: PPWaypoint) : Serializable {
 
             // TODO: Update from RobotCode2018 style pathsegments
             val pathSegment: LinearPathSegment
-            if (i == 0) {
+            pathSegment = if (i == 0) {
                 val beginningSpeed = if (from.speed == 0.0) to.speed else from.speed
 
-                pathSegment = PathSegmentInterpolated(
+                PathSegmentInterpolated(
                         from.location, to.location, i == ppWaypoints.size - 2, true, addedDistance,
                         beginningSpeed, to.speed, dt,
                         from.acceleration, from.deceleration)
             } else {
-                pathSegment = PathSegmentInterpolated(
+                PathSegmentInterpolated(
                         from.location, to.location, i == ppWaypoints.size - 2, false, addedDistance,
                         from.speed, to.speed, dt,
                         from.acceleration, from.deceleration)

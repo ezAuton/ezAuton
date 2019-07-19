@@ -12,7 +12,7 @@ import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrat
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.conversion.ScalarVector;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeoutException;
 public class RecorderTest {
     public static void main(String[] args) throws IOException, TimeoutException, ExecutionException {
 
-        ImmutableVector immutableVector = new ImmutableVector(0, 0);
+        ScalarVector immutableVector = new ScalarVector(0, 0);
         immutableVector.isFinite();
 
         Path path = new PPWaypoint.Builder()

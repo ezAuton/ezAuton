@@ -1,11 +1,18 @@
 package com.github.ezauton.core.pathplanning
 
+import com.github.ezauton.conversion.ConcreteVector
+import com.github.ezauton.conversion.SIUnit
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
 import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.core.utils.LinearInterpolationMap
+import com.github.ezauton.core.utils.math.ParametricFunction
 import java.util.ArrayList
 
-class QuinticSpline(val first: ScalarVector, val last: ScalarVector, val firstSlope: ScalarVector, val lastSlope: ScalarVector) : MathUtils.Geometry.ParametricFunction {
+class QuinticSpline<T : SIUnit<T>>(val first: ConcreteVector<T>, val last: ConcreteVector<T>, val firstSlope: ScalarVector<T>, val lastSlope: ScalarVector<T>) : ParametricFunction {
+
+    override fun invoke(p1: Double): ConcreteVector<T> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     /**
      * t^5 coefficient for the quintic spline equation

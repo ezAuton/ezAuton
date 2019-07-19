@@ -65,9 +65,4 @@ fun discriminate(a: Double, b: Double, c: Double): Double {
     return b * b - 4.0 * a * c
 }
 
-/**
- * @return if a <= x <= b or b<= x <= a
- */
-fun between(a: Double, x: Double, b: Double): Boolean {
-    return bounded(a, x, b) || bounded(b, x, a)
-}
+

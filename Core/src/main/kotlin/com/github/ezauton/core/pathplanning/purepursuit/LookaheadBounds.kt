@@ -17,7 +17,7 @@ class LookaheadBounds
  * @param maxSpeed Maximum speed where lookahead is allowed to be dynamic
  * @param velocityEstimator Estimator of the robot's velocity. Used to calculate lookahead based on current speed.
  */
-(private val minDistance: SIUnit<Distance>, private val maxDistance: SIUnit<Distance>, private val minSpeed: SIUnit<Velocity>, maxSpeed: SIUnit<Velocity>, private val velocityEstimator: VelocityEstimator) : Lookahead {
+(private val minDistance: Distance, private val maxDistance: Distance, private val minSpeed: LinearVelocity, maxSpeed: LinearVelocity, private val velocityEstimator: VelocityEstimator) : Lookahead {
 
     private val dDistance = maxDistance - minDistance
     private val dSpeed = maxSpeed - minSpeed
@@ -27,9 +27,9 @@ class LookaheadBounds
      *
      * @return The lookahead to use
      */
-    override val lookahead: SIUnit<Distance>
+    override val lookahead: Distance
         get() {
-            val speed = abs(velocityEstimator.translationalVelocity)
+            val speed = velocityEstimator.translationalVelocity.abs()
             val lookahead = dDistance * ((speed - minSpeed) / dSpeed) + minDistance
             return lookahead.coerceIn(minDistance .. maxDistance)
         }

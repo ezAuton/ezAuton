@@ -1,8 +1,7 @@
 package com.github.ezauton.core.localization.sensors
 
-import com.github.ezauton.conversion.SIUnit
-import com.github.ezauton.conversion.Velocity
+import com.github.ezauton.conversion.LinearVelocity
 
 interface VelocityEstimator {
-    val translationalVelocity: SIUnit<Velocity>
+    val translationalVelocity: LinearVelocity
 }

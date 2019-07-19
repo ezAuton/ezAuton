@@ -1,5 +1,7 @@
 package com.github.ezauton.core.pathplanning
 
+import com.github.ezauton.conversion.ConcreteVector
+import com.github.ezauton.conversion.SIUnit
 import com.github.ezauton.conversion.ScalarVector
 
 import java.io.Serializable
@@ -7,30 +9,30 @@ import java.io.Serializable
 /**
  * A section of a path (usually linear) which has similar laws (i.e. same transition between two speeds).
  */
-interface PathSegment : Serializable {
+interface PathSegment<T: SIUnit<T>> : Serializable {
     val absoluteDistanceEnd: Double
 
     val isBeginning: Boolean
 
     val isFinish: Boolean
 
-    val from: ScalarVector
+    val from: ConcreteVector<T>
 
-    val to: ScalarVector
+    val to: ConcreteVector<T>
 
-    val length: Double
+    val length: T
 
     val absoluteDistanceStart: Double
 
-    fun getPoint(relativeDistance: Double): ScalarVector
+    fun getPoint(relativeDistance: Double): ConcreteVector<T>
 
-    fun getClosestPoint(robotPos: ScalarVector): ScalarVector
+    fun getClosestPoint(robotPos: ScalarVector): ConcreteVector<T>
 
     /**
      * @param linePos
      * @return The absolute distance on the path of a point on the line
      */
-    fun getAbsoluteDistance(linePos: ScalarVector): Double
+    fun getAbsoluteDistance(linePos: ConcreteVector<T>): Double
 
-    fun getSpeed(absoluteDistance: Double): Double
+    fun getSpeed(absoluteDistance: T): Velocity
 }

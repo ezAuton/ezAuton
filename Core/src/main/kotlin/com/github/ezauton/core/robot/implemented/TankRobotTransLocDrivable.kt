@@ -1,15 +1,14 @@
 package com.github.ezauton.core.robot.implemented
 
-import com.github.ezauton.conversion.ConcreteVector
-import com.github.ezauton.conversion.LinearVelocity
-import com.github.ezauton.conversion.SIUnit
+import com.github.ezauton.conversion.*
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.localization.RotationalLocationEstimator
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.robot.TankRobotConstants
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
-import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.core.utils.math.absoluteToRelativeCoord
+import com.github.ezauton.core.utils.math.between
+import com.github.ezauton.core.utils.math.calculateCurvature
 
 /**
  * Describes the kinematics for a robot with a tank drivetrain
@@ -25,9 +24,9 @@ class TankRobotTransLocDrivable
  * @param tankRobotConstants A data class containing constants regarding the structure of the tank drive robot, such as lateral wheel distance
  */
 (private val leftMotor: VelocityMotor, private val rightMotor: VelocityMotor, private val translationalLocationEstimator: TranslationalLocationEstimator, private val rotationalLocationEstimator: RotationalLocationEstimator, private val tankRobotConstants: TankRobotConstants) : TranslationalLocationDrivable {
-    var lastLeftTarget: Double = 0.toDouble()
+    var lastLeftTarget: LinearVelocity = 0.mps
         private set
-    var lastRightTarget: Double = 0.toDouble()
+    var lastRightTarget: LinearVelocity = 0.mps
         private set
 
     /**
@@ -37,17 +36,17 @@ class TankRobotTransLocDrivable
      * @param loc The absolute coordinates of the target location
      * @return True
      */
-    override fun <T : SIUnit<T>> driveTowardTransLoc(speed: LinearVelocity, loc: ConcreteVector<T>): Boolean {
-        if (loc.dimension != 2) throw IllegalArgumentException("target location must be in R2")
-        if (!loc[0].isFinite || !loc[1].isFinite) throw IllegalArgumentException("target location $loc must contain real, finite numbers")
+    override fun driveTowardTransLoc(speed: LinearVelocity, loc: ConcreteVector<Distance>): Boolean {
+        require(loc.dimension == 2) { "target location must be in R2" }
+        require(loc.isFinite) { "target location $loc must contain real, finite numbers" }
 
         val wheelVelocities = getWheelVelocities(speed, loc)
 
-        lastLeftTarget = wheelVelocities.get(0)
+        lastLeftTarget = wheelVelocities[0]
 
         leftMotor.runVelocity(lastLeftTarget)
 
-        lastRightTarget = wheelVelocities.get(1)
+        lastRightTarget = wheelVelocities[1]
         rightMotor.runVelocity(lastRightTarget)
 
         return true // always possible //TODO: Maybe sometimes return false?
@@ -59,7 +58,7 @@ class TankRobotTransLocDrivable
      * @param speed The target speed, where a positive value is forwards and a negative value is backwards
      * @return True, it is always possible to drive straight
      */
-    override fun driveSpeed(speed: Double): Boolean {
+    override fun driveSpeed(speed: LinearVelocity): Boolean {
         leftMotor.runVelocity(speed)
         rightMotor.runVelocity(speed)
         return true
@@ -72,20 +71,21 @@ class TankRobotTransLocDrivable
      * @param loc THe absolute coordinates of the goal point
      * @return The wheel speeds in a vector where the 0th element is the left wheel speed and the 1st element is the right wheel speed
      */
-    private fun <T : SIUnit<T>> getWheelVelocities(speed: LinearVelocity, loc: ConcreteVector<T>): ConcreteVector<T> {
+    private fun getWheelVelocities(speed: LinearVelocity, loc: ConcreteVector<Distance>): ConcreteVector<LinearVelocity> {
+        // TODO: lookover
         val relativeCoord = absoluteToRelativeCoord(loc, translationalLocationEstimator.estimateLocation(), rotationalLocationEstimator.estimateHeading())
-        val curvature = MathUtils.calculateCurvature(relativeCoord)
-        var bestVector: ScalarVector? = null
+        val curvature = calculateCurvature(relativeCoord)
+        var bestVector: ConcreteVector<LinearVelocity>? = null
 
         val v_lMin = -speed
         val v_rMin = -speed
 
         val lateralWheelDistance = tankRobotConstants.lateralWheelDistance
 
-        if (Math.abs(curvature) < THRESHOLD_CURVATURE)
+        if (curvature.abs() < THRESHOLD_CURVATURE)
         // if we are a straight line ish (lines are not curvy -> low curvature)
         {
-            return ScalarVector(speed, speed)
+            return ConcreteVector.of(speed, speed)
         } else
         // if we need to go in a circle, we should calculate the wheel velocities so we hit our target radius AND our target tangential speed
         {
@@ -97,44 +97,44 @@ class TankRobotTransLocDrivable
             // vl(L+2r) + vr(L-2r) = 0
             // vl(L+2r) = -vr(L-2r)
             // vl/vr = -(L+2r)/(L-2r)
-            val r = 1 / curvature
+            val r = 1 / curvature.value // ELIMINATING UNITS
 
             val velLeftToRightRatio = -(lateralWheelDistance + 2 * r) / (lateralWheelDistance - 2 * r)
             val velRightToLeftRatio = 1 / velLeftToRightRatio // invert the ratio
 
             // This first big repetitive section is just finding the largest possible velocities while maintaining a ratio.
-            var score = java.lang.Double.MIN_VALUE
+            var score = LinearVelocity(Double.MIN_VALUE) // TODO: probably better way to do this
 
             var v_r = speed * velLeftToRightRatio
 
-            if (MathUtils.Algebra.between(v_rMin, v_r, speed) || MathUtils.Algebra.between(speed, v_r, v_rMin)) {
-                score = Math.abs(speed + v_r)
-                bestVector = ScalarVector(speed, v_r)
+            if (v_r in v_rMin .. speed || v_r in speed .. v_rMin) {
+                score = (speed + v_r).abs()
+                bestVector = ConcreteVector.of(speed, v_r)
             }
 
             v_r = v_lMin * velLeftToRightRatio
-            if (MathUtils.Algebra.between(v_rMin, v_r, speed) || MathUtils.Algebra.between(speed, v_r, v_rMin)) {
-                val tempScore = Math.abs(v_lMin + v_r)
+            if (v_r in v_rMin .. speed || v_r in speed .. v_rMin) {
+                val tempScore = (v_lMin + v_r).abs()
                 if (tempScore > score) {
                     score = tempScore
-                    bestVector = ScalarVector(v_lMin, v_r)
+                    bestVector = ConcreteVector.of(v_lMin, v_r)
                 }
             }
 
             var v_l = speed * velRightToLeftRatio
-            if (MathUtils.Algebra.between(v_lMin, v_l, speed) || MathUtils.Algebra.between(speed, v_l, v_lMin)) {
-                val tempScore = Math.abs(speed + v_l)
+            if (v_l in v_lMin .. speed || v_l in speed .. v_lMin) {
+                val tempScore = (speed + v_l).abs()
                 if (tempScore > score) {
                     score = tempScore
-                    bestVector = ScalarVector(v_l, speed)
+                    bestVector = ConcreteVector.of(v_l, speed)
                 }
             }
 
             v_l = v_rMin * velRightToLeftRatio
-            if (MathUtils.Algebra.between(v_lMin, v_l, speed) || MathUtils.Algebra.between(speed, v_l, v_lMin)) {
-                val tempScore = Math.abs(v_lMin + v_l)
+            if (v_l in v_lMin .. speed || v_l in speed .. v_lMin) {
+                val tempScore = (v_lMin + v_l).abs()
                 if (tempScore > score) {
-                    bestVector = ScalarVector(v_l, v_rMin)
+                    bestVector = ConcreteVector.of(v_l, v_rMin)
                 }
             }
 
@@ -156,6 +156,6 @@ class TankRobotTransLocDrivable
         /**
          * The minimum curvature, below which we are driving on a straight line
          */
-        private val THRESHOLD_CURVATURE = 0.001
+        private val THRESHOLD_CURVATURE = 0.001.meters
     }
 }

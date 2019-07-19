@@ -1,6 +1,6 @@
 package com.github.ezauton.visualizer.util;
 
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
+import com.github.ezauton.conversion.ScalarVector;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
@@ -39,5 +39,5 @@ public interface Environment {
      *
      * @return The location of the origin.
      */
-    ImmutableVector getOrigin();
+    ScalarVector getOrigin();
 }

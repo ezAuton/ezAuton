@@ -9,5 +9,5 @@ import com.github.ezauton.conversion.SIUnit
  * on how fast we are going or the curvature of the path.
  */
 interface Lookahead {
-    val lookahead: SIUnit<Distance>
+    val lookahead: Distance
 }

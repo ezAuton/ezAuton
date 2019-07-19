@@ -1,8 +1,6 @@
 package com.github.ezauton.core.utils.math
 
-import com.github.ezauton.conversion.ConcreteVector
-import com.github.ezauton.conversion.SIUnit
-import com.github.ezauton.conversion.ScalarVector
+import com.github.ezauton.conversion.*
 
 /**
  * Rotate the input vector theta radians counterclockwise
@@ -11,11 +9,11 @@ import com.github.ezauton.conversion.ScalarVector
  * @param theta How much to rotate it by (radians)
  * @return The rotated vector
  */
-fun ScalarVector.rotate2D(theta: Double): ScalarVector {
-    val sin = esin(theta)
-    val cos = ecos(theta)
-    return ScalarVector(get(0) * cos - get(1) * sin,
-            get(0) * sin + get(1) * cos)
+fun <T> ConcreteVector<T>.rotate2D(theta: Angle): ConcreteVector<T>
+        where T : SIUnit<T>, T : LinearUnit {
+    val sin = esin(theta.value)
+    val cos = ecos(theta.value)
+    return ConcreteVector.of(get(0) * cos - get(1) * sin, get(0) * sin + get(1) * cos)
 }
 
 /**
@@ -26,14 +24,12 @@ fun ScalarVector.rotate2D(theta: Double): ScalarVector {
  * @param robotHeading The robot's heading (radians)
  * @return `coordinateAbsolute` but relative to the robot
  */
-fun absoluteToRelativeCoord(coordinateAbsolute: ScalarVector, robotCoordAbs: ScalarVector, robotHeading: Double): ScalarVector {
+fun <T> absoluteToRelativeCoord(coordinateAbsolute: ConcreteVector<T>, robotCoordAbs: ConcreteVector<T>, robotHeading: Angle): ConcreteVector<T>
+        where T : SIUnit<T>, T : LinearUnit {
     return coordinateAbsolute.minus(robotCoordAbs).rotate2D(-robotHeading)
 }
 
-fun <T : SIUnit<T>> absoluteToRelativeCoord(coordinateAbsolute: ConcreteVector<T>, robotCoordAbs: ConcreteVector<T>, robotHeading: Double): ScalarVector {
-    return coordinateAbsolute.minus(robotCoordAbs).rotate2D(-robotHeading)
-}
-
-fun relativeToAbsoluteCoord(coordinateRelative: ScalarVector, robotCoordAbs: ScalarVector, robotHeading: Double): ScalarVector {
+fun <T> relativeToAbsoluteCoord(coordinateRelative: ConcreteVector<T>, robotCoordAbs: ConcreteVector<T>, robotHeading: Angle): ConcreteVector<out T>
+        where T : SIUnit<T>, T : LinearUnit {
     return coordinateRelative.rotate2D(robotHeading) + robotCoordAbs
 }

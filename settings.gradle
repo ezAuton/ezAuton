@@ -3,5 +3,6 @@ include 'Core'
 include 'WPILib'
 include 'Visualizer'
 include 'Recorder'
-include 'Conversion'
+
+includeBuild("../Conversion")
 

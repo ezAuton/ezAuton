@@ -1,5 +1,7 @@
 package com.github.ezauton.core.utils.math
 
+import com.github.ezauton.conversion.ConcreteVector
+import com.github.ezauton.conversion.Distance
 import com.github.ezauton.conversion.ScalarVector
 
 val PHI = 1.618033989
@@ -49,12 +51,12 @@ private val SIN_TABLE by lazy {
  *
  * @see MathUtils.LinearAlgebra.absoluteToRelativeCoord
  */
-fun calculateCurvature(relativeGoalPoint: ScalarVector): Double {
-    val lSquared = relativeGoalPoint.mag2() // x^2 + y^2 = l^2 (length)
+fun calculateCurvature(relativeGoalPoint: ConcreteVector<Distance>): Distance {
+    val lSquared = relativeGoalPoint.scalarVector.mag2() // x^2 + y^2 = l^2 (length)
 
     // curvature = 2x / l^2 (from Pure Pursuit paper)
     // added - so it is positive when counterclockwise
-    return -2 * relativeGoalPoint.get(0) / lSquared
+    return -2 * relativeGoalPoint[0] / lSquared
 }
 
 fun <A, B> Map<A, B>.inverse() = entries.associateBy({ it.value }, { it.key })
