@@ -18,6 +18,10 @@ repositories {
 
 dependencies {
 
+    // FTC specific libraries
+    compile name: "FtcCommon-release"
+    compile name: "Hardware-release"
+    compile name: "RobotCore-release"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile project(':Core')
