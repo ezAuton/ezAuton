@@ -7,6 +7,9 @@ import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor;
 
 /**
  * An interface representing your typical motor. It is able to be controller by either velocity or voltage, and has an encoder.
+ *
+ * @deprecated please use the one in Core
  */
+@Deprecated
 public interface TypicalMotor extends VelocityMotor, RotationalDistanceSensor, VoltageMotor {
 }
