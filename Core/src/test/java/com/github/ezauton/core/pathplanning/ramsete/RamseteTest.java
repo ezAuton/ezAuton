@@ -35,6 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RamseteTest {
+    public static final double DEFAULT_B = 1.5;
+    public static final double DEFAULT_ZETA = 0.3;
     private TimeStateSeries ramsete;
 
     @BeforeEach
@@ -92,7 +94,7 @@ public class RamseteTest {
                 .add(0, 10, 0, 10, -10)
                 .buildPathGenerator().generate(0.05);
 
-        test("basicLinearPath", path, 2, 0.5);
+        test("basicLinearPath", path, DEFAULT_B, DEFAULT_ZETA);
     }
 
     @Test
@@ -103,7 +105,7 @@ public class RamseteTest {
                     .add(0, 10, -Math.PI / 2, 3, 10, -10)
                     .add(-7, 3, Math.PI / 2, 0, 10, -10)
                     .buildPathGenerator().generate(0.05);
-            test("basicSplinePath", path, 0.3, 0);
+            test("basicSplinePath", path, DEFAULT_B, DEFAULT_ZETA);
     }
 
     @Test
@@ -115,7 +117,7 @@ public class RamseteTest {
                 .add(10, 10,    0, 10, 3, 10, -10)
                 .add(10, 20,    0, 10, 0, 10, -10)
                 .buildPathGenerator().generate(0.05);
-        test("complexSplinePath", path, 0.25, 0.05);
+        test("complexSplinePath", path, DEFAULT_B, DEFAULT_ZETA);
     }
 
     @Test
@@ -128,7 +130,7 @@ public class RamseteTest {
                 .add(-10, 0, 8, 0, 3, 10, -10)
                 .add(0, 0, 10, 0, 0, 10, -10)
                 .flipY().buildPathGenerator().generate(0.05);
-        test("testRightCurlingPath", path, 1.5, 0.3);
+        test("testRightCurlingPath", path, DEFAULT_B, DEFAULT_ZETA);
     }
 
     @Test
@@ -141,7 +143,7 @@ public class RamseteTest {
                 .add(-10, 0, 8, 0, 3, 10, -10)
                 .add(0, 0,    10, 0, 0, 10, -10)
                 .buildPathGenerator().generate(0.05);
-        test("testLeftCurlingPath", path, 1.5, 0.3);
+        test("testLeftCurlingPath", path, DEFAULT_B, DEFAULT_ZETA);
     }
 
 

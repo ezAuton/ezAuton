@@ -73,8 +73,8 @@ public class PPSimulatorTest {
         test("testSpline", new SplinePPWaypoint.Builder()
                 .add(0, 0, 0, 15, 13, -12)
                 .add(0, 13, 0, 10, 13, -12)
-                .add(20, 17, -Math.PI / 2, 8, 13, -12)
-                .add(23, 24, 0, 0.5, 13, -12)
+                .add(10, 17, -Math.PI / 2, 8, 13, -12)
+                .add(10, 24, 0, 0.5, 13, -12)
                 .buildPathGenerator()
                 .generate(0.05));
     }
