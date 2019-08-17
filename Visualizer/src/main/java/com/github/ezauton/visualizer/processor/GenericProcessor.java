@@ -1,7 +1,7 @@
 package com.github.ezauton.visualizer.processor;
 
-import com.github.ezauton.recorder.base.GenericNumberRecorder;
-import com.github.ezauton.recorder.base.frame.GenericNumberFrame;
+import com.github.ezauton.recorder.base.GenericRecorder;
+import com.github.ezauton.recorder.base.frame.GenericFrame;
 import com.github.ezauton.visualizer.util.DataProcessor;
 import com.github.ezauton.visualizer.util.Environment;
 import javafx.animation.Interpolator;
@@ -14,16 +14,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GenericNumberProcessor implements DataProcessor {
+public class GenericProcessor implements DataProcessor {
 
     private final HashMap<String, Label> nameLabelHashMap = new HashMap<>();
     private final HashMap<String, Label> valueLabelHashMap = new HashMap<>();
-    private final GenericNumberRecorder gnRec;
+    private final GenericRecorder gnRec;
 
-    public GenericNumberProcessor(GenericNumberRecorder rec) {
+    public GenericProcessor(GenericRecorder rec) {
         this.gnRec = rec;
 
-        gnRec.getDataFrames().get(0).getNamedNumbers().forEach((name, num) -> {
+        gnRec.getDataFrames().get(0).getNamedData().forEach((name, num) -> {
             nameLabelHashMap.put(name, new Label(name));
             valueLabelHashMap.put(name, new Label(num.toString()));
         });
@@ -43,10 +43,18 @@ public class GenericNumberProcessor implements DataProcessor {
     @Override
     public Map<Double, List<KeyValue>> generateKeyValues(Interpolator interpolator) {
         HashMap<Double, List<KeyValue>> ret = new HashMap<>();
-        for (GenericNumberFrame dataFrame : gnRec.getDataFrames()) {
+        for (GenericFrame dataFrame : gnRec.getDataFrames()) {
             List<KeyValue> keyValues = new ArrayList<>();
             for (String name : valueLabelHashMap.keySet()) {
-                keyValues.add(new KeyValue(valueLabelHashMap.get(name).textProperty(), String.format("%.04f", dataFrame.getNamedNumbers().get(name))));
+                try {
+                    double doubleVal = Double.parseDouble(dataFrame.getNamedData().get(name).toString());
+
+                    // else
+                    keyValues.add(new KeyValue(valueLabelHashMap.get(name).textProperty(), String.format("%.04f", doubleVal)));
+                } catch (NumberFormatException e) {
+
+                    keyValues.add(new KeyValue(valueLabelHashMap.get(name).textProperty(), dataFrame.getNamedData().get(name).toString()));
+                }
             }
             ret.put(dataFrame.getTime(), keyValues);
         }

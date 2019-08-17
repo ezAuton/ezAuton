@@ -16,7 +16,7 @@ import com.github.ezauton.core.simulation.TimeWarpedSimulation;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
 import com.github.ezauton.recorder.Recording;
-import com.github.ezauton.recorder.base.GenericNumberRecorder;
+import com.github.ezauton.recorder.base.GenericRecorder;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
@@ -29,8 +29,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RamseteTest {
     private TimeStateSeries ramsete;
@@ -44,6 +46,16 @@ public class RamseteTest {
                         .buildPathGenerator().generate(0.05), 0.01);
     }
 
+    @Test
+    public void testPoseAritmetic() {
+        RamseteMovementStrategy.Pose pose1 = RamseteMovementStrategy.Pose.Companion.from(0, 5, -Math.PI/2); // Forwards 5 feet facing due east
+        RamseteMovementStrategy.Pose pose2 = RamseteMovementStrategy.Pose.Companion.from(5, 0, 0); // Right 5 feet facing due north
+
+        assertTrue(pose1.equals(pose1.inverse().inverse()));
+        assertTrue(RamseteMovementStrategy.Pose.Companion.from(0, 0, 0).equals(pose1.compose(pose1.inverse())));
+
+        assertTrue(pose1.minus(pose2).equals(pose2.minus(pose1).inverse()));
+    }
     @Test
     public void testAngleFinder() {
         for (double i = -10; i < 10; i++) {
@@ -116,7 +128,7 @@ public class RamseteTest {
                 .add(-10, 0, 8, 0, 3, 10, -10)
                 .add(0, 0, 10, 0, 0, 10, -10)
                 .flipY().buildPathGenerator().generate(0.05);
-        test("testRightCurlingPath", path, 0.1, 3);
+        test("testRightCurlingPath", path, 1.5, 0.3);
     }
 
     @Test
@@ -129,7 +141,7 @@ public class RamseteTest {
                 .add(-10, 0, 8, 0, 3, 10, -10)
                 .add(0, 0,    10, 0, 0, 10, -10)
                 .buildPathGenerator().generate(0.05);
-        test("testLeftCurlingPath", path, 0.1, 3);
+        test("testLeftCurlingPath", path, 1.5, 0.3);
     }
 
 
@@ -159,12 +171,13 @@ public class RamseteTest {
                 robot.getDefaultTransLocDriveable()
         );
 
-        HashMap<String, DoubleSupplier> numberProducers = new HashMap<>();
+        HashMap<String, Supplier> numberProducers = new HashMap<>();
         for (String key : ramseteMovementStrategy.getRamseteFrame().keySet()) {
             numberProducers.put(key + "  ", () -> ramseteMovementStrategy.getRamseteFrame().get(key));
         }
 
-        GenericNumberRecorder gnrec = new GenericNumberRecorder("ramsete", sim.getClock(), numberProducers);
+        GenericRecorder gnrec = new GenericRecorder("ramsete", sim.getClock(), numberProducers);
+
         Recording rec = new Recording()
                 .addSubRecording(new RobotStateRecorder("robotstate", sim.getClock(), locEstimator, rotEstimator, tankRobotConstants.getLateralWheelDistance(), 1.5))
                 .addSubRecording(gnrec)
@@ -200,7 +213,7 @@ public class RamseteTest {
         sim.add(group);
         // run the simulator for 30 seconds
         try {
-            sim.runSimulation(3, TimeUnit.SECONDS);
+            sim.runSimulation(10, TimeUnit.SECONDS);
         } finally {
             try {
                 rec.save(name + ".json");

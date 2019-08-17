@@ -5,26 +5,26 @@ import com.github.ezauton.recorder.SequentialDataFrame;
 
 import java.util.HashMap;
 
-public class GenericNumberFrame extends SequentialDataFrame {
+public class GenericFrame extends SequentialDataFrame {
 
     @JsonProperty
-    private HashMap<String, Double> namedNumbers;
+    private HashMap<String, Object> namedData;
 
-    public GenericNumberFrame(double time, HashMap<String, Double> namedNumbers) {
+    public GenericFrame(double time, HashMap<String, Object> namedData) {
         super(time);
-        this.namedNumbers = namedNumbers;
+        this.namedData = namedData;
     }
 
-    private GenericNumberFrame() {}
+    private GenericFrame() {}
 
-    public HashMap<String, Double> getNamedNumbers() {
-        return namedNumbers;
+    public HashMap<String, Object> getNamedData() {
+        return namedData;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("GenericNumberFrame{");
-        sb.append("namedNumbers=").append(namedNumbers);
+        sb.append("namedData=").append(namedData);
         sb.append('}');
         return sb.toString();
     }

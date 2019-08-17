@@ -1,7 +1,7 @@
 package com.github.ezauton.visualizer;
 
 import com.github.ezauton.recorder.Recording;
-import com.github.ezauton.recorder.base.GenericNumberRecorder;
+import com.github.ezauton.recorder.base.GenericRecorder;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
@@ -39,7 +39,7 @@ public class Visualizer extends Application {
         factory.register(PurePursuitRecorder.class, PurePursuitDataProcessor::new);
         factory.register(RobotStateRecorder.class, RobotStateDataProcessor::new);
         factory.register(TankDriveableRecorder.class, TankDriveableDataProcessor::new);
-        factory.register(GenericNumberRecorder.class, GenericNumberProcessor::new);
+        factory.register(GenericRecorder.class, GenericProcessor::new);
         factory.register(Recording.class, t -> new RecordingDataProcessor(t, factory));
 
 

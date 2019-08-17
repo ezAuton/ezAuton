@@ -12,9 +12,7 @@ import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrat
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDriveable;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
-import com.github.ezauton.recorder.JsonUtils;
-import com.github.ezauton.recorder.Recording;
-import com.github.ezauton.recorder.base.GenericNumberRecorder;
+import com.github.ezauton.recorder.base.GenericRecorder;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;
@@ -28,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public class RecorderTest {
 
@@ -84,10 +83,10 @@ public class RecorderTest {
         PurePursuitRecorder ppRec = new PurePursuitRecorder("pp", simulation.getClock(), path, ppMoveStrat);
         TankDriveableRecorder tankRobot = new TankDriveableRecorder("td", simulation.getClock(), tankRobotTransLocDriveable);
 
-        HashMap<String, DoubleSupplier> numberSuppliers = new HashMap<>();
+        HashMap<String, Supplier> numberSuppliers = new HashMap<>();
         numberSuppliers.put("raw i", () -> i.addAndGet(1));
         numberSuppliers.put("half of i", () -> i.get()/2);
-        GenericNumberRecorder numRecorder = new GenericNumberRecorder("gnr", simulation.getClock(), numberSuppliers);
+        GenericRecorder numRecorder = new GenericRecorder("gnr", simulation.getClock(), numberSuppliers);
 
         recording
                 .addSubRecording(posRec)
