@@ -218,7 +218,7 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
         int i = 0;
 
         for (Double keyOn : keys) {
-            if (key.floatValue() < keyOn.floatValue()) {
+            if (key < keyOn) {
                 upperBound = keyOn;
                 if (i > 0) {
                     lowerBound = keys.get(i - 1);
@@ -270,8 +270,8 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
 
         if (dataPoints.isEmpty()) throw new IllegalArgumentException("Data points must not be empty");
         if (dataPoints.size() == 1) {
-            lines.add(new MathUtils.Geometry.LineR2(new ImmutableVector((float) a, get(a).floatValue()),
-                    new ImmutableVector((float) b, get(b).floatValue())));
+            lines.add(new MathUtils.Geometry.LineR2(new ImmutableVector(a, get(a)),
+                    new ImmutableVector(b, get(b))));
         } else {
             Double firstX = dataPoints.get(0);
             Double lastX = dataPoints.get(dataPoints.size() - 1);
@@ -295,8 +295,8 @@ InterpolationMap implements Map<Double, Double>, MathUtils.Integrable, Serializa
                     x2 = Math.min(b, x2);
 
                     // use "entire" line
-                    lines.add(new MathUtils.Geometry.LineR2(new ImmutableVector((float) x1, get(x1)),
-                            new ImmutableVector((float) x2, get(x2))));
+                    lines.add(new MathUtils.Geometry.LineR2(new ImmutableVector(x1, get(x1)),
+                            new ImmutableVector(x2, get(x2))));
                 }
             }
 

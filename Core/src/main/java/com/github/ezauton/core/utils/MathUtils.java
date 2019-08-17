@@ -800,7 +800,7 @@ public final class MathUtils {
                 return lineb;
             } else {
                 if (lineSegment.slope == 0) {
-                    return new ImmutableVector(robotPos.get(0), (float) lineSegment.evaluateY(robotPos.get(0)));
+                    return new ImmutableVector(robotPos.get(0), lineSegment.evaluateY(robotPos.get(0)));
                 }
                 return intersect;
             }
@@ -870,7 +870,7 @@ public final class MathUtils {
             double getY(double t);
 
             default ImmutableVector get(double t) {
-                return new ImmutableVector((float) getX(t), (float) getY(t));
+                return new ImmutableVector(getX(t), getY(t));
             }
 
             default double getArcLength(double lowerBound, double upperBound) {
@@ -985,7 +985,7 @@ public final class MathUtils {
                 } else {
                     perpSlope = -1 / slope;
                 }
-                return new LineR2(point, new ImmutableVector(point.get(0) + 1, (float) (point.get(1) + perpSlope)));
+                return new LineR2(point, new ImmutableVector(point.get(0) + 1, (point.get(1) + perpSlope)));
             }
 
             public ImmutableVector intersection(LineR2 other) {
@@ -994,21 +994,21 @@ public final class MathUtils {
                         return null;
                     } else {
                         // TODO: is this a good idea to return?
-                        return new ImmutableVector((float) other.x1, (float) other.y2);
+                        return new ImmutableVector(other.x1, other.y2);
                     }
                 }
                 if (Double.isNaN(slope)) {
-                    return new ImmutableVector(a.get(0), (float) other.evaluateY(a.get(0)));
+                    return new ImmutableVector(a.get(0), other.evaluateY(a.get(0)));
                 }
 
                 if (Double.isNaN(other.slope)) {
-                    return new ImmutableVector(other.a.get(0), (float) evaluateY(other.a.get(0)));
+                    return new ImmutableVector(other.a.get(0), evaluateY(other.a.get(0)));
                 }
                 // mx + b = cx + d
                 // (m-c) x = d - b
                 double x = (other.y_intercept - this.y_intercept) / (this.slope - other.slope);
                 double y = evaluateY(x);
-                return new ImmutableVector((float) x, (float) y);
+                return new ImmutableVector(x, y);
 
 
             }
