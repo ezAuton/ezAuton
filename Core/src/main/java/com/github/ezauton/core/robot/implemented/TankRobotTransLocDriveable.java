@@ -180,8 +180,11 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
     }
 
     public void driveEachMotor(RamseteMovementStrategy.Output ramseteOutput) {
-        leftMotor.runVelocity(ramseteOutput.getLeftVelocity());
-        rightMotor.runVelocity(ramseteOutput.getRightVelocity());
+        lastLeftTarget = ramseteOutput.getLeftVelocity();
+        lastRightTarget = ramseteOutput.getRightVelocity();
+
+        leftMotor.runVelocity(lastLeftTarget);
+        rightMotor.runVelocity(lastRightTarget);
     }
 
     public TankRobotConstants getTankRobotConstants() {

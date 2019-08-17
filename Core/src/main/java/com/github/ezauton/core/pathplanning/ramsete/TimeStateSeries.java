@@ -8,6 +8,7 @@ import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.InterpolationMap;
 import com.github.ezauton.core.utils.MathUtils;
 
+import java.sql.Time;
 import java.util.Iterator;
 
 public class TimeStateSeries {

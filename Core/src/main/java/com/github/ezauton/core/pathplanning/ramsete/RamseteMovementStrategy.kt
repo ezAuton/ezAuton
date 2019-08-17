@@ -2,7 +2,11 @@ package com.github.ezauton.core.pathplanning.ramsete
 
 import com.github.ezauton.core.pathplanning.Path
 import com.github.ezauton.core.robot.TankRobotConstants
+import com.github.ezauton.core.trajectory.geometry.ImmutableMatrix
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector
 import com.github.ezauton.core.utils.MathUtils
+import java.lang.RuntimeException
+import java.lang.StringBuilder
 import kotlin.math.max
 
 //TODO: move to src/main/kotlin? not sure about good kotlin practices when interop'ing with java -- rm
@@ -12,7 +16,7 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
     var lastOutput: Output? = null
     var lastTime = 0.0
 
-    var ramseteFrame: Map<String, Double> = mapOf(
+    var ramseteFrame: Map<String, Any> = mapOf(
             "v_d" to 0.0, //
             "w_d" to 0.0, //
             "x_e" to 0.0, //
@@ -25,15 +29,27 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
             "ramv" to 0.0, //
             "ramw_second" to 0.0,
             "ramw_third" to 0.0,
-            "ramw" to 0.0 //
+            "ramw" to 0.0, //
+            "robot_pose" to Pose.identity(),
+            "desired_pose" to Pose.identity(),
+            "pose_error" to Pose.identity()
     )
+
+//    var ramsetePoseInfo: Map<String, Pose> = mapOf(
+//
+//    )
 
     fun recalculate(time: Double, robotPose: Pose, max_left: Double, max_right: Double): Output {
         lastTime = time;
         val (desiredPose, desiredOutput) = ramsetePath.getDesiredPose(time)
         val (v_d, w_d) = desiredOutput
         var (x_e: Double, y_e: Double, theta_e) = error(robotPose, desiredPose)
+
         theta_e = MathUtils.Geometry.simplifyAngleCentered0(theta_e)// Account for circular nature of angles
+
+        if(theta_e > Math.PI || theta_e < -Math.PI) {
+            throw RuntimeException()
+        }
 
         var k = 2 * zeta * Math.sqrt(w_d * w_d + b * v_d * v_d)
 
@@ -43,10 +59,10 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
 
         //FIXME works only on left turns. for right turns to work, x_e and y_e  must be swapped. I think this is an angle issue? help!!! --rm
         var ramv_first = v_d * Math.cos(theta_e)
-        var ramv_second = k * (x_e * Math.cos(robotTheta) + y_e * Math.sin(robotTheta))
+        var ramv_second = k * y_e //(x_e * Math.cos(robotTheta) + y_e * Math.sin(robotTheta))
         var ramv: Double = ramv_first + ramv_second
 
-        var ramw_second = b * v_d * sinc(theta_e) * (y_e * Math.cos(robotTheta) - x_e * Math.sin(robotTheta))
+        var ramw_second = b * v_d * sinc(theta_e) * -x_e //(y_e * Math.cos(robotTheta) - x_e * Math.sin(robotTheta))
         var ramw_third = k * theta_e
         var ramw: Double = w_d + ramw_second + ramw_third
 
@@ -89,8 +105,13 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
                 "ramv" to ramv, //
                 "ramw_second" to ramw_second,
                 "ramw_third" to ramw_third,
-                "ramw" to ramw//
+                "ramw" to ramw,
+                "robot_pose" to robotPose.toString(),
+                "desired_pose" to desiredPose.toString(),
+                "pose_error" to error(robotPose, desiredPose).toString()
+
         )
+
 
 
         return invKinematics
@@ -102,29 +123,29 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
         var v_left: Double = v - (tankRobotConstants.lateralWheelDistance * w) / 2
         var v_right: Double = v + (tankRobotConstants.lateralWheelDistance * w) / 2
 
-        val min_right = -max_right
-        val min_left = -max_left
-
-        var scaling_ratio_fromright = Double.MIN_VALUE
-        if (v_right > max_right) {
-            scaling_ratio_fromright = max_right / v_right;
-        } else if (v_right < min_right) {
-            scaling_ratio_fromright = min_right / v_right;
-        }
-
-        var scaling_ratio_fromleft = Double.MIN_VALUE
-        if (v_left > max_left) {
-            scaling_ratio_fromleft = max_left / v_left;
-        } else if (v_left < min_left) {
-            scaling_ratio_fromleft = min_left / v_left;
-        }
-
-        var scaling_ratio = max(scaling_ratio_fromleft, scaling_ratio_fromright)
-
-        if (scaling_ratio > Double.MIN_VALUE) {
-            v_left *= scaling_ratio
-            v_right *= scaling_ratio
-        }
+//        val min_right = -max_right
+//        val min_left = -max_left
+//
+//        var scaling_ratio_fromright = Double.MIN_VALUE
+//        if (v_right > max_right) {
+//            scaling_ratio_fromright = max_right / v_right;
+//        } else if (v_right < min_right) {
+//            scaling_ratio_fromright = min_right / v_right;
+//        }
+//
+//        var scaling_ratio_fromleft = Double.MIN_VALUE
+//        if (v_left > max_left) {
+//            scaling_ratio_fromleft = max_left / v_left;
+//        } else if (v_left < min_left) {
+//            scaling_ratio_fromleft = min_left / v_left;
+//        }
+//
+//        var scaling_ratio = max(scaling_ratio_fromleft, scaling_ratio_fromright)
+//
+//        if (scaling_ratio > Double.MIN_VALUE) {
+//            v_left *= scaling_ratio
+//            v_right *= scaling_ratio
+//        }
 
         var output = Output(v_left, v_right)
         lastOutput = output
@@ -161,17 +182,52 @@ class RamseteMovementStrategy(val b: Double, val zeta: Double, val stopTolerance
             fun from(x: Double, y: Double, theta: Double): Pose {
                 return Pose(x, y, MathUtils.Geometry.simplifyAngleCentered0(theta))
             }
+
+            fun from(tVec: ImmutableVector, theta: Double): Pose {
+                return from(tVec.get(0), tVec.get(1), theta);
+            }
+
+            fun identity(): Pose {
+                return from(0.0, 0.0, 0.0)
+            }
         }
 
-
         operator fun minus(other: Pose): Pose {
-            return from(x - other.x, y - other.y, theta - other.theta)
+            // reqires this - other + other = this
+            return other.inverse().compose(this)
+        }
+
+        fun inverse(): Pose {
+            val rotatedTranslationVec = MathUtils.LinearAlgebra.rotate2D(ImmutableVector(x, y), -theta).mul(-1.0)
+            return from(rotatedTranslationVec, -theta)
+        }
+
+        fun compose(other: Pose): Pose {
+            val newTheta = this.theta + other.theta
+            val newTVec = MathUtils.LinearAlgebra.rotate2D(ImmutableVector(other.x, other.y), theta).add(ImmutableVector(this.x, this.y))
+
+            return from(newTVec, newTheta)
         }
 
         fun dist(other: Pose): Double {
             val error = this - other
             return Math.sqrt(error.x * error.x + error.y * error.y + error.theta * error.theta)
         }
+
+        fun equals(other: Pose): Boolean {
+            val epsilon = 1e-3
+            return MathUtils.epsilonEquals(this.x, other.x, epsilon) && MathUtils.epsilonEquals(this.y, other.y, epsilon) && MathUtils.epsilonEquals(this.theta, other.theta, epsilon)
+        }
+
+        override fun toString(): String {
+            return "Pose(" +
+                    "x=${String.format("%.04f", x)}," +
+                    "y=${String.format("%.04f", y)}," +
+                    "theta=${String.format("%.04f", theta)}" +
+                    ")"
+        }
+
+
     }
 
     data class ControlOutput(val velocity: Double, val turningRate: Double)
