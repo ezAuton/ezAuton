@@ -7,7 +7,12 @@ public interface VelocityMotor extends Motor {
     /**
      * Run the motor at a certain velocity
      *
-     * @param targetVelocity The speed to run the motor at
+     * @param targetVelocity The *rotational* speed to run the motor at (RPM)
      */
+    @Deprecated
     void runVelocity(double targetVelocity);
+
+    default void runAngularVelocity(double targetVelocity) {
+        runVelocity(targetVelocity);
+    };
 }
