@@ -16,7 +16,7 @@ import java.util.concurrent.Future;
  * <a href = "https://vorpus.org/blog/notes-on-structured-concurrency-or-go-statement-considered-harmful/">here</a>.
  */
 public final class ActionGroup extends BaseAction {
-    private Queue<ActionWrapper> scheduledActions;
+    private final Queue<ActionWrapper> scheduledActions;
 
     /**
      * Creates an Action Group comprised of different kinds of commands (i.e sequential, parallel, with)
@@ -24,14 +24,14 @@ public final class ActionGroup extends BaseAction {
      * @param scheduledActions The ActionWrappers to run
      */
     public ActionGroup(ActionWrapper... scheduledActions) {
-        this.scheduledActions = new LinkedList<>(Arrays.asList(scheduledActions));
+        this.scheduledActions = new ArrayDeque<>(Arrays.asList(scheduledActions));
     }
 
     /**
      * Create an empty ActionGroup
      */
     public ActionGroup() {
-        this.scheduledActions = new LinkedList<>();
+        this.scheduledActions = new ArrayDeque<>();
     }
 
     /**
@@ -160,7 +160,7 @@ public final class ActionGroup extends BaseAction {
         return this;
     }
 
-    class WithActionData {
+    private static class WithActionData {
 
         private final Action action;
         private final Future<Void> future;
@@ -244,7 +244,6 @@ public final class ActionGroup extends BaseAction {
                 }
             }
         } catch (InterruptedException e) {
-            System.out.println("reeeee");
             // If we get interrupted
             cancelAll(actionFutures);
         }
