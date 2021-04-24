@@ -6,9 +6,6 @@ import com.github.ezauton.core.localization.Updateable;
 import com.github.ezauton.core.localization.UpdateableGroup;
 import com.github.ezauton.core.simulation.ActionScheduler;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
-import com.github.ezauton.core.utils.RealClock;
-import com.github.ezauton.core.utils.Stopwatch;
-import com.github.ezauton.core.utils.TimeWarpedClock;
 import com.google.common.util.concurrent.AtomicDouble;
 import org.junit.jupiter.api.Test;
 

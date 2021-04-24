@@ -4,30 +4,22 @@ import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.DelayedAction;
 import com.github.ezauton.core.action.TimedPeriodicAction;
-import com.github.ezauton.core.localization.SimpsonEncoderRotationEstimator;
 import com.github.ezauton.core.localization.estimators.EncoderRotationEstimator;
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator;
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
-import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
-import com.github.ezauton.core.utils.Stopwatch;
-import javafx.scene.paint.Stop;
 import org.junit.jupiter.api.Test;
 
-import java.beans.Encoder;
-import java.sql.SQLOutput;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LocalizerTest
-{
+public class LocalizerTest {
     @Test
-    public void testThatTheLocalizersGiveSimilarResults() throws TimeoutException, ExecutionException
-    {
+    public void testThatTheLocalizersGiveSimilarResults() throws TimeoutException, ExecutionException {
         TimeWarpedSimulation sim = new TimeWarpedSimulation();
         SimulatedTankRobot simulatedBot = new SimulatedTankRobot(0.2, sim.getClock(), 3, -4, 4);
         simulatedBot.getDefaultLocEstimator().reset();
@@ -36,15 +28,13 @@ public class LocalizerTest
         EncoderRotationEstimator encRotEstimator = new EncoderRotationEstimator(locEstimator, new TranslationalDistanceSensor() {
 
             @Override
-            public double getPosition()
-            {
-                return (simulatedBot.getLeftDistanceSensor().getPosition() + simulatedBot.getRightDistanceSensor().getPosition())/2; // correct because of linearity of integration
+            public double getPosition() {
+                return (simulatedBot.getLeftDistanceSensor().getPosition() + simulatedBot.getRightDistanceSensor().getPosition()) / 2; // correct because of linearity of integration
             }
 
             @Override
-            public double getVelocity()
-            {
-                return (simulatedBot.getLeftDistanceSensor().getVelocity() + simulatedBot.getRightDistanceSensor().getVelocity())/2;
+            public double getVelocity() {
+                return (simulatedBot.getLeftDistanceSensor().getVelocity() + simulatedBot.getRightDistanceSensor().getVelocity()) / 2;
             }
         });
         SimpsonEncoderRotationEstimator simpson = new SimpsonEncoderRotationEstimator(locEstimator, () -> simulatedBot.getDefaultLocEstimator().getAvgTranslationalWheelVelocity(), sim.getClock());
@@ -73,8 +63,6 @@ public class LocalizerTest
         assertTrue(locEstimator.estimateLocation().dist2(encRotEstimator.estimateLocation()) < 0.01);
         assertTrue(simpson.estimateLocation().dist2(encRotEstimator.estimateLocation()) < 0.01);
         assertTrue(locEstimator.estimateLocation().dist2(simpson.estimateLocation()) < 0.01);
-
-
 
 
     }

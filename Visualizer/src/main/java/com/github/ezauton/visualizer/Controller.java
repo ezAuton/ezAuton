@@ -1,18 +1,14 @@
 package com.github.ezauton.visualizer;
 
-import javafx.animation.*;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.core.utils.MathUtils;
-import com.github.ezauton.recorder.SubRecording;
 import com.github.ezauton.recorder.JsonUtils;
 import com.github.ezauton.recorder.Recording;
+import com.github.ezauton.recorder.SubRecording;
 import com.github.ezauton.visualizer.processor.factory.FactoryMap;
 import com.github.ezauton.visualizer.util.DataProcessor;
 import com.github.ezauton.visualizer.util.Environment;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -67,31 +63,22 @@ public class Controller implements Initializable {
 
     @FXML
     public Button btnSelectJsonLogFile;
-
-    @FXML
-    private Slider timeSlider;
-
-    @FXML
-    private TabPane tabPane;
-
-    @FXML
-    private Button btnSkipToStart;
-
-    @FXML
-    private Button btnSkipToEnd;
-
-    @FXML
-    private Button btnAdvanceOneFrame;
-
-    @FXML
-    private Button btnRewindOneFrame;
-
-    @FXML
-    private Button btnPlayPause;
-
     @FXML
     AnchorPane backdrop;
-
+    @FXML
+    private Slider timeSlider;
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private Button btnSkipToStart;
+    @FXML
+    private Button btnSkipToEnd;
+    @FXML
+    private Button btnAdvanceOneFrame;
+    @FXML
+    private Button btnRewindOneFrame;
+    @FXML
+    private Button btnPlayPause;
     @FXML
     private Slider rateSlider;
 
@@ -338,7 +325,7 @@ public class Controller implements Initializable {
         });
 
         timeSlider.setOnMouseReleased((e) -> {
-            if(wasPlaying.get()) {
+            if (wasPlaying.get()) {
                 play();
             }
             timeSlider.valueProperty().removeListener(updateTimelineTimeListener);
@@ -347,10 +334,9 @@ public class Controller implements Initializable {
         });
 
         btnPlayPause.setOnMouseClicked((e) -> {
-            if(timeline.getStatus() == Animation.Status.RUNNING) {
+            if (timeline.getStatus() == Animation.Status.RUNNING) {
                 pause();
-            }
-            else {
+            } else {
                 play();
             }
         });
@@ -387,12 +373,12 @@ public class Controller implements Initializable {
         timeline.pause();
         btnPlayPause.setText("Play");
     }
+
     private void play() {
-        if(timeline.getStatus() == Animation.Status.STOPPED) {
+        if (timeline.getStatus() == Animation.Status.STOPPED) {
             timeline.playFromStart();
             btnPlayPause.setText("Pause");
-        }
-        else {
+        } else {
             timeline.play();
             btnPlayPause.setText("Pause");
         }
@@ -447,13 +433,11 @@ public class Controller implements Initializable {
     @FXML
     private void displayRealWorldCoordsOnClick(MouseEvent e) {
         double xFt = (e.getX() - originX) / spatialScaleFactor;
-        double yFt = ( originY - e.getY()) / spatialScaleFactor;
+        double yFt = (originY - e.getY()) / spatialScaleFactor;
 
-        if(MathUtils.epsilonEquals(originX, -1234) && MathUtils.epsilonEquals(originY, -1234)) {
+        if (MathUtils.epsilonEquals(originX, -1234) && MathUtils.epsilonEquals(originY, -1234)) {
             clickedCoordsDisplay.setText("Select a starting position first.");
-        }
-        else
-        {
+        } else {
             clickedCoordsDisplay.setText(String.format("(%f, %f)", xFt, yFt));
         }
     }
@@ -464,14 +448,11 @@ public class Controller implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select JSON Recording");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("JSON file", "*.json"));
-        try
-        {
+        try {
             File jsonFile = fileChooser.showOpenDialog(Visualizer.getInstance().getStage());
             loadRecording(jsonFile);
             btnSelectJsonLogFile.setText(jsonFile.getName());
-        }
-        catch(Exception err)
-        {
+        } catch (Exception err) {
             err.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error deserializing log file");

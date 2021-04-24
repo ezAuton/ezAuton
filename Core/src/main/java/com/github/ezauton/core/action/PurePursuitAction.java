@@ -1,8 +1,8 @@
 package com.github.ezauton.core.action;
 
 import com.github.ezauton.core.localization.TranslationalLocationEstimator;
-import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.pathplanning.Path;
+import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.pathplanning.purepursuit.Lookahead;
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy;
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDriveable;

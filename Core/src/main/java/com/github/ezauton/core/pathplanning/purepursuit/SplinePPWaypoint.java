@@ -115,15 +115,13 @@ public class SplinePPWaypoint extends PPWaypoint implements Serializable {
     public static class Builder {
 
         private final double kTheta;
-
-        public Builder()
-        {
-            this(SplinePPWaypoint.kTheta);
-        }
         private List<SplinePPWaypoint> waypointList = new ArrayList<>();
 
-        public Builder(double kTheta)
-        {
+        public Builder() {
+            this(SplinePPWaypoint.kTheta);
+        }
+
+        public Builder(double kTheta) {
             this.kTheta = kTheta;
         }
 
@@ -154,7 +152,7 @@ public class SplinePPWaypoint extends PPWaypoint implements Serializable {
 
         public Builder flipY() {
             Builder ret = new Builder();
-            for(SplinePPWaypoint wp : waypointList) {
+            for (SplinePPWaypoint wp : waypointList) {
                 ret.add(-wp.getLocation().get(0), wp.getLocation().get(1), -wp.getTanVec().get(0), wp.getTanVec().get(1), wp.getSpeed(), wp.getAcceleration(), wp.getDeceleration());
             }
             return ret;

@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * for time spent to process tasks
  *
  * @deprecated Use {@link ActionScheduler}
- *
  */
 public final class ModernSimulatedClock implements Clock, Simulation {
 

@@ -25,9 +25,8 @@ public class SimulatedTankRobot implements TankRobotConstants, Updateable {
     private final TranslationalDistanceSensor leftTDS;
     private final TranslationalDistanceSensor rightTDS;
     private final TankRobotEncoderEncoderEstimator defaultLocationEstimator;
-    private final TankRobotTransLocDriveable defaultTranslationalLocationDriveable
-            ;
-//    public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
+    private final TankRobotTransLocDriveable defaultTranslationalLocationDriveable;
+    //    public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
     private UpdateableGroup toUpdate = new UpdateableGroup();
 
     /**

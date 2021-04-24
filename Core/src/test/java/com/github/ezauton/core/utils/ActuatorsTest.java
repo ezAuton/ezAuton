@@ -6,7 +6,6 @@ import com.github.ezauton.core.actuators.VoltageMotor;
 import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor;
 import com.github.ezauton.core.actuators.implementations.BoundedVelocityProcessor;
 import com.github.ezauton.core.actuators.implementations.RampUpVelocityProcessor;
-import com.github.ezauton.core.utils.ManualClock;
 import com.google.common.util.concurrent.AtomicDouble;
 import org.junit.jupiter.api.Test;
 

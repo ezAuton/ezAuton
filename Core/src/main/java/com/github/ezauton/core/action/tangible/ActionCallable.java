@@ -15,7 +15,7 @@ public class ActionCallable implements Callable<Void> {
         this(action, actionRunInfo, false);
     }
 
-    public ActionCallable(Action action, ActionRunInfo actionRunInfo, boolean print){
+    public ActionCallable(Action action, ActionRunInfo actionRunInfo, boolean print) {
         this.action = action;
         this.actionRunInfo = actionRunInfo;
         this.print = print;
@@ -25,7 +25,7 @@ public class ActionCallable implements Callable<Void> {
     public Void call() throws Exception {
         try {
             action.run(actionRunInfo);
-        }catch (Exception e){
+        } catch (Exception e) {
             if (print) e.printStackTrace();
             throw e;
         }

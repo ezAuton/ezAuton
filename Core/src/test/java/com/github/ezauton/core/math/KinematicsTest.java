@@ -60,9 +60,10 @@ public class KinematicsTest {
 
     @Test
     public void ardDPosNaNHandling() {
-        ImmutableVector dPos = MathUtils.Kinematics.getAbsoluteDPosCurve(-0.010000000000001563, -0.010000000000001563, 30/12D, 0.4509467);
+        ImmutableVector dPos = MathUtils.Kinematics.getAbsoluteDPosCurve(-0.010000000000001563, -0.010000000000001563, 30 / 12D, 0.4509467);
         assertTrue(dPos.isFinite());
     }
+
     @Test
     public void testAbsoluteToRelativeCoord() {
         ImmutableVector robotPos = new ImmutableVector(4, 4);

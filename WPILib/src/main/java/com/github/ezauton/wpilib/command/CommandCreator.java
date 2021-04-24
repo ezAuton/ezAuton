@@ -37,13 +37,13 @@ public class CommandCreator extends Command {
 
     @Override
     protected boolean isFinished() {
-        if(voidFuture == null) throw new IllegalStateException("somehow command has not been initialized before running");
+        if (voidFuture == null) throw new IllegalStateException("somehow command has not been initialized before running");
         return voidFuture.isDone();
     }
 
     @Override
     protected void interrupted() {
-        if(voidFuture == null) throw new IllegalStateException("somehow command has not been initialized before running");
+        if (voidFuture == null) throw new IllegalStateException("somehow command has not been initialized before running");
         voidFuture.cancel(true);
     }
 }

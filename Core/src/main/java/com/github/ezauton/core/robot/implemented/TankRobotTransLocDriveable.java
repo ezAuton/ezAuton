@@ -124,13 +124,13 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
 
             double v_r = v_lMax * velLeftToRightRatio;
 
-            if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax) || MathUtils.Algebra.between(v_rMax, v_r,v_rMin)) {
+            if (MathUtils.Algebra.between(v_rMin, v_r, v_rMax) || MathUtils.Algebra.between(v_rMax, v_r, v_rMin)) {
                 score = Math.abs(v_lMax + v_r);
                 bestVector = new ImmutableVector(v_lMax, v_r);
             }
 
             v_r = v_lMin * velLeftToRightRatio;
-            if(MathUtils.Algebra.between(v_rMin, v_r, v_rMax) || MathUtils.Algebra.between(v_rMax, v_r,v_rMin)) {
+            if (MathUtils.Algebra.between(v_rMin, v_r, v_rMax) || MathUtils.Algebra.between(v_rMax, v_r, v_rMin)) {
                 double tempScore = Math.abs(v_lMin + v_r);
                 if (tempScore > score) {
                     score = tempScore;
@@ -139,7 +139,7 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
             }
 
             double v_l = v_rMax * velRightToLeftRatio;
-            if(MathUtils.Algebra.between(v_lMin, v_l, v_lMax) || MathUtils.Algebra.between(v_lMax, v_l, v_lMin)) {
+            if (MathUtils.Algebra.between(v_lMin, v_l, v_lMax) || MathUtils.Algebra.between(v_lMax, v_l, v_lMin)) {
                 double tempScore = Math.abs(v_lMax + v_l);
                 if (tempScore > score) {
                     score = tempScore;
@@ -148,7 +148,7 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
             }
 
             v_l = v_rMin * velRightToLeftRatio;
-            if(MathUtils.Algebra.between(v_lMin, v_l, v_lMax) || MathUtils.Algebra.between(v_lMax, v_l, v_lMin)) {
+            if (MathUtils.Algebra.between(v_lMin, v_l, v_lMax) || MathUtils.Algebra.between(v_lMax, v_l, v_lMin)) {
                 double tempScore = Math.abs(v_lMin + v_l);
                 if (tempScore > score) {
                     bestVector = new ImmutableVector(v_l, v_rMin);
@@ -160,7 +160,7 @@ public class TankRobotTransLocDriveable implements TranslationalLocationDriveabl
                 throw new NullPointerException(s); //TODO: More informative error message
             }
 
-            if ( (bestVector.get(0) + bestVector.get(1))/speed == -1) { // tangential vel and speed are opposite signs
+            if ((bestVector.get(0) + bestVector.get(1)) / speed == -1) { // tangential vel and speed are opposite signs
                 System.err.println("Robot is going the wrong direction!");
             }
 

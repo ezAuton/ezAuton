@@ -1,7 +1,7 @@
 package com.github.ezauton.core.pathplanning.purepursuit;
 
-import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.pathplanning.Path;
+import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 
 /**

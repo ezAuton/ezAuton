@@ -4,7 +4,6 @@ package com.github.ezauton.core.simulation;
 import com.github.ezauton.core.action.Action;
 import com.github.ezauton.core.action.tangible.MainActionScheduler;
 import com.github.ezauton.core.utils.TimeWarpedClock;
-import kotlin.Deprecated;
 
 import java.util.ArrayList;
 import java.util.List;

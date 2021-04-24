@@ -80,7 +80,7 @@ public abstract class PeriodicAction extends BaseAction {
     /**
      * Called when the periodic action is first initialized
      */
-    protected void init() throws Exception  {
+    protected void init() throws Exception {
     }
 
     /**
@@ -114,7 +114,7 @@ public abstract class PeriodicAction extends BaseAction {
     }
 
     @Override
-    public final void run(ActionRunInfo actionRunInfo) throws Exception  {
+    public final void run(ActionRunInfo actionRunInfo) throws Exception {
         this.clock = actionRunInfo.getClock();
 
         stopwatch = new Stopwatch(clock);
@@ -160,7 +160,8 @@ public abstract class PeriodicAction extends BaseAction {
      *
      * @throws Exception
      */
-    void loopWaitInterrupted(){}
+    void loopWaitInterrupted() {
+    }
 
     /**
      * A stopwatch which returns the time since the action started running (unless popped)

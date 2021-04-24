@@ -2,8 +2,6 @@ package com.github.ezauton.core.utils;
 
 import com.github.ezauton.core.action.DelayedAction;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
-import com.github.ezauton.core.utils.Stopwatch;
-import com.github.ezauton.core.utils.TimeWarpedClock;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

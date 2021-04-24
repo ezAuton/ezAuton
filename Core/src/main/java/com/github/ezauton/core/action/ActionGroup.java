@@ -1,7 +1,5 @@
 package com.github.ezauton.core.action;
 
-import com.github.ezauton.core.action.tangible.ActionCallable;
-
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -160,32 +158,13 @@ public final class ActionGroup extends BaseAction {
         return this;
     }
 
-    private static class WithActionData {
-
-        private final Action action;
-        private final Future<Void> future;
-
-        WithActionData(Action action, Future<Void> future) {
-            this.action = action;
-            this.future = future;
-        }
-
-        public Action getAction() {
-            return action;
-        }
-
-        public Future<Void> getFuture() {
-            return future;
-        }
-    }
-
     @Override
     public final void run(ActionRunInfo actionRunInfo) throws ExecutionException {
         List<WithActionData> withActions = new ArrayList<>();
         List<Future<Void>> actionFutures = new ArrayList<>();
 
         for (ActionWrapper scheduledAction : scheduledActions) {
-            if(Thread.interrupted()){
+            if (Thread.interrupted()) {
                 cancelAll(actionFutures);
                 return;
             }
@@ -212,12 +191,10 @@ public final class ActionGroup extends BaseAction {
                         the action group.
                          */
                         submit.get();
-                    }
-                    catch (InterruptedException e){
+                    } catch (InterruptedException e) {
                         cancelAll(actionFutures);
                         return;
-                    }
-                    catch (CancellationException e) {
+                    } catch (CancellationException e) {
                         cancelAll(actionFutures);
                         throw new ExecutionException("A sequential action threw an exception", e);
                     }
@@ -271,6 +248,25 @@ public final class ActionGroup extends BaseAction {
          * Runs in parallel to everything else, but will end when the current sequential action ends.
          */
         WITH
+    }
+
+    private static class WithActionData {
+
+        private final Action action;
+        private final Future<Void> future;
+
+        WithActionData(Action action, Future<Void> future) {
+            this.action = action;
+            this.future = future;
+        }
+
+        public Action getAction() {
+            return action;
+        }
+
+        public Future<Void> getFuture() {
+            return future;
+        }
     }
 
     /**
