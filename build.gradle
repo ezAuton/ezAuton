@@ -1,13 +1,30 @@
-allprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'jacoco'
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.32' apply false
 }
 
 subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'jacoco'
+
+
+    repositories {
+        mavenCentral()
+    }
+
+
+    compileKotlin {
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_1_8.toString()
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_1_8.toString()
+        }
+    }
 
     dependencies {
         testImplementation(
@@ -27,18 +44,3 @@ subprojects {
 
     check.dependsOn jacocoTestReport
 }
-
-sourceSets {
-    main {
-        java { srcDirs = ['src/main/java'] }
-        resources { srcDirs = ['src/main/resources'] }
-    }
-
-    test {
-        java { srcDirs = ['src/test/java'] }
-        resources { srcDirs = ['src/test/resources'] }
-    }
-}
-
-
-
