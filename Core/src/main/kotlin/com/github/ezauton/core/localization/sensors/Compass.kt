@@ -10,5 +10,5 @@ interface Compass : Sensor {
   /**
    * @return Robot angle in degrees. In front of robot is 0. To left is 90, behind is 180, to right is 270, top is 0
    */
-  val angle: SIUnit<Angle>
+  val angle: Angle
 }

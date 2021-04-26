@@ -77,7 +77,7 @@ class PurePursuitMovementStrategy
 
     if (dataChannel != null) {
       val closestPointDist = on.closestPoint.value.dist(loc)
-      val data = PurePursuitData(goalPoint, isFinished, lookahead, on.closestPoint.value.scalarVector, closestPointDist.value, on.segmentIdx)
+      val data = PurePursuitData(goalPoint, false, lookahead, on.closestPoint.value.scalarVector, closestPointDist.value, on.segmentIdx) // TODO: isFinished
       dataChannel.send(data)
     }
 

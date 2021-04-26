@@ -91,9 +91,9 @@ class SimpsonEncoderRotationEstimator
         dPosVec = cvec(0.0, 0.0)
 
         val xVelComponent = Parabola(
-          vec(vel2ago!!.time, vel2ago!!.velVec[0]),
-          vec(vel1ago!!.time, vel1ago!!.velVec[0]),
-          vec(currentTime, velVec[0])
+          scalarVec(vel2ago!!.time, vel2ago!!.velVec[0]),
+          scalarVec(vel1ago!!.time, vel1ago!!.velVec[0]),
+          scalarVec(currentTime, velVec[0])
         )
 
         val yVelComponent = Parabola(
@@ -177,7 +177,7 @@ class SimpsonEncoderRotationEstimator
 
     @JvmStatic
     fun main(args: Array<String>) {
-      val parabola = Parabola(vec(0.0, 2.0), ScalarVector(4.0, 6.0), ScalarVector(10.0, 2.0))
+      val parabola = Parabola(scalarVec(0.0, 2.0), ScalarVector(4.0, 6.0), ScalarVector(10.0, 2.0))
       println("parabola = " + parabola.integrate())
     }
   }

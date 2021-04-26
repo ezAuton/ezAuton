@@ -2,7 +2,7 @@ package com.github.ezauton.core.localization
 
 import com.github.ezauton.conversion.ConcreteVector
 import com.github.ezauton.conversion.Distance
-import com.github.ezauton.conversion.Velocity
+import com.github.ezauton.conversion.LinearVelocity
 
 /**
  * An interface for any class trying to estimate our location
@@ -20,5 +20,5 @@ interface TranslationalLocationEstimator {
    *
    * @return Our position
    */
-  fun estimateAbsoluteVelocity(): ConcreteVector<Velocity>
+  fun estimateAbsoluteVelocity(): ConcreteVector<LinearVelocity>
 }

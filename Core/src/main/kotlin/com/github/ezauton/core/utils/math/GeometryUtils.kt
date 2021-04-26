@@ -1,10 +1,9 @@
 package com.github.ezauton.core.utils.math
 
-import com.github.ezauton.conversion.Angle
-import com.github.ezauton.conversion.ConcreteVector
-import com.github.ezauton.conversion.SIUnit
-import com.github.ezauton.conversion.ScalarVector
+import com.github.ezauton.conversion.*
+import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.sin
 
 
 /**
@@ -111,8 +110,15 @@ fun getClosestPointLineSegments(pointA: ScalarVector, pointB: ScalarVector, pos:
  * @return A vector in <x></x>, y> form
  * @see ScalarVector
  */
-fun <T : Any> polarVector2D(magnitude: SIUnit<T>, angle: SIUnit<Angle>): ConcreteVector<T> {
-  return VECTOR_FORWARD.rotate2D(angle.value).times(magnitude)
+fun <T: SIUnit<T>> polarVector2D(magnitude: T, angle: Angle): ConcreteVector<T> {
+  return VECTOR_FORWARD.rotate2D(angle).times(magnitude)
+}
+
+private fun ScalarVector.rotate2D(value: Angle): ScalarVector {
+  val radians = value.radians
+  val newX = cos(radians) * x + sin(radians) * y
+  val newY = sin(radians) * x + cos(radians) * y
+  return scalarVec(newX, newY)
 }
 
 /**
