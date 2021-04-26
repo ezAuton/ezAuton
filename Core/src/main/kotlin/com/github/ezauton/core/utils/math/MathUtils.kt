@@ -1,6 +1,7 @@
 package com.github.ezauton.core.utils.math
 
 import com.github.ezauton.conversion.ConcreteVector
+import com.github.ezauton.conversion.times
 import com.github.ezauton.conversion.Distance
 import com.github.ezauton.conversion.ScalarVector
 

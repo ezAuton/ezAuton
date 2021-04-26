@@ -1,7 +1,9 @@
 package com.github.ezauton.core.localization.sensors
 
+import com.github.ezauton.conversion.Angle
 import com.github.ezauton.conversion.Distance
 import com.github.ezauton.conversion.LinearVelocity
+import com.github.ezauton.conversion.zero
 
 /**
  * The combination of an encoder and a wheel. This allows to calculate translational distance. An encoder without
@@ -19,8 +21,8 @@ class EncoderWheel
    * (wheel rev / encoder rev)
    */
   var multiplier = 1.0
-  private var encoderPosMultiplied: Double = 0.toDouble()
-  private var encoderRawPos: Double = 0.toDouble()
+  private var encoderPosMultiplied: Angle = zero()
+  private var encoderRawPos: Angle = zero()
 
   /**
    * @return velocity (probably in ft/s)
@@ -32,7 +34,7 @@ class EncoderWheel
   /**
    * @return position (probably in ft)
    */
-  override val position: Double
+  override val position: Distance
     get() {
       val tempRawPos = rotationalDistanceSensor.position
       encoderPosMultiplied += (tempRawPos - encoderRawPos) * multiplier

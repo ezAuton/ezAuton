@@ -8,7 +8,7 @@ fun hasOddSymmetry(map: Map<out Double, Double>): Boolean {
   return map.entries.stream().allMatch { entry ->
     val key = entry.key
     val value = entry.value
-    val symmetricEntry = map[-key].toDouble()
+    val symmetricEntry = map[-key]?.toDouble()
     symmetricEntry != null && symmetricEntry == -value
   }
 }
@@ -21,7 +21,7 @@ fun hasEvenSymmetry(map: Map<out Double, Double>): Boolean {
   return map.entries.stream().allMatch { entry ->
     val key = entry.key
     val value = entry.value
-    val symmetricValue = map[-key].toDouble()
+    val symmetricValue = map[-key]?.toDouble()
     symmetricValue != null && symmetricValue == value
   }
 }
