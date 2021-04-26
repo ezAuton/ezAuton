@@ -1,8 +1,9 @@
 package com.github.ezauton.core.pathplanning
 
-import com.github.ezauton.conversion.ScalarVector
-import com.github.ezauton.core.utils.math.epsilonEquals
-import com.github.ezauton.core.utils.math.getClosestPointLineSegments
+import com.github.ezauton.conversion.ConcreteVector
+import com.github.ezauton.conversion.SIUnit
+import com.github.ezauton.conversion.scalar
+import com.github.ezauton.conversion.times
 
 /**
  * A mostly-implemented linear PathSegment which contains all methods save getSpeed(...).
@@ -16,121 +17,29 @@ import com.github.ezauton.core.utils.math.getClosestPointLineSegments
  * @param beginning If this is the first path segment in the path
  * @param distanceStart How far along the path the starting location is (arclength)
  */
-abstract class LinearPathSegment(
-        final override val from: ScalarVector,
-        final override val to: ScalarVector,
-        override val isFinish: Boolean,
-        override val isBeginning: Boolean,
-        distanceStart: Double
-) : PathSegment {
+class LinearPathSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, override val to: ConcreteVector<T>) : PathSegment<T> {
 
-    /**
-     * @return How far along the entire path that the from point is
-     */
-    final override val absoluteDistanceStart: Double
-    /**
-     * @return How far along the entire path that the end point is
-     */
-    final override val absoluteDistanceEnd: Double
-    private val dPos: ScalarVector
-    final override val length: Double = this.from.dist(this.to)
+  override val length = from.dist(to)
+  override val type get() = from.type
 
-    init {
-        if (0.0 epsilonEquals length) {
-            throw IllegalArgumentException("PathSegment length must be non-zero.")
-        }
-        this.absoluteDistanceStart = distanceStart
-        this.absoluteDistanceEnd = distanceStart + length
-        dPos = to.sub(from)
+  val n = (from - to).normalized().scalarVector
+
+  init {
+    if (length.isZero) {
+      throw IllegalArgumentException("PathSegment length must be non-zero.")
     }
+  }
 
-    /**
-     * Get the point on the line segment that is the closest to the robot
-     *
-     * @param robotPos The position of the robot
-     * @return The point on the line segment that is the closest to the robot
-     */
-    override fun getClosestPoint(robotPos: ScalarVector): ScalarVector {
-        return getClosestPointLineSegments(from, to, robotPos)
-    }
+  override fun getClosestPointTo(point: ConcreteVector<T>): SegmentPoint<T> {
+    val (a, b, p) = scalar(from, to, point)
+    val ap = p - a
+    val t = ap.dot(n)
+    val x = a + t * n //  x is a point on line
+    return SegmentPoint(x.withUnit(type), t)
+  }
 
-    /**
-     * Calculate how far along the path a point on the linesegment is
-     *
-     * @param linePos The point on the line
-     * @return How far it is along the line segment
-     */
-    override fun getAbsoluteDistance(linePos: ScalarVector): Double {
-        if (to == linePos) {
-            return absoluteDistanceEnd
-        }
+  override fun getPointAlong(proportion: Double): ConcreteVector<T> {
+    return (from.scalarVector + n * proportion).withUnit(type)
+  }
 
-        if (from == linePos) {
-            return absoluteDistanceStart
-        }
-
-        // The difference between from, truncating 0
-        val dif = linePos.sub(from)
-        for (i in 0 until dif.elements.size) {
-            val difElement = dif.get(i)
-            if (difElement != 0.0) {
-                val dPosElement = dPos.get(i)
-                //                assert dPosElement != 0;
-                //                if(dPos.get(i) == 0) throw new IllegalArgumentException("Point must be on the line!");
-                val proportion = difElement / dPosElement
-                return absoluteDistanceStart + proportion * length
-            }
-        }
-        throw ArithmeticException("Somehow dif has a dimension of 0.")
-    }
-
-    /**
-     * Convert absolute distance (dist. along the path) to relative distance (dist. along this segment)
-     *
-     * @param absoluteDistance The absolute distance along the path
-     * @return The relative distance along this path segment
-     */
-    fun getRelativeDistance(absoluteDistance: Double): Double {
-        return absoluteDistance - absoluteDistanceStart
-    }
-
-    abstract override fun getSpeed(absoluteDistance: Double): Double
-
-    /**
-     * Assert a point that is x distance along the whole path is in this path segment
-     *
-     * @param absoluteDistance How far the point is along the path
-     * @throws IllegalArgumentException
-     */
-    private fun checkDistance(absoluteDistance: Double) {
-        if (absoluteDistance in absoluteDistanceStart..absoluteDistanceEnd) throw IllegalArgumentException("Must be within bounds")
-    }
-
-    /**
-     * Based on the relative distance of a point along this path segment, get the location of the point
-     *
-     * @param relativeDistance How far the point is along this path segment
-     * @return The aboslute location of the point
-     */
-    override fun getPoint(relativeDistance: Double): ScalarVector {
-        return dPos.mul(relativeDistance / length).plus(from)
-    }
-
-    /**
-     * Get the distance left squared
-     *
-     * @param point A point on this path segment
-     * @return The distance left on the path segment, squared
-     */
-    @Deprecated("")
-    fun getDistanceLeft2(point: ScalarVector): Double {
-        return to.sub(point).mag2()
-    }
-
-    override fun toString(): String {
-        return "PathSegment{" +
-            "from=" + from +
-            ", to=" + to +
-            '}'.toString()
-    }
 }

@@ -22,17 +22,17 @@ object PhysicalTest // TODO: what we using this for {
  * @param rightMotor
  */
 fun testStraightVoltage(leftMotor: VoltageMotor, rightMotor: VoltageMotor, voltage: Double): Action {
-    // run for 5 seconds
-    return object : PeriodicAction(20, TimeUnit.MILLISECONDS) {
-        override fun execute() {
-            leftMotor.runVoltage(voltage)
-            rightMotor.runVoltage(voltage)
-        }
-
-        override fun isFinished(): Boolean {
-            return stopwatch.read(TimeUnit.SECONDS) > 5
-        }
+  // run for 5 seconds
+  return object : PeriodicAction(20, TimeUnit.MILLISECONDS) {
+    override fun execute() {
+      leftMotor.runVoltage(voltage)
+      rightMotor.runVoltage(voltage)
     }
+
+    override fun isFinished(): Boolean {
+      return stopwatch.read(TimeUnit.SECONDS) > 5
+    }
+  }
 }
 
 /**
@@ -46,17 +46,17 @@ fun testStraightVoltage(leftMotor: VoltageMotor, rightMotor: VoltageMotor, volta
  * @param rightMotor
  */
 fun testStraightVelocity(leftMotor: VelocityMotor, rightMotor: VelocityMotor, velocity: Double): Action {
-    // run for 5 seconds
-    return object : PeriodicAction(20, TimeUnit.MILLISECONDS) {
-        override fun execute() {
-            leftMotor.runVelocity(velocity)
-            rightMotor.runVelocity(velocity)
-        }
-
-        override fun isFinished(): Boolean {
-            return stopwatch.read(TimeUnit.SECONDS) > 5
-        }
+  // run for 5 seconds
+  return object : PeriodicAction(20, TimeUnit.MILLISECONDS) {
+    override fun execute() {
+      leftMotor.runVelocity(velocity)
+      rightMotor.runVelocity(velocity)
     }
+
+    override fun isFinished(): Boolean {
+      return stopwatch.read(TimeUnit.SECONDS) > 5
+    }
+  }
 }
 
 /**
@@ -70,12 +70,19 @@ fun testStraightVelocity(leftMotor: VelocityMotor, rightMotor: VelocityMotor, ve
  * @param voltage
  * @return
  */
-fun testStraightEncoderEncoderLocalization(left: TranslationalDistanceSensor, right: TranslationalDistanceSensor, leftMotor: VoltageMotor, rightMotor: VoltageMotor, lateralWheelDistance: Double, voltage: Double): Action {
-    val action = testStraightVoltage(leftMotor, rightMotor, voltage)
-    val localizer = TankRobotEncoderEncoderEstimator(left, right) { lateralWheelDistance }
-    localizer.reset()
-    return ActionGroup().with(BackgroundAction(50, TimeUnit.MILLISECONDS, Runnable { localizer.update() }))
-            .addSequential(action)
-            .addSequential(BaseAction({ }))
+fun testStraightEncoderEncoderLocalization(
+  left: TranslationalDistanceSensor,
+  right: TranslationalDistanceSensor,
+  leftMotor: VoltageMotor,
+  rightMotor: VoltageMotor,
+  lateralWheelDistance: Double,
+  voltage: Double
+): Action {
+  val action = testStraightVoltage(leftMotor, rightMotor, voltage)
+  val localizer = TankRobotEncoderEncoderEstimator(left, right) { lateralWheelDistance }
+  localizer.reset()
+  return ActionGroup().with(BackgroundAction(50, TimeUnit.MILLISECONDS, Runnable { localizer.update() }))
+    .addSequential(action)
+    .addSequential(BaseAction({ }))
 }
 }

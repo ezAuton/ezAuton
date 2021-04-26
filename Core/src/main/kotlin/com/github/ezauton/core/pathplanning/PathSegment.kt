@@ -5,34 +5,20 @@ import com.github.ezauton.conversion.SIUnit
 import com.github.ezauton.conversion.ScalarVector
 
 import java.io.Serializable
+import kotlin.reflect.KClass
 
+
+data class SegmentPoint<T : SIUnit<T>>(val value: ConcreteVector<T>, val tValue: Double)
 /**
  * A section of a path (usually linear) which has similar laws (i.e. same transition between two speeds).
  */
-interface PathSegment<T: SIUnit<T>> : Serializable {
-    val absoluteDistanceEnd: Double
+interface PathSegment<T : SIUnit<T>> : Serializable {
 
-    val isBeginning: Boolean
+  val from: ConcreteVector<T>
+  val to: ConcreteVector<T>
+  val type: KClass<out T>
+  val length: T
 
-    val isFinish: Boolean
-
-    val from: ConcreteVector<T>
-
-    val to: ConcreteVector<T>
-
-    val length: T
-
-    val absoluteDistanceStart: Double
-
-    fun getPoint(relativeDistance: Double): ConcreteVector<T>
-
-    fun getClosestPoint(robotPos: ScalarVector): ConcreteVector<T>
-
-    /**
-     * @param linePos
-     * @return The absolute distance on the path of a point on the line
-     */
-    fun getAbsoluteDistance(linePos: ConcreteVector<T>): Double
-
-    fun getSpeed(absoluteDistance: T): Velocity
+  fun getPointAlong(proportion: Double): ConcreteVector<T>
+  fun getClosestPointTo(point: ConcreteVector<T>): SegmentPoint<T>
 }

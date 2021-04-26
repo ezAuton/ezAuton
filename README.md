@@ -1,33 +1,40 @@
-[![travis-ci](https://travis-ci.org/ezAuton/ezAuton.svg?branch=master)](https://travis-ci.org/ezAuton/ezAuton) 
-[![codecov](https://codecov.io/gh/ezAuton/ezAuton/branch/master/graph/badge.svg?token=mDoht49dKM)](https://codecov.io/gh/ezAuton/ezAuton) 
+[![travis-ci](https://travis-ci.org/ezAuton/ezAuton.svg?branch=master)](https://travis-ci.org/ezAuton/ezAuton)
+[![codecov](https://codecov.io/gh/ezAuton/ezAuton/branch/master/graph/badge.svg?token=mDoht49dKM)](https://codecov.io/gh/ezAuton/ezAuton)
 [![jitpack](https://jitpack.io/v/ezAuton/ezAuton.svg)](https://jitpack.io/#ezAuton/ezAuton)
 [![discord](https://img.shields.io/badge/chat-on%20discord-7289DA.svg?logo=discord&style=flat)](https://discord.gg/u8rmxxy)
 
 # ezAuton
-A collection of tools to help with FRC autonomous for Java robots. 
+
+A collection of tools to help with FRC autonomous for Java robots.
 
 ## Resources to Learn
+
 - [Medium — How to use ezAuton to write cleaner code for FRC](https://medium.com/@andrew.gazelka/how-to-use-ezauton-to-write-cleaner-code-for-frc-ea18d0243936)
 
 ## Included
 
 #### Localization
-- currently all tank/differential drive, but built to be extended SUPER EASILY for other drivetrains. Just implement your own `IRotationalLocationEstimator` or `ITranslationalLocationEstimator`. 
-  - voltage
-  - encoder-encoder
-  - encoder-gyro
-  - encoder-encoder-gyro
+
+- currently all tank/differential drive, but built to be extended SUPER EASILY for other drivetrains. Just implement your own `IRotationalLocationEstimator` or `ITranslationalLocationEstimator`.
+    - voltage
+    - encoder-encoder
+    - encoder-gyro
+    - encoder-encoder-gyro
 
 ### Trajectories
+
 - Pure Pursuit control law between waypoints
 
 ### Actions (better Command replacement)
+
 - Interface for easier unit testing of commands and easy creation of commands which run faster than once every 20ms.
 - ![IAction base clases](https://imgur.com/2fJBqDd.png)
 - All subclasses of `IAction` (including custom) can be converted to WPILib `Command` or a `Thread`.
 
 ### Simulation
+
 All IActions can be simulated. As an example, look at one of our more simple unit tests
+
 ```java
 TimeWarpedClock clock = new TimeWarpedClock(10); // a clock based off of real time but accelerated 10x
 
@@ -45,8 +52,10 @@ assertEquals(4, count.get());
 ```
 
 ### Recording
-Additionally, you can easily record the robot. All data is stored in JSON and it is very easy to add more "subrecordings".
-Here is a more complicated example which incorperates simulation, Pure Pursuit, and recordings.
+
+Additionally, you can easily record the robot. All data is stored in JSON and it is very easy to add more "subrecordings". Here is a more complicated example which incorperates simulation, Pure
+Pursuit, and recordings.
+
 ```java
 Path path = new PPWaypoint.Builder()
         .add(0, 0, 16, 13, -12)
@@ -112,15 +121,18 @@ writer.close();
 ```
 
 ### Visualizer
-- Once you record, you can _play_ the recording as well. Built to be extendible, so you can implement your own 
-visualizer modules as well (use `ISubRecording` in the "Recording" module and `IDataProcessor` in the "Visualizer" module).
+
+- Once you record, you can _play_ the recording as well. Built to be extendible, so you can implement your own visualizer modules as well (use `ISubRecording` in the "Recording" module
+  and `IDataProcessor` in the "Visualizer" module).
 - ![Visualizer in Action](https://thumbs.gfycat.com/LimpSplendidGuanaco-size_restricted.gif)
- 
 
 ## Examples
-Look at [unit tests](https://github.com/ezAuton/ezAuton/tree/d2e62895b3cf2d2a30720f6809d8e5ab0856a1d9/Core/src/test) to get several documented examples on what is possible to do with ezAuton. Note ezAuton is **NOT STABLE**. We are still in a development stage, so we encourage you to contribute and test with your robot so we can get an official release as soon as possible.
+
+Look at [unit tests](https://github.com/ezAuton/ezAuton/tree/d2e62895b3cf2d2a30720f6809d8e5ab0856a1d9/Core/src/test) to get several documented examples on what is possible to do with ezAuton. Note
+ezAuton is **NOT STABLE**. We are still in a development stage, so we encourage you to contribute and test with your robot so we can get an official release as soon as possible.
 
 ### Tank robot Pure Pursuit no helpers
+
 This is code for encoder-encoder localization with a tank robot with no helper classes. The code is overly-verbose for most scenarios; it is usually not needed.
 
 ```Java
@@ -170,9 +182,13 @@ thread.start();
 // Command to start Pure Pursuit
 Command commmand = new PurePursuitAction(ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable).buildWPI();
  ```
- 
- ### Tank robot voltage localization
- A robot can still use Pure Pursuit if it does not have any encoders or a gyro! FRC motors have an increadibly linear relationship between voltage applied and motor speed. If you provide a map from voltage to velocity, ezAuton provides implementation to intepolate this map to provide localization. However, make sure to use `RampUpSimulatedMotor`s. These make sure that the voltage applied to the motor is fairly continuous. Without this helper class, if there is a sudden, large increase or decrease in voltage applied to the motor, the map from voltage to motor velocity is usually not accurate. 
+
+### Tank robot voltage localization
+
+A robot can still use Pure Pursuit if it does not have any encoders or a gyro! FRC motors have an increadibly linear relationship between voltage applied and motor speed. If you provide a map from
+voltage to velocity, ezAuton provides implementation to intepolate this map to provide localization. However, make sure to use `RampUpSimulatedMotor`s. These make sure that the voltage applied to the
+motor is fairly continuous. Without this helper class, if there is a sudden, large increase or decrease in voltage applied to the motor, the map from voltage to motor velocity is usually not accurate.
+
  ```Java
 TalonSRX leftTalon = new TalonSRX(1);
 TalonSRX rightTalon = new TalonSRX(2);

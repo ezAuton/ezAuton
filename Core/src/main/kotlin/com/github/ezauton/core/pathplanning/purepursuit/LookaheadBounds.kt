@@ -1,6 +1,7 @@
 package com.github.ezauton.core.pathplanning.purepursuit
 
-import com.github.ezauton.conversion.*
+import com.github.ezauton.conversion.Distance
+import com.github.ezauton.conversion.LinearVelocity
 import com.github.ezauton.core.localization.sensors.VelocityEstimator
 
 /**
@@ -17,20 +18,20 @@ class LookaheadBounds
  * @param maxSpeed Maximum speed where lookahead is allowed to be dynamic
  * @param velocityEstimator Estimator of the robot's velocity. Used to calculate lookahead based on current speed.
  */
-(private val minDistance: Distance, private val maxDistance: Distance, private val minSpeed: LinearVelocity, maxSpeed: LinearVelocity, private val velocityEstimator: VelocityEstimator) : Lookahead {
+  (private val minDistance: Distance, private val maxDistance: Distance, private val minSpeed: LinearVelocity, maxSpeed: LinearVelocity, private val velocityEstimator: VelocityEstimator) : Lookahead {
 
-    private val dDistance = maxDistance - minDistance
-    private val dSpeed = maxSpeed - minSpeed
+  private val dDistance = maxDistance - minDistance
+  private val dSpeed = maxSpeed - minSpeed
 
-    /**
-     * Based on the current speed as described by this.velocityEstimator, calculate a lookahead
-     *
-     * @return The lookahead to use
-     */
-    override val lookahead: Distance
-        get() {
-            val speed = velocityEstimator.translationalVelocity.abs()
-            val lookahead = dDistance * ((speed - minSpeed) / dSpeed) + minDistance
-            return lookahead.coerceIn(minDistance .. maxDistance)
-        }
+  /**
+   * Based on the current speed as described by this.velocityEstimator, calculate a lookahead
+   *
+   * @return The lookahead to use
+   */
+  override val lookahead: Distance
+    get() {
+      val speed = velocityEstimator.translationalVelocity.abs()
+      val lookahead = dDistance * ((speed - minSpeed) / dSpeed) + minDistance
+      return lookahead.coerceIn(minDistance..maxDistance)
+    }
 }

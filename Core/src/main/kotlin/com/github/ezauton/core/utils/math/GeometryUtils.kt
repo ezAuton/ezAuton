@@ -4,6 +4,7 @@ import com.github.ezauton.conversion.Angle
 import com.github.ezauton.conversion.ConcreteVector
 import com.github.ezauton.conversion.SIUnit
 import com.github.ezauton.conversion.ScalarVector
+import kotlin.math.hypot
 
 
 /**
@@ -12,12 +13,12 @@ import com.github.ezauton.conversion.ScalarVector
  * @return the difference in radians between the two degrees from [0,2pi). Increases counterclockwise.
  */
 fun getDThetaNavX(initDegrees: Double, finalDegrees: Double): Double {
-    val degDif = -(finalDegrees - initDegrees)
-    val radians = deg2Rad(degDif)
-    val radBounded = radians % TAU
-    return if (radBounded < 0) {
-        TAU + radBounded
-    } else radBounded
+  val degDif = -(finalDegrees - initDegrees)
+  val radians = deg2Rad(degDif)
+  val radBounded = radians % TAU
+  return if (radBounded < 0) {
+    TAU + radBounded
+  } else radBounded
 }
 
 /**
@@ -28,34 +29,34 @@ fun getDThetaNavX(initDegrees: Double, finalDegrees: Double): Double {
  * @return Difference between the angles (in degrees)
  */
 fun getDAngle(angle1: Double, angle2: Double): Double {
-    val simpleAngle1 = angle1 % 360
-    val simpleAngle2 = angle2 % 360
-    var dif = Math.abs(simpleAngle1 - simpleAngle2)
-    if (dif > 180) {
-        dif = 360 - dif
-    }
-    return dif
+  val simpleAngle1 = angle1 % 360
+  val simpleAngle2 = angle2 % 360
+  var dif = Math.abs(simpleAngle1 - simpleAngle2)
+  if (dif > 180) {
+    dif = 360 - dif
+  }
+  return dif
 }
 
 fun isCCWQuickest(angleInit: Double, angleFinal: Double): Boolean {
-    var d: Double
-    if (angleFinal > angleInit) {
-        d = angleFinal - angleInit
-        if (d > 180) {
-            // Since angles are by default cw (navX) this means we should go ccw
-            return true
-            //                    d = 360-d;
-        }
-    } else if (angleInit > angleFinal) {
-        d = angleInit - angleFinal
-        if (d > 180) {
-            d = 360 - d
-        } else {
-            return true
-            //                    ccw = true;
-        }
+  var d: Double
+  if (angleFinal > angleInit) {
+    d = angleFinal - angleInit
+    if (d > 180) {
+      // Since angles are by default cw (navX) this means we should go ccw
+      return true
+      //                    d = 360-d;
     }
-    return false
+  } else if (angleInit > angleFinal) {
+    d = angleInit - angleFinal
+    if (d > 180) {
+      d = 360 - d
+    } else {
+      return true
+      //                    ccw = true;
+    }
+  }
+  return false
 }
 
 /**
@@ -66,47 +67,42 @@ fun isCCWQuickest(angleInit: Double, angleFinal: Double): Boolean {
  * Equivalent to arctan((start - end))
  */
 fun getThetaFromPoints(start: ScalarVector, end: ScalarVector): Double {
-    val dx = end.get(0) - start.get(0)
-    val dy = end.get(1) - start.get(1)
-    return Math.atan2(dy, dx)
+  val dx = end.get(0) - start.get(0)
+  val dy = end.get(1) - start.get(1)
+  return Math.atan2(dy, dx)
 }
 
 /**
  * //TODO: rewrite in parametric.... actually quite horrible
  * Given a line defined by two points, find the point on the line closest to our robot's position
  *
- * @param linea    One point on the line
- * @param lineb    Another point on the line
- * @param robotPos The point at which our robot is
+ * @param pointA    One point on the line
+ * @param pointB    Another point on the line
+ * @param pos The point at which our robot is
  * @return The point on the line closest to the robot
  */
-fun getClosestPointLineSegments(linea: ScalarVector, lineb: ScalarVector, robotPos: ScalarVector): ScalarVector {
+fun getClosestPointLineSegments(pointA: ScalarVector, pointB: ScalarVector, pos: ScalarVector): ScalarVector {
 
-    val d1 = Math.hypot(linea.get(0) - robotPos.get(0), linea.get(1) - robotPos.get(1))
-    val d2 = Math.hypot(lineb.get(0) - robotPos.get(0), lineb.get(1) - robotPos.get(1))
+  val d1 = hypot(pointA[0] - pos[0], pointA[1] - pos[1])
+  val d2 = hypot(pointB[0] - pos[0], pointB[1] - pos[1])
 
-    val dPerp: Double
+  val lineSegment = LineR2(pointA, pointB)
 
-    val lineSegment = LineR2(linea, lineb)
+  val linePerp = lineSegment.getPerp(pos)
 
-    val linePerp = lineSegment.getPerp(robotPos)
+  val intersect = linePerp.intersection(lineSegment)
 
-    val intersect = linePerp.intersection(lineSegment)
+  val d3 = hypot(intersect!![0] - pos[0], intersect[1] - pos[1])
 
-    val d3 = Math.hypot(intersect!!.get(0) - robotPos.get(0), intersect.get(1) - robotPos.get(1))
-
-    if (java.lang.Double.isNaN(intersect.get(1))) {
-
-    }
-    return if (d1 < d2 && d1 < d3) {
-        linea
-    } else if (d2 < d1 && d2 < d3) {
-        lineb
-    } else {
-        if (lineSegment.slope == 0.0) {
-            ScalarVector(robotPos[0], lineSegment.evaluateY(robotPos[0]))
-        } else intersect
-    }
+  return if (d1 < d2 && d1 < d3) {
+    pointA
+  } else if (d2 < d1 && d2 < d3) {
+    pointB
+  } else {
+    if (lineSegment.slope == 0.0) { // TODO: this is bad ... make line not slope form
+      ScalarVector(pos[0], lineSegment.evaluateY(pos[0]))
+    } else intersect
+  }
 }
 
 /**
@@ -116,7 +112,7 @@ fun getClosestPointLineSegments(linea: ScalarVector, lineb: ScalarVector, robotP
  * @see ScalarVector
  */
 fun <T : Any> polarVector2D(magnitude: SIUnit<T>, angle: SIUnit<Angle>): ConcreteVector<T> {
-    return VECTOR_FORWARD.rotate2D(angle.value).times(magnitude)
+  return VECTOR_FORWARD.rotate2D(angle.value).times(magnitude)
 }
 
 /**
@@ -129,35 +125,35 @@ fun <T : Any> polarVector2D(magnitude: SIUnit<T>, angle: SIUnit<Angle>): Concret
  * @return All points on both the line and circle, should they exist.
  */
 fun getCircleLineIntersectionPoint(pointA: ScalarVector, pointB: ScalarVector, center: ScalarVector, radius: Double): List<ScalarVector> {
-    val baX = pointB[0] - pointA.get(0)
-    val baY = pointB.get(1) - pointA.get(1)
+  val baX = pointB[0] - pointA.get(0)
+  val baY = pointB.get(1) - pointA.get(1)
 
-    val caX = center.get(0) - pointA.get(0)
-    val caY = center.get(1) - pointA.get(1)
+  val caX = center.get(0) - pointA.get(0)
+  val caY = center.get(1) - pointA.get(1)
 
-    val a = baX * baX + baY * baY
-    val bBy2 = baX * caX + baY * caY
-    val c = caX * caX + caY * caY - radius * radius
+  val a = baX * baX + baY * baY
+  val bBy2 = baX * caX + baY * caY
+  val c = caX * caX + caY * caY - radius * radius
 
-    val pBy2 = bBy2 / a
-    val q = c / a
+  val pBy2 = bBy2 / a
+  val q = c / a
 
-    val disc = pBy2 * pBy2 - q
-    if (disc < 0) {
-        return emptyList()
-    }
-    // if disc == 0 ... dealt with later
-    val tmpSqrt = Math.sqrt(disc)
-    val abScalingFactor1 = tmpSqrt - pBy2
+  val disc = pBy2 * pBy2 - q
+  if (disc < 0) {
+    return emptyList()
+  }
+  // if disc == 0 ... dealt with later
+  val tmpSqrt = Math.sqrt(disc)
+  val abScalingFactor1 = tmpSqrt - pBy2
 
-    val p1 = ScalarVector(pointA[0] - baX * abScalingFactor1, pointA[1] - baY * abScalingFactor1)
-    if (disc == 0.0) {
-        return listOf(p1)
-    }
+  val p1 = ScalarVector(pointA[0] - baX * abScalingFactor1, pointA[1] - baY * abScalingFactor1)
+  if (disc == 0.0) {
+    return listOf(p1)
+  }
 
-    val abScalingFactor2 = -pBy2 - tmpSqrt
-    val p2 = ScalarVector(pointA[0] - baX * abScalingFactor2, pointA[1] - baY * abScalingFactor2)
-    return listOf(p1, p2)
+  val abScalingFactor2 = -pBy2 - tmpSqrt
+  val p2 = ScalarVector(pointA[0] - baX * abScalingFactor2, pointA[1] - baY * abScalingFactor2)
+  return listOf(p1, p2)
 }
 
 
@@ -165,27 +161,27 @@ typealias ParametricFunction = (Double) -> ScalarVector
 
 
 fun ParametricFunction.arcLength(bounds: ClosedRange<Double>, delta: Double = ParametricFunction.DELTA): Double {
-    require(bounds.endInclusive > bounds.start)
+  require(bounds.endInclusive > bounds.start)
 
-    var on = bounds.start
-    var last = this(on)
+  var on = bounds.start
+  var last = this(on)
+  on += delta
+
+  var resultLength = 0.0
+
+  while (on <= bounds.endInclusive) {
+    this(t)
     on += delta
+  }
 
-    var resultLength = 0.0
-
-    while (on <= bounds.endInclusive) {
-        this(t)
-        on += delta
-    }
-
-    while (t <= bounds.endInclusive) {
-        this(t)
-        resultLength += Math.hypot(x - lastX, y - lastY)
-        lastX = x
-        lastY = y
-        t += delta
-    }
-    return resultLength
+  while (t <= bounds.endInclusive) {
+    this(t)
+    resultLength += Math.hypot(x - lastX, y - lastY)
+    lastX = x
+    lastY = y
+    t += delta
+  }
+  return resultLength
 }
 
 
@@ -194,143 +190,143 @@ fun getX(t: Double): Double
 fun getY(t: Double): Double
 
 operator fun get(t: Double): ScalarVector {
-    return ScalarVector(getX(t), getY(t))
+  return ScalarVector(getX(t), getY(t))
 }
 
 fun arcLength(lowerBound: Double, upperBound: Double, delta: Double = DELTA): Double {
-    var resultLength = 0.0
-    var lastX = getX(lowerBound)
-    var lastY = getY(lowerBound)
-    var t = lowerBound + delta
-    while (t <= upperBound) {
-        val x = getX(t)
-        val y = getY(t)
-        resultLength += Math.hypot(x - lastX, y - lastY)
-        lastX = x
-        lastY = y
-        t += delta
-    }
-    return resultLength
+  var resultLength = 0.0
+  var lastX = getX(lowerBound)
+  var lastY = getY(lowerBound)
+  var t = lowerBound + delta
+  while (t <= upperBound) {
+    val x = getX(t)
+    val y = getY(t)
+    resultLength += Math.hypot(x - lastX, y - lastY)
+    lastX = x
+    lastY = y
+    t += delta
+  }
+  return resultLength
 }
 
 fun getT(point: ScalarVector, lowerBound: Double, upperBound: Double): Double {
-    var t = lowerBound
-    while (t <= upperBound) {
-        if (get(t) == point)
-            return t
-        t += DELTA
-    }
-    return java.lang.Double.NaN
+  var t = lowerBound
+  while (t <= upperBound) {
+    if (get(t) == point)
+      return t
+    t += DELTA
+  }
+  return java.lang.Double.NaN
 }
 
 fun fromArcLength(arcLength: Double): ScalarVector {
-    return fromArcLength(0.0, arcLength, DELTA)
+  return fromArcLength(0.0, arcLength, DELTA)
 }
 
 fun fromArcLength(lowerBound: Double, arcLength: Double, delta: Double = DELTA): ScalarVector {
-    var arcLength = arcLength
-    var lastX = getX(lowerBound)
-    var lastY = getY(lowerBound)
-    var resultT = lowerBound
-    var t = lowerBound + delta
-    while (arcLength >= 0) {
-        val x = getX(t)
-        val y = getY(t)
-        arcLength -= Math.hypot(x - lastX, y - lastY)
-        lastX = x
-        lastY = y
-        resultT = t
-        t += delta
-    }
-    return get(resultT)
+  var arcLength = arcLength
+  var lastX = getX(lowerBound)
+  var lastY = getY(lowerBound)
+  var resultT = lowerBound
+  var t = lowerBound + delta
+  while (arcLength >= 0) {
+    val x = getX(t)
+    val y = getY(t)
+    arcLength -= Math.hypot(x - lastX, y - lastY)
+    lastX = x
+    lastY = y
+    resultT = t
+    t += delta
+  }
+  return get(resultT)
 }
 
 companion object {
-    val DELTA = 1E-4
+  val DELTA = 1E-4
 }
 
 
 }
 
 class LineR2(internal val a: ScalarVector, internal val b: ScalarVector) : Integrable {
-    internal val slope: Double
-    internal val y_intercept: Double
-    internal val x_intercept: Double
+  internal val slope: Double
+  internal val y_intercept: Double
+  internal val x_intercept: Double
 
-    internal val x1: Double
-    internal val x2: Double
-    internal val y1: Double
-    internal val y2: Double
+  internal val x1: Double
+  internal val x2: Double
+  internal val y1: Double
+  internal val y2: Double
 
-    init {
-        x1 = a.get(0)
-        x2 = b.get(0)
-        y1 = a.get(1)
-        y2 = b.get(1)
+  init {
+    x1 = a.get(0)
+    x2 = b.get(0)
+    y1 = a.get(1)
+    y2 = b.get(1)
 
-        if (a.get(0) - b.get(0) != 0.0) {
-            slope = (a.get(1) - b.get(1)) / (a.get(0) - b.get(0))
-            y_intercept = a.get(1) - slope * a.get(0)
-            x_intercept = -y_intercept / slope
-        } else {
-            slope = java.lang.Double.NaN
-            y_intercept = java.lang.Double.POSITIVE_INFINITY
-            x_intercept = a.get(0)
-        }
+    if (a.get(0) - b.get(0) != 0.0) {
+      slope = (a.get(1) - b.get(1)) / (a.get(0) - b.get(0))
+      y_intercept = a.get(1) - slope * a.get(0)
+      x_intercept = -y_intercept / slope
+    } else {
+      slope = java.lang.Double.NaN
+      y_intercept = java.lang.Double.POSITIVE_INFINITY
+      x_intercept = a.get(0)
+    }
+  }
+
+
+  fun evaluateY(x: Double): Double {
+    return slope * x + y_intercept
+  }
+
+  override fun integrate(a: Double, b: Double): Double {
+    // integral of y = mx + b is
+    // mx^2/2 + bx + c
+    // at start of integration bound it should be 0
+    val c = -(a * a / 2 + b * a)
+
+    val indefiniteIntegral = { x -> slope * x * x / 2 + y_intercept * x + c }
+
+    return indefiniteIntegral.get(b) - indefiniteIntegral.get(a)
+  }
+
+  fun integrate(): Double {
+    return integrate(x1, x2)
+  }
+
+  fun getPerp(point: ScalarVector): LineR2 {
+    val perpSlope: Double
+    if (java.lang.Double.isNaN(slope)) {
+      perpSlope = 0.0
+    } else {
+      perpSlope = -1 / slope
+    }
+    return LineR2(point, ScalarVector(point.get(0) + 1, (point.get(1) + perpSlope).toFloat()))
+  }
+
+  fun intersection(other: LineR2): ScalarVector? {
+    if (other.slope == slope) {
+      return if (other.x_intercept != other.x_intercept) {
+        null
+      } else {
+        // TODO: is this a good idea to return?
+        ScalarVector(other.x1.toFloat(), other.y2.toFloat())
+      }
+    }
+    if (java.lang.Double.isNaN(slope)) {
+      return ScalarVector(a.get(0), other.evaluateY(a.get(0)).toFloat())
     }
 
-
-    fun evaluateY(x: Double): Double {
-        return slope * x + y_intercept
+    if (java.lang.Double.isNaN(other.slope)) {
+      return ScalarVector(other.a.get(0), evaluateY(other.a.get(0)).toFloat())
     }
-
-    override fun integrate(a: Double, b: Double): Double {
-        // integral of y = mx + b is
-        // mx^2/2 + bx + c
-        // at start of integration bound it should be 0
-        val c = -(a * a / 2 + b * a)
-
-        val indefiniteIntegral = { x -> slope * x * x / 2 + y_intercept * x + c }
-
-        return indefiniteIntegral.get(b) - indefiniteIntegral.get(a)
-    }
-
-    fun integrate(): Double {
-        return integrate(x1, x2)
-    }
-
-    fun getPerp(point: ScalarVector): LineR2 {
-        val perpSlope: Double
-        if (java.lang.Double.isNaN(slope)) {
-            perpSlope = 0.0
-        } else {
-            perpSlope = -1 / slope
-        }
-        return LineR2(point, ScalarVector(point.get(0) + 1, (point.get(1) + perpSlope).toFloat()))
-    }
-
-    fun intersection(other: LineR2): ScalarVector? {
-        if (other.slope == slope) {
-            return if (other.x_intercept != other.x_intercept) {
-                null
-            } else {
-                // TODO: is this a good idea to return?
-                ScalarVector(other.x1.toFloat(), other.y2.toFloat())
-            }
-        }
-        if (java.lang.Double.isNaN(slope)) {
-            return ScalarVector(a.get(0), other.evaluateY(a.get(0)).toFloat())
-        }
-
-        if (java.lang.Double.isNaN(other.slope)) {
-            return ScalarVector(other.a.get(0), evaluateY(other.a.get(0)).toFloat())
-        }
-        // mx + b = cx + d
-        // (m-c) x = d - b
-        val x = (other.y_intercept - this.y_intercept) / (this.slope - other.slope)
-        val y = evaluateY(x)
-        return ScalarVector(x.toFloat(), y.toFloat())
+    // mx + b = cx + d
+    // (m-c) x = d - b
+    val x = (other.y_intercept - this.y_intercept) / (this.slope - other.slope)
+    val y = evaluateY(x)
+    return ScalarVector(x.toFloat(), y.toFloat())
 
 
-    }
+  }
 }

@@ -1,7 +1,6 @@
 package com.github.ezauton.core.pathplanning.purepursuit
 
 import com.github.ezauton.conversion.Distance
-import com.github.ezauton.conversion.SIUnit
 
 /**
  * The distance to lookahead on the path in the Pure Pursuit control law. This is comparable to how
@@ -9,5 +8,5 @@ import com.github.ezauton.conversion.SIUnit
  * on how fast we are going or the curvature of the path.
  */
 interface Lookahead {
-    val lookahead: Distance
+  val lookahead: Distance
 }

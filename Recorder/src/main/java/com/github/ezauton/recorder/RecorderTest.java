@@ -1,5 +1,6 @@
 package com.github.ezauton.recorder;
 
+import com.github.ezauton.conversion.ScalarVector;
 import com.github.ezauton.core.action.ActionGroup;
 import com.github.ezauton.core.action.BackgroundAction;
 import com.github.ezauton.core.action.PurePursuitAction;
@@ -12,7 +13,6 @@ import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrat
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable;
 import com.github.ezauton.core.simulation.SimulatedTankRobot;
 import com.github.ezauton.core.simulation.TimeWarpedSimulation;
-import com.github.ezauton.conversion.ScalarVector;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.TankDriveableRecorder;

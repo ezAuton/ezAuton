@@ -9,13 +9,13 @@ import kotlinx.coroutines.delay
  */
 class RealClock private constructor() : Clock {
 
-    override suspend fun delayFor(duration: Time) {
-        delay(duration.millisL)
-    }
+  override suspend fun delayFor(duration: Time) {
+    delay(duration.millisL)
+  }
 
-    override val time get() = now()
+  override val time get() = now()
 
-    companion object {
-        val CLOCK = RealClock()
-    }
+  companion object {
+    val CLOCK = RealClock()
+  }
 }

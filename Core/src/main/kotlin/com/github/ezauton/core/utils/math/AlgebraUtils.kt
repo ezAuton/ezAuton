@@ -1,18 +1,16 @@
 package com.github.ezauton.core.utils.math
 
-import java.util.HashSet
-
 /**
  * @param map
  * @return If is odd function
  */
 fun hasOddSymmetry(map: Map<out Double, Double>): Boolean {
-    return map.entries.stream().allMatch { entry ->
-        val key = entry.key
-        val value = entry.value
-        val symmetricEntry = map[-key].toDouble()
-        symmetricEntry != null && symmetricEntry == -value
-    }
+  return map.entries.stream().allMatch { entry ->
+    val key = entry.key
+    val value = entry.value
+    val symmetricEntry = map[-key].toDouble()
+    symmetricEntry != null && symmetricEntry == -value
+  }
 }
 
 /**
@@ -20,12 +18,12 @@ fun hasOddSymmetry(map: Map<out Double, Double>): Boolean {
  * @return If is even function
  */
 fun hasEvenSymmetry(map: Map<out Double, Double>): Boolean {
-    return map.entries.stream().allMatch { entry ->
-        val key = entry.key
-        val value = entry.value
-        val symmetricValue = map[-key].toDouble()
-        symmetricValue != null && symmetricValue == value
-    }
+  return map.entries.stream().allMatch { entry ->
+    val key = entry.key
+    val value = entry.value
+    val symmetricValue = map[-key].toDouble()
+    symmetricValue != null && symmetricValue == value
+  }
 }
 
 /**
@@ -37,19 +35,19 @@ fun hasEvenSymmetry(map: Map<out Double, Double>): Boolean {
  * @return roots of the quadratic
  */
 fun quadratic(a: Double, b: Double, c: Double): Set<Double> {
-    val toReturn = HashSet<Double>()
-    val discriminate = discriminate(a, b, c)
-    if (discriminate < 0) {
-        return toReturn
-    } else if (discriminate == 0.0) {
-        toReturn.add(-b / (2 * a))
-    } else {
-        val LHS = -b / (2 * a)
-        val RHS = Math.sqrt(discriminate) / (2 * a)
-        toReturn.add(LHS + RHS)
-        toReturn.add(LHS - RHS)
-    }
+  val toReturn = HashSet<Double>()
+  val discriminate = discriminate(a, b, c)
+  if (discriminate < 0) {
     return toReturn
+  } else if (discriminate == 0.0) {
+    toReturn.add(-b / (2 * a))
+  } else {
+    val LHS = -b / (2 * a)
+    val RHS = Math.sqrt(discriminate) / (2 * a)
+    toReturn.add(LHS + RHS)
+    toReturn.add(LHS - RHS)
+  }
+  return toReturn
 }
 
 /**
@@ -62,7 +60,5 @@ fun quadratic(a: Double, b: Double, c: Double): Set<Double> {
  * @see MathUtils.Algebra.quadratic
  */
 fun discriminate(a: Double, b: Double, c: Double): Double {
-    return b * b - 4.0 * a * c
+  return b * b - 4.0 * a * c
 }
-
-

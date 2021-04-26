@@ -10,10 +10,10 @@ import com.github.ezauton.conversion.*
  * @return The rotated vector
  */
 fun <T> ConcreteVector<T>.rotate2D(theta: Angle): ConcreteVector<T>
-        where T : SIUnit<T>, T : LinearUnit {
-    val sin = esin(theta.value)
-    val cos = ecos(theta.value)
-    return ConcreteVector.of(get(0) * cos - get(1) * sin, get(0) * sin + get(1) * cos)
+    where T : SIUnit<T>, T : LinearUnit {
+  val sin = esin(theta.value)
+  val cos = ecos(theta.value)
+  return ConcreteVector.of(get(0) * cos - get(1) * sin, get(0) * sin + get(1) * cos)
 }
 
 /**
@@ -25,11 +25,11 @@ fun <T> ConcreteVector<T>.rotate2D(theta: Angle): ConcreteVector<T>
  * @return `coordinateAbsolute` but relative to the robot
  */
 fun <T> absoluteToRelativeCoord(coordinateAbsolute: ConcreteVector<T>, robotCoordAbs: ConcreteVector<T>, robotHeading: Angle): ConcreteVector<T>
-        where T : SIUnit<T>, T : LinearUnit {
-    return coordinateAbsolute.minus(robotCoordAbs).rotate2D(-robotHeading)
+    where T : SIUnit<T>, T : LinearUnit {
+  return coordinateAbsolute.minus(robotCoordAbs).rotate2D(-robotHeading)
 }
 
 fun <T> relativeToAbsoluteCoord(coordinateRelative: ConcreteVector<T>, robotCoordAbs: ConcreteVector<T>, robotHeading: Angle): ConcreteVector<out T>
-        where T : SIUnit<T>, T : LinearUnit {
-    return coordinateRelative.rotate2D(robotHeading) + robotCoordAbs
+    where T : SIUnit<T>, T : LinearUnit {
+  return coordinateRelative.rotate2D(robotHeading) + robotCoordAbs
 }

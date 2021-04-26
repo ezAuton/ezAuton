@@ -1,17 +1,18 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.conversion.SIUnit
 import com.github.ezauton.conversion.Time
 import com.github.ezauton.conversion.Units
 import com.github.ezauton.core.utils.Clock
+import kotlinx.coroutines.CoroutineScope
 
-data class ActionContext(val clock: Clock) {
+interface ActionContext: CoroutineScope  {
 
-    suspend fun delay(millis: Long) {
-        delay(Units.ms(millis))
-    }
 
-    suspend fun delay(duration: Time) {
-        clock.delayFor(duration)
-    }
+  suspend fun delay(millis: Long) {
+//    delay(Units.ms(millis))
+  }
+
+  suspend fun delay(duration: Time) {
+//    clock.delayFor(duration)
+  }
 }

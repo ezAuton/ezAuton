@@ -61,8 +61,7 @@ public class Visualizer extends Application {
         primaryStage.show();
     }
 
-    public Window getStage()
-    {
+    public Window getStage() {
         return mainScene.getWindow();
     }
 }

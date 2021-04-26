@@ -1,7 +1,7 @@
 package com.github.ezauton.visualizer.processor;
 
-import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.conversion.ScalarVector;
+import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.recorder.base.PurePursuitRecorder;
 import com.github.ezauton.recorder.base.frame.PurePursuitFrame;
 import com.github.ezauton.visualizer.util.DataProcessor;

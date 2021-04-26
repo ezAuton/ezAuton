@@ -18,59 +18,61 @@ class SimulatedTankRobot
  * @param maxAccel The max acceleration of the motors
  * @param minVel The minimum velocity the robot can continuously drive at (i.e. the robot cannot drive at 0.0001 ft/s)
  */
-(override val lateralWheelDistance: Double, clock: Clock, maxAccel: Double, minVel: Double, maxVel: Double) : TankRobotConstants, Updatable {
+  (override val lateralWheelDistance: Double, clock: Clock, maxAccel: Double, minVel: Double, maxVel: Double) : TankRobotConstants, Updatable {
 
-    private val left: SimulatedMotor
-    private val right: SimulatedMotor
+  private val left: SimulatedMotor
+  private val right: SimulatedMotor
 
-    private val stopwatch: Stopwatch
-    val leftDistanceSensor: TranslationalDistanceSensor
-    val rightDistanceSensor: TranslationalDistanceSensor
-    /**
-     * @return A location estimator which automatically updates
-     */
-    val defaultLocEstimator: TankRobotEncoderEncoderEstimator
-    val defaultTransLocDriveable: TankRobotTransLocDrivable
-    //    public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
-    private val toUpdate: Set<Updatable>
+  private val stopwatch: Stopwatch
+  val leftDistanceSensor: TranslationalDistanceSensor
+  val rightDistanceSensor: TranslationalDistanceSensor
 
-    val leftMotor: VelocityMotor
-        get() = left
+  /**
+   * @return A location estimator which automatically updates
+   */
+  val defaultLocEstimator: TankRobotEncoderEncoderEstimator
+  val defaultTransLocDriveable: TankRobotTransLocDrivable
 
-    val rightMotor: VelocityMotor
-        get() = right
+  //    public StringBuilder log = new StringBuilder("t, v_l, v_r\n");
+  private val toUpdate: Set<Updatable>
 
-    init {
-        stopwatch = Stopwatch(clock)
-        stopwatch.init()
+  val leftMotor: VelocityMotor
+    get() = left
 
-        left = SimulatedMotor(clock, maxAccel, minVel, maxVel, 1.0)
-        leftDistanceSensor = Encoders.toTranslationalDistanceSensor(1.0, 1.0, left)
+  val rightMotor: VelocityMotor
+    get() = right
 
-        right = SimulatedMotor(clock, maxAccel, minVel, maxVel, 1.0)
-        rightDistanceSensor = Encoders.toTranslationalDistanceSensor(1.0, 1.0, right)
+  init {
+    stopwatch = Stopwatch(clock)
+    stopwatch.init()
 
-        toUpdate = setOf(left, right)
+    left = SimulatedMotor(clock, maxAccel, minVel, maxVel, 1.0)
+    leftDistanceSensor = Encoders.toTranslationalDistanceSensor(1.0, 1.0, left)
 
-        this.defaultLocEstimator = TankRobotEncoderEncoderEstimator(leftDistanceSensor, rightDistanceSensor, this)
-        this.defaultTransLocDriveable = TankRobotTransLocDrivable(left, right, defaultLocEstimator, defaultLocEstimator, this)
-    }
+    right = SimulatedMotor(clock, maxAccel, minVel, maxVel, 1.0)
+    rightDistanceSensor = Encoders.toTranslationalDistanceSensor(1.0, 1.0, right)
 
-    fun run(leftV: Double, rightV: Double) {
-        left.runVelocity(leftV)
-        right.runVelocity(rightV)
-    }
+    toUpdate = setOf(left, right)
 
-    override fun update(): Boolean {
-        //        long read = stopwatch.read(TimeUnit.SECONDS);
-        //        log.append(read).append(", ").append(leftTDS.getVelocity()).append(", ").append(rightTDS.getVelocity()).append("\n");
-        toUpdate.forEach { it.update() }
-        defaultLocEstimator.update()
-        return true
-    }
+    this.defaultLocEstimator = TankRobotEncoderEncoderEstimator(leftDistanceSensor, rightDistanceSensor, this)
+    this.defaultTransLocDriveable = TankRobotTransLocDrivable(left, right, defaultLocEstimator, defaultLocEstimator, this)
+  }
 
-    companion object {
+  fun run(leftV: Double, rightV: Double) {
+    left.runVelocity(leftV)
+    right.runVelocity(rightV)
+  }
 
-        val NORM_DT = 0.02
-    }
+  override fun update(): Boolean {
+    //        long read = stopwatch.read(TimeUnit.SECONDS);
+    //        log.append(read).append(", ").append(leftTDS.getVelocity()).append(", ").append(rightTDS.getVelocity()).append("\n");
+    toUpdate.forEach { it.update() }
+    defaultLocEstimator.update()
+    return true
+  }
+
+  companion object {
+
+    val NORM_DT = 0.02
+  }
 }

@@ -4,8 +4,8 @@ package com.github.ezauton.core.localization
  * Any class which can be regularly updated
  */
 interface Updatable {
-    /**
-     * @return If could update successfully
-     */
-    fun update(): Boolean
+  /**
+   * @return If could update successfully
+   */
+  fun update(): Boolean
 }

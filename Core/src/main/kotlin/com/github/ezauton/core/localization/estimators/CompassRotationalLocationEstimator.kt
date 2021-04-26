@@ -8,6 +8,6 @@ import com.github.ezauton.core.localization.sensors.Compass
  */
 class CompassRotationalLocationEstimator(private val compass: Compass) : RotationalLocationEstimator {
 
-    override fun estimateHeading() = compass.angle
+  override fun estimateHeading() = compass.angle
 
 }

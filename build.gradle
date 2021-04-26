@@ -1,13 +1,14 @@
-allprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'jacoco'
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.32' apply false
 }
 
 subprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     dependencies {
         testImplementation(
@@ -16,6 +17,9 @@ subprojects {
         testRuntimeOnly(
                 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
         )
+
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+
     }
 
     jacocoTestReport {
@@ -27,18 +31,3 @@ subprojects {
 
     check.dependsOn jacocoTestReport
 }
-
-sourceSets {
-    main {
-        java { srcDirs = ['src/main/java'] }
-        resources { srcDirs = ['src/main/resources'] }
-    }
-
-    test {
-        java { srcDirs = ['src/test/java'] }
-        resources { srcDirs = ['src/test/resources'] }
-    }
-}
-
-
-

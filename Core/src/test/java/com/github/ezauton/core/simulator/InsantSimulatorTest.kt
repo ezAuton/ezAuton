@@ -8,30 +8,30 @@ import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicLong
 
 class InsantSimulatorTest {
-    @Test
-    @Throws(TimeoutException::class)
-    fun testABC() {
+  @Test
+  @Throws(TimeoutException::class)
+  fun testABC() {
 
-        val sum = AtomicLong()
+    val sum = AtomicLong()
 
-        val actionA = TimedPeriodicAction(20, TimeUnit.SECONDS)
-                .addRunnable({ a -> { sum.addAndGet(a.stopwatch.read()) } })
+    val actionA = TimedPeriodicAction(20, TimeUnit.SECONDS)
+      .addRunnable({ a -> { sum.addAndGet(a.stopwatch.read()) } })
 
-        val actionB = TimedPeriodicAction(20, TimeUnit.SECONDS)
-                .addRunnable({ a ->
-                    {
-                        val l = sum.addAndGet(-a.stopwatch.read(TimeUnit.MILLISECONDS))
-                        assertEquals(0, l)
-                    }
-                })
+    val actionB = TimedPeriodicAction(20, TimeUnit.SECONDS)
+      .addRunnable({ a ->
+        {
+          val l = sum.addAndGet(-a.stopwatch.read(TimeUnit.MILLISECONDS))
+          assertEquals(0, l)
+        }
+      })
 
-        val clock = ModernSimulatedClock()
+    val clock = ModernSimulatedClock()
 
-        clock
-                .add(actionA)
-                .add(actionB)
-                .runSimulation(1000, TimeUnit.SECONDS)
+    clock
+      .add(actionA)
+      .add(actionB)
+      .runSimulation(1000, TimeUnit.SECONDS)
 
-        assertEquals(0, sum.get())
-    }
+    assertEquals(0, sum.get())
+  }
 }

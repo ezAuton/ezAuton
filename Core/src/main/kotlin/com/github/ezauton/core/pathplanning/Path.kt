@@ -9,6 +9,8 @@ import com.github.ezauton.conversion.ScalarVector
  * This class is very helpful when it comes to tracking which segment is currently on and getting the distance
  * on the path at any point (taking arclength ... basically making path 1D).
  */
-class Path<T: SIUnit<T>>  private constructor(private val pathSegments: List<PathSegment>)  {
+class Path<T : SIUnit<T>> private constructor(private val pathSegments: List<PathSegment>) {
 
 }
+
+typealias P

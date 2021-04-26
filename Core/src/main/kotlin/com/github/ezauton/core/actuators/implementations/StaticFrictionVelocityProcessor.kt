@@ -16,16 +16,16 @@ class StaticFrictionVelocityProcessor
  * @param toApply The motor to apply the processed velocity to
  * @param minVelMove The minimum velocity to move the motor
  */
-(private val distanceSensor: TranslationalDistanceSensor, toApply: VelocityMotor, private val minVelMove: LinearVelocity) : VelocityProcessor(toApply) {
+  (private val distanceSensor: TranslationalDistanceSensor, toApply: VelocityMotor, private val minVelMove: LinearVelocity) : VelocityProcessor(toApply) {
 
-    /**
-     * Run the motor at the target velocity, unless the target velocity is too small and we are not moving
-     *
-     * @param targetVelocity The speed to run the motor at
-     */
-    override fun runVelocity(targetVelocity: LinearVelocity) {
-        if (!distanceSensor.velocity.isZero  || targetVelocity.abs() >= minVelMove) {
-            toApply.runVelocity(targetVelocity)
-        }
+  /**
+   * Run the motor at the target velocity, unless the target velocity is too small and we are not moving
+   *
+   * @param targetVelocity The speed to run the motor at
+   */
+  override fun runVelocity(targetVelocity: LinearVelocity) {
+    if (!distanceSensor.velocity.isZero || targetVelocity.abs() >= minVelMove) {
+      toApply.runVelocity(targetVelocity)
     }
+  }
 }

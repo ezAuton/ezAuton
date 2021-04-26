@@ -12,7 +12,7 @@ import com.github.ezauton.conversion.ScalarVector
  * @return
  */
 fun getPos(posInit: Double, velocityInit: Double, accelerationInit: Double, dt: Double): Double {
-    return posInit + velocityInit * dt + (1 / 2f).toDouble() * accelerationInit * dt * dt
+  return posInit + velocityInit * dt + (1 / 2f).toDouble() * accelerationInit * dt * dt
 }
 
 /**
@@ -22,7 +22,7 @@ fun getPos(posInit: Double, velocityInit: Double, accelerationInit: Double, dt: 
  * @return positive CCW, negative CW
  */
 fun getAngularDistance(leftVel: Double, rightVel: Double, lateralWheelDistance: Double): Double {
-    return (rightVel - leftVel) / lateralWheelDistance
+  return (rightVel - leftVel) / lateralWheelDistance
 }
 
 /**
@@ -32,7 +32,7 @@ fun getAngularDistance(leftVel: Double, rightVel: Double, lateralWheelDistance: 
  * @return The radius of the circle traveling across .. positive if CCW
  */
 fun getTrajectoryRadius(vL: Double, vR: Double, l: Double): Double {
-    return l * (vR + vL) / (2 * (vR - vL))
+  return l * (vR + vL) / (2 * (vR - vL))
 }
 
 /**
@@ -44,34 +44,34 @@ fun getTrajectoryRadius(vL: Double, vR: Double, l: Double): Double {
  * @return
  */
 fun getRelativeDPosCurve(distanceLeft: Double, distanceRight: Double, lateralWheelDistance: Double): ScalarVector {
-    // To account for an infinite pathplanning radius when going straight
-    if (Math.abs(distanceLeft - distanceRight) <= Math.abs(distanceLeft + distanceRight) * 1E-2) {
-        // Probably average is not needed, but it may be useful over long distances
-        return ScalarVector(0.0, (distanceLeft + distanceRight) / 2.0)
-    }
-    val w = getAngularDistance(distanceLeft, distanceRight, lateralWheelDistance)
+  // To account for an infinite pathplanning radius when going straight
+  if (Math.abs(distanceLeft - distanceRight) <= Math.abs(distanceLeft + distanceRight) * 1E-2) {
+    // Probably average is not needed, but it may be useful over long distances
+    return ScalarVector(0.0, (distanceLeft + distanceRight) / 2.0)
+  }
+  val w = getAngularDistance(distanceLeft, distanceRight, lateralWheelDistance)
 
-    val r = getTrajectoryRadius(distanceLeft, distanceRight, lateralWheelDistance)
+  val r = getTrajectoryRadius(distanceLeft, distanceRight, lateralWheelDistance)
 
-    val dxRelative = -r * (1 - ecos(-w))
-    val dyRelative = -r * esin(-w)
+  val dxRelative = -r * (1 - ecos(-w))
+  val dyRelative = -r * esin(-w)
 
-    return ScalarVector(dxRelative, dyRelative)
+  return ScalarVector(dxRelative, dyRelative)
 }
 
 fun getTangentialSpeed(wheelL: Double, wheelR: Double): Double {
-    return (wheelL + wheelR) / 2.0
+  return (wheelL + wheelR) / 2.0
 }
 
 fun getAbsoluteDPosLine(vL: Double, vR: Double, dt: Double, robotHeading: Double): ScalarVector {
-    val tangentialSpeed = getTangentialSpeed(vL, vR)
-    val tangentialDPos = getTangentialSpeed(vL, vR) * dt
-    val dPos = VECTOR_FORWARD.mul(tangentialDPos)
-    return dPos.rotate2D(robotHeading)
+  val tangentialSpeed = getTangentialSpeed(vL, vR)
+  val tangentialDPos = getTangentialSpeed(vL, vR) * dt
+  val dPos = VECTOR_FORWARD.mul(tangentialDPos)
+  return dPos.rotate2D(robotHeading)
 }
 
 fun getAbsoluteDPosCurve(vL: Double, vR: Double, l: Double, robotHeading: Double): ScalarVector {
-    return getRelativeDPosCurve(vL, vR, l).rotate2D(robotHeading)
+  return getRelativeDPosCurve(vL, vR, l).rotate2D(robotHeading)
 }
 
 /**
@@ -82,11 +82,11 @@ fun getAbsoluteDPosCurve(vL: Double, vR: Double, l: Double, robotHeading: Double
  */
 
 fun navXToRad(yawDegTot: Double): Double {
-    var yawDeg = -yawDegTot % 360
-    if (yawDeg < 0) {
-        yawDeg += 360
-    }
-    return deg2Rad(yawDeg)
+  var yawDeg = -yawDegTot % 360
+  if (yawDeg < 0) {
+    yawDeg += 360
+  }
+  return deg2Rad(yawDeg)
 }
 
 /**
@@ -96,8 +96,8 @@ fun navXToRad(yawDegTot: Double): Double {
  * @return An angle between 0 and 360, in degrees
  */
 fun navXBound(angle: Double): Double {
-    val bounded = angle % 360
-    return if (bounded < 0) {
-        360 + bounded
-    } else bounded
+  val bounded = angle % 360
+  return if (bounded < 0) {
+    360 + bounded
+  } else bounded
 }

@@ -5,30 +5,30 @@ package com.github.ezauton.core.action
  * Additionally, it is not bound to the 20ms periodic timer for WPILib Commands. 👋 Commands! 🚀 🤖
  */
 interface Action { // In the purest form an action is of type: suspend () -> Unit
-    /**
-     * Run the action given a clock 🏃‍️
-     *
-     */
-    @Throws(Exception::class)
-    suspend fun ActionContext.run()
+  /**
+   * Run the action given a clock 🏃‍️
+   *
+   */
+  @Throws(Exception::class)
+  suspend fun ActionContext.run()
 }
 
 typealias ActionFunc = suspend ActionContext.() -> Unit
 
 fun action(block: ActionFunc) = object : Action {
-    override suspend fun ActionContext.run() {
-        block()
-    }
+  override suspend fun ActionContext.run(){
+    block()
+  }
 }
 
 fun ActionFunc.toAction() = object : Action {
-    override suspend fun ActionContext.run() {
-        this@toAction()
-    }
+  override suspend fun ActionContext.run() {
+    this@toAction()
+  }
 }
-
-fun Runnable.toAction() = object : Action {
-    override suspend fun ActionContext.run() {
-        this@toAction.run()
-    }
-}
+//
+//fun Runnable.toAction() = object : Action {
+//  override suspend fun ActionContext.run() {
+//    this@toAction.run()
+//  }
+//}
