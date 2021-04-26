@@ -22,3 +22,11 @@ interface PathSegment<T : SIUnit<T>> : Serializable {
   fun getPointAlong(proportion: Double): ConcreteVector<T>
   fun getClosestPointTo(point: ConcreteVector<T>): SegmentPoint<T>
 }
+
+fun <T: SIUnit<T>> PathSegment<T>.dist(point: ConcreteVector<T>): T {
+  return getClosestPointTo(point).value.dist(point)
+}
+
+fun <T: SIUnit<T>> PathSegment<T>.dist2(point: ConcreteVector<T>): T {
+  return getClosestPointTo(point).value.dist2(point)
+}
