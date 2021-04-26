@@ -1,9 +1,11 @@
 package com.github.ezauton.core.actuators.implementations
 
+import com.github.ezauton.conversion.Angle
+import com.github.ezauton.conversion.AngularAcceleration
+import com.github.ezauton.conversion.AngularVelocity
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.actuators.VoltageMotor
 import com.github.ezauton.core.localization.Updatable
-import com.github.ezauton.core.localization.UpdatableGroup
 import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor
 import com.github.ezauton.core.utils.Clock
 
@@ -20,38 +22,39 @@ class SimulatedMotor
  * @param maxVel The maximum velocity of the motor
  * @param kV Max voltage over max velocity (see FRC Drivetrain Characterization Paper eq. 11)). Used to simulate voltage-based driving as well.
  */
-  (clock: Clock, maxAccel: Double, minVel: Double, maxVel: Double, private val kV: Double) : VelocityMotor, RotationalDistanceSensor, VoltageMotor, Updatable {
+  (clock: Clock, maxAccel: AngularAcceleration, minVel: AngularVelocity, maxVel: AngularVelocity, private val kV: Double) : VelocityMotor, RotationalDistanceSensor, VoltageMotor, Updatable {
 
   private val motorConstraints: BoundedVelocityProcessor
   private val motor: BaseSimulatedMotor = BaseSimulatedMotor(clock)
-  private val updatableGroup = UpdatableGroup()
-  private val maxVoltage: Double
+  private val maxVelPerVolt: AngularVelocity
 
-  override val position: Double
-    get() = motor.position
-
-  override val velocity: Double
-    get() = motor.velocity
+  private val toUpdate: Updatable
 
   init {
 
     val leftRampUpMotor = RampUpVelocityProcessor(motor, clock, maxAccel)
-    updatableGroup.add(leftRampUpMotor)
+    toUpdate = leftRampUpMotor
+//    updatableGroup.add(leftRampUpMotor)
 
     val leftSF = StaticFrictionVelocityProcessor(motor, leftRampUpMotor, minVel)
     motorConstraints = BoundedVelocityProcessor(leftSF, maxVel)
-    maxVoltage = maxVel * kV
+    maxVelPerVolt = maxVel * kV // TODO: is this good
   }
 
-  override fun runVelocity(targetVelocity: Double) {
+  override fun runVelocity(targetVelocity: AngularVelocity) {
     motorConstraints.runVelocity(targetVelocity)
   }
 
   override fun runVoltage(targetVoltage: Double) {
-    motorConstraints.runVelocity(maxVoltage * targetVoltage / kV)
+    motorConstraints.runVelocity(maxVelPerVolt * targetVoltage / kV)
   }
 
+  override val position: Angle
+    get() = motor.position
+  override val velocity: AngularVelocity
+    get() = TODO("Not yet implemented")
+
   override fun update(): Boolean {
-    return updatableGroup.update()
+    return toUpdate.update()
   }
 }

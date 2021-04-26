@@ -1,11 +1,11 @@
 package com.github.ezauton.core.actuators.implementations
 
-import com.github.ezauton.conversion.Distance
-import com.github.ezauton.conversion.LinearVelocity
-import com.github.ezauton.conversion.Units
-import com.github.ezauton.conversion.meters
+import com.github.ezauton.conversion.Angle
+import com.github.ezauton.conversion.AngularVelocity
+import com.github.ezauton.conversion.radians
+import com.github.ezauton.conversion.zero
 import com.github.ezauton.core.actuators.VelocityMotor
-import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
+import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor
 import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
 
@@ -18,13 +18,13 @@ class BaseSimulatedMotor
  *
  * @param clock The clock to keep track of time with
  */
-  (clock: Clock) : VelocityMotor, TranslationalDistanceSensor {
+  (clock: Clock) : VelocityMotor, RotationalDistanceSensor {
   private val stopwatch: Stopwatch = Stopwatch(clock)
 
   /**
    * Assumed to be in dist/second
    */
-  override var velocity: LinearVelocity = Units.mps(0.0)
+  override var velocity: AngularVelocity = zero()
     private set
   /**
    * @return The motor to which the velocity is being applied
@@ -36,8 +36,9 @@ class BaseSimulatedMotor
    *
    */
   var subscribed: VelocityMotor? = null
-  override var position = 0.0.meters
-    get(): Distance {
+
+  override var position = 0.0.radians
+    get(): Angle {
       stopwatch.resetIfNotInit()
       field += velocity * stopwatch.pop()
       return field
@@ -47,7 +48,7 @@ class BaseSimulatedMotor
   /**
    * @param targetVelocity The target speed for the motor to be ran at
    */
-  override fun runVelocity(targetVelocity: LinearVelocity) {
+  override fun runVelocity(targetVelocity: AngularVelocity) {
     stopwatch.resetIfNotInit()
     if (subscribed != null) {
       subscribed!!.runVelocity(targetVelocity)

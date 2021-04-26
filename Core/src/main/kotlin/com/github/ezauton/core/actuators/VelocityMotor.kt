@@ -1,6 +1,6 @@
 package com.github.ezauton.core.actuators
 
-import com.github.ezauton.conversion.LinearVelocity
+import com.github.ezauton.conversion.AngularVelocity
 
 /**
  * A motor which can be run at a certain velocity
@@ -11,5 +11,5 @@ interface VelocityMotor : Motor {
    *
    * @param targetVelocity The speed to run the motor at
    */
-  fun runVelocity(targetVelocity: LinearVelocity)
+  fun runVelocity(targetVelocity: AngularVelocity)
 }
