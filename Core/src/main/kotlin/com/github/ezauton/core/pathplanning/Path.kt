@@ -20,6 +20,7 @@ class Path<T : SIUnit<T>> constructor(val pathSegments: List<PathSegment<T>>) {
   private val distances = DoubleArray(pathSegments.size + 1) { 0.0 }
 
 
+
   init {
     for (i in pathSegments.indices) {
       distances[i + 1] = distances[i] + pathSegments[i].length.value

@@ -5,6 +5,12 @@ import com.github.ezauton.core.pathplanning.PathProgressor
 import com.github.ezauton.core.pathplanning.ProgressResult
 import kotlinx.coroutines.channels.Channel
 
+
+sealed class Update<T: SIUnit<T>> {
+  class Result<T: SIUnit<T>>(val goal: ConcreteVector<T>, val on: ProgressResult<T>): Update<T>()
+  class Finished<T: SIUnit<T>>: Update<T>()
+}
+
 /**
  * The main logic behind Pure Pursuit ... returns the subsequent location the robot should try to
  * go towards.
@@ -27,11 +33,8 @@ class PurePursuitMovementStrategy
   private val dataChannel: Channel<PurePursuitData>? = null
 ) {
 
-  var isFinished = false
-    private set
-
   init {
-    require(stopTolerance <= 0) { "stopTolerance must be a positive number!" }
+    require(stopTolerance.isPositive) { "stopTolerance must be a positive number!" }
   }
 
   private val path get() = pathProgressor.path
@@ -52,32 +55,33 @@ class PurePursuitMovementStrategy
    * @param lookahead Current lookahead as given by an Lookahead instance
    * @return The wanted pose of the robot at a certain location
    */
-  fun update(loc: ConcreteVector<Distance>, lookahead: Distance): ConcreteVector<Distance>? {
+  suspend fun update(loc: ConcreteVector<Distance>, lookahead: Distance): Update<Distance> {
 
-    val currentDistance = when (val on = pathProgressor.progress(loc)) {
+    val on = pathProgressor.progress(loc)
+
+    when (on) {
       is ProgressResult.End -> {
-        isFinished = true
-        return null
+        return Update.Finished()
       };
       is ProgressResult.OnPath -> {
         val distanceLeft = path.distance - on.distance
         if (distanceLeft < stopTolerance) {
-          isFinished = true
-          return null
+          return Update.Finished()
         }
-        on.distance
       }
-      is ProgressResult.Start -> zero()
+      else -> {
+      }
     }
 
-    val goalPoint = calculateAbsoluteGoalPoint(currentDistance, lookahead)
+    val goalPoint = calculateAbsoluteGoalPoint(on.distance, lookahead)
 
     if (dataChannel != null) {
-      val data = PurePursuitData(goalPoint, isFinished, lookahead, closestPoint, closestPointDist, segmentOnI)
-      val channel = Channel()
+      val closestPointDist = on.closestPoint.value.dist(loc)
+      val data = PurePursuitData(goalPoint, isFinished, lookahead, on.closestPoint.value.scalarVector, closestPointDist.value, on.segmentIdx)
       dataChannel.send(data)
     }
-    return goalPoint
+
+    return Update.Result(goalPoint, on)
   }
 }
 

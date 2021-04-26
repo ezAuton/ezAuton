@@ -1,12 +1,17 @@
 package com.github.ezauton.core.action
 
+import com.github.ezauton.conversion.Distance
+import com.github.ezauton.conversion.LinearVelocity
 import com.github.ezauton.conversion.Time
 import com.github.ezauton.conversion.mps
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
-import com.github.ezauton.core.pathplanning.PathProgressor
 import com.github.ezauton.core.pathplanning.purepursuit.Lookahead
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy
+import com.github.ezauton.core.pathplanning.purepursuit.Update
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
+
+
+typealias Speed = (distance: Distance) -> LinearVelocity
 
 /**
  * A Pure Pursuit action which can be used in simulation or as a WPILib Command
@@ -19,26 +24,27 @@ import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
  */
 fun purePursuit(
   period: Time,
+  speedFunction: Speed,
   purePursuitMovementStrategy: PurePursuitMovementStrategy,
   translationalLocationEstimator: TranslationalLocationEstimator,
   lookahead: Lookahead,
   translationalLocationDrivable: TranslationalLocationDrivable
 ) = action {
-  periodic { loop ->
+  periodic(period) { loop ->
 
-    if (purePursuitMovementStrategy.isFinished) {
-      translationalLocationDrivable.driveSpeed(0.0.mps)
-      loop.stop()
+    val currentLocation = translationalLocationEstimator.estimateLocation()
+
+    when (val update = purePursuitMovementStrategy.update(currentLocation, lookahead.lookahead)) {
+      is Update.Finished -> {
+        translationalLocationDrivable.driveSpeed(0.0.mps)
+        loop.stop()
+      }
+      is Update.Result -> {
+        val speedUsed = speedFunction(update.on.distance)
+        translationalLocationDrivable.driveTowardTransLoc(speedUsed, update.goal)
+      }
     }
 
-    val loc = translationalLocationEstimator.estimateLocation()
-    val goalPoint = purePursuitMovementStrategy.update(loc, lookahead.lookahead)
-    val path = purePursuitMovementStrategy.path
-    val progressor = PathProgressor(path)
-    val current = progressor.segmentOn
-    val closestPoint = current.getClosestPoint(loc)
-    val absoluteDistanceUsed = current.getAbsoluteDistance(closestPoint)
-    val speedUsed = current.getSpeed(absoluteDistanceUsed)
-    translationalLocationDrivable.driveTowardTransLoc(speedUsed, goalPoint)
+
   }
 }

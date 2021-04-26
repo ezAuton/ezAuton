@@ -12,10 +12,10 @@ enum class Position {
   END
 }
 
-sealed class ProgressResult<T : SIUnit<T>> {
-  class Start<T : SIUnit<T>>(val segment: PathSegment<T>) : ProgressResult<T>()
-  class End<T : SIUnit<T>>(val segment: PathSegment<T>) : ProgressResult<T>()
-  class OnPath<T : SIUnit<T>>(val point: SegmentPoint<T>, val segment: PathSegment<T>, val distance: T, val position: Position) : ProgressResult<T>()
+sealed class ProgressResult<T : SIUnit<T>>(val segment: PathSegment<T>, val closestPoint: SegmentPoint<T>, val distance: T, val segmentIdx: Int) {
+  class Start<T : SIUnit<T>>(segment: PathSegment<T>, point: SegmentPoint<T>, distance: T, segmentIdx: Int) : ProgressResult<T>(segment, point, distance, segmentIdx)
+  class End<T : SIUnit<T>>(segment: PathSegment<T>, point: SegmentPoint<T>, distance: T, segmentIdx: Int) : ProgressResult<T>(segment, point, distance, segmentIdx)
+  class OnPath<T : SIUnit<T>>(segment: PathSegment<T>, point: SegmentPoint<T>, distance: T, val position: Position, segmentIdx: Int) : ProgressResult<T>(segment, point, distance, segmentIdx)
 }
 
 class PathProgressor<T : SIUnit<T>>(val path: Path<T>) {
@@ -48,24 +48,24 @@ class PathProgressor<T : SIUnit<T>>(val path: Path<T>) {
           val distanceBefore = path.distanceBeforeIdx(segmentOnIdx)
           val distanceAt = distanceBefore + t * segmentOn.length.value
 
-          val position = when(segmentOnIdx){
+          val position = when (segmentOnIdx) {
             path.pathSegments.lastIndex -> Position.END
             0 -> Position.START
             else -> Position.MIDDLE
           }
 
-          return ProgressResult.OnPath(segmentPoint, segmentOn, distanceAt.withUnit(type), position)
+          return ProgressResult.OnPath(segmentOn, segmentPoint, distanceAt.withUnit(type), position, segmentOnIdx)
         }
       }
 
       when {
         segmentOnIdx < 0 -> {
           segmentOnIdx = 0
-          return ProgressResult.Start(segmentOn)
+          return ProgressResult.Start(segmentOn, SegmentPoint(segmentOn.from, 0.0), 0.0.withUnit(type), segmentOnIdx)
         }
         segmentOnIdx >= path.pathSegments.size -> {
           segmentOnIdx = path.pathSegments.lastIndex
-          return ProgressResult.End(segmentOn)
+          return ProgressResult.End(segmentOn, SegmentPoint(segmentOn.to, 1.0), path.distance, segmentOnIdx)
         }
       }
 
