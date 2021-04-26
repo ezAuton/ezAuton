@@ -22,7 +22,7 @@ class LinearPathSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, ove
   override val length = from.dist(to)
   override val type get() = from.type
 
-  val n = (from - to).normalized().scalarVector
+  val n = (from - to).scalarVector / length.value
 
   init {
     if (length.isZero) {
@@ -30,7 +30,7 @@ class LinearPathSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, ove
     }
   }
 
-  override fun getClosestPointTo(point: ConcreteVector<T>): SegmentPoint<T> {
+  override fun getClosestPoint(point: ConcreteVector<T>): SegmentPoint<T> {
     val (a, b, p) = scalar(from, to, point)
     val ap = p - a
     val t = ap.dot(n)

@@ -3,6 +3,7 @@ package com.github.ezauton.core.action
 import com.github.ezauton.conversion.Time
 import com.github.ezauton.conversion.mps
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
+import com.github.ezauton.core.pathplanning.PathProgressor
 import com.github.ezauton.core.pathplanning.purepursuit.Lookahead
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
@@ -33,7 +34,8 @@ fun purePursuit(
     val loc = translationalLocationEstimator.estimateLocation()
     val goalPoint = purePursuitMovementStrategy.update(loc, lookahead.lookahead)
     val path = purePursuitMovementStrategy.path
-    val current = path.current
+    val progressor = PathProgressor(path)
+    val current = progressor.segmentOn
     val closestPoint = current.getClosestPoint(loc)
     val absoluteDistanceUsed = current.getAbsoluteDistance(closestPoint)
     val speedUsed = current.getSpeed(absoluteDistanceUsed)
