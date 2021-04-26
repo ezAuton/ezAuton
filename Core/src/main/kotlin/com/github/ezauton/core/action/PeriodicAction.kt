@@ -45,7 +45,7 @@ enum class DelayType {
 }
 
 suspend fun CoroutineScope.periodic(
-  period: Time = 20.ms,
+  period: Time = DEFAULT_PERIOD,
   loopMethod: DelayType = DelayType.FROM_START,
   duration: Time? = null,
   iterations: Int? = null,

@@ -1,7 +1,7 @@
 package com.github.ezauton.core.pathplanning
 
 import com.github.ezauton.conversion.ScalarVector
-import com.github.ezauton.core.utils.LinearInterpolationMap
+//import com.github.ezauton.core.utils.LinearInterpolationMap
 
 ///**
 // * A fully-implemented linear path segment. This class

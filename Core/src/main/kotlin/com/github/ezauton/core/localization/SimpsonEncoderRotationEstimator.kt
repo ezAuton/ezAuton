@@ -4,9 +4,11 @@ import com.github.ezauton.conversion.*
 import com.github.ezauton.core.localization.sensors.VelocityEstimator
 import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
+import com.github.ezauton.core.utils.math.min
 import com.github.ezauton.core.utils.math.polarVector2D
+import kotlin.math.max
 
-typealias TimeIndexedVelocityVec = Pair<SIUnit<Time>, ConcreteVector<Velocity>>
+typealias TimeIndexedVelocityVec = Pair<Time, ConcreteVector<LinearVelocity>>
 
 /**
  * Describes an Updatable object that can track the location and heading of the robot using a rotational device
@@ -29,9 +31,9 @@ class SimpsonEncoderRotationEstimator
 ) : RotationalLocationEstimator, TranslationalLocationEstimator, Updatable {
 
   private val stopwatch: Stopwatch = Stopwatch(clock)
-  private var velocity: SIUnit<Velocity> = Double.NaN.mps
-  private var dPosVec = ConcreteVector.empty<Distance>()
-  private var positionVec = ConcreteVector.empty<Distance>()
+  private var velocity: LinearVelocity = Double.NaN.mps
+  private var dPosVec = vec<Distance>()
+  private var positionVec = vec<Distance>()
   private var init = false
 
   /**
@@ -48,13 +50,13 @@ class SimpsonEncoderRotationEstimator
    * Set the current position to <0, 0>, in effect resetting the location estimator
    */
   fun reset() { // TODO: Reset heading
-    dPosVec = cvec(0.0, 0.0)
-    positionVec = cvec(0.0, 0.0)
+    dPosVec = vec(0.0, 0.0)
+    positionVec = vec(0.0, 0.0)
     init = true
     stopwatch.reset()
   }
 
-  override fun estimateHeading(): SIUnit<Angle> {
+  override fun estimateHeading(): Angle {
     return rotationalLocationEstimator.estimateHeading()
   }
 
@@ -91,18 +93,18 @@ class SimpsonEncoderRotationEstimator
         dPosVec = cvec(0.0, 0.0)
 
         val xVelComponent = Parabola(
-          scalarVec(vel2ago!!.time, vel2ago!!.velVec[0]),
-          scalarVec(vel1ago!!.time, vel1ago!!.velVec[0]),
-          scalarVec(currentTime, velVec[0])
+          scalarVec(vel2ago!!.first.s, vel2ago!!.second.scalarVector.x),
+          scalarVec(vel1ago!!.first.s, vel1ago!!.second.scalarVector.x),
+          scalarVec(currentTime.s, velVec.x.s)
         )
 
         val yVelComponent = Parabola(
-          ScalarVector(vel2ago!!.time, vel2ago!!.velVec[1]),
-          ScalarVector(vel1ago!!.time, vel1ago!!.velVec[1]),
-          ScalarVector(currentTime, velVec[1])
+          scalarVec(vel2ago!!.first.s, vel2ago!!.second.scalarVector.y),
+          scalarVec(vel1ago!!.first.s, vel1ago!!.second.scalarVector.y),
+          scalarVec(currentTime.s, velVec.y.s)
         )
 
-        dPosVec = ScalarVector(xVelComponent.integrate(), yVelComponent.integrate())
+        dPosVec = svec(xVelComponent.integrate(), yVelComponent.integrate()).withUnit()
 
         if (!dPosVec.isFinite) {
           System.err.println("vel2ago = " + vel2ago!!)
@@ -117,9 +119,7 @@ class SimpsonEncoderRotationEstimator
       }
     } else {
       if (vel1ago == null) {
-        if (vel2ago == null || currentTime > vel2ago!!.time + epsilon) {
-          //                    System.out.println("vel2ago = " + vel2ago);
-          //                    System.out.println("currentTime = " + currentTime);
+        if (vel2ago == null || currentTime.s > vel2ago!!.first.s + epsilon) {
           vel1ago = TimeIndexedVelocityVec(currentTime, velVec)
         }
       } else if (vel2ago == null) {
@@ -130,13 +130,14 @@ class SimpsonEncoderRotationEstimator
     return true // TODO: Return false sometimes?
   }
 
-  private class Parabola<T : Any>(point1: ConcreteVector<T>, point2: ConcreteVector<T>, point3: ConcreteVector<T>) {
+  private class Parabola(point1: ScalarVector, point2: ScalarVector, point3: ScalarVector) {
+    
     private val a: Double
     private val b: Double
     private val c: Double
 
-    private val lowerBound: SIUnit<T>
-    private val upperBound: SIUnit<T>
+    private val lowerBound: Double
+    private val upperBound: Double
 
     init {
       val x1 = point1[0]
@@ -171,14 +172,6 @@ class SimpsonEncoderRotationEstimator
   }
 
   companion object {
-
-    private const val epsilon =
-      1e-3 // One millisecond; we can't reasonably expect our clock to have a resolution below 1 ms
-
-    @JvmStatic
-    fun main(args: Array<String>) {
-      val parabola = Parabola(scalarVec(0.0, 2.0), ScalarVector(4.0, 6.0), ScalarVector(10.0, 2.0))
-      println("parabola = " + parabola.integrate())
-    }
+    private const val epsilon = 1e-3 // One millisecond; we can't reasonably expect our clock to have a resolution below 1 ms
   }
 }

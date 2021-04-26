@@ -15,7 +15,5 @@ class RealClock private constructor() : Clock {
 
   override val time get() = now()
 
-  companion object {
-    val CLOCK = RealClock()
-  }
+  companion object: Clock by RealClock()
 }

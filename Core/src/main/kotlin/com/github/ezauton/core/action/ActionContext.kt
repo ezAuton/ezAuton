@@ -5,7 +5,7 @@ import com.github.ezauton.conversion.Units
 import com.github.ezauton.core.utils.Clock
 import kotlinx.coroutines.CoroutineScope
 
-interface ActionContext: CoroutineScope  {
+interface ActionContext: CoroutineScope, ActionGroup  {
 
 
   suspend fun delay(millis: Long) {

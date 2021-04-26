@@ -81,7 +81,7 @@ fun <T: SIUnit<T>> polarVector2D(magnitude: T, angle: Angle): ConcreteVector<T> 
   return VECTOR_FORWARD.rotate2D(angle).times(magnitude)
 }
 
-private fun ScalarVector.rotate2D(value: Angle): ScalarVector {
+fun ScalarVector.rotate2D(value: Angle): ScalarVector {
   val radians = value.radians
   val newX = cos(radians) * x + sin(radians) * y
   val newY = sin(radians) * x + cos(radians) * y

@@ -1,10 +1,10 @@
 package com.github.ezauton.core.action
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
-
 
 
 interface ActionGroup {
@@ -60,7 +60,7 @@ interface ActionGroup {
  * finished. The reason for this is mentioned
  * [here](https://vorpus.org/blog/notes-on-structured-concurrency-or-go-statement-considered-harmful/).
  */
-private class ActionGroupImpl: ActionGroup {
+private class ActionGroupImpl : ActionGroup {
 
   private var scheduledActions: Queue<ActionWrapper>
 
@@ -213,11 +213,5 @@ private class ActionGroupImpl: ActionGroup {
   data class ActionWrapper(val action: Action, val type: Type)
 }
 
-
-suspend fun ActionContext.group(block: ActionGroup.() -> Unit) {
-  val group = ActionGroupImpl()
-  group.block()
-  with(group) {
-    run()
-  }
-}
+// TODO: move location
+class SimpleContext(private val scope: CoroutineScope): ActionContext, CoroutineScope by scope, ActionGroup by ActionGroupImpl()

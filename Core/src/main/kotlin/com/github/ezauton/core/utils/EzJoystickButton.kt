@@ -1,7 +1,7 @@
 package com.github.ezauton.core.utils
 
 import com.github.ezauton.core.action.Action
-import com.github.ezauton.core.simulation.ActionScheduler
+import com.github.ezauton.core.simulation.Scheduler
 
 import java.util.function.Supplier
 
@@ -13,7 +13,7 @@ interface EzJoystickButton {
    *
    * @param runnable runnable to run
    */
-  fun whenPressed(actionScheduler: ActionScheduler, actionSupplier: Supplier<Action>)
+  fun whenPressed(scheduler: Scheduler, actionSupplier: Supplier<Action>)
 
   /**
    * Constantly starts the given command while the button is held.
@@ -24,26 +24,26 @@ interface EzJoystickButton {
    *
    * @param runnable the runnable to start
    */
-  fun whileHeld(actionScheduler: ActionScheduler, actionSupplier: Supplier<Action>)
+  fun whileHeld(scheduler: Scheduler, actionSupplier: Supplier<Action>)
 
   /**
    * Starts the command when the button is released.
    *
    * @param runnable the runnable to start
    */
-  fun whenReleased(actionScheduler: ActionScheduler, actionSupplier: Supplier<Action>)
+  fun whenReleased(scheduler: Scheduler, actionSupplier: Supplier<Action>)
 
   /**
    * Toggles the command whenever the button is pressed (on then off then on).
    *
    * @param runnable the runnable to start
    */
-  fun toggleWhenPressed(actionScheduler: ActionScheduler, actionSupplier: Supplier<Action>)
+  fun toggleWhenPressed(scheduler: Scheduler, actionSupplier: Supplier<Action>)
 
   /**
    * Cancel the command when the button is pressed.
    *
    * @param runnable the runnable to start
    */
-  fun cancelWhenPressed(actionScheduler: ActionScheduler, actionSupplier: Supplier<Action>)
+  fun cancelWhenPressed(scheduler: Scheduler, actionSupplier: Supplier<Action>)
 }

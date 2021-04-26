@@ -1,6 +1,6 @@
 package com.github.ezauton.core.localization.estimators
 
-import com.github.ezauton.conversion.ScalarVector
+import com.github.ezauton.conversion.*
 import com.github.ezauton.core.localization.RotationalLocationEstimator
 import com.github.ezauton.core.localization.TankRobotVelocityEstimator
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
@@ -27,17 +27,15 @@ class TankRobotEncoderEncoderEstimator
   private val right: TranslationalDistanceSensor,
   private val tankRobot: TankRobotConstants
 ) : RotationalLocationEstimator, TranslationalLocationEstimator, TankRobotVelocityEstimator, Updatable {
-  private var lastPosLeft: Double = 0.toDouble()
-  private var lastPosRight: Double = 0.toDouble()
+  private var lastPosLeft: Distance = zero()
+  private var lastPosRight: Distance = zero()
   private var init = false
-  private var heading = 0.0
-  private var location = ScalarVector.origin(2)
+  private var heading: Angle = zero()
+  private var location: ConcreteVector<Distance> = origin(2)
 
-  override val leftTranslationalWheelVelocity: Double
-    get() = left.velocity
+  override val leftTranslationalWheelVelocity: LinearVelocity get() = left.velocity
 
-  override val rightTranslationalWheelVelocity: Double
-    get() = right.velocity
+  override val rightTranslationalWheelVelocity: LinearVelocity get() = right.velocity
 
   /**
    * Reset the heading and position of the location estimator
@@ -45,16 +43,16 @@ class TankRobotEncoderEncoderEstimator
   fun reset() {
     lastPosLeft = left.position
     lastPosRight = right.position
-    location = ScalarVector(0.0, 0.0)
-    heading = 0.0
+    location = origin(2)
+    heading = zero()
     init = true
   }
 
-  override fun estimateHeading(): Double {
+  override fun estimateHeading(): Angle {
     return heading
   }
 
-  override fun estimateLocation(): ScalarVector {
+  override fun estimateLocation(): ConcreteVector<Distance> {
     return location
   }
 
@@ -76,20 +74,21 @@ class TankRobotEncoderEncoderEstimator
     lastPosLeft = leftPosition
     lastPosRight = rightPosition
 
-    val dLocation = getAbsoluteDPosCurve(dl, dr, tankRobot.lateralWheelDistance, heading)
+    val dLocation: ConcreteVector<Distance> = getAbsoluteDPosCurve(dl.value, dr.value, tankRobot.lateralWheelDistance.value, heading).withUnit()
 
     if (!dLocation.isFinite) {
       throw IllegalStateException("dLocation is $dLocation, which is not finite! dl = $dl, dr = $dr, heading = $heading")
     }
+
     location += dLocation
-    heading += getAngularDistance(dl, dr, tankRobot.lateralWheelDistance)
+    heading += getAngularDistance(dl.value, dr.value, tankRobot.lateralWheelDistance.value).withUnit()
     return true
   }
 
   /**
    * @return The current velocity vector of the robot in 2D space.
    */
-  override fun estimateAbsoluteVelocity(): ScalarVector {
-    return polarVector2D(magnitude = avgTranslationalWheelVelocity, theta = heading)
+  override fun estimateAbsoluteVelocity(): ConcreteVector<LinearVelocity> {
+    return polarVector2D(magnitude = avgTranslationalWheelVelocity, angle = heading)
   }
 }

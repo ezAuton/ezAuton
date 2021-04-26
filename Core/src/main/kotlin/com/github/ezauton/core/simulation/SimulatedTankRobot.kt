@@ -1,7 +1,6 @@
 package com.github.ezauton.core.simulation
 
-import com.github.ezauton.conversion.AngularAcceleration
-import com.github.ezauton.conversion.AngularVelocity
+import com.github.ezauton.conversion.*
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.actuators.implementations.SimulatedMotor
 import com.github.ezauton.core.localization.Updatable
@@ -20,7 +19,7 @@ class SimulatedTankRobot
  * @param maxAccel The max acceleration of the motors
  * @param minVel The minimum velocity the robot can continuously drive at (i.e. the robot cannot drive at 0.0001 ft/s)
  */
-  (override val lateralWheelDistance: Double, clock: Clock, maxAccel: AngularAcceleration, minVel: AngularVelocity, maxVel: AngularVelocity) : TankRobotConstants, Updatable {
+  (override val lateralWheelDistance: Distance, clock: Clock, maxAccel: LinearAcceleration, minVel: LinearVelocity, maxVel: LinearVelocity) : TankRobotConstants, Updatable {
 
   private val left: SimulatedMotor
   private val right: SimulatedMotor
@@ -44,11 +43,15 @@ class SimulatedTankRobot
   init {
     stopwatch.init()
 
-    left = SimulatedMotor(clock, maxAccel, minVel, maxVel, 1.0)
-    leftDistanceSensor = Encoders.toTranslationalDistanceSensor(1.0, 1.0, left)
+    val maxAccelAngular: AngularAcceleration = SI(maxAccel.value)
+    val minVelAngular: AngularVelocity = SI(minVel.value)
+    val maxVelAngular: AngularVelocity = SI(maxVel.value)
 
-    right = SimulatedMotor(clock, maxAccel, minVel, maxVel, 1.0)
-    rightDistanceSensor = Encoders.toTranslationalDistanceSensor(1.0, 1.0, right)
+    left = SimulatedMotor(clock, maxAccelAngular, minVelAngular, maxVelAngular, 1.0)
+    leftDistanceSensor = Encoders.toTranslationalDistanceSensor(1.0.meters, 1.0.mps, left)
+
+    right = SimulatedMotor(clock, maxAccelAngular, minVelAngular, maxVelAngular, 1.0)
+    rightDistanceSensor = Encoders.toTranslationalDistanceSensor(1.0.meters, 1.0.mps, right)
 
     toUpdate = setOf(left, right)
 
@@ -56,14 +59,13 @@ class SimulatedTankRobot
     this.defaultTransLocDriveable = TankRobotTransLocDrivable(left, right, defaultLocEstimator, defaultLocEstimator, this)
   }
 
-  fun run(leftV: AngularVelocity, rightV: AngularVelocity) {
-    left.runVelocity(leftV)
-    right.runVelocity(rightV)
+  fun run(leftV: LinearVelocity, rightV: LinearVelocity) {
+    // TODO: sketchhhhhh
+    left.runVelocity(leftV.s.withUnit())
+    right.runVelocity(rightV.s.withUnit())
   }
 
   override fun update(): Boolean {
-    //        long read = stopwatch.read(TimeUnit.SECONDS);
-    //        log.append(read).append(", ").append(leftTDS.getVelocity()).append(", ").append(rightTDS.getVelocity()).append("\n");
     toUpdate.forEach { it.update() }
     defaultLocEstimator.update()
     return true

@@ -9,3 +9,6 @@ interface Updatable {
    */
   fun update(): Boolean
 }
+
+
+fun Iterable<Updatable>.update() = forEach { it.update() }

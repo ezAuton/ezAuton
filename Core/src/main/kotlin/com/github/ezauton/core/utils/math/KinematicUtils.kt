@@ -1,5 +1,6 @@
 package com.github.ezauton.core.utils.math
 
+import com.github.ezauton.conversion.Angle
 import com.github.ezauton.conversion.ScalarVector
 
 /**
@@ -44,6 +45,7 @@ fun getTrajectoryRadius(vL: Double, vR: Double, l: Double): Double {
  * @return
  */
 fun getRelativeDPosCurve(distanceLeft: Double, distanceRight: Double, lateralWheelDistance: Double): ScalarVector {
+  // TODO: fix dist
   // To account for an infinite pathplanning radius when going straight
   if (Math.abs(distanceLeft - distanceRight) <= Math.abs(distanceLeft + distanceRight) * 1E-2) {
     // Probably average is not needed, but it may be useful over long distances
@@ -63,14 +65,14 @@ fun getTangentialSpeed(wheelL: Double, wheelR: Double): Double {
   return (wheelL + wheelR) / 2.0
 }
 
-fun getAbsoluteDPosLine(vL: Double, vR: Double, dt: Double, robotHeading: Double): ScalarVector {
-  val tangentialSpeed = getTangentialSpeed(vL, vR)
+fun getAbsoluteDPosLine(vL: Double, vR: Double, dt: Double, robotHeading: Angle): ScalarVector {
+//  val tangentialSpeed = getTangentialSpeed(vL, vR)
   val tangentialDPos = getTangentialSpeed(vL, vR) * dt
-  val dPos = VECTOR_FORWARD.mul(tangentialDPos)
+  val dPos = VECTOR_FORWARD * tangentialDPos
   return dPos.rotate2D(robotHeading)
 }
 
-fun getAbsoluteDPosCurve(vL: Double, vR: Double, l: Double, robotHeading: Double): ScalarVector {
+fun getAbsoluteDPosCurve(vL: Double, vR: Double, l: Double, robotHeading: Angle): ScalarVector {
   return getRelativeDPosCurve(vL, vR, l).rotate2D(robotHeading)
 }
 

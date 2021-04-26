@@ -23,7 +23,7 @@ public class PathSerializer extends StdSerializer<Path> {
     public void serialize(Path value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonGenerationException {
         try {
             List<PathSegment> pathSegments = value.getPathSegments();
-            double length = value.getLength();
+            double length = value.getDistance().getValue();
 
             jgen.writeStartObject();
             jgen.writeFieldName("pathSegments");

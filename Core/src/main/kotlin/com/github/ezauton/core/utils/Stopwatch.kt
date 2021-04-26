@@ -10,7 +10,7 @@ import com.github.ezauton.conversion.seconds
 class Stopwatch(val clock: Clock) {
   companion object {
     fun new(): Stopwatch {
-      return Stopwatch(RealClock.CLOCK)
+      return Stopwatch(RealClock)
     }
   }
   private var startDuration: Time = (-1).seconds

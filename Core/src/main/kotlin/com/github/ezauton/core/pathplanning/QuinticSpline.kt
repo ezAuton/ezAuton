@@ -3,8 +3,8 @@ package com.github.ezauton.core.pathplanning
 import com.github.ezauton.conversion.ConcreteVector
 import com.github.ezauton.conversion.SIUnit
 import com.github.ezauton.conversion.ScalarVector
-import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
-import com.github.ezauton.core.utils.LinearInterpolationMap
+//import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
+//import com.github.ezauton.core.utils.LinearInterpolationMap
 import com.github.ezauton.core.utils.math.ParametricFunction
 
 //class QuinticSpline<T : SIUnit<T>>(val first: ConcreteVector<T>, val last: ConcreteVector<T>, val firstSlope: ScalarVector<T>, val lastSlope: ScalarVector<T>) : ParametricFunction {

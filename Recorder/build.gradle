@@ -16,4 +16,5 @@ repositories {
 dependencies {
     compile project(':Core')
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
+    implementation "com.github.ezauton:Conversion:1.0-SNAPSHOT"
 }

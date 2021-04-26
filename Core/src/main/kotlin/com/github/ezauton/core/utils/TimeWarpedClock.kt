@@ -11,7 +11,7 @@ class TimeWarpedClock @JvmOverloads constructor(val speed: Double, private val s
 
   override suspend fun delayFor(duration: Time) = delay((duration.millis / speed).toLong())
 
-  private val realClock: RealClock = RealClock.CLOCK
+  private val realClock = RealClock
   private val timeStartedAt = now()
 
   override val time: Time

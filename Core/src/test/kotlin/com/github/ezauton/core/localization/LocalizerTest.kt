@@ -1,60 +1,75 @@
 package com.github.ezauton.core.localization
 
-import com.github.ezauton.core.action.ActionGroup
-import com.github.ezauton.core.action.DelayedAction
-import com.github.ezauton.core.action.TimedPeriodicAction
+import com.github.ezauton.conversion.*
+import com.github.ezauton.core.action.action
+import com.github.ezauton.core.action.periodic
+import com.github.ezauton.core.action.withTimeout
 import com.github.ezauton.core.localization.estimators.EncoderRotationEstimator
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
+import com.github.ezauton.core.simulation.Scheduler
 import com.github.ezauton.core.simulation.SimulatedTankRobot
-import com.github.ezauton.core.simulation.TimeWarpedSimulation
+import com.github.ezauton.core.utils.RealClock
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class LocalizerTest {
+
   @Test
   @Throws(TimeoutException::class, ExecutionException::class)
   fun testThatTheLocalizersGiveSimilarResults() {
-    val sim = TimeWarpedSimulation()
-    val simulatedBot = SimulatedTankRobot(0.2, sim.clock, 3.0, -4.0, 4.0)
+    val simulatedBot = SimulatedTankRobot(0.2.meters, RealClock, 3.0.mps / sec, (-4.0).mps, 4.0.mps)
     simulatedBot.defaultLocEstimator.reset()
 
     val locEstimator = TankRobotEncoderEncoderEstimator(simulatedBot.leftDistanceSensor, simulatedBot.rightDistanceSensor, simulatedBot)
     val encRotEstimator = EncoderRotationEstimator(locEstimator, object : TranslationalDistanceSensor {
 
       override // correct because of linearity of integration
-      val position: Double
+      val position: Distance
         get() = (simulatedBot.leftDistanceSensor.position + simulatedBot.rightDistanceSensor.position) / 2
 
-      override val velocity: Double
+      override val velocity: LinearVelocity
         get() = (simulatedBot.leftDistanceSensor.velocity + simulatedBot.rightDistanceSensor.velocity) / 2
     })
-    val simpson = SimpsonEncoderRotationEstimator(locEstimator, { simulatedBot.defaultLocEstimator.avgTranslationalWheelVelocity }, sim.clock)
+    val simpson = SimpsonEncoderRotationEstimator(locEstimator, simulatedBot.defaultLocEstimator, RealClock)
 
     locEstimator.reset()
     encRotEstimator.reset()
     simpson.reset()
 
-    val actionGroup = ActionGroup()
-      .addParallel(TimedPeriodicAction(5, TimeUnit.SECONDS, { simulatedBot.run(1.0, 1.0) }))
-      .with(BackgroundAction(10, TimeUnit.MILLISECONDS, Runnable { locEstimator.update() }, Runnable { simulatedBot.update() }, Runnable { encRotEstimator.update() }, Runnable { simpson.update() }))
-      .addSequential(DelayedAction(7, TimeUnit.SECONDS))
+    val actionGroup = action {
+      addParallel {
+        periodic(5.seconds) {
+          simulatedBot.run(1.0.mps, 1.0.mps)
+        }
+      }
 
-    sim.add(actionGroup)
+      with {
+        val toUpdate = listOf(locEstimator, simulatedBot, encRotEstimator, simpson)
+        periodic(10.ms, duration = 7.seconds) {
+          toUpdate.update()
+        }
+      }
+    }
 
-    sim.runSimulation(10, TimeUnit.SECONDS)
+    runBlocking {
+      withTimeout(10.seconds) {
+        Scheduler.run(actionGroup)
+      }
+    }
 
-    simulatedBot.run(0.0, 0.0)
+
+    simulatedBot.run(0.0.mps, 0.0.mps)
 
     println("TankEncoderEncoderRotationEstimator = " + locEstimator.estimateLocation())
     println("EncoderRotationEstimator = " + encRotEstimator.estimateLocation())
     println("SimpsonEncRotEstimator = " + simpson.estimateLocation())
 
-    assertTrue(locEstimator.estimateLocation().dist2(encRotEstimator.estimateLocation()) < 0.01)
-    assertTrue(simpson.estimateLocation().dist2(encRotEstimator.estimateLocation()) < 0.01)
-    assertTrue(locEstimator.estimateLocation().dist2(simpson.estimateLocation()) < 0.01)
+    assertTrue(locEstimator.estimateLocation().dist2(encRotEstimator.estimateLocation()) < 0.01.meters)
+    assertTrue(simpson.estimateLocation().dist2(encRotEstimator.estimateLocation()) < 0.01.meters)
+    assertTrue(locEstimator.estimateLocation().dist2(simpson.estimateLocation()) < 0.01.meters)
   }
 }

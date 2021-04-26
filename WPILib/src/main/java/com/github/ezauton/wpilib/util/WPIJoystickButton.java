@@ -1,7 +1,7 @@
 package com.github.ezauton.wpilib.util;
 
 import com.github.ezauton.core.action.Action;
-import com.github.ezauton.core.simulation.ActionScheduler;
+import com.github.ezauton.core.simulation.Scheduler;
 import com.github.ezauton.core.utils.EzJoystickButton;
 import com.github.ezauton.wpilib.command.CommandCreator;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -26,31 +26,31 @@ public class WPIJoystickButton extends JoystickButton implements EzJoystickButto
     }
 
     @Override
-    public void whenPressed(ActionScheduler actionScheduler, Supplier<Action> actionSupplier) {
-        whenPressed(cmd(actionScheduler, actionSupplier.get()));
+    public void whenPressed(Scheduler scheduler, Supplier<Action> actionSupplier) {
+        whenPressed(cmd(scheduler, actionSupplier.get()));
     }
 
     @Override
-    public void whileHeld(ActionScheduler actionScheduler, Supplier<Action> actionSupplier) {
-        whileHeld(cmd(actionScheduler, actionSupplier.get()));
+    public void whileHeld(Scheduler scheduler, Supplier<Action> actionSupplier) {
+        whileHeld(cmd(scheduler, actionSupplier.get()));
     }
 
     @Override
-    public void whenReleased(ActionScheduler actionScheduler, Supplier<Action> actionSupplier) {
-        whenReleased(cmd(actionScheduler, actionSupplier.get()));
+    public void whenReleased(Scheduler scheduler, Supplier<Action> actionSupplier) {
+        whenReleased(cmd(scheduler, actionSupplier.get()));
     }
 
     @Override
-    public void toggleWhenPressed(ActionScheduler actionScheduler, Supplier<Action> actionSupplier) {
-        toggleWhenPressed(cmd(actionScheduler, actionSupplier.get()));
+    public void toggleWhenPressed(Scheduler scheduler, Supplier<Action> actionSupplier) {
+        toggleWhenPressed(cmd(scheduler, actionSupplier.get()));
     }
 
     @Override
-    public void cancelWhenPressed(ActionScheduler actionScheduler, Supplier<Action> actionSupplier) {
-        cancelWhenPressed(cmd(actionScheduler, actionSupplier.get()));
+    public void cancelWhenPressed(Scheduler scheduler, Supplier<Action> actionSupplier) {
+        cancelWhenPressed(cmd(scheduler, actionSupplier.get()));
     }
 
-    private CommandCreator cmd(ActionScheduler actionScheduler, Action runnable) {
-        return new CommandCreator(runnable, actionScheduler);
+    private CommandCreator cmd(Scheduler scheduler, Action runnable) {
+        return new CommandCreator(runnable, scheduler);
     }
 }

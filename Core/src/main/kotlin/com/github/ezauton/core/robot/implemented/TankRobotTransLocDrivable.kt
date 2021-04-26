@@ -49,10 +49,10 @@ class TankRobotTransLocDrivable
 
     lastLeftTarget = wheelVelocities[0]
 
-    leftMotor.runVelocity(lastLeftTarget)
+    leftMotor.runVelocity(lastLeftTarget.value.withUnit())
 
     lastRightTarget = wheelVelocities[1]
-    rightMotor.runVelocity(lastRightTarget)
+    rightMotor.runVelocity(lastRightTarget.value.withUnit())
 
     return true // always possible //TODO: Maybe sometimes return false?
   }
@@ -64,8 +64,8 @@ class TankRobotTransLocDrivable
    * @return True, it is always possible to drive straight
    */
   override fun driveSpeed(speed: LinearVelocity): Boolean {
-    leftMotor.runVelocity(speed)
-    rightMotor.runVelocity(speed)
+    leftMotor.runVelocity(speed.value.withUnit())
+    rightMotor.runVelocity(speed.value.withUnit())
     return true
   }
 
@@ -104,7 +104,7 @@ class TankRobotTransLocDrivable
       // vl/vr = -(L+2r)/(L-2r)
       val r = 1 / curvature.value // ELIMINATING UNITS
 
-      val velLeftToRightRatio = -(lateralWheelDistance + 2 * r) / (lateralWheelDistance - 2 * r)
+      val velLeftToRightRatio = -(lateralWheelDistance.value + 2 * r) / (lateralWheelDistance.value - 2 * r)
       val velRightToLeftRatio = 1 / velLeftToRightRatio // invert the ratio
 
       // This first big repetitive section is just finding the largest possible velocities while maintaining a ratio.
@@ -148,7 +148,7 @@ class TankRobotTransLocDrivable
         throw NullPointerException(s) // TODO: More informative error message
       }
 
-      if ((bestVector.get(0) + bestVector.get(1)) / speed == -1.0) { // tangential vel and speed are opposite signs
+      if ((bestVector[0] + bestVector[1]) / speed == -1.0) { // tangential vel and speed are opposite signs
         System.err.println("Robot is going the wrong direction!")
       }
     }

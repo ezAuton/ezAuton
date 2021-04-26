@@ -1,7 +1,7 @@
 package com.github.ezauton.wpilib.command;
 
 import com.github.ezauton.core.action.Action;
-import com.github.ezauton.core.simulation.ActionScheduler;
+import com.github.ezauton.core.simulation.Scheduler;
 import edu.wpi.first.wpilibj.command.Command;
 
 import java.util.concurrent.Future;
@@ -12,7 +12,7 @@ import java.util.concurrent.Future;
 public class CommandCreator extends Command {
 
     private final Action action;
-    private final ActionScheduler actionScheduler;
+    private final Scheduler scheduler;
     private Future<Void> voidFuture = null;
 
     /**
@@ -20,14 +20,14 @@ public class CommandCreator extends Command {
      *
      * @param action The action to run as a action
      */
-    public CommandCreator(Action action, ActionScheduler actionScheduler) {
+    public CommandCreator(Action action, Scheduler scheduler) {
         this.action = action;
-        this.actionScheduler = actionScheduler;
+        this.scheduler = scheduler;
     }
 
     @Override
     protected void initialize() {
-        voidFuture = actionScheduler.scheduleAction(action);
+        voidFuture = scheduler.run(action);
     }
 
     @Override

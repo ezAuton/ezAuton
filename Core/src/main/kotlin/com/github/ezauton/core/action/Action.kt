@@ -1,5 +1,8 @@
 package com.github.ezauton.core.action
 
+import com.github.ezauton.conversion.Time
+import kotlinx.coroutines.CoroutineScope
+
 /**
  * Describes an Action, which is similar to a WPILib Commands, but has both linear, periodic, and other implementations.
  * Additionally, it is not bound to the 20ms periodic timer for WPILib Commands. 👋 Commands! 🚀 🤖
@@ -26,6 +29,10 @@ fun ActionFunc.toAction() = object : Action {
     this@toAction()
   }
 }
+
+
+suspend fun <T> withTimeout(time: Time, block: suspend CoroutineScope.() -> T) = kotlinx.coroutines.withTimeout(time.millisL, block)
+
 //
 //fun Runnable.toAction() = object : Action {
 //  override suspend fun ActionContext.run() {
