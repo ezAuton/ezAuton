@@ -1,9 +1,6 @@
 package com.github.ezauton.core.pathplanning
 
-import com.github.ezauton.conversion.ConcreteVector
-import com.github.ezauton.conversion.SIUnit
-import com.github.ezauton.conversion.scalar
-import com.github.ezauton.conversion.times
+import com.github.ezauton.conversion.*
 
 /**
  * A mostly-implemented linear PathSegment which contains all methods save getSpeed(...).
@@ -17,7 +14,7 @@ import com.github.ezauton.conversion.times
  * @param beginning If this is the first path segment in the path
  * @param distanceStart How far along the path the starting location is (arclength)
  */
-class LinearPathSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, override val to: ConcreteVector<T>) : PathSegment<T> {
+class LineSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, override val to: ConcreteVector<T>) : PathSegment<T> {
 
   override val length = from.dist(to)
   override val type get() = from.type
@@ -28,6 +25,22 @@ class LinearPathSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, ove
     if (length.isZero) {
       throw IllegalArgumentException("PathSegment length must be non-zero.")
     }
+  }
+
+  val slope
+    get(): Double {
+      if ((to.x - from.x).isZero) {
+        return Double.POSITIVE_INFINITY
+      }
+      return (to.y - from.y) / (to.x - from.x)
+    }
+
+  fun integrate(): Double {
+    // TODO: hard to implement with unit
+    val dx = to.x - from.x
+    val averageY = (from.y + to.y) / 2
+
+    return (dx.value * averageY.value)
   }
 
   override fun getClosestPoint(point: ConcreteVector<T>): SegmentPoint<T> {

@@ -1,9 +1,6 @@
 package com.github.ezauton.core.utils.math
 
-import com.github.ezauton.conversion.ConcreteVector
-import com.github.ezauton.conversion.times
-import com.github.ezauton.conversion.Distance
-import com.github.ezauton.conversion.ScalarVector
+import com.github.ezauton.conversion.*
 
 val PHI = 1.618033989
 val ROOT_2 = 1.414213562
