@@ -14,6 +14,10 @@ val Resource.isTakenByAnyone get() = status is ResourceStatus.Used
 
 interface ResourceHold {
   fun giveBack()
+
+  companion object Empty : ResourceHold {
+    override fun giveBack() {}
+  }
 }
 
 fun ResourceHold.combine(other: ResourceHold): ResourceHold {

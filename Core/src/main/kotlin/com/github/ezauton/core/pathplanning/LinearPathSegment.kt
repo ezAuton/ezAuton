@@ -31,7 +31,7 @@ class LinearPathSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, ove
   }
 
   override fun getClosestPoint(point: ConcreteVector<T>): SegmentPoint<T> {
-    val (a, b, p) = scalar(from, to, point)
+    val (a, _, p) = scalar(from, to, point)
     val ap = p - a
     val t = ap.dot(n)
     val x = a + t * n //  x is a point on line

@@ -49,10 +49,8 @@ class SimulatedMotor
     motorConstraints.runVelocity(maxVelPerVolt * targetVoltage / kV)
   }
 
-  override val position: Angle
-    get() = motor.position
-  override val velocity: AngularVelocity
-    get() = TODO("Not yet implemented")
+  override val position: Angle get() = motor.position
+  override val velocity: AngularVelocity get() = motor.velocity
 
   override fun update(): Boolean {
     return toUpdate.update()

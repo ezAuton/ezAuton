@@ -41,18 +41,19 @@ class LocalizerTest {
     simpson.reset()
 
     val actionGroup = action {
-      addParallel {
-        periodic(5.seconds) {
+
+      parallel {
+        delay(1.seconds)
+        periodic(duration = 5.seconds) {
           simulatedBot.run(1.0.mps, 1.0.mps)
         }
       }
 
-      with {
-        val toUpdate = listOf(locEstimator, simulatedBot, encRotEstimator, simpson)
-        periodic(10.ms, duration = 7.seconds) {
-          toUpdate.update()
-        }
+      val toUpdate = listOf(locEstimator, simulatedBot, encRotEstimator, simpson)
+      periodic(duration = 7.seconds) {
+        toUpdate.update()
       }
+
     }
 
     runBlocking {
@@ -64,12 +65,18 @@ class LocalizerTest {
 
     simulatedBot.run(0.0.mps, 0.0.mps)
 
-    println("TankEncoderEncoderRotationEstimator = " + locEstimator.estimateLocation())
-    println("EncoderRotationEstimator = " + encRotEstimator.estimateLocation())
-    println("SimpsonEncRotEstimator = " + simpson.estimateLocation())
-
     assertTrue(locEstimator.estimateLocation().dist2(encRotEstimator.estimateLocation()) < 0.01.meters)
     assertTrue(simpson.estimateLocation().dist2(encRotEstimator.estimateLocation()) < 0.01.meters)
     assertTrue(locEstimator.estimateLocation().dist2(simpson.estimateLocation()) < 0.01.meters)
+
+    // see if straight
+
+    val x = locEstimator.estimateLocation().x
+    val xAbs = x.abs()
+    val y = locEstimator.estimateLocation().y
+
+    // TODO: should go more straight
+    assertTrue(xAbs < 0.5.meters){"$x has a magnitude larger than than 0.5 meters"}
+    assertTrue(y> 1.meters){"$y is not less than 1 meter"}
   }
 }

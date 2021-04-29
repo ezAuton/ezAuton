@@ -49,7 +49,7 @@ fun isCCWQuickest(angleInit: Double, angleFinal: Double): Boolean {
   } else if (angleInit > angleFinal) {
     d = angleInit - angleFinal
     if (d > 180) {
-      d = 360 - d
+//      d = 360 - d
     } else {
       return true
       //                    ccw = true;

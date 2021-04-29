@@ -2,8 +2,8 @@ package com.github.ezauton.core.action
 
 import com.github.ezauton.conversion.Time
 import com.github.ezauton.conversion.millis
-import com.github.ezauton.conversion.ms
 import com.github.ezauton.conversion.now
+import com.github.ezauton.core.action.require.ResourceHold
 import com.github.ezauton.core.action.require.combine
 import com.github.ezauton.core.utils.Stopwatch
 import kotlinx.coroutines.CancellationException
@@ -56,9 +56,18 @@ suspend fun CoroutineScope.periodic(
 
   val state = PeriodicScopeImpl(this)
 
-  suspend fun doHold() = resourcePriorities.map { (resource, priority) ->
-    resource.take(priority)
-  }.combine()
+  suspend fun doHold(): ResourceHold {
+    return when {
+      resourcePriorities.isNotEmpty() -> {
+        resourcePriorities.map { (resource, priority) ->
+          resource.take(priority)
+        }.combine()
+      }
+
+      else -> ResourceHold.Empty
+    }
+
+  }
 
   fun waitTime(): Time {
     val afterExecution = now()
@@ -82,7 +91,7 @@ suspend fun CoroutineScope.periodic(
     }
   }
 
-  val stopwatch = Stopwatch.new()
+  val stopwatch = Stopwatch.new().reset()
 
   fun isFinished(): Boolean {
     if (iterations != null && iterations == state.iteration) return true
