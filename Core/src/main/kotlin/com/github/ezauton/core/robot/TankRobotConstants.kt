@@ -10,4 +10,12 @@ interface TankRobotConstants : RobotConstants {
    * @return How far apart the left wheels are from the right wheels.
    */
   val lateralWheelDistance: Distance
+
+  companion object {
+    fun from(lateralWheelDistance: Distance): TankRobotConstants {
+      return ConstraintImpl(lateralWheelDistance)
+    }
+  }
 }
+
+private class ConstraintImpl(override val lateralWheelDistance: Distance): TankRobotConstants
