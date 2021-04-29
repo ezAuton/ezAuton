@@ -10,4 +10,11 @@ interface Tachometer : Sensor {
    * @return revolutions / s
    */
   val velocity: AngularVelocity
+  companion object Mock {
+    fun withVelocity(velocity: AngularVelocity): Tachometer {
+      return object: Tachometer {
+        override val velocity = velocity
+      }
+    }
+  }
 }
