@@ -4,11 +4,9 @@ import com.github.ezauton.conversion.*
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.pathplanning.PathProgressor
 import com.github.ezauton.core.pathplanning.Trajectory
-import com.github.ezauton.core.pathplanning.purepursuit.Lookahead
-import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
-import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy
-import com.github.ezauton.core.pathplanning.purepursuit.Update
+import com.github.ezauton.core.pathplanning.purepursuit.*
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
+import kotlinx.coroutines.channels.Channel
 
 
 typealias Speed = (distance: Distance) -> LinearVelocity
@@ -27,11 +25,12 @@ fun purePursuit(
   translationalLocationEstimator: TranslationalLocationEstimator,
   translationalLocationDrivable: TranslationalLocationDrivable,
   lookahead: Lookahead,
-  stopDistance: Distance = 0.001.m
+  stopDistance: Distance = 0.001.m,
+  dataChannel: Channel<PurePursuitData>? = null
 ) = action {
   val progressor = PathProgressor(trajectory.path)
   val speedFunction = trajectory.speed
-  val ppMoveStrat = PurePursuitMovementStrategy(progressor, stopDistance)
+  val ppMoveStrat = PurePursuitMovementStrategy(progressor, stopDistance, dataChannel)
   periodic(period) { loop ->
 
     val currentLocation = translationalLocationEstimator.estimateLocation()
@@ -43,10 +42,11 @@ fun purePursuit(
       }
       is Update.Result -> {
         val speedUsed = speedFunction(update.on.distance)
-        println("speedUsed $speedUsed")
+//        println("speedUsed $speedUsed")
         translationalLocationDrivable.driveTowardTransLoc(speedUsed, update.goal)
       }
     }
 
   }
+  dataChannel?.close()
 }

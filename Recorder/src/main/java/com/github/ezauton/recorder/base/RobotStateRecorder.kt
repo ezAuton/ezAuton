@@ -5,13 +5,17 @@ import com.github.ezauton.core.action.periodic
 import com.github.ezauton.core.action.sendAction
 import com.github.ezauton.core.localization.RotationalLocationEstimator
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
-import com.github.ezauton.recorder.SeqRecording
+import com.github.ezauton.recorder.SubRecording
 import com.github.ezauton.recorder.base.frame.RobotStateFrame
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 
-class RobotStateRecording(frames: List<RobotStateFrame>) : SeqRecording<RobotStateFrame>("RobotStateRecording", frames)
+@Serializable
+@SerialName("robotState")
+class RobotStateRecording(val frames: List<RobotStateFrame>, override val name: String): SubRecording
 
-suspend fun robotStateRecorder(period: PeriodicParams, posEstimator: TranslationalLocationEstimator, rotEstimator: RotationalLocationEstimator, width: Double, height: Double) = sendAction {
+fun robotStateRecorder(posEstimator: TranslationalLocationEstimator, rotEstimator: RotationalLocationEstimator, width: Double, height: Double, period: PeriodicParams = PeriodicParams.DEFAULT) = sendAction {
   val frames = periodic(period) { loop ->
     RobotStateFrame(
       posEstimator.estimateLocation().scalarVector,
@@ -23,5 +27,5 @@ suspend fun robotStateRecorder(period: PeriodicParams, posEstimator: Translation
     )
   }
 
-  emit(RobotStateRecording(frames))
+  emit(RobotStateRecording(frames, "RobotStateRecording"))
 }

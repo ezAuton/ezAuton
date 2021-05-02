@@ -1,47 +1,50 @@
 package com.github.ezauton.recorder
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.ezauton.core.action.SendAction
-import com.github.ezauton.core.action.action
 import com.github.ezauton.core.action.sendAction
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
-class Recording(@JsonProperty("name") override val name: String, recordings: List<SubRecording>) : SubRecording {
-
-  @JsonProperty("recordingData")
-  val recordingMap: Map<String, SubRecording> = run {
-    val map = HashMap<String, SubRecording>()
-    for (recording in recordings) {
-      map[recording.name] = recording
-    }
-    map
+fun generateRecordingMap(recordings: List<SubRecording>): HashMap<String, SubRecording> {
+  val map = HashMap<String, SubRecording>()
+  for (recording in recordings) {
+    map[recording.name] = recording
   }
-
-  override fun toJson(): String? {
-    return JsonUtils.toStringUnchecked(this)
-  }
+  return map
+}
+@Serializable
+class Recording(val name: String, val recordingMap: Map<String, SubRecording>)  {
 
   @Throws(IOException::class)
   fun save(name: String?) {
     val homeDir = System.getProperty("user.home")
     val filePath = Paths.get(homeDir, ".ezauton", name)
     save(filePath)
+    println("saved file!")
   }
 
   @Throws(IOException::class)
   fun save(filePath: Path) {
     Files.createDirectories(filePath.parent)
     val writer = Files.newBufferedWriter(filePath)
-    val json = toJson() ?: throw IllegalStateException("could not convert to json");
+
+    val json = format.encodeToString(this)
     writer.write(json)
     writer.close()
-    JsonUtils.toObject(Recording::class.java, json)
+  }
+
+  companion object {
+    fun from(name: String, recording: List<SubRecording>): Recording {
+      return Recording(name, generateRecordingMap(recording))
+    }
   }
 }
 
@@ -52,7 +55,7 @@ fun groupRecordings(name: String, vararg actions: SendAction<SubRecording>) = se
     }
   }.awaitAll()
 
-  val recording = Recording(name, subRecordings);
+  val recording = Recording.from(name, subRecordings);
 
   emit(recording)
 }

@@ -1,17 +1,17 @@
 package com.github.ezauton.recorder.base
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.ezauton.conversion.ScalarVector
-import com.github.ezauton.recorder.base.frame.RobotStateFrame
+import kotlinx.serialization.Serializable
 
+@Serializable
 class TankRobotState(
-  @JsonProperty val leftVel: Double = 0.0, @JsonProperty val leftPos: Double = 0.0, @JsonProperty val rightVel: Double = 0.0, @JsonProperty val rightPos: Double = 0.0,
-  time: Double,
-  pos: ScalarVector,
-  heading: Double,
-  robotWidth: Double,
-  robotLength: Double,
-  robotVelocity: ScalarVector
-) : RobotStateFrame(pos, heading, robotWidth, robotLength, robotVelocity, time) {
+  val leftVel: Double = 0.0, val leftPos: Double = 0.0, val rightVel: Double = 0.0, val rightPos: Double = 0.0,
+  val time: Double,
+  val pos: ScalarVector,
+  val heading: Double,
+  val robotWidth: Double,
+  val robotLength: Double,
+  val robotVelocity: ScalarVector
+){ // : TODO RobotStateFrame(pos, heading, robotWidth, robotLength, robotVelocity, time) {
 
 }

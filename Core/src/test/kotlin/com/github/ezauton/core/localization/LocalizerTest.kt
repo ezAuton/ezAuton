@@ -7,7 +7,6 @@ import com.github.ezauton.core.action.withTimeout
 import com.github.ezauton.core.localization.estimators.EncoderRotationEstimator
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
-import com.github.ezauton.core.simulation.Scheduler
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.utils.RealClock
 import kotlinx.coroutines.runBlocking
@@ -58,7 +57,7 @@ class LocalizerTest {
 
     runBlocking {
       withTimeout(10.seconds) {
-        Scheduler.run(actionGroup)
+        actionGroup.run()
       }
     }
 

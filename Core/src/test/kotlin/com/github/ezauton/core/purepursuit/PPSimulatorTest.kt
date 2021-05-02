@@ -7,14 +7,22 @@ import com.github.ezauton.core.pathplanning.Trajectory
 import com.github.ezauton.core.pathplanning.TrajectoryGenerator
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitData
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
-import com.github.ezauton.core.simulation.run
 import com.github.ezauton.core.utils.RealClock
+import com.github.ezauton.recorder.base.purePursuitRecorder
+import com.github.ezauton.recorder.base.robotStateRecorder
+import com.github.ezauton.recorder.base.tankDrivableRecorder
+import com.github.ezauton.recorder.groupRecordings
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.lang.Exception
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeoutException
 
@@ -92,25 +100,38 @@ class PPSimulatorTest {
 
     val tankRobotTransLocDriveable = TankRobotTransLocDrivable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot)
 
-    val purePursuitAction = purePursuit(20.ms, trajectory, locEstimator, tankRobotTransLocDriveable, lookahead)
+    val dataChannel = Channel<PurePursuitData>()
+    val purePursuitAction = purePursuit(20.ms, trajectory, locEstimator, tankRobotTransLocDriveable, lookahead, dataChannel = dataChannel)
 
     val updateKinematics = action {
       periodic(40.ms, DelayType.FROM_END) {
-        println("dist: ${locEstimator.estimateLocation()}")
-        println("heading: ${simulatedRobot.defaultLocEstimator.estimateHeading().degrees}")
+//        println("dist: ${locEstimator.estimateLocation()}")
+//        println("heading: ${simulatedRobot.defaultLocEstimator.estimateHeading().degrees}")
         simulatedRobot.update()
         locEstimator.update()
       }
     }
 
-//    val rec = Recording()
-//    rec.addSubRecording(PurePursuitRecorder(RealClock, path, ppMoveStrat))
-//    rec.addSubRecording(RobotStateRecorder(RealClock, locEstimator, locEstimator, 30 / 12.0, 2.0))
-//    rec.addSubRecording(TankDriveableRecorder("td", RealClock, simulatedRobot.defaultTransLocDriveable))
+    val periodicParams = PeriodicParams(duration = 1.seconds)
+
+//    val ppRecorder = purePursuitRecorder(RealClock, trajectory.path, dataChannel.consumeAsFlow())
+    val stateRecorder = robotStateRecorder(locEstimator, locEstimator, simulatedRobot.lateralWheelDistance.value, 10.0, periodicParams)
+    val tankDriveRecorder = tankDrivableRecorder(tankRobotTransLocDriveable, periodicParams)
+
+    val recordingAction = groupRecordings("recording", stateRecorder, tankDriveRecorder)
+
+    val timeoutAction = action {
+      delay(1000)
+    }
 
     val groupAction = action {
+      val recording = parallelSend(recordingAction)
       with(updateKinematics)
-      sequential(purePursuitAction)
+      sequential(timeoutAction)
+
+      println("trying to save...")
+
+      recording.first().save("tester")
     }
     runBlocking {
       withTimeout(10.seconds) {
@@ -118,16 +139,6 @@ class PPSimulatorTest {
       }
     }
 
-    // run the simulator for 30 seconds
-//    try {
-//      simulation.runSimulation(30, TimeUnit.SECONDS)
-//    } finally {
-//      try {
-//        recording.save("$name.json")
-//      } catch (e: IOException) {
-//        e.printStackTrace()
-//      }
-//    }
 
     val leftWheelVelocity = locEstimator.leftTranslationalWheelVelocity
     assertTrue(leftWheelVelocity in (-0.5).mps..0.5.mps)

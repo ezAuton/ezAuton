@@ -2,6 +2,8 @@ package com.github.ezauton.core.utils.math
 
 import com.github.ezauton.conversion.Angle
 import com.github.ezauton.conversion.ScalarVector
+import com.github.ezauton.conversion.svec
+import kotlin.math.abs
 
 /**
  * Get the 1D position of the robot given p0, v0, a0, and dt. Uses elementary physics formulas.
@@ -47,9 +49,9 @@ fun getTrajectoryRadius(vL: Double, vR: Double, l: Double): Double {
 fun getRelativeDPosCurve(distanceLeft: Double, distanceRight: Double, lateralWheelDistance: Double): ScalarVector {
   // TODO: fix dist
   // To account for an infinite pathplanning radius when going straight
-  if (Math.abs(distanceLeft - distanceRight) <= Math.abs(distanceLeft + distanceRight) * 1E-2) {
+  if (abs(distanceLeft - distanceRight) <= Math.abs(distanceLeft + distanceRight) * 1E-2) {
     // Probably average is not needed, but it may be useful over long distances
-    return ScalarVector(0.0, (distanceLeft + distanceRight) / 2.0)
+    return svec(0.0, (distanceLeft + distanceRight) / 2.0)
   }
   val w = getAngularDistance(distanceLeft, distanceRight, lateralWheelDistance)
 
@@ -58,7 +60,7 @@ fun getRelativeDPosCurve(distanceLeft: Double, distanceRight: Double, lateralWhe
   val dxRelative = -r * (1 - ecos(-w))
   val dyRelative = -r * esin(-w)
 
-  return ScalarVector(dxRelative, dyRelative)
+  return svec(dxRelative, dyRelative)
 }
 
 fun getTangentialSpeed(wheelL: Double, wheelR: Double): Double {

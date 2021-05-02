@@ -34,6 +34,9 @@ interface PeriodicScope : CoroutineScope {
 private class PeriodicScopeImpl(val scope: CoroutineScope) : PeriodicScope, CoroutineScope by scope {
   override var iteration = 0
   override val stopwatch: Stopwatch = Stopwatch.new()
+  init {
+    stopwatch.init()
+  }
   override val start = now()
   override fun stop(): Nothing {
     TODO()
@@ -52,7 +55,11 @@ class PeriodicParams(
   val iterations: Int? = null,
   val resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT,
   vararg val resourcePriorities: ResourcePriority,
-)
+){
+  companion object  {
+    val DEFAULT = PeriodicParams()
+  }
+}
 
 
 suspend fun <T> periodic(params: PeriodicParams, block: suspend (PeriodicScope) -> T) = coroutineScope {

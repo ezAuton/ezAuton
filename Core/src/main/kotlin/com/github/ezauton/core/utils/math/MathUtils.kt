@@ -1,6 +1,7 @@
 package com.github.ezauton.core.utils.math
 
 import com.github.ezauton.conversion.*
+import kotlin.math.abs
 
 val PHI = 1.618033989
 val ROOT_2 = 1.414213562
@@ -10,7 +11,7 @@ val EPSILON = 1E-6
 
 const val TAU = 2 * Math.PI
 
-val VECTOR_FORWARD = ScalarVector(0.0, 1.0)
+val VECTOR_FORWARD = svec(0.0, 1.0)
 
 private val ln2 = StrictMath.log(2.0)
 private val ln3 = StrictMath.log(3.0)
@@ -64,21 +65,21 @@ fun init() {}
 /**
  * Untraditional perpendicular
  *
- * @param immutableVector
+ * @param vec
  * @return
  */
-fun perp(immutableVector: ScalarVector): ScalarVector {
-  immutableVector.assertDimension(2)
-  return ScalarVector(immutableVector.get(1), -immutableVector.get(0))
+fun perp(vec: ScalarVector): ScalarVector {
+  vec.assertDimension(2)
+  return svec(vec[1], -vec[0])
 }
 
 fun cross(a: ScalarVector, b: ScalarVector): ScalarVector {
   a.assertDimension(3)
   b.assertDimension(3)
-  return ScalarVector(
-    a.get(1) * b.get(2) - b.get(1) * a.get(2),
-    a.get(0) * b.get(2) - b.get(0) * a.get(2),
-    a.get(0) * b.get(1) - b.get(0) * a.get(1)
+  return svec(
+    a[1] * b[2] - b[1] * a[2],
+    a[0] * b[2] - b[0] * a[2],
+    a[0] * b[1] - b[0] * a[1]
   )
 }
 
@@ -112,7 +113,7 @@ fun esin(value: Double): Double {
  * @return the number closer to 0, or the `a` if |a| = |b|
  */
 fun minAbs(a: Double, b: Double): Double {
-  return if (Math.abs(a) > Math.abs(b)) b else a
+  return if (abs(a) > abs(b)) b else a
 }
 
 /**
@@ -121,7 +122,7 @@ fun minAbs(a: Double, b: Double): Double {
  * @return the number farther from 0, or `a` if |a| = |b|
  */
 fun maxAbs(a: Double, b: Double): Double {
-  return if (Math.abs(a) < Math.abs(b)) b else a
+  return if (abs(a) < abs(b)) b else a
 }
 
 /**

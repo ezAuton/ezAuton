@@ -14,7 +14,7 @@ interface ActionContext : CoroutineScope, ActionGroup {
 //    delay(Units.ms(millis))
   }
 
-  suspend fun delay(duration: Time) = flo {
+  suspend fun delay(duration: Time) {
 //    clock.delayFor(duration)
   }
 

@@ -1,21 +1,26 @@
 package com.github.ezauton.recorder.base
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.ezauton.conversion.Distance
 import com.github.ezauton.core.action.sendAction
 import com.github.ezauton.core.pathplanning.Path
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitData
 import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
-import com.github.ezauton.recorder.SeqRecording
+import com.github.ezauton.recorder.SubRecording
 import com.github.ezauton.recorder.base.frame.PurePursuitFrame
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-class PurePursuitRecording(@JsonProperty private val path: Path<Distance>, frames: List<PurePursuitFrame>) : SeqRecording<PurePursuitFrame>("PurePursuitRecording", frames)
+
+// TODO: add back Path
+@Serializable
+@SerialName("purePursuit")
+class PurePursuitRecording(val frames: List<PurePursuitFrame>, override val name: String): SubRecording
 
 
-suspend fun purePursuitRecorder(name: String, clock: Clock, path: Path<Distance>, inputFlow: Flow<PurePursuitData>) = sendAction {
+fun purePursuitRecorder(clock: Clock, path: Path<Distance>, inputFlow: Flow<PurePursuitData>) = sendAction {
   val stopwatch = Stopwatch(clock)
   stopwatch.init()
   val dataFrames = ArrayList<PurePursuitFrame>()
@@ -25,6 +30,6 @@ suspend fun purePursuitRecorder(name: String, clock: Clock, path: Path<Distance>
     dataFrames.add(frame)
   }
 
-  emit(PurePursuitRecording(path, dataFrames))
+  emit(PurePursuitRecording(dataFrames, "PurePursuit"))
 
 }

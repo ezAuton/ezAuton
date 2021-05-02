@@ -1,9 +1,7 @@
 package com.github.ezauton.recorder.base.frame
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.ezauton.conversion.ScalarVector
-import com.github.ezauton.recorder.SequentialDataFrame
-import java.io.Serializable
+import kotlinx.serialization.Serializable
 
 /**
  * An immutable object for storing the state of the robot at a particular point in time.
@@ -11,23 +9,5 @@ import java.io.Serializable
  *
  * Generic drivetrain format
  */
-open class RobotStateFrame(
-  @JsonProperty val pos: ScalarVector,
-  @JsonProperty val heading: Double = 0.0,
-  @JsonProperty val robotWidth: Double = 0.0,
-  @JsonProperty val robotLength: Double = 0.0,
-  @JsonProperty val robotVelocity: ScalarVector,
-  time: Double,
-) : SequentialDataFrame(time), Serializable {
-
-
-  override fun toString(): String {
-    return "RobotState{" +
-        "pos=" + pos +
-        ", heading=" + heading +
-        ", robotWidth=" + robotWidth +
-        ", robotLength=" + robotLength +
-        ", time=" + time +
-        '}'
-  }
-}
+@Serializable
+open class RobotStateFrame(val pos: ScalarVector, val heading: Double = 0.0, val robotWidth: Double = 0.0, val robotLength: Double = 0.0, val robotVelocity: ScalarVector, val time: Double)

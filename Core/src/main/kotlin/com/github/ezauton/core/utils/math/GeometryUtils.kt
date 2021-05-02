@@ -4,6 +4,7 @@ import com.github.ezauton.conversion.*
 import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 
 /**
@@ -98,11 +99,11 @@ fun ScalarVector.rotate2D(value: Angle): ScalarVector {
  * @return All points on both the line and circle, should they exist.
  */
 fun getCircleLineIntersectionPoint(pointA: ScalarVector, pointB: ScalarVector, center: ScalarVector, radius: Double): List<ScalarVector> {
-  val baX = pointB[0] - pointA.get(0)
-  val baY = pointB.get(1) - pointA.get(1)
+  val baX = pointB[0] - pointA[0]
+  val baY = pointB[1] - pointA[1]
 
-  val caX = center.get(0) - pointA.get(0)
-  val caY = center.get(1) - pointA.get(1)
+  val caX = center[0] - pointA[0]
+  val caY = center[1] - pointA[1]
 
   val a = baX * baX + baY * baY
   val bBy2 = baX * caX + baY * caY
@@ -116,16 +117,16 @@ fun getCircleLineIntersectionPoint(pointA: ScalarVector, pointB: ScalarVector, c
     return emptyList()
   }
   // if disc == 0 ... dealt with later
-  val tmpSqrt = Math.sqrt(disc)
+  val tmpSqrt = sqrt(disc)
   val abScalingFactor1 = tmpSqrt - pBy2
 
-  val p1 = ScalarVector(pointA[0] - baX * abScalingFactor1, pointA[1] - baY * abScalingFactor1)
+  val p1 = svec(pointA[0] - baX * abScalingFactor1, pointA[1] - baY * abScalingFactor1)
   if (disc == 0.0) {
     return listOf(p1)
   }
 
   val abScalingFactor2 = -pBy2 - tmpSqrt
-  val p2 = ScalarVector(pointA[0] - baX * abScalingFactor2, pointA[1] - baY * abScalingFactor2)
+  val p2 = svec(pointA[0] - baX * abScalingFactor2, pointA[1] - baY * abScalingFactor2)
   return listOf(p1, p2)
 }
 

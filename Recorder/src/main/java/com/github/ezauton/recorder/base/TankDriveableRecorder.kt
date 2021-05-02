@@ -4,10 +4,14 @@ import com.github.ezauton.core.action.PeriodicParams
 import com.github.ezauton.core.action.periodic
 import com.github.ezauton.core.action.sendAction
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
-import com.github.ezauton.recorder.SeqRecording
+import com.github.ezauton.recorder.SubRecording
 import com.github.ezauton.recorder.base.frame.TankDriveableFrame
+import kotlinx.serialization.Serializable
 
-suspend fun tankDrivableRecorder(periodicParams: PeriodicParams, transLocDriveable: TankRobotTransLocDrivable) = sendAction {
+@Serializable
+class TankDriveableRecorder(override val name: String, val frames: List<TankDriveableFrame>) : SubRecording
+
+fun tankDrivableRecorder(transLocDriveable: TankRobotTransLocDrivable, periodicParams: PeriodicParams = PeriodicParams.DEFAULT) = sendAction {
   val frames = periodic(periodicParams) { loop ->
     TankDriveableFrame(
       loop.stopwatch.read().millis,
@@ -16,5 +20,5 @@ suspend fun tankDrivableRecorder(periodicParams: PeriodicParams, transLocDriveab
     )
   }
 
-  emit(SeqRecording.of("TankDrivableRecorder", frames))
+  emit(TankDriveableRecorder("TankDrivableRecorder", frames))
 }

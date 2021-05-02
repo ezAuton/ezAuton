@@ -27,8 +27,9 @@ interface Action { // In the purest form an action is of type: suspend () -> Uni
  */
 typealias SendAction<T> = Flow<T>
 typealias ActionFunc = suspend ActionContext.() -> Unit
+typealias SendActionFunc<T> = suspend SendActionContext<T>.() -> Unit
 
-private suspend fun actionContext(block: ActionContext.() -> Unit) {
+private suspend fun actionContext(block: ActionFunc) {
   coroutineScope {
     val context = SimpleContext(this)
     with(context) {
@@ -47,7 +48,7 @@ private fun <T> sendActionContext(block: suspend SendActionContext<T>.() -> Unit
   }
 }
 
-fun action(block: suspend ActionContext.() -> Unit): Action {
+fun action(block: ActionFunc): Action {
   return object : Action {
     override suspend fun run() {
       actionContext(block)
