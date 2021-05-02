@@ -1,7 +1,7 @@
 package com.github.ezauton.core.pathplanning.purepursuit
 
 import com.github.ezauton.conversion.*
-import com.github.ezauton.core.pathplanning.PathGenerator
+import com.github.ezauton.core.pathplanning.TrajectoryGenerator
 import java.io.Serializable
 
 /**
@@ -40,8 +40,8 @@ open class PPWaypoint
       return waypointList.toTypedArray()
     }
 
-    fun buildPathGenerator(): PathGenerator {
-      return PathGenerator(*buildArray())
+    fun buildPathGenerator(): TrajectoryGenerator {
+      return TrajectoryGenerator(*buildArray())
     }
 
     fun flipY(): Builder {

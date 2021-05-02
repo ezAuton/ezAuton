@@ -46,7 +46,7 @@ class SpeedInterpolator(
         val position = motionState.position
         if (position > length) {
           val velLeft = speedStop - motionState.speed
-          assert(velLeft.isNegative || velLeft.isZero)
+          assert(velLeft.isNegative || velLeft.isApproxZero)
         }
         speedInterpolator[position.value] = min(speedStop, motionState.speed).value
       }

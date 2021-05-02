@@ -17,6 +17,6 @@ interface Clock {
 suspend fun Clock.delayUntil(timeUntil: Time) {
   val dt = timeUntil - time
   require(dt.isPositive) { "the duration must be non-negative" }
-  if (dt.isZero) return
+  if (dt.isApproxZero) return
   delayFor(dt)
 }

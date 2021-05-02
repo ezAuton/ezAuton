@@ -22,14 +22,14 @@ class LineSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, override 
   val n = (from - to).scalarVector / length.value
 
   init {
-    if (length.isZero) {
+    if (length.isApproxZero) {
       throw IllegalArgumentException("PathSegment length must be non-zero.")
     }
   }
 
   val slope
     get(): Double {
-      if ((to.x - from.x).isZero) {
+      if ((to.x - from.x).isApproxZero) {
         return Double.POSITIVE_INFINITY
       }
       return (to.y - from.y) / (to.x - from.x)

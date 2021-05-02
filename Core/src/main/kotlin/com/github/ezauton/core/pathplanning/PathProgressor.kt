@@ -42,7 +42,7 @@ class PathProgressor<T : SIUnit<T>>(val path: Path<T>) {
           segmentOnIdx += 1
         }
         t < 0 -> {
-          segmentOnIdx -= 0;
+          segmentOnIdx -= 1;
         }
         else -> {
           val distanceBefore = path.distanceBeforeIdx(segmentOnIdx)

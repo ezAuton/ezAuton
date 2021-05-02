@@ -8,16 +8,16 @@ import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
 import java.io.Serializable
 import java.util.*
 
-class PathParams(val path: Path<Distance>, val speed: (Distance) -> LinearVelocity)
+class Trajectory(val path: Path<Distance>, val speed: (Distance) -> LinearVelocity)
 
 private typealias Segment = PathSegment<Distance>
 
 /**
  * Generates a path 🗺 for Pure Pursuit given [PPWaypoint]
  */
-class PathGenerator(private vararg val ppWaypoints: PPWaypoint) : Serializable {
+class TrajectoryGenerator(private vararg val ppWaypoints: PPWaypoint) : Serializable {
 
-  fun generate(dt: Time): PathParams {
+  fun generate(dt: Time): Trajectory {
 
     val interpolatorMap = HashMap<Double, SpeedInterpolator>()
 
@@ -32,7 +32,7 @@ class PathGenerator(private vararg val ppWaypoints: PPWaypoint) : Serializable {
       val length = line.length
 
 
-      val beginningSpeed = if (i == 0 && from.speed.isZero) to.speed else from.speed
+      val beginningSpeed = if (i == 0 && from.speed.isApproxZero) to.speed else from.speed
       val interpolator = SpeedInterpolator(length, beginningSpeed, to.speed, dt, from.acceleration, from.deceleration)
 
       interpolatorMap[length.value] = interpolator
@@ -45,7 +45,7 @@ class PathGenerator(private vararg val ppWaypoints: PPWaypoint) : Serializable {
 
     val path = Path(segments)
 
-    return PathParams(path, speed)
+    return Trajectory(path, speed)
   }
 }
 

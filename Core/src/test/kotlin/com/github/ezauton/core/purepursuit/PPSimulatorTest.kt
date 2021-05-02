@@ -1,26 +1,21 @@
 package com.github.ezauton.core.purepursuit
 
 import com.github.ezauton.conversion.*
-import com.github.ezauton.core.action.purePursuit
+import com.github.ezauton.core.action.*
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
-import com.github.ezauton.core.pathplanning.Path
-import com.github.ezauton.core.pathplanning.PathProgressor
+import com.github.ezauton.core.pathplanning.Trajectory
+import com.github.ezauton.core.pathplanning.TrajectoryGenerator
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
-import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
-import com.github.ezauton.core.simulation.ActionGroup
 import com.github.ezauton.core.simulation.SimulatedTankRobot
+import com.github.ezauton.core.simulation.run
 import com.github.ezauton.core.utils.RealClock
-import com.github.ezauton.recorder.Recording
-import com.github.ezauton.recorder.base.PurePursuitRecorder
-import com.github.ezauton.recorder.base.RobotStateRecorder
-import com.github.ezauton.recorder.base.TankDriveableRecorder
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.io.IOException
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class PPSimulatorTest {
@@ -43,9 +38,10 @@ class PPSimulatorTest {
   @Throws(TimeoutException::class, ExecutionException::class)
   fun testStraight() {
 
-    val waypoint1 = PPWaypoint.simple2D(0.m, 0.m, 0.0.mps, 3.0.mpss, -4.0.mpss)
-    val waypoint2 = PPWaypoint.simple2D(0.m, 6.m ,5.0.mps, 3.0.mpss, -4.0.mpss)
-    val waypoint3 = PPWaypoint.simple2D(0.m, 20.m, 0.0.mps, 3.0.mpss, -4.0.mpss)
+
+    val waypoint1 = PPWaypoint.simple2D(0.m, 0.m, 0.0.mps, 3.0.mpss, (-4.0).mpss)
+    val waypoint2 = PPWaypoint.simple2D(0.m, 6.m, 5.0.mps, 3.0.mpss, (-4.0).mpss)
+    val waypoint3 = PPWaypoint.simple2D(0.m, 20.m, 0.0.mps, 3.0.mpss, (-4.0).mpss)
 
     test("testStraight", waypoint1, waypoint2, waypoint3)
   }
@@ -59,9 +55,9 @@ class PPSimulatorTest {
   @Test
   @Throws(TimeoutException::class, ExecutionException::class)
   fun testRight() {
-    val waypoint1 = PPWaypoint.simple2D(0.m 0.m, 0.mps, 3.mpss, -3.0.mpss)
-    val waypoint2 = PPWaypoint.simple2D(6.m 6.m, 5.mps, 3.mpss, -3.0.mpss)
-    val waypoint3 = PPWaypoint.simple2D(12.m, 0.m, 0.mps, 3.mpss, -3.0.mpss)
+    val waypoint1 = PPWaypoint.simple2D(0.m, 0.m, 0.mps, 3.mpss, (-3.0).mpss)
+    val waypoint2 = PPWaypoint.simple2D(6.m, 6.m, 5.mps, 3.mpss, (-3.0).mpss)
+    val waypoint3 = PPWaypoint.simple2D(12.m, 0.m, 0.mps, 3.mpss, (-3.0).mpss)
 
     test("testRight", waypoint1, waypoint2, waypoint3)
   }
@@ -81,11 +77,7 @@ class PPSimulatorTest {
 //  }
 
   @Throws(TimeoutException::class, ExecutionException::class)
-  private fun test(name: String, path: Path<Distance>) {
-
-    val progressor = PathProgressor(path)
-
-    val ppMoveStrat = PurePursuitMovementStrategy(progressor, 0.001.m)
+  private fun test(name: String, trajectory: Trajectory) {
 
     // Might be a problem
     val simulatedRobot = SimulatedTankRobot(1.m, RealClock, 14.0.mpss, 0.3.mps, 16.0.mps)
@@ -100,57 +92,57 @@ class PPSimulatorTest {
 
     val tankRobotTransLocDriveable = TankRobotTransLocDrivable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot)
 
-//    val rec = Recording()
-//    rec.addSubRecording(PurePursuitRecorder(RealClock, path, ppMoveStrat))
-//    rec.addSubRecording(RobotStateRecorder(RealClock, locEstimator, locEstimator, 30 / 12.0, 2.0))
-//    rec.addSubRecording(TankDriveableRecorder("td", RealClock, simulatedRobot.defaultTransLocDriveable))
+    val purePursuitAction = purePursuit(20.ms, trajectory, locEstimator, tankRobotTransLocDriveable, lookahead)
 
-    val purePursuitAction = purePursuit(20.ms, {0.0.mps}, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable)
-
-    val updateKinematics = BackgroundAction(2, TimeUnit.MILLISECONDS, Runnable { simulatedRobot.update() })
-
-    val recording = Recording()
-      .addSubRecording(RobotStateRecorder("robotstate", simulation.clock, locEstimator, locEstimator, simulatedRobot.lateralWheelDistance, 1.5))
-      .addSubRecording(PurePursuitRecorder("pp", simulation.clock, path, ppMoveStrat))
-      .addSubRecording(TankDriveableRecorder("td", simulation.clock, tankRobotTransLocDriveable))
-
-    val updateRecording = BackgroundAction(20, TimeUnit.MILLISECONDS, Runnable { recording.update() })
-
-    // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-    val backgroundAction = BackgroundAction(20, TimeUnit.MILLISECONDS, Runnable { locEstimator.update() }, Runnable { rec.update() })
-
-    val group = ActionGroup()
-      .with(updateKinematics)
-      .with(backgroundAction)
-      .with(updateRecording)
-      .addSequential(purePursuitAction)
-    simulation.add(group)
-
-    // run the simulator for 30 seconds
-    try {
-      simulation.runSimulation(30, TimeUnit.SECONDS)
-    } finally {
-      try {
-        recording.save("$name.json")
-      } catch (e: IOException) {
-        e.printStackTrace()
+    val updateKinematics = action {
+      periodic(40.ms, DelayType.FROM_END) {
+        println("dist: ${locEstimator.estimateLocation()}")
+        simulatedRobot.update()
+        locEstimator.update()
       }
     }
 
+    val groupAction = action {
+      with(updateKinematics)
+      sequential(purePursuitAction)
+    }
+    runBlocking {
+      withTimeout(10.seconds) {
+        groupAction.run()
+      }
+    }
+//    val group = ActionGroup()
+//      .with(updateKinematics)
+//      .with(backgroundAction)
+//      .with(updateRecording)
+//      .addSequential(purePursuitAction)
+//    simulation.add(group)
+
+    // run the simulator for 30 seconds
+//    try {
+//      simulation.runSimulation(30, TimeUnit.SECONDS)
+//    } finally {
+//      try {
+//        recording.save("$name.json")
+//      } catch (e: IOException) {
+//        e.printStackTrace()
+//      }
+//    }
+
     val leftWheelVelocity = locEstimator.leftTranslationalWheelVelocity
-    assertEquals(0.0, leftWheelVelocity, 0.5, "left wheel velocity")
+    assertTrue(leftWheelVelocity in (-0.5).mps..0.5.mps)
 
     val rightWheelVelocity = locEstimator.rightTranslationalWheelVelocity
-    assertEquals(0.0, rightWheelVelocity, 0.5, "right wheel velocity")
+    assertTrue(rightWheelVelocity in (-0.5).mps..0.5.mps)
 
     // The final location after the simulator
     val finalLoc = locEstimator.estimateLocation()
 
     // If the final loc is approximately equal to the last waypoint
-    approxEqual(path.end, finalLoc, 0.2)
+    approxEqual(trajectory.path.end, finalLoc, 0.2)
 
     // If the final loc is approximately equal to the last waypoint
-    approxEqual(path.end, finalLoc, 0.2)
+    approxEqual(trajectory.path.end, finalLoc, 0.2)
   }
 
   /**
@@ -160,9 +152,13 @@ class PPSimulatorTest {
    */
   @Throws(TimeoutException::class, ExecutionException::class)
   private fun test(name: String, vararg waypoints: PPWaypoint) {
-    val pathGenerator = PP_PathGenerator(*waypoints)
-    val path = pathGenerator.generate(0.05)
-    test(name, path)
+    val pathGenerator = TrajectoryGenerator(*waypoints)
+    val trajectory = pathGenerator.generate(0.05.seconds)
+    test(name, trajectory)
+  }
+
+  private fun <T : SIUnit<T>> approxEqual(a: ConcreteVector<T>, b: ConcreteVector<T>, epsilon: Double) {
+    return approxEqual(a.scalarVector, b.scalarVector, epsilon)
   }
 
   private fun approxEqual(a: ScalarVector, b: ScalarVector, epsilon: Double) {
@@ -173,8 +169,4 @@ class PPSimulatorTest {
     }
   }
 
-  companion object {
-
-    private val LATERAL_WHEEL_DIST = 4.0
-  }
 }

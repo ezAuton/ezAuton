@@ -36,6 +36,10 @@ interface Scheduler {
 
 }
 
+suspend fun Action.run(){
+  Scheduler.run(this)
+}
+
 
 interface ActionGroup {
 
@@ -68,6 +72,8 @@ interface ActionGroup {
 
 }
 
+
+
 // TODO: move location
 class SimpleContext(private val scope: CoroutineScope): ActionContext, CoroutineScope by scope {
 
@@ -77,7 +83,9 @@ class SimpleContext(private val scope: CoroutineScope): ActionContext, Coroutine
     with(action){
       run()
     }
+    println("cancelling with jobs")
     withJobs.forEach { it.cancel() }
+    println("cancelled with jobs")
   }
 
   override fun with(block: ActionFunc) {

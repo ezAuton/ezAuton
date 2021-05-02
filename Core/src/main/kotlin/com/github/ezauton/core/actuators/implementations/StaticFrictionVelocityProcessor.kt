@@ -24,7 +24,7 @@ class StaticFrictionVelocityProcessor
    * @param targetVelocity The speed to run the motor at
    */
   override fun runVelocity(targetVelocity: AngularVelocity) {
-    if (!velocitySensor.velocity.isZero || targetVelocity.abs() >= minVelMove) {
+    if (!velocitySensor.velocity.isApproxZero || targetVelocity.abs() >= minVelMove) {
       toApply.runVelocity(targetVelocity)
     }
   }

@@ -19,6 +19,9 @@ class Path<T : SIUnit<T>> constructor(val pathSegments: List<PathSegment<T>>) {
 
   private val distances = DoubleArray(pathSegments.size + 1) { 0.0 }
 
+  val start get() = pathSegments.first().from
+  val end get() = pathSegments.last().to
+
 
 
   init {

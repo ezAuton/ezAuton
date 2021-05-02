@@ -85,6 +85,7 @@ suspend fun CoroutineScope.periodic(
   suspend fun doDelay() {
     val waitMillis = waitTime().millisL
     if (waitMillis < 0) {
+      println("waitMillis neg 0 no delay")
       System.out.printf("The action is executing slower than the set period! milliseconds behind: %d\n", -waitMillis)
     } else if (waitMillis > 0) {
       delay(waitMillis)
@@ -124,10 +125,9 @@ suspend fun CoroutineScope.periodic(
       try {
         doDelay()
       } catch (e: CancellationException) {
-//        onInterrupted()
         return
       }
-      if (resourceManagement == ResourceManagement.LET_GO_EACH_CYCLE) held.giveBack()
+      held.giveBack()
     } while (!isFinished())
     held.giveBack()
   }
