@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 </T> */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 
-abstract class SequentialRecording<T : SequentialDataFrame>(@JsonProperty override val name: String, @JsonProperty("dataSequence") val dataFrames: List<T>) : SubRecording, Iterable<T> {
+class SeqRecording<T : SequentialDataFrame>(@JsonProperty override val name: String, @JsonProperty("dataSequence") val dataFrames: List<T>) : SubRecording, Iterable<T> {
 
 
   override fun toJson(): String? {
@@ -32,6 +32,13 @@ abstract class SequentialRecording<T : SequentialDataFrame>(@JsonProperty overri
   companion object {
     @JsonIgnore
     private var sequenceCounter = 0
+
+    fun <T : SequentialDataFrame> of(name: String, dataFrames: List<T>): SeqRecording<T> {
+      return SeqRecording(name, dataFrames)
+    }
+
   }
+
+
 
 }

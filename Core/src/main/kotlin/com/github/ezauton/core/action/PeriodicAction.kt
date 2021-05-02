@@ -55,21 +55,22 @@ class PeriodicParams(
 )
 
 
-suspend fun periodic(params: PeriodicParams, block: suspend (PeriodicScope) -> Unit) {
-  coroutineScope {
-    periodic(params.period, params.loopMethod, params.duration, params.iterations, params.resourceManagement, *params.resourcePriorities, block = block)
-  }
+suspend fun <T> periodic(params: PeriodicParams, block: suspend (PeriodicScope) -> T) = coroutineScope {
+  periodic(params.period, params.loopMethod, params.duration, params.iterations, params.resourceManagement, *params.resourcePriorities, block = block)
 }
 
-suspend fun periodic(
+
+suspend fun <T> periodic(
   period: Time = DEFAULT_PERIOD,
   loopMethod: DelayType = DelayType.FROM_START,
   duration: Time? = null,
   iterations: Int? = null,
   resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT,
   vararg resourcePriorities: ResourcePriority,
-  block: suspend (PeriodicScope) -> Unit
-) = coroutineScope {
+  block: suspend (PeriodicScope) -> T
+): List<T> = coroutineScope {
+
+  val list = ArrayList<T>()
 
   val state = PeriodicScopeImpl(this)
 
@@ -124,7 +125,8 @@ suspend fun periodic(
       if (!ranOnce) {
         ranOnce = true
       } else held.giveBack()
-      block(state)
+      val res = block(state)
+      list.add(res)
       held.giveBack()
       try {
         doDelay()
@@ -138,7 +140,8 @@ suspend fun periodic(
   suspend fun untilFinish() {
     val held = doHold()
     do {
-      block(state)
+      val res = block(state)
+      list.add(res)
       try {
         doDelay()
       } catch (e: CancellationException) {
@@ -153,5 +156,7 @@ suspend fun periodic(
     ResourceManagement.LET_GO_EACH_CYCLE -> letGoEachCycle()
     ResourceManagement.UNTIL_FINISH -> untilFinish()
   }
+
+  return@coroutineScope list
 
 }

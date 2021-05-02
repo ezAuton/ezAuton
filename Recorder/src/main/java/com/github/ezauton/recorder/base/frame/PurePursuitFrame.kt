@@ -5,39 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.ezauton.conversion.ScalarVector
 import java.lang.StringBuilder
 
-class PurePursuitFrame : SequentialDataFrame {
-  @JsonProperty
-  var lookahead = 0.0
-    private set
-
-  @JsonProperty
-  var closestPoint: ScalarVector? = null
-    private set
-
-  @JsonProperty
-  var goalPoint: ScalarVector? = null
-    private set
-
-  @JsonProperty
-  private var dCP = 0.0
-
-  @JsonProperty
-  var currentSegmentIndex = 0
-    private set
-
-  constructor(time: Double, lookahead: Double, closestPoint: ScalarVector?, goalPoint: ScalarVector?, dCP: Double, currentSegmentIndex: Int) : super(time) {
-    this.lookahead = lookahead
-    this.closestPoint = closestPoint
-    this.goalPoint = goalPoint
-    this.dCP = dCP
-    this.currentSegmentIndex = currentSegmentIndex
-  }
-
-  private constructor() {}
-
-  fun getdCP(): Double {
-    return dCP
-  }
+class PurePursuitFrame(
+  time: Double, @JsonProperty val lookahead: Double, @JsonProperty val closestPoint: ScalarVector, @field:JsonProperty val goalPoint: ScalarVector, @JsonProperty
+  private val dCP: Double, @JsonProperty val currentSegmentIndex: Int
+) : SequentialDataFrame(time) {
 
   override fun toString(): String {
     val sb = StringBuilder("PurePursuitFrame{")

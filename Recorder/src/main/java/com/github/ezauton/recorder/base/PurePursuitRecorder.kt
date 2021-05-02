@@ -7,12 +7,12 @@ import com.github.ezauton.core.pathplanning.Path
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitData
 import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
-import com.github.ezauton.recorder.SequentialRecording
+import com.github.ezauton.recorder.SeqRecording
 import com.github.ezauton.recorder.base.frame.PurePursuitFrame
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 
-class PurePursuitRecording(@JsonProperty private val path: Path<Distance>, frames: List<PurePursuitFrame>) : SequentialRecording<PurePursuitFrame>("PurePursuitRecording", frames)
+class PurePursuitRecording(@JsonProperty private val path: Path<Distance>, frames: List<PurePursuitFrame>) : SeqRecording<PurePursuitFrame>("PurePursuitRecording", frames)
 
 
 suspend fun purePursuitRecorder(name: String, clock: Clock, path: Path<Distance>, inputFlow: Flow<PurePursuitData>) = sendAction {
