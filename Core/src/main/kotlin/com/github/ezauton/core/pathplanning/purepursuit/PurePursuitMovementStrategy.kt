@@ -37,7 +37,7 @@ class PurePursuitMovementStrategy
     require(stopTolerance.isPositive) { "stopTolerance must be a positive number!" }
   }
 
-  private val path get() = pathProgressor.path
+  val path get() = pathProgressor.path
 
   /**
    * @return The absolute location of the selected goal point.
@@ -58,8 +58,6 @@ class PurePursuitMovementStrategy
   suspend fun update(loc: ConcreteVector<Distance>, lookahead: Distance): Update<Distance> {
 
     val on = pathProgressor.progress(loc)
-
-    println("on is ${on.javaClass.simpleName}")
 
     when (on) {
       is ProgressResult.End -> {

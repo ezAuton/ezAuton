@@ -1,7 +1,12 @@
 package com.github.ezauton.core.action
 
 import com.github.ezauton.conversion.Time
+import com.github.ezauton.core.simulation.SimpleContext
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlin.experimental.ExperimentalTypeInference
 
 /**
  * Describes an Action, which is similar to a WPILib Commands, but has both linear, periodic, and other implementations.
@@ -13,29 +18,48 @@ interface Action { // In the purest form an action is of type: suspend () -> Uni
    *
    */
   @Throws(Exception::class)
-  suspend fun ActionContext.run()
+  suspend fun run()
 }
 
+/**
+ * Describes an Action, which is similar to a WPILib Commands, but has both linear, periodic, and other implementations.
+ * Additionally, it is not bound to the 20ms periodic timer for WPILib Commands. 👋 Commands! 🚀 🤖
+ */
+typealias SendAction<T> = Flow<T>
 typealias ActionFunc = suspend ActionContext.() -> Unit
 
-fun action(block: ActionFunc) = object : Action {
-  override suspend fun ActionContext.run(){
-    block()
+private suspend fun actionContext(block: ActionContext.() -> Unit) {
+  coroutineScope {
+    val context = SimpleContext(this)
+    with(context) {
+      block()
+    }
   }
 }
 
-fun ActionFunc.toAction() = object : Action {
-  override suspend fun ActionContext.run() {
-    this@toAction()
+private fun <T> sendActionContext(block: suspend SendActionContext<T>.() -> Unit) = flow {
+  coroutineScope {
+    val context = SimpleContext(this)
+    val sendActionContext = SendActionContextImpl<T>(context, this@flow)
+    with(sendActionContext) {
+      block()
+    }
   }
 }
+
+fun action(block: suspend ActionContext.() -> Unit): Action {
+  return object : Action {
+    override suspend fun run() {
+      actionContext(block)
+    }
+  }
+}
+
+@OptIn(ExperimentalTypeInference::class)
+fun <T> sendAction(@BuilderInference block: suspend SendActionContext<T>.() -> Unit): SendAction<T> {
+  return sendActionContext(block)
+}
+
 
 
 suspend fun <T> withTimeout(time: Time, block: suspend CoroutineScope.() -> T) = kotlinx.coroutines.withTimeout(time.millisL, block)
-
-//
-//fun Runnable.toAction() = object : Action {
-//  override suspend fun ActionContext.run() {
-//    this@toAction.run()
-//  }
-//}

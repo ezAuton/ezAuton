@@ -97,10 +97,16 @@ class PPSimulatorTest {
     val updateKinematics = action {
       periodic(40.ms, DelayType.FROM_END) {
         println("dist: ${locEstimator.estimateLocation()}")
+        println("heading: ${simulatedRobot.defaultLocEstimator.estimateHeading().degrees}")
         simulatedRobot.update()
         locEstimator.update()
       }
     }
+
+//    val rec = Recording()
+//    rec.addSubRecording(PurePursuitRecorder(RealClock, path, ppMoveStrat))
+//    rec.addSubRecording(RobotStateRecorder(RealClock, locEstimator, locEstimator, 30 / 12.0, 2.0))
+//    rec.addSubRecording(TankDriveableRecorder("td", RealClock, simulatedRobot.defaultTransLocDriveable))
 
     val groupAction = action {
       with(updateKinematics)
@@ -111,12 +117,6 @@ class PPSimulatorTest {
         groupAction.run()
       }
     }
-//    val group = ActionGroup()
-//      .with(updateKinematics)
-//      .with(backgroundAction)
-//      .with(updateRecording)
-//      .addSequential(purePursuitAction)
-//    simulation.add(group)
 
     // run the simulator for 30 seconds
 //    try {

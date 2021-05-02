@@ -40,7 +40,6 @@ suspend fun Action.run(){
   Scheduler.run(this)
 }
 
-
 interface ActionGroup {
 
   /**
@@ -49,7 +48,7 @@ interface ActionGroup {
    * @param runnable The Action to run
    * @return this
    */
-  suspend fun sequential(action: Action)
+  suspend fun <T> sequential(action: Action<T>): T
 
   /**
    * Add a daemonic Action to the actions that we will run. It will run in parallel with another action, except it wil end at the same time as the other action.
@@ -58,7 +57,7 @@ interface ActionGroup {
    * @return this
    */
   fun with(block: ActionFunc)
-  fun with(action: Action)
+//  fun with(action: Action)
 
 
   /**
@@ -68,13 +67,11 @@ interface ActionGroup {
    * @return this
    */
   fun parallel(block: ActionFunc)
-  fun parallel(action: Action)
+//  fun parallel(action: Action)
 
 }
 
 
-
-// TODO: move location
 class SimpleContext(private val scope: CoroutineScope): ActionContext, CoroutineScope by scope {
 
   private val withJobs = ArrayList<Job>()

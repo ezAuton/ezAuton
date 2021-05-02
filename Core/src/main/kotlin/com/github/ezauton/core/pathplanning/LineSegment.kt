@@ -10,9 +10,6 @@ import com.github.ezauton.conversion.*
  *
  * @param from Starting location
  * @param to Ending location
- * @param finish If this is the last path segment in the path
- * @param beginning If this is the first path segment in the path
- * @param distanceStart How far along the path the starting location is (arclength)
  */
 class LineSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, override val to: ConcreteVector<T>) : PathSegment<T> {
 

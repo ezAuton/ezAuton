@@ -8,6 +8,7 @@ import com.github.ezauton.core.action.require.combine
 import com.github.ezauton.core.utils.Stopwatch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 
 enum class ResourceManagement {
@@ -44,7 +45,23 @@ enum class DelayType {
   FROM_END,
 }
 
-suspend fun CoroutineScope.periodic(
+class PeriodicParams(
+  val period: Time = DEFAULT_PERIOD,
+  val loopMethod: DelayType = DelayType.FROM_START,
+  val duration: Time? = null,
+  val iterations: Int? = null,
+  val resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT,
+  vararg val resourcePriorities: ResourcePriority,
+)
+
+
+suspend fun periodic(params: PeriodicParams, block: suspend (PeriodicScope) -> Unit) {
+  coroutineScope {
+    periodic(params.period, params.loopMethod, params.duration, params.iterations, params.resourceManagement, *params.resourcePriorities, block = block)
+  }
+}
+
+suspend fun periodic(
   period: Time = DEFAULT_PERIOD,
   loopMethod: DelayType = DelayType.FROM_START,
   duration: Time? = null,
@@ -52,7 +69,7 @@ suspend fun CoroutineScope.periodic(
   resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT,
   vararg resourcePriorities: ResourcePriority,
   block: suspend (PeriodicScope) -> Unit
-) {
+) = coroutineScope {
 
   val state = PeriodicScopeImpl(this)
 
