@@ -3,6 +3,7 @@ package com.github.ezauton.core.pathplanning
 import com.github.ezauton.conversion.ConcreteVector
 import com.github.ezauton.conversion.SIUnit
 import com.github.ezauton.conversion.withUnit
+import java.lang.IllegalStateException
 
 private const val UNINITIALIZED = -1
 
@@ -32,10 +33,13 @@ class PathProgressor<T : SIUnit<T>>(val path: Path<T>) {
 
   private fun findClosest(point: ConcreteVector<T>): ProgressResult<T> {
 
-    while (true) {
+    val maxIter = 100
+    repeat(maxIter) {
       val segmentPoint = segmentOn.getClosestPoint(point)
       val t = segmentPoint.tValue
 
+
+      println("t for $point close to $segmentOn is $t")
 
       when {
         t > 1 -> {
@@ -68,8 +72,8 @@ class PathProgressor<T : SIUnit<T>>(val path: Path<T>) {
           return ProgressResult.End(segmentOn, SegmentPoint(segmentOn.to, 1.0), path.distance, segmentOnIdx)
         }
       }
-
     }
+    throw IllegalStateException("reached maxIter");
   }
 
   private fun closestIdx(point: ConcreteVector<T>): Int {

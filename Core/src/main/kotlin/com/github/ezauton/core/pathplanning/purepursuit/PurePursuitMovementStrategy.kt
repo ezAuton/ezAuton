@@ -59,6 +59,8 @@ class PurePursuitMovementStrategy
 
     val on = pathProgressor.progress(loc)
 
+    println("on is ${on.javaClass.simpleName}")
+
     when (on) {
       is ProgressResult.End -> {
         return Update.Finished()

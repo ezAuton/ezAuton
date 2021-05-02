@@ -43,6 +43,7 @@ fun purePursuit(
       }
       is Update.Result -> {
         val speedUsed = speedFunction(update.on.distance)
+        println("speedUsed $speedUsed")
         translationalLocationDrivable.driveTowardTransLoc(speedUsed, update.goal)
       }
     }

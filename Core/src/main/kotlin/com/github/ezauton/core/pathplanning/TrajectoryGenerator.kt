@@ -53,6 +53,7 @@ private class TimeGetter(val map: SortedMap<Double, SpeedInterpolator>) : Speed 
 
   private fun interpolator(distance: Distance): SpeedInterpolator {
     val tailMap = map.tailMap(distance.value)
+    println("passed in dist ${distance.value}")
     val key = if (tailMap.isEmpty()) map.lastKey() else tailMap.firstKey()
     return map[key]!!
   }
