@@ -2,13 +2,13 @@ package com.github.ezauton.core.action
 
 import com.github.ezauton.conversion.Time
 import com.github.ezauton.core.simulation.SimpleContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlin.experimental.ExperimentalTypeInference
+
+
 
 /**
  * Describes an Action, which is similar to a WPILib Commands, but has both linear, periodic, and other implementations.
@@ -63,7 +63,19 @@ fun <T> action(block: ActionFunc<T>): Action<T> {
   }
 }
 
-fun <T> ephemeral(block: suspend CoroutineScope.() -> T): T{
+@OptIn(ExperimentalCoroutinesApi::class)
+suspend fun <T> ephemeral(block: suspend CoroutineScope.() -> T): T {
+
+  val job = Job()
+  val scope = CoroutineScope(job)
+
+  val result = with(scope) {
+    block()
+  }
+
+  job.cancel()
+
+  return result
 
 }
 

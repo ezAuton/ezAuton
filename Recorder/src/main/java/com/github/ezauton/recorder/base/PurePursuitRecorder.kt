@@ -10,6 +10,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 
-fun purePursuitRecorder(inputFlow: Flow<PurePursuitData>) = inputFlow.map { data ->
-    PurePursuitFrame(time, data.lookahead.value, data.closestPoint, data.goalPoint.scalarVector, data.closestPointDist, data.currentSegmentIndex)
-}
+//fun purePursuitRecorder(inputFlow: Flow<PurePursuitData>) = inputFlow.map { data ->
+//    PurePursuitFrame(time, data.lookahead.value, data.closestPoint, data.goalPoint.scalarVector, data.closestPointDist, data.currentSegmentIndex)
+//}

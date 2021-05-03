@@ -10,7 +10,7 @@ interface EzJoystickButton {
    *
    * @param runnable runnable to run
    */
-  fun whenPressed(action: Action)
+  fun <T> whenPressed(action: Action<T>)
 
   /**
    * Constantly starts the given command while the button is held.
@@ -21,26 +21,26 @@ interface EzJoystickButton {
    *
    * @param runnable the runnable to start
    */
-  fun whileHeld(actionSupplier: Action)
+  fun <T> whileHeld(actionSupplier: Action<T>)
 
   /**
    * Starts the command when the button is released.
    *
    * @param runnable the runnable to start
    */
-  fun whenReleased(action: Action)
+  fun <T> whenReleased(action: Action<T>)
 
   /**
    * Toggles the command whenever the button is pressed (on then off then on).
    *
    * @param runnable the runnable to start
    */
-  fun toggleWhenPressed(action: Action)
+  fun <T> toggleWhenPressed(action: Action<T>)
 
   /**
    * Cancel the command when the button is pressed.
    *
    * @param runnable the runnable to start
    */
-  fun cancelWhenPressed(action: Action)
+  fun <T> cancelWhenPressed(action: Action<T>)
 }

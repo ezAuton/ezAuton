@@ -18,23 +18,23 @@ import kotlinx.serialization.Serializable
 class RobotStateRecording(val frames: List<RobotStateFrame>, override val name: String) : SubRecording
 
 
-fun robotStateRecorder(posEstimator: TranslationalLocationEstimator, rotEstimator: RotationalLocationEstimator, width: Double, height: Double, period: PeriodicParams = PeriodicParams.DEFAULT) =
-
-
-  sendAction {
-    val frames =  periodic(period) { loop ->
-      RobotStateFrame(
-        posEstimator.estimateLocation().scalarVector,
-        rotEstimator.estimateHeading().value,
-        width,
-        height,
-        posEstimator.estimateAbsoluteVelocity().scalarVector,
-        loop.stopwatch.read().millis,
-      )
-    }
-
-    println("caught with!!!")
-
-    emit(RobotStateRecording(frames, "RobotStateRecording"))
-
-  }
+//fun robotStateRecorder(posEstimator: TranslationalLocationEstimator, rotEstimator: RotationalLocationEstimator, width: Double, height: Double, period: PeriodicParams = PeriodicParams.DEFAULT) =
+//
+//
+//  sendAction {
+//    val frames =  periodic(period) { loop ->
+//      RobotStateFrame(
+//        posEstimator.estimateLocation().scalarVector,
+//        rotEstimator.estimateHeading().value,
+//        width,
+//        height,
+//        posEstimator.estimateAbsoluteVelocity().scalarVector,
+//        loop.stopwatch.read().millis,
+//      )
+//    }
+//
+//    println("caught with!!!")
+//
+//    emit(RobotStateRecording(frames, "RobotStateRecording"))
+//
+//  }

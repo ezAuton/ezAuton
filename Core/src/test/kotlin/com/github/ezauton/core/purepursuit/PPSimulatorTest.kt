@@ -11,6 +11,7 @@ import com.github.ezauton.core.record.recording
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.utils.RealClock
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -113,7 +114,7 @@ class PPSimulatorTest {
         val recordingBuilder = recording {
           parallel(updateKinematics)
           parallel(purePursuitAction)
-          sample(10.millis, locEstimator, tankRobotTransLocDriveable)
+//          sample(10.millis, locEstimator, tankRobotTransLocDriveable)
         }
 
         delay(10.seconds)

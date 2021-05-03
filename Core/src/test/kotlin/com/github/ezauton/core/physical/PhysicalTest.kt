@@ -49,38 +49,38 @@ object PhysicalTest { // TODO: what we using this for
     }
   }
 
-  /**
-   * Test if encoder-encoder localization when going straight works
-   *
-   * @param left
-   * @param right
-   * @param leftMotor
-   * @param rightMotor
-   * @param lateralWheelDistance
-   * @param voltage
-   * @return
-   */
-  fun testStraightEncoderEncoderLocalization(
-    left: TranslationalDistanceSensor,
-    right: TranslationalDistanceSensor,
-    leftMotor: VoltageMotor,
-    rightMotor: VoltageMotor,
-    lateralWheelDistance: Distance,
-    voltage: Double
-  ): Action {
-    val action = testStraightVoltage(leftMotor, rightMotor, voltage)
-    val constraints = TankRobotConstants.from(lateralWheelDistance)
-    val localizer = TankRobotEncoderEncoderEstimator(left, right, constraints)
-    localizer.reset()
-
-    return action {
-      with {
-        periodic {
-          localizer.update()
-        }
-      }
-      sequential(action)
-    }
-
-  }
+//  /**
+//   * Test if encoder-encoder localization when going straight works
+//   *
+//   * @param left
+//   * @param right
+//   * @param leftMotor
+//   * @param rightMotor
+//   * @param lateralWheelDistance
+//   * @param voltage
+//   * @return
+//   */
+//  fun testStraightEncoderEncoderLocalization(
+//    left: TranslationalDistanceSensor,
+//    right: TranslationalDistanceSensor,
+//    leftMotor: VoltageMotor,
+//    rightMotor: VoltageMotor,
+//    lateralWheelDistance: Distance,
+//    voltage: Double
+//  ): Action<*> {
+//    val action = testStraightVoltage(leftMotor, rightMotor, voltage)
+//    val constraints = TankRobotConstants.from(lateralWheelDistance)
+//    val localizer = TankRobotEncoderEncoderEstimator(left, right, constraints)
+//    localizer.reset()
+//
+//    return action {
+//      with {
+//        periodic {
+//          localizer.update()
+//        }
+//      }
+//      sequential(action)
+//    }
+//
+//  }
 }

@@ -5,7 +5,6 @@ import com.github.ezauton.conversion.millis
 import com.github.ezauton.conversion.now
 import com.github.ezauton.core.action.require.ResourceHold
 import com.github.ezauton.core.action.require.combine
-import com.github.ezauton.core.simulation.WithCancel
 import com.github.ezauton.core.utils.Stopwatch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -163,13 +162,9 @@ suspend fun <T> periodic(
     } while (!isFinished())
   }
 
-  try {
-    when (resourceManagement) {
-      ResourceManagement.LET_GO_EACH_CYCLE -> letGoEachCycle()
-      ResourceManagement.UNTIL_FINISH -> untilFinish()
-    }
-  } catch (e: WithCancel) {
-    if (!catchWith) throw e
+  when (resourceManagement) {
+    ResourceManagement.LET_GO_EACH_CYCLE -> letGoEachCycle()
+    ResourceManagement.UNTIL_FINISH -> untilFinish()
   }
 
   return@coroutineScope list

@@ -1,6 +1,6 @@
 package com.github.ezauton.recorder
 
-import com.github.ezauton.recorder.base.PurePursuitRecording
+//import com.github.ezauton.recorder.base.PurePursuitRecording
 import com.github.ezauton.recorder.base.RobotStateRecording
 import com.github.ezauton.recorder.base.TankDriveableRecorder
 import kotlinx.serialization.json.Json
@@ -10,7 +10,7 @@ import kotlinx.serialization.modules.subclass
 
 private val module = SerializersModule {
   polymorphic(SubRecording::class) {
-    subclass(PurePursuitRecording::class)
+//    subclass(PurePur::class)
     subclass(RobotStateRecording::class)
     subclass(TankDriveableRecorder::class)
   }
