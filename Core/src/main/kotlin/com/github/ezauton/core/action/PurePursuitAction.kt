@@ -16,7 +16,6 @@ import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlin.coroutines.coroutineContext
 
 
 typealias Speed = (distance: Distance) -> LinearVelocity
@@ -30,7 +29,7 @@ typealias Speed = (distance: Distance) -> LinearVelocity
  * @param translationalLocationDrivable The drivetrain of the robot
  */
 fun purePursuit(
-  period: PeriodicParams,
+  period: Periodic,
   trajectory: Trajectory,
   translationalLocationEstimator: TranslationalLocationEstimator,
   translationalLocationDrivable: TranslationalLocationDrivable,
@@ -67,4 +66,5 @@ fun purePursuit(
 
   }
   dataChannel?.close()
+  return@action
 }

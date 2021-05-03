@@ -14,6 +14,7 @@ class CoroutineTest {
 
 
     val counter = ephemeral {
+
       var internalCounter = 0
       launch {
         repeat(1000) {

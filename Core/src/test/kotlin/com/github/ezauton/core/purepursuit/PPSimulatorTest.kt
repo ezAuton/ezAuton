@@ -7,10 +7,12 @@ import com.github.ezauton.core.pathplanning.Trajectory
 import com.github.ezauton.core.pathplanning.TrajectoryGenerator
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
-import com.github.ezauton.core.record.recording
+import com.github.ezauton.core.record.recordingFlow
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
+import com.github.ezauton.core.simulation.parallel
 import com.github.ezauton.core.utils.RealClock
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -77,6 +79,7 @@ class PPSimulatorTest {
 //    )
 //  }
 
+
   @Throws(TimeoutException::class, ExecutionException::class)
   private fun test(name: String, trajectory: Trajectory) {
 
@@ -86,60 +89,53 @@ class PPSimulatorTest {
     val leftMotor = simulatedRobot.leftMotor
     val rightMotor = simulatedRobot.rightMotor
 
-    val locEstimator = TankRobotEncoderEncoderEstimator(simulatedRobot.leftDistanceSensor, simulatedRobot.rightDistanceSensor, simulatedRobot)
-    locEstimator.reset()
+    val locationEstimator = TankRobotEncoderEncoderEstimator(simulatedRobot.leftDistanceSensor, simulatedRobot.rightDistanceSensor, simulatedRobot)
+    locationEstimator.reset()
 
-    val lookahead = LookaheadBounds(1.0.m, 5.0.m, 2.0.mps, 10.0.mps, locEstimator)
+    val lookahead = LookaheadBounds(1.0.m, 5.0.m, 2.0.mps, 10.0.mps, locationEstimator)
 
-    val tankRobotTransLocDriveable = TankRobotTransLocDrivable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot)
-
-    val purePursuitAction = purePursuit(period = PeriodicParams(20.ms), trajectory, locEstimator, tankRobotTransLocDriveable, lookahead)
 
     val updateKinematics = action {
-      periodic(40.ms, DelayType.FROM_END) {
-        simulatedRobot.update()
-        locEstimator.update()
-      }
+      simulatedRobot.update()
+      locationEstimator.update()
     }
 
 
-    val timeoutAction = action {
-      delay(2000)
-    }
+    val drivable = TankRobotTransLocDrivable(leftMotor, rightMotor, locationEstimator, locationEstimator, simulatedRobot)
 
-    val groupAction = action {
+    val purePursuit = purePursuit(Periodic(10.ms, before = updateKinematics), trajectory, locationEstimator, drivable, lookahead)
 
-      val recording = ephemeral {
+    val action = action {
+      ephemeral {
+        val flow = recordingFlow {
+          parallel(purePursuit)
+        }
 
-        val recordingBuilder = recording {
-          parallel(updateKinematics)
-          parallel(purePursuitAction)
-//          sample(10.millis, locEstimator, tankRobotTransLocDriveable)
+        launch {
+          flow.collect {
+            // send sample to NT
+          }
         }
 
         delay(10.seconds)
-
-        recordingBuilder.build()
       }
-
-
     }
 
     runBlocking {
       withTimeout(10.seconds) {
-        groupAction.run()
+        action.run()
       }
     }
 
 
-    val leftWheelVelocity = locEstimator.leftTranslationalWheelVelocity
+    val leftWheelVelocity = locationEstimator.leftTranslationalWheelVelocity
     assertTrue(leftWheelVelocity in (-0.5).mps..0.5.mps)
 
-    val rightWheelVelocity = locEstimator.rightTranslationalWheelVelocity
+    val rightWheelVelocity = locationEstimator.rightTranslationalWheelVelocity
     assertTrue(rightWheelVelocity in (-0.5).mps..0.5.mps)
 
     // The final location after the simulator
-    val finalLoc = locEstimator.estimateLocation()
+    val finalLoc = locationEstimator.estimateLocation()
 
     // If the final loc is approximately equal to the last waypoint
     approxEqual(trajectory.path.end, finalLoc, 0.2)

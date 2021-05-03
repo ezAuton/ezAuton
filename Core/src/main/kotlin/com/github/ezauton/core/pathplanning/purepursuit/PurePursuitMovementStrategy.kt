@@ -3,6 +3,8 @@ package com.github.ezauton.core.pathplanning.purepursuit
 import com.github.ezauton.conversion.*
 import com.github.ezauton.core.pathplanning.PathProgressor
 import com.github.ezauton.core.pathplanning.ProgressResult
+import com.github.ezauton.core.record.AbstractSample
+import com.github.ezauton.core.record.RecordingKey
 import kotlinx.coroutines.channels.Channel
 
 
@@ -92,4 +94,8 @@ data class PurePursuitData(
   val closestPoint: ScalarVector,
   val closestPointDist: Double,
   val currentSegmentIndex: Int
-)
+): AbstractSample(PurePursuitData) {
+
+  companion object Key: RecordingKey
+
+}

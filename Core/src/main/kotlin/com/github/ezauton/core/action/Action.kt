@@ -1,13 +1,11 @@
 package com.github.ezauton.core.action
 
 import com.github.ezauton.conversion.Time
-import com.github.ezauton.core.simulation.SimpleContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlin.experimental.ExperimentalTypeInference
-
 
 
 /**
@@ -33,32 +31,13 @@ interface Action<T> : Flow<T> { // In the purest form an action is of type: susp
  * Additionally, it is not bound to the 20ms periodic timer for WPILib Commands. 👋 Commands! 🚀 🤖
  */
 typealias SendAction<T> = Flow<T>
-typealias ActionFunc<T> = suspend ActionContext.() -> T
-typealias SendActionFunc<T> = suspend SendActionContext<T>.() -> Unit
-
-private suspend fun <T> actionContext(block: ActionFunc<T>): T {
-  return coroutineScope {
-    val context = SimpleContext(this)
-    with(context) {
-      block()
-    }
-  }
-}
-
-private fun <T> sendActionContext(block: suspend SendActionContext<T>.() -> Unit) = flow {
-  coroutineScope {
-    val context = SimpleContext(this)
-    val sendActionContext = SendActionContextImpl<T>(context, this@flow)
-    with(sendActionContext) {
-      block()
-    }
-  }
-}
+typealias ActionFunc<T> = suspend CoroutineScope.() -> T
+typealias SendActionFunc<T> = suspend FlowCollector<T>.() -> Unit
 
 fun <T> action(block: ActionFunc<T>): Action<T> {
   return object : Action<T> {
-    override suspend fun run(): T {
-      return actionContext(block)
+    override suspend fun run(): T = coroutineScope {
+      block()
     }
   }
 }
@@ -79,10 +58,15 @@ suspend fun <T> ephemeral(block: suspend CoroutineScope.() -> T): T {
 
 }
 
-@OptIn(ExperimentalTypeInference::class)
-fun <T> sendAction(@BuilderInference block: suspend SendActionContext<T>.() -> Unit): SendAction<T> {
-  return sendActionContext(block)
+suspend fun delay(duration: Time) {
+  delay(duration.millisL)
 }
 
 
-suspend fun <T> withTimeout(time: Time, block: suspend CoroutineScope.() -> T) = kotlinx.coroutines.withTimeout(time.millisL, block)
+@OptIn(ExperimentalTypeInference::class)
+fun <T> sendAction(@BuilderInference block: SendActionFunc<T>)= flow<T> {
+  block(this)
+}
+
+
+suspend fun <T> withTimeout(time: Time, block: suspend CoroutineScope.() -> T) = withTimeout(time.millisL, block)

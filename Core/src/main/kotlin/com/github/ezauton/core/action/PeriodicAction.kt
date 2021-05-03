@@ -6,10 +6,7 @@ import com.github.ezauton.conversion.now
 import com.github.ezauton.core.action.require.ResourceHold
 import com.github.ezauton.core.action.require.combine
 import com.github.ezauton.core.utils.Stopwatch
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 
 enum class ResourceManagement {
   UNTIL_FINISH,
@@ -18,11 +15,6 @@ enum class ResourceManagement {
 
 val DEFAULT_PERIOD = 20.millis
 val DEFAULT_RESOURCE_MANAGEMENT = ResourceManagement.UNTIL_FINISH
-
-enum class PeriodicResult {
-  CONTINUE,
-  STOP
-}
 
 interface PeriodicScope : CoroutineScope {
   val stopwatch: Stopwatch
@@ -50,23 +42,25 @@ enum class DelayType {
   FROM_END,
 }
 
-data class PeriodicParams(
+data class Periodic(
   val period: Time = DEFAULT_PERIOD,
   val loopMethod: DelayType = DelayType.FROM_START,
   val duration: Time? = null,
   val iterations: Int? = null,
+  val before: Action<*>? = null,
+  val after: Action<*>? = null,
   val resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT,
   val resourcePriorities: List<ResourcePriority> = emptyList(),
 ) {
   companion object {
-    val DEFAULT = PeriodicParams()
+    val DEFAULT = Periodic()
   }
 }
 
 class PeriodicBuilder
 
-suspend fun <T> periodic(params: PeriodicParams, block: suspend (PeriodicScope) -> T) = coroutineScope {
-  periodic(params.period, params.loopMethod, params.duration, params.iterations, params.resourceManagement, *params.resourcePriorities.toTypedArray(), block = block)
+suspend fun <T> periodic(params: Periodic, block: suspend (PeriodicScope) -> T) = coroutineScope {
+  periodic(params.period, params.loopMethod, params.duration, params.iterations, params.before, params.after, params.resourceManagement, *params.resourcePriorities.toTypedArray(), block = block)
 }
 
 
@@ -75,6 +69,8 @@ suspend fun <T> periodic(
   loopMethod: DelayType = DelayType.FROM_START,
   duration: Time? = null,
   iterations: Int? = null,
+  before: Action<*>? = null,
+  after: Action<*>? = null,
   resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT,
   vararg resourcePriorities: ResourcePriority,
   block: suspend (PeriodicScope) -> T
@@ -128,6 +124,13 @@ suspend fun <T> periodic(
     return false
   }
 
+  suspend fun run(): T {
+    before?.run()
+    val res = block(state)
+    after?.run()
+    return res
+  }
+
   suspend fun letGoEachCycle() {
     val held = doHold()
     var ranOnce = false
@@ -135,7 +138,7 @@ suspend fun <T> periodic(
       if (!ranOnce) {
         ranOnce = true
       } else held.giveBack()
-      val res = block(state)
+      val res = run()
       list.add(res)
       held.giveBack()
       try {
@@ -150,7 +153,7 @@ suspend fun <T> periodic(
   suspend fun untilFinish() {
     val held = doHold()
     do {
-      val res = block(state)
+      val res = run()
       list.add(res)
       try {
         doDelay()

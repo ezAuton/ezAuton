@@ -6,12 +6,23 @@ import com.github.ezauton.core.localization.TankRobotVelocityEstimator
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
-import com.github.ezauton.core.record.Sample
+import com.github.ezauton.core.record.AbstractSample
+import com.github.ezauton.core.record.RecordingKey
+import com.github.ezauton.core.record.Sampler
 import com.github.ezauton.core.robot.TankRobotConstants
 import com.github.ezauton.core.utils.math.getAbsoluteDPosCurve
 import com.github.ezauton.core.utils.math.getAngularDistance
 import com.github.ezauton.core.utils.math.polarVector2D
 
+
+class TREESample(
+  val leftWheelVelocity: LinearVelocity,
+  val rightWheelVelocity: LinearVelocity,
+  val heading: Angle,
+  val location: ConcreteVector<Distance>
+) : AbstractSample(TREESample) {
+  companion object Key : RecordingKey
+}
 
 /**
  * Describes an object that can estimate the heading and absolute position of the robot solely using the encoders
@@ -28,7 +39,8 @@ class TankRobotEncoderEncoderEstimator
   private val left: TranslationalDistanceSensor,
   private val right: TranslationalDistanceSensor,
   private val tankRobot: TankRobotConstants
-) : RotationalLocationEstimator, TranslationalLocationEstimator, TankRobotVelocityEstimator, Updatable {
+) : RotationalLocationEstimator, TranslationalLocationEstimator, TankRobotVelocityEstimator, Updatable, Sampler<TREESample> {
+
   private var lastPosLeft: Distance = zero()
   private var lastPosRight: Distance = zero()
   private var init = false
@@ -38,6 +50,7 @@ class TankRobotEncoderEncoderEstimator
   override val leftTranslationalWheelVelocity: LinearVelocity get() = left.velocity
 
   override val rightTranslationalWheelVelocity: LinearVelocity get() = right.velocity
+
 
   /**
    * Reset the heading and position of the location estimator
@@ -93,4 +106,6 @@ class TankRobotEncoderEncoderEstimator
   override fun estimateAbsoluteVelocity(): ConcreteVector<LinearVelocity> {
     return polarVector2D(magnitude = avgTranslationalWheelVelocity, angle = heading)
   }
+
+  override fun sample() = TREESample(leftTranslationalWheelVelocity, rightTranslationalWheelVelocity, heading, location)
 }

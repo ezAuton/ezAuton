@@ -1,16 +1,11 @@
 package com.github.ezauton.core.physical
 
 import com.github.ezauton.conversion.AngularVelocity
-import com.github.ezauton.conversion.Distance
 import com.github.ezauton.conversion.seconds
-import com.github.ezauton.core.action.Action
 import com.github.ezauton.core.action.action
 import com.github.ezauton.core.action.periodic
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.actuators.VoltageMotor
-import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
-import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
-import com.github.ezauton.core.robot.TankRobotConstants
 
 
 object PhysicalTest { // TODO: what we using this for
