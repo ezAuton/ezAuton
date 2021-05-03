@@ -108,11 +108,13 @@ class PPSimulatorTest {
     val action = action {
       ephemeral {
         val flow = recordingFlow {
+          sample(40.ms, locationEstimator)
           parallel(purePursuit)
         }
 
         launch {
           flow.collect {
+            println("collected $it")
             // send sample to NT
           }
         }

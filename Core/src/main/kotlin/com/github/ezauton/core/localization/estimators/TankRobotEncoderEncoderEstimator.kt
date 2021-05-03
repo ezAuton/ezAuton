@@ -15,7 +15,7 @@ import com.github.ezauton.core.utils.math.getAngularDistance
 import com.github.ezauton.core.utils.math.polarVector2D
 
 
-class TREESample(
+data class TREESample(
   val leftWheelVelocity: LinearVelocity,
   val rightWheelVelocity: LinearVelocity,
   val heading: Angle,

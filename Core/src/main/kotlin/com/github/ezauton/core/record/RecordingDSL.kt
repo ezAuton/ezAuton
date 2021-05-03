@@ -2,12 +2,11 @@ package com.github.ezauton.core.record
 
 import com.github.ezauton.conversion.Time
 import com.github.ezauton.core.action.periodic
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import java.nio.file.Path
@@ -35,12 +34,15 @@ interface RecordingDSL : CoroutineScope {
 
 interface RecordingKey
 
-private class RecordingDSLFlowImpl(val scope: CoroutineScope): RecordingDSL, CoroutineScope by scope {
+private class RecordingDSLFlowImpl(baseScope: CoroutineScope): RecordingDSL, RecordingInternalBuilder {
+
+  @OptIn(ExperimentalCoroutinesApi::class)
+  override val coroutineContext = baseScope.newCoroutineContext(RecordingContext(this))
 
   private val channel = Channel<Sample>()
 
   override fun <T : Sample> sample(period: Time, vararg samplers: Sampler<T>) {
-    scope.launch {
+    launch {
       periodic(period){
         samplers.asSequence()
           .map { it.sample() }
@@ -55,16 +57,28 @@ private class RecordingDSLFlowImpl(val scope: CoroutineScope): RecordingDSL, Cor
     data.forEach { channel.offer(it) }
   }
 
+  override fun <T : Sample> receiveFlow(flow: Flow<T>) {
+    launch {
+      flow.collect {
+        channel.offer(it)
+      }
+    }
+  }
+
   val flow get() = channel.consumeAsFlow()
+
 
 }
 
-private class RecordingDSLImpl(val scope: CoroutineScope) : RecordingDSL, CoroutineScope by scope, RecordingBuilder, RecordingInternalBuilder {
+private class RecordingDSLImpl(baseScope: CoroutineScope) : RecordingDSL, CoroutineScope, RecordingBuilder, RecordingInternalBuilder {
+
+  @OptIn(ExperimentalCoroutinesApi::class)
+  override val coroutineContext = baseScope.newCoroutineContext(RecordingContext(this))
 
   private val samples = HashMap<RecordingKey, ArrayList<Sample>>()
 
   override fun <T : Sample> sample(period: Time, vararg samplers: Sampler<T>) {
-    scope.launch {
+    launch {
       periodic(period) {
         samplers.asSequence()
           .map { it.sample() }
@@ -86,7 +100,7 @@ private class RecordingDSLImpl(val scope: CoroutineScope) : RecordingDSL, Corout
   }
 
   override fun <T : Sample> receiveFlow(flow: Flow<T>) {
-    scope.launch {
+    launch {
       flow.collect { sample ->
         addSample(sample)
       }
@@ -132,8 +146,6 @@ fun CoroutineScope.recording(block: RecordingDSL.() -> Unit): RecordingBuilder {
   impl.block()
   return impl
 }
-
-data class RecordingPacket(val key: RecordingKey, val sample: Sample)
 
 fun CoroutineScope.recordingFlow(block: RecordingDSL.() -> Unit): Flow<Sample> {
   val impl = RecordingDSLFlowImpl(this)

@@ -38,9 +38,6 @@ class PathProgressor<T : SIUnit<T>>(val path: Path<T>) {
       val segmentPoint = segmentOn.getClosestPoint(point)
       val t = segmentPoint.tValue
 
-
-      println("t for $point close to $segmentOn is $t")
-
       when {
         t > 1 -> {
           segmentOnIdx += 1
