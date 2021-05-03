@@ -88,17 +88,16 @@ class Controller : Initializable {
    * By default, the robot is 2-3 pixels tall. This is much too small to learn anything.
    * This scales everything up so that everything is still proportional to each other but you can at least see it
    */
-  private var scaleFactorY = 0.0
+  private var spatialScaleFactor = 0.0
 
-  private lateinit var timeline: Timeline
-  private lateinit var rateSliderListener: ChangeListener<Number>
+
+  private var timeline: Timeline? = null
+  private var rateSliderListener: ChangeListener<Number>? = null
   private lateinit var currentRecording: Recording
 
   override fun initialize(location: URL, resources: ResourceBundle?) {
 
-    requireNotNull(location)
-
-    backdrop.heightProperty().addListener { heightProp: ObservableValue<out Number>?, oldHeight: Number?, newHeight: Number -> scaleFactorY = newHeight.toDouble() / 30.0156 }
+    backdrop.heightProperty().addListener { heightProp: ObservableValue<out Number>?, oldHeight: Number?, newHeight: Number ->  spatialScaleFactor = newHeight.toDouble() / 30.0156 }
     backdrop.widthProperty().addListener { widthProp: ObservableValue<out Number>?, oldWidth: Number?, newWidth: Number ->
       try {
         originX = posChooser.value.proportionX * newWidth.toDouble()
@@ -197,10 +196,11 @@ class Controller : Initializable {
     if (rateSliderListener != null) {
       rateSlider.valueProperty().removeListener(rateSliderListener)
     }
-    if (timeline != null) {
-      timeline.pause()
-    }
-    timeline = Timeline()
+
+    timeline?.pause()
+
+    val timeline = Timeline()
+    this.timeline = Timeline()
 
 
     // Loop it forever
@@ -273,16 +273,16 @@ class Controller : Initializable {
   }
 
   private fun pause() {
-    timeline.pause()
+    timeline?.pause()
     btnPlayPause.text = "Play"
   }
 
   private fun play() {
-    if (timeline.status == Animation.Status.STOPPED) {
-      timeline.playFromStart()
+    if (timeline?.status == Animation.Status.STOPPED) {
+      timeline?.playFromStart()
       btnPlayPause.text = "Pause"
     } else {
-      timeline.play()
+      timeline?.play()
       btnPlayPause.text = "Pause"
     }
   }
@@ -301,10 +301,8 @@ class Controller : Initializable {
         throw NullPointerException("Cannot find tab with name: $name")
       }
 
-      override val scaleFactorX: Double
-        get() = scaleFactorY
-      override val scaleFactorY: Double
-        get() = scaleFactorY
+      override val scaleFactorX: Double get() = spatialScaleFactor
+      override val scaleFactorY: Double get() = spatialScaleFactor
 
       override val origin: ScalarVector
         get() = svec(originX, originY)
@@ -324,8 +322,8 @@ class Controller : Initializable {
 
   @FXML
   private fun displayRealWorldCoordsOnClick(e: MouseEvent) {
-    val xFt = (e.x - originX) / scaleFactorY
-    val yFt = (originY - e.y) / scaleFactorY
+    val xFt = (e.x - originX) / spatialScaleFactor
+    val yFt = (originY - e.y) / spatialScaleFactor
     if (originX.epsilonEquals(-1234.0) && originY.epsilonEquals(-1234.0)) {
       clickedCoordsDisplay.text = "Select a starting position first."
     } else {
