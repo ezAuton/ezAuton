@@ -27,7 +27,7 @@ class PurePursuitMovementStrategy
   /**
    * The path that we're driving on
    */
-  val pathProgressor: PathProgressor<Distance>,
+  private val pathProgressor: PathProgressor<Distance>,
   /**
    * How close we need to be to the final waypoint for us to decide that we are finished
    */
@@ -49,6 +49,7 @@ class PurePursuitMovementStrategy
   ](https://www.chiefdelphi.com/forums/showthread.php?threadid=162713) */
   private fun calculateAbsoluteGoalPoint(currentDistance: Distance, lookAheadDistance: Distance): ConcreteVector<Distance> {
     require(currentDistance.isFinite) { "distanceCurrentSegmentLeft ($currentDistance) must be finite" }
+    val atDist = currentDistance + lookAheadDistance
     return path.pointAtDist(currentDistance + lookAheadDistance, extrapolate = true)
   }
 

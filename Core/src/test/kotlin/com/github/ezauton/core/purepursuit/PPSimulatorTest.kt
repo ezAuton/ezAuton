@@ -2,17 +2,22 @@ package com.github.ezauton.core.purepursuit
 
 import com.github.ezauton.conversion.*
 import com.github.ezauton.core.action.*
+import com.github.ezauton.core.localization.estimators.TREESample
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.pathplanning.Trajectory
 import com.github.ezauton.core.pathplanning.TrajectoryGenerator
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitData
 import com.github.ezauton.core.record.recordingFlow
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.parallel
 import com.github.ezauton.core.utils.RealClock
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectIndexed
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -103,20 +108,30 @@ class PPSimulatorTest {
 
     val drivable = TankRobotTransLocDrivable(leftMotor, rightMotor, locationEstimator, locationEstimator, simulatedRobot)
 
-    val purePursuit = purePursuit(Periodic(10.ms, before = updateKinematics), trajectory, locationEstimator, drivable, lookahead)
+    val purePursuit = purePursuit(Periodic(5.ms, before = updateKinematics), trajectory, locationEstimator, drivable, lookahead)
 
     val action = action {
       ephemeral {
         val flow = recordingFlow {
-          sample(40.ms, locationEstimator)
+          sample(5.ms, locationEstimator)
           parallel(purePursuit)
         }
 
         launch {
-          flow.collect {
-            println("collected $it")
-            // send sample to NT
+          flow.collect{ sample ->
+            when(sample){
+              is TREESample -> {
+                println(sample.leftWheelVelocity)
+              }
+              is PurePursuitData -> {
+                println(sample.closestPoint)
+              }
+              else -> {}
+            }
           }
+//          flow.filterIsInstance<TREESample>().collectIndexed { index, value ->
+//
+//          }
         }
 
         delay(10.seconds)

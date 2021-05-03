@@ -82,8 +82,8 @@ class TankRobotTransLocDrivable
     val curvature = calculateCurvature(relativeCoord)
     var bestVector: ConcreteVector<LinearVelocity>? = null
 
-    val v_lMin = -speed
-    val v_rMin = -speed
+    val minVelLeft = -speed
+    val minVelRight = -speed
 
     val lateralWheelDistance = tankRobotConstants.lateralWheelDistance
 
@@ -112,22 +112,22 @@ class TankRobotTransLocDrivable
 
       var v_r = speed * velLeftToRightRatio
 
-      if (v_r in v_rMin..speed || v_r in speed..v_rMin) {
+      if (v_r in minVelRight..speed || v_r in speed..minVelRight) {
         score = (speed + v_r).abs()
         bestVector = ConcreteVector.of(speed, v_r)
       }
 
-      v_r = v_lMin * velLeftToRightRatio
-      if (v_r in v_rMin..speed || v_r in speed..v_rMin) {
-        val tempScore = (v_lMin + v_r).abs()
+      v_r = minVelLeft * velLeftToRightRatio
+      if (v_r in minVelRight..speed || v_r in speed..minVelRight) {
+        val tempScore = (minVelLeft + v_r).abs()
         if (tempScore > score) {
           score = tempScore
-          bestVector = ConcreteVector.of(v_lMin, v_r)
+          bestVector = ConcreteVector.of(minVelLeft, v_r)
         }
       }
 
       var v_l = speed * velRightToLeftRatio
-      if (v_l in v_lMin..speed || v_l in speed..v_lMin) {
+      if (v_l in minVelLeft..speed || v_l in speed..minVelLeft) {
         val tempScore = (speed + v_l).abs()
         if (tempScore > score) {
           score = tempScore
@@ -135,11 +135,11 @@ class TankRobotTransLocDrivable
         }
       }
 
-      v_l = v_rMin * velRightToLeftRatio
-      if (v_l in v_lMin..speed || v_l in speed..v_lMin) {
-        val tempScore = (v_lMin + v_l).abs()
+      v_l = minVelRight * velRightToLeftRatio
+      if (v_l in minVelLeft..speed || v_l in speed..minVelLeft) {
+        val tempScore = (minVelLeft + v_l).abs()
         if (tempScore > score) {
-          bestVector = ConcreteVector.of(v_l, v_rMin)
+          bestVector = ConcreteVector.of(v_l, minVelRight)
         }
       }
 

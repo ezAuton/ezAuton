@@ -50,8 +50,8 @@ class Path<T : SIUnit<T>> constructor(val pathSegments: List<PathSegment<T>>) {
       if (distanceBeforeI >= value) {
         val distanceBefore = distances[i - 1]
         val segment = pathSegments[i - 1]
-        val relativeDistance = value - distanceBefore
-        return segment.getAtDist(relativeDistance.withUnit(type))
+        val relativeDistance = (value - distanceBefore).withUnit(type)
+        return segment.getAtDist(relativeDistance)
       }
     }
 

@@ -16,7 +16,8 @@ class LineSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, override 
   override val length = from.dist(to)
   override val type get() = from.type
 
-  private val n = (to - from).scalarVector / (length.value * length.value)
+  private val change = (to - from).scalarVector
+  private val dir = change / length.value
 
   init {
     if (length.isApproxZero) {
@@ -45,13 +46,13 @@ class LineSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, override 
   override fun getClosestPoint(point: ConcreteVector<T>): SegmentPoint<T> {
     val (a, _, p) = scalar(from, to, point)
     val ap = p - a
-    val t = ap.dot(n)
-    val x = a + t * n //  x is a point on line
+    val t = ap.dot(dir) / length.value
+    val x = a + t * dir //  x is a point on line
     return SegmentPoint(x.withUnit(type), t)
   }
 
   override fun getPointAlong(proportion: Double): ConcreteVector<T> {
-    return (from.scalarVector + n * proportion).withUnit(type)
+    return (from.scalarVector + change * proportion).withUnit(type)
   }
 
   override fun toString(): String {
