@@ -3,6 +3,7 @@ package com.github.ezauton.core.pathplanning
 import com.github.ezauton.conversion.Distance
 import com.github.ezauton.conversion.LinearVelocity
 import com.github.ezauton.conversion.Time
+import com.github.ezauton.conversion.withUnit
 import com.github.ezauton.core.action.Speed
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
 import java.io.Serializable
@@ -22,6 +23,9 @@ class TrajectoryGenerator(private vararg val ppWaypoints: PPWaypoint) : Serializ
     val interpolatorMap = HashMap<Double, SpeedInterpolator>()
 
     val segments = ArrayList<Segment>()
+
+    var lengthOn = 0.0
+
     for (i in 0 until ppWaypoints.size - 1) {
       val from = ppWaypoints[i]
       val to = ppWaypoints[i + 1]
@@ -35,7 +39,9 @@ class TrajectoryGenerator(private vararg val ppWaypoints: PPWaypoint) : Serializ
       val beginningSpeed = if (i == 0 && from.speed.isApproxZero) to.speed else from.speed
       val interpolator = SpeedInterpolator(length, beginningSpeed, to.speed, dt, from.acceleration, from.deceleration)
 
-      interpolatorMap[length.value] = interpolator
+      lengthOn += length.value
+
+      interpolatorMap[lengthOn] = interpolator
 
     }
 
@@ -51,15 +57,20 @@ class TrajectoryGenerator(private vararg val ppWaypoints: PPWaypoint) : Serializ
 
 private class TimeGetter(val map: SortedMap<Double, SpeedInterpolator>) : Speed {
 
-  private fun interpolator(distance: Distance): SpeedInterpolator {
-    val tailMap = map.tailMap(distance.value)
-    val key = if (tailMap.isEmpty()) map.lastKey() else tailMap.firstKey()
-    return map[key]!!
-  }
-
   override fun invoke(distance: Distance): LinearVelocity {
-    val interp = interpolator(distance)
-    return interp[distance]
+    val tailMap = map.tailMap(distance.value)
+
+    val to = if (tailMap.isEmpty()) map.lastKey() else tailMap.firstKey()
+
+    val headMap = map.headMap(distance.value)
+    val from = if(headMap.isEmpty()) 0.0 else headMap.lastKey()
+
+    println("interpolator $from -> $to")
+    val interpolator =  map[to]!!
+    val relativeDist = distance.value - from
+    println("dist ${distance.value}")
+    println("relative $relativeDist")
+    return interpolator[relativeDist.withUnit()]
   }
 
 }

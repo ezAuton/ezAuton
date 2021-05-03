@@ -55,6 +55,8 @@ class PathProgressor<T : SIUnit<T>>(val path: Path<T>) {
             else -> Position.MIDDLE
           }
 
+          println("distanceAt $distanceAt, distanceBefore $distanceBefore, segmentOnIdx $segmentOnIdx, t $t, point $point")
+
           return ProgressResult.OnPath(segmentOn, segmentPoint, distanceAt.withUnit(type), position, segmentOnIdx)
         }
       }

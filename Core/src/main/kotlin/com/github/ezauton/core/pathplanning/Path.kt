@@ -5,6 +5,7 @@ import com.github.ezauton.conversion.SIUnit
 import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.conversion.withUnit
 import java.lang.IllegalStateException
+import java.util.*
 
 /**
  * A path is the conglomerate of several [PathSegment]s, which are in turn made from two [ScalarVector]s.
@@ -17,18 +18,18 @@ class Path<T : SIUnit<T>> constructor(val pathSegments: List<PathSegment<T>>) {
 
   val type get() = pathSegments[0].type
 
-  private val distances = DoubleArray(pathSegments.size + 1) { 0.0 }
+  private val distances = run {
+    val inner = DoubleArray(pathSegments.size + 1) { 0.0 }
+    for (i in pathSegments.indices) {
+      inner[i + 1] = inner[i] + pathSegments[i].length.value
+    }
+
+    inner
+  }
 
   val start get() = pathSegments.first().from
   val end get() = pathSegments.last().to
 
-
-
-  init {
-    for (i in pathSegments.indices) {
-      distances[i + 1] = distances[i] + pathSegments[i].length.value
-    }
-  }
 
   val distance = distances.last().withUnit(type)
 

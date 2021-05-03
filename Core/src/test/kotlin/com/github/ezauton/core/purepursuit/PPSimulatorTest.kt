@@ -134,12 +134,12 @@ class PPSimulatorTest {
 //          }
         }
 
-        delay(10.seconds)
+        delay(20.seconds)
       }
     }
 
     runBlocking {
-      withTimeout(10.seconds) {
+      withTimeout(20.seconds) {
         action.run()
       }
     }

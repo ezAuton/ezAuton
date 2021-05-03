@@ -47,7 +47,7 @@ class LineSegment<T : SIUnit<T>>(override val from: ConcreteVector<T>, override 
     val (a, _, p) = scalar(from, to, point)
     val ap = p - a
     val t = ap.dot(dir) / length.value
-    val x = a + t * dir //  x is a point on line
+    val x = a + t * change
     return SegmentPoint(x.withUnit(type), t)
   }
 

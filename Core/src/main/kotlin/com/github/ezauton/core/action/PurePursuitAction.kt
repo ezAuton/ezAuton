@@ -52,6 +52,8 @@ fun purePursuit(
 
       val currentLocation = translationalLocationEstimator.estimateLocation()
 
+      println("current loc $currentLocation")
+
       when (val update = ppMoveStrat.update(currentLocation, lookahead.lookahead)) {
         is Update.Finished -> {
           translationalLocationDrivable.driveSpeed(0.0.mps)
