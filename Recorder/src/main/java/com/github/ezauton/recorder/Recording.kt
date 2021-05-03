@@ -52,7 +52,10 @@ class Recording(override val name: String, val recordingMap: Map<String, SubReco
 fun groupRecordings(name: String, vararg actions: SendAction<SubRecording>) = sendAction {
   val subRecordings = actions.map { action ->
     async {
-      action.first()
+      println("getting first")
+      val first = action.first()
+      println("got first")
+      first
     }
   }.awaitAll()
 

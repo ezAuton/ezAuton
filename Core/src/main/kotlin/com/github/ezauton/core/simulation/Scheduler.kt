@@ -5,9 +5,10 @@ import com.github.ezauton.core.action.*
 import com.github.ezauton.core.utils.RealClock
 import com.github.ezauton.core.utils.Stopwatch
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.flow.*
 import java.util.*
-import kotlin.coroutines.EmptyCoroutineContext
 
 ///**
 // * An interface which is used to schedule an action in a certain way. Nice for simulations.
@@ -46,7 +47,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 interface ActionGroup {
 
 
-  suspend fun sequential(action: Action)
+  suspend fun <T> sequential(action: Action<T>)
   suspend fun <T> sequentialSend(action: SendAction<T>)
 
   /**
@@ -55,8 +56,8 @@ interface ActionGroup {
    * @param action The Action to run
    * @return this
    */
-  fun with(block: ActionFunc)
-  fun with(action: Action)
+  fun <T> with(block: ActionFunc<T>)
+  fun <T> with(action: Action<T>)
 
   fun <T> sendWith(action: SendAction<T>): Flow<T>
   fun <T> sendWith(action: SendActionFunc<T>): Flow<T>
@@ -68,8 +69,8 @@ interface ActionGroup {
    * @param action The action to run
    * @return this
    */
-  fun parallel(block: ActionFunc)
-  fun parallel(action: Action)
+  fun <T> parallel(block: ActionFunc<T>)
+  fun <T> parallel(action: Action<T>)
 
   /**
    * Add a parallel Action to the actions that we will run. It will run in parallel and will end in its own time.
@@ -128,29 +129,22 @@ class SimpleContext(private val scope: CoroutineScope) : ActionContext, Coroutin
     withJobs.add(job)
   }
 
-  /**
-   * TODO: fix
-   */
   @OptIn(ExperimentalCoroutinesApi::class, kotlinx.coroutines.FlowPreview::class)
-  override fun <T> sendWith(inputFlow: SendAction<T>): Flow<T> {
-    TODO()
-    val newContext = newCoroutineContext(EmptyCoroutineContext)
-    val scope = CoroutineScope(newContext)
+  override fun <T> sendWith(action: SendAction<T>): Flow<T> {
 
-    val wrapped = flow {
-      inputFlow.collect {
-        try {
-          emit(it)
-        } catch (e: WithCancel) {
-          println("disregard!!!")
+    val broadcastChannel = BroadcastChannel<T>(capacity = 1000) // TODO: figure out unlimited somehow
+
+    val job = launch {
+      try {
+        action.collect {
+          broadcastChannel.send(it)
         }
+      } catch (e: WithCancel) {
+        println("disregard!!!")
       }
     }
 
-    val broadcastChannel = wrapped.broadcastIn(scope, start = CoroutineStart.DEFAULT)
-
-
-    withJobs.add(newContext.job)
+    withJobs.add(job)
 
     return broadcastChannel.asFlow()
   }

@@ -7,22 +7,14 @@ import com.github.ezauton.core.pathplanning.Trajectory
 import com.github.ezauton.core.pathplanning.TrajectoryGenerator
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
-import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitData
+import com.github.ezauton.core.record.recording
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.utils.RealClock
-import com.github.ezauton.recorder.base.purePursuitRecorder
-import com.github.ezauton.recorder.base.robotStateRecorder
-import com.github.ezauton.recorder.base.tankDrivableRecorder
-import com.github.ezauton.recorder.groupRecordings
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import java.lang.Exception
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeoutException
 
@@ -100,39 +92,38 @@ class PPSimulatorTest {
 
     val tankRobotTransLocDriveable = TankRobotTransLocDrivable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot)
 
-    val dataChannel = Channel<PurePursuitData>()
-    val purePursuitAction = purePursuit(20.ms, trajectory, locEstimator, tankRobotTransLocDriveable, lookahead, dataChannel = dataChannel)
+    val purePursuitAction = purePursuit(period = PeriodicParams(20.ms), trajectory, locEstimator, tankRobotTransLocDriveable, lookahead)
 
     val updateKinematics = action {
       periodic(40.ms, DelayType.FROM_END) {
-//        println("dist: ${locEstimator.estimateLocation()}")
-//        println("heading: ${simulatedRobot.defaultLocEstimator.estimateHeading().degrees}")
         simulatedRobot.update()
         locEstimator.update()
       }
     }
 
-    val periodicParams = PeriodicParams(duration = 1.seconds)
-
-//    val ppRecorder = purePursuitRecorder(RealClock, trajectory.path, dataChannel.consumeAsFlow())
-    val stateRecorder = robotStateRecorder(locEstimator, locEstimator, simulatedRobot.lateralWheelDistance.value, 10.0, periodicParams)
-    val tankDriveRecorder = tankDrivableRecorder(tankRobotTransLocDriveable, periodicParams)
-
-    val recordingAction = groupRecordings("recording", stateRecorder, tankDriveRecorder)
 
     val timeoutAction = action {
-      delay(1000)
+      delay(2000)
     }
 
     val groupAction = action {
-      val recording = parallelSend(recordingAction)
-      with(updateKinematics)
-      sequential(timeoutAction)
 
-      println("trying to save...")
+      val recording = ephemeral {
 
-      recording.first().save("tester")
+        val recordingBuilder = recording {
+          parallel(updateKinematics)
+          parallel(purePursuitAction)
+          sample(10.millis, locEstimator, tankRobotTransLocDriveable)
+        }
+
+        delay(10.seconds)
+
+        recordingBuilder.build()
+      }
+
+
     }
+
     runBlocking {
       withTimeout(10.seconds) {
         groupAction.run()

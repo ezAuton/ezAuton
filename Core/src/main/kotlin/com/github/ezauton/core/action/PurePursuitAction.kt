@@ -1,12 +1,22 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.conversion.*
+import com.github.ezauton.conversion.Distance
+import com.github.ezauton.conversion.LinearVelocity
+import com.github.ezauton.conversion.m
+import com.github.ezauton.conversion.mps
 import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.pathplanning.PathProgressor
 import com.github.ezauton.core.pathplanning.Trajectory
-import com.github.ezauton.core.pathplanning.purepursuit.*
+import com.github.ezauton.core.pathplanning.purepursuit.Lookahead
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitData
+import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy
+import com.github.ezauton.core.pathplanning.purepursuit.Update
+import com.github.ezauton.core.record.RecordingContext
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlin.coroutines.coroutineContext
 
 
 typealias Speed = (distance: Distance) -> LinearVelocity
@@ -20,30 +30,38 @@ typealias Speed = (distance: Distance) -> LinearVelocity
  * @param translationalLocationDrivable The drivetrain of the robot
  */
 fun purePursuit(
-  period: Time,
+  period: PeriodicParams,
   trajectory: Trajectory,
   translationalLocationEstimator: TranslationalLocationEstimator,
   translationalLocationDrivable: TranslationalLocationDrivable,
   lookahead: Lookahead,
   stopDistance: Distance = 0.001.m,
-  dataChannel: Channel<PurePursuitData>? = null
 ) = action {
+
+  val recordingContext = coroutineContext[RecordingContext]
+  val dataChannel = if (recordingContext == null) null else Channel<PurePursuitData>()
+
+  recordingContext?.recording?.receiveFlow(dataChannel!!.consumeAsFlow())
+
   val progressor = PathProgressor(trajectory.path)
   val speedFunction = trajectory.speed
   val ppMoveStrat = PurePursuitMovementStrategy(progressor, stopDistance, dataChannel)
-  periodic(period) { loop ->
 
-    val currentLocation = translationalLocationEstimator.estimateLocation()
+  coroutineScope {
 
-    when (val update = ppMoveStrat.update(currentLocation, lookahead.lookahead)) {
-      is Update.Finished -> {
-        translationalLocationDrivable.driveSpeed(0.0.mps)
-        loop.stop()
-      }
-      is Update.Result -> {
-        val speedUsed = speedFunction(update.on.distance)
-//        println("speedUsed $speedUsed")
-        translationalLocationDrivable.driveTowardTransLoc(speedUsed, update.goal)
+    periodic(period) { loop ->
+
+      val currentLocation = translationalLocationEstimator.estimateLocation()
+
+      when (val update = ppMoveStrat.update(currentLocation, lookahead.lookahead)) {
+        is Update.Finished -> {
+          translationalLocationDrivable.driveSpeed(0.0.mps)
+          loop.stop()
+        }
+        is Update.Result -> {
+          val speedUsed = speedFunction(update.on.distance)
+          translationalLocationDrivable.driveTowardTransLoc(speedUsed, update.goal)
+        }
       }
     }
 

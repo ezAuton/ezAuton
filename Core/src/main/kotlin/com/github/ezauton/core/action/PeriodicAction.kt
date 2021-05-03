@@ -5,6 +5,7 @@ import com.github.ezauton.conversion.millis
 import com.github.ezauton.conversion.now
 import com.github.ezauton.core.action.require.ResourceHold
 import com.github.ezauton.core.action.require.combine
+import com.github.ezauton.core.simulation.WithCancel
 import com.github.ezauton.core.utils.Stopwatch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -34,9 +35,11 @@ interface PeriodicScope : CoroutineScope {
 private class PeriodicScopeImpl(val scope: CoroutineScope) : PeriodicScope, CoroutineScope by scope {
   override var iteration = 0
   override val stopwatch: Stopwatch = Stopwatch.new()
+
   init {
     stopwatch.init()
   }
+
   override val start = now()
   override fun stop(): Nothing {
     TODO()
@@ -48,22 +51,23 @@ enum class DelayType {
   FROM_END,
 }
 
-class PeriodicParams(
+data class PeriodicParams(
   val period: Time = DEFAULT_PERIOD,
   val loopMethod: DelayType = DelayType.FROM_START,
   val duration: Time? = null,
   val iterations: Int? = null,
   val resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT,
-  vararg val resourcePriorities: ResourcePriority,
-){
-  companion object  {
+  val resourcePriorities: List<ResourcePriority> = emptyList(),
+) {
+  companion object {
     val DEFAULT = PeriodicParams()
   }
 }
 
+class PeriodicBuilder
 
 suspend fun <T> periodic(params: PeriodicParams, block: suspend (PeriodicScope) -> T) = coroutineScope {
-  periodic(params.period, params.loopMethod, params.duration, params.iterations, params.resourceManagement, *params.resourcePriorities, block = block)
+  periodic(params.period, params.loopMethod, params.duration, params.iterations, params.resourceManagement, *params.resourcePriorities.toTypedArray(), block = block)
 }
 
 
@@ -138,7 +142,7 @@ suspend fun <T> periodic(
       try {
         doDelay()
       } catch (e: CancellationException) {
-//        onInterrupted()
+        held.giveBack()
         return
       }
     } while (!isFinished())
@@ -153,15 +157,19 @@ suspend fun <T> periodic(
         doDelay()
       } catch (e: CancellationException) {
         return
+      } finally {
+        held.giveBack()
       }
-      held.giveBack()
     } while (!isFinished())
-    held.giveBack()
   }
 
-  when (resourceManagement) {
-    ResourceManagement.LET_GO_EACH_CYCLE -> letGoEachCycle()
-    ResourceManagement.UNTIL_FINISH -> untilFinish()
+  try {
+    when (resourceManagement) {
+      ResourceManagement.LET_GO_EACH_CYCLE -> letGoEachCycle()
+      ResourceManagement.UNTIL_FINISH -> untilFinish()
+    }
+  } catch (e: WithCancel) {
+    if (!catchWith) throw e
   }
 
   return@coroutineScope list
