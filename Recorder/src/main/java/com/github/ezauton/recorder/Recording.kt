@@ -21,7 +21,7 @@ fun generateRecordingMap(recordings: List<SubRecording>): HashMap<String, SubRec
   return map
 }
 @Serializable
-class Recording(val name: String, val recordingMap: Map<String, SubRecording>)  {
+class Recording(override val name: String, val recordingMap: Map<String, SubRecording>): SubRecording  {
 
   @Throws(IOException::class)
   fun save(name: String?) {
@@ -34,6 +34,7 @@ class Recording(val name: String, val recordingMap: Map<String, SubRecording>)  
   @Throws(IOException::class)
   fun save(filePath: Path) {
     Files.createDirectories(filePath.parent)
+    println("path $filePath")
     val writer = Files.newBufferedWriter(filePath)
 
     val json = format.encodeToString(this)

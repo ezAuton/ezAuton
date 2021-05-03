@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 // TODO: add back Path
 @Serializable
 @SerialName("purePursuit")
-class PurePursuitRecording(val frames: List<PurePursuitFrame>, override val name: String): SubRecording
+class PurePursuitRecording(val frames: List<PurePursuitFrame>, override val name: String, val path: PointPath): SubRecording
 
 
 fun purePursuitRecorder(clock: Clock, path: Path<Distance>, inputFlow: Flow<PurePursuitData>) = sendAction {
@@ -30,6 +30,6 @@ fun purePursuitRecorder(clock: Clock, path: Path<Distance>, inputFlow: Flow<Pure
     dataFrames.add(frame)
   }
 
-  emit(PurePursuitRecording(dataFrames, "PurePursuit"))
+  emit(PurePursuitRecording(dataFrames, "PurePursuit", PointPath.from(path)))
 
 }
