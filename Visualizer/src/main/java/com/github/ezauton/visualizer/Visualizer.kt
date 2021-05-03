@@ -16,23 +16,33 @@ import javafx.scene.Scene
 import javafx.scene.image.Image
 import javafx.stage.Stage
 import javafx.stage.Window
+import java.net.URL
 
-object Visualizer : Application() {
+
+class Visualizer : Application() {
   val factory: FactoryMap = FactoryMap()
   private lateinit var mainScene: Scene
 
+  val mainFxml
+    get(): URL {
+      val inner = javaClass.getResource("main.fxml")
+      requireNotNull(inner)
+      return inner
+    }
+
   @Throws(Exception::class)
   override fun start(primaryStage: Stage) {
+    instance = this
     factory.register<PurePursuitRecording> { ppRec -> PurePursuitDataProcessor(ppRec) }
-    factory.register<RobotStateRecording>{ robotRec  -> RobotStateDataProcessor(robotRec) }
-    factory.register<TankDriveableRecorder>{ recorder -> TankDriveableDataProcessor(recorder) }
-    factory.register<Recording>{ recording -> RecordingDataProcessor(recording, factory) }
+    factory.register<RobotStateRecording> { robotRec -> RobotStateDataProcessor(robotRec) }
+    factory.register<TankDriveableRecorder> { recorder -> TankDriveableDataProcessor(recorder) }
+    factory.register<Recording> { recording -> RecordingDataProcessor(recording, factory) }
 
 
     // Keep a reference to the window
     primaryStage.icons.add(Image(javaClass.getResourceAsStream("icon.png")))
     primaryStage.title = "PP Player"
-    val mainRoot: Parent = FXMLLoader.load(javaClass.getResource("main.fxml"))
+    val mainRoot: Parent = FXMLLoader.load(mainFxml)
 
     // Display the window
     mainScene = Scene(mainRoot)
@@ -42,8 +52,14 @@ object Visualizer : Application() {
 
   val stage: Window get() = mainScene.window
 
-  @JvmStatic
-  fun main(args: Array<String>) {
-    launch(*args)
+
+  companion object {
+    lateinit var instance: Visualizer
+      private set
+
+    @JvmStatic
+    fun main(args: Array<String>) {
+      launch(Visualizer::class.java, *args);
+    }
   }
 }

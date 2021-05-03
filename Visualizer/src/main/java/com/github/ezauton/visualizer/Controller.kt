@@ -94,7 +94,10 @@ class Controller : Initializable {
   private lateinit var rateSliderListener: ChangeListener<Number>
   private lateinit var currentRecording: Recording
 
-  override fun initialize(location: URL, resources: ResourceBundle) {
+  override fun initialize(location: URL, resources: ResourceBundle?) {
+
+    requireNotNull(location)
+
     backdrop.heightProperty().addListener { heightProp: ObservableValue<out Number>?, oldHeight: Number?, newHeight: Number -> scaleFactorY = newHeight.toDouble() / 30.0156 }
     backdrop.widthProperty().addListener { widthProp: ObservableValue<out Number>?, oldWidth: Number?, newWidth: Number ->
       try {
@@ -154,7 +157,7 @@ class Controller : Initializable {
     }
 
     // Initialize data processors and whatnot
-    val factory: FactoryMap = Visualizer.factory
+    val factory: FactoryMap = Visualizer.instance.factory
 
     // currentRecorder... holds values of RECORDINGS... maps to RECORDING PROCESSORS
     val dataProcessor: DataProcessor = factory.getProcessor(currentRecording) ?: throw IllegalStateException("could not find current recording")
@@ -337,7 +340,7 @@ class Controller : Initializable {
     fileChooser.title = "Select JSON Recording"
     fileChooser.selectedExtensionFilter = FileChooser.ExtensionFilter("JSON file", "*.json")
     try {
-      val jsonFile: File = fileChooser.showOpenDialog(Visualizer.stage)
+      val jsonFile: File = fileChooser.showOpenDialog(Visualizer.instance.stage)
       loadRecording(jsonFile)
       btnSelectJsonLogFile.text = jsonFile.name
     } catch (err: Exception) {
