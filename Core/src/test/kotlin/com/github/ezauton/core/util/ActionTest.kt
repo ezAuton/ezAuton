@@ -13,26 +13,15 @@ class ActionTest {
 
 
   @Test
-  fun `overloaded periodic tries to become stable`() {
+  fun `overloaded periodic tries to become stable`() = runBlocking{
+
     var bool = false
-
-
-    action {
-      var someValue = 2;
-      periodic(10.ms, duration = 10.seconds) { loop ->
-        someValue *= someValue
-        if (someValue > 1000) {
-          loop.stop()
-        }
-
-        println("someValue is $someValue")
-      }
-    }
-
-
     var timesRun = 0
 
-    val timedPeriodicAction = periodicAction(20.ms, duration = 2.seconds) {
+    val period = 20.ms
+    val duration = 2.seconds
+
+    val timedPeriodicAction = periodicAction(period, duration = duration) {
       timesRun += 1
       if (!bool) {
         bool = true
@@ -42,16 +31,14 @@ class ActionTest {
 
 
     try {
-      runBlocking {
-        withTimeout(2_500.ms) {
-          timedPeriodicAction.run()
-        }
-      }
+      timedPeriodicAction.runWithTimeout(2_500.ms)
     } catch (ignored: TimeoutException) {
 
     }
 
-    assertEquals(2, timesRun)
+    val expected = duration / period
+
+    assertEquals(expected, timesRun.toDouble(), 2.0)
   }
 
   @Test
@@ -71,24 +58,25 @@ class ActionTest {
   }
 
   @Test
-  fun `action group of wrappers test`() = runBlocking {
+  fun `ephemeral actions test`() = runBlocking {
 
     var counter = 0
 
     val actionGroup = action {
 
       parallel {
-        delay(2.seconds)
+        delay(3.seconds)
         if (counter == 1) counter++
       }
 
       ephemeral {
         parallel {
-          delay(3.seconds)
-          if (counter == 0) counter++
+          delay(2.seconds)
+          if (counter == 1) counter++
         }
 
         delay(1.seconds)
+        if (counter == 0) counter++
       }
     }
 
