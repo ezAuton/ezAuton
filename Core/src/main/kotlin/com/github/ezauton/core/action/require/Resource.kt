@@ -5,12 +5,29 @@ interface Resource {
 
   /**
    * wait until the resource if available and then take control of it
+   *
    */
-  suspend fun take(priority: Int = 0): ResourceHold
-
+  @Deprecated("Use the scoped version")
+  suspend fun takeUnsafe(priority: Int = 0): ResourceHold
+  fun tryTakeUnsafe(): ResourceHold?
 }
 
-val Resource.isTakenByAnyone get() = status is ResourceStatus.Used
+suspend inline fun <A : Resource, T> A.take(priority: Int = 0, block: (A) -> T): T {
+  val hold = takeUnsafe(priority)
+  val res = block(this)
+  hold.giveBack()
+  return res
+}
+
+inline fun <A : Resource, T> A.forceTake(block: (A) -> T): T {
+  val hold = tryTakeUnsafe() ?: throw IllegalStateException("no hold")
+  val res = block(this)
+  hold.giveBack()
+  return res
+}
+
+val Resource.isTaken get() = status is ResourceStatus.Used
+val Resource.isOpen get() = status is ResourceStatus.Open
 
 interface ResourceHold {
   fun giveBack()
@@ -29,7 +46,10 @@ fun ResourceHold.combine(other: ResourceHold): ResourceHold {
   }
 }
 
-fun Collection<ResourceHold>.combine() = reduce { acc, resourceHold -> acc.combine(resourceHold) }
+fun Collection<ResourceHold>.combine(): ResourceHold = when (size) {
+  0 -> ResourceHold.Empty
+  else -> reduce { acc, resourceHold -> acc.combine(resourceHold) }
+}
 
 sealed class ResourceStatus {
   object Open : ResourceStatus()

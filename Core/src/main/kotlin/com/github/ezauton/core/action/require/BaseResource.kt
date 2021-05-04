@@ -1,16 +1,21 @@
 package com.github.ezauton.core.action.require
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import java.util.*
 
-data class LockInfo(val mutex: Mutex?, val priority: Int)
+data class LockInfo(val mutex: Mutex, val priority: Int)
 
 class BaseResource(vararg subResources: Resource) : Resource {
 
 
   private val subResourcesList = subResources.asList().toMutableList()
 
-  private val lowestPriority get() = queue.first().priority
+  val currentLock = Mutex(false)
+
+  private val lowestPriority get() = queue.firstOrNull()?.priority
   private val queue = PriorityQueue<LockInfo> { o1, o2 -> o1.priority - o2.priority }
 
 
@@ -21,36 +26,101 @@ class BaseResource(vararg subResources: Resource) : Resource {
 
   override val status: ResourceStatus
     get() {
-      if (queue.isEmpty()) return ResourceStatus.Open
-      return ResourceStatus.Used(lowestPriority)
+      val lp = lowestPriority
+      val lowestSubPriority = subResourcesList.asSequence()
+        .map { it.status }
+        .filterIsInstance<ResourceStatus.Used>()
+        .map { it.priority }
+        .plus(lp)
+        .filterNotNull()
+        .minOrNull()
+
+      if (lowestSubPriority != null) return ResourceStatus.Used(lowestSubPriority)
+      return ResourceStatus.Open
     }
 
-  fun pollQueue(lockInfo: LockInfo) {
-    val get = queue.first()
-    if (lockInfo !== get) throw IllegalArgumentException("Queue is wrong")
-    queue.poll()
-    queue.firstOrNull()?.mutex?.unlock()
-  }
 
-  fun assertPossession(): Boolean {
+  fun hasPossession(): Boolean {
     val mutex = queue.first().mutex ?: return true;
     return mutex.holdsLock(this) // TODO: not sure if this is right
   }
 
+  fun pollQueue() {
+    val res: LockInfo = queue.poll() ?: return
+    res.mutex.unlock()
+  }
 
-  override suspend fun take(priority: Int): ResourceHold {
-    val mutex = if (priority < lowestPriority) null else Mutex(true)
-    val lockInfo = LockInfo(mutex, priority)
-    queue.add(lockInfo)
-    mutex?.lock()
-
-    val subHold = subResourcesList.map { it.take(priority) }.combine()
-
-    return object : ResourceHold {
-      override fun giveBack() {
-        pollQueue(lockInfo)
-        subHold.giveBack()
-      }
+  fun assertPossession() {
+    if (!hasPossession()) {
+      throw IllegalStateException("does not have possession")
     }
   }
+
+
+  override suspend fun takeUnsafe(priority: Int): ResourceHold = coroutineScope {
+
+    if (queue.isEmpty()) {
+      val hold = tryTakeUnsafe()
+      if (hold != null) return@coroutineScope hold
+    }
+
+    val mutex = Mutex(true)
+    queue.add(LockInfo(mutex, priority))
+
+    val subHoldsDeferred = subResourcesList.map { resource ->
+      async {
+        resource.takeUnsafe()
+      }
+    }
+
+    mutex.lock() // will be opened by queue
+    currentLock.lock() // can now grab the current lock
+    val subHolds = subHoldsDeferred.awaitAll()
+    val combinedHold = subHolds.combine()
+
+
+    return@coroutineScope object : ResourceHold {
+      override fun giveBack() {
+        combinedHold.giveBack()
+        pollQueue()
+        currentLock.unlock()
+      }
+
+    }
+
+  }
+
+  override fun tryTakeUnsafe(): ResourceHold? {
+    val lockedBase = currentLock.tryLock()
+    if (!lockedBase) return null
+
+    val subholds = ArrayList<ResourceHold>(subResourcesList.size)
+
+    for (resource in subResourcesList) {
+      val hold = resource.tryTakeUnsafe() ?: break
+      subholds.add(hold)
+    }
+
+    // we were able to grab everything
+    if (subholds.size == subResourcesList.size) {
+      return object : ResourceHold {
+        override fun giveBack() {
+          subholds.forEach {
+            it.giveBack()
+          }
+          pollQueue()
+          currentLock.unlock()
+        }
+      }
+    }
+
+    // we weren't able to grab everything -> unlock and return null
+    subholds.forEach { it.giveBack() }
+    pollQueue()
+    currentLock.unlock()
+
+    return null
+  }
+
+
 }
