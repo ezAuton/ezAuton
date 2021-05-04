@@ -1,9 +1,6 @@
 package com.github.ezauton.core.pathplanning
 
-import com.github.ezauton.conversion.ConcreteVector
-import com.github.ezauton.conversion.SIUnit
-import com.github.ezauton.conversion.ScalarVector
-import com.github.ezauton.conversion.withUnit
+import com.github.ezauton.conversion.*
 import com.github.ezauton.core.record.Data
 import kotlinx.serialization.Serializable
 
@@ -21,9 +18,9 @@ class Path<T : SIUnit<T>> constructor(val pathSegments: List<PathSegment<T>>) {
   val type get() = pathSegments[0].type
 
   val simpleRepr
-    get(): Data.PathWrapper<T> {
+    get(): Data.PathWrapper {
       val points = pathSegments.map { it.from } + pathSegments.last().to
-      return Data.PathWrapper(points)
+      return Data.PathWrapper(points.map { it.scalarVector })
     }
 
 

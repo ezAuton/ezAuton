@@ -1,16 +1,17 @@
 package com.github.ezauton.visualizer
 
+import com.github.ezauton.core.record.Recording
 import com.github.ezauton.visualizer.view.Birdseye
-import javafx.scene.paint.Color
 import tornadofx.*
 
 
-
-class Test: View(){
+class Test : View() {
   override val root = stackpane {
     button("Choose File") {
       action {
-        chooseFile("yes", filters = JSON_FILTER)
+        val file = chooseJsonFile() ?: return@action
+        val recording = Recording.load(file)
+        print("sample count: ${recording.samples.size}")
       }
     }
   }

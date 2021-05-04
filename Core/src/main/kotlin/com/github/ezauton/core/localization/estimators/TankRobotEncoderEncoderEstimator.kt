@@ -99,5 +99,5 @@ class TankRobotEncoderEncoderEstimator
     return polarVector2D(magnitude = avgTranslationalWheelVelocity, angle = heading)
   }
 
-  override fun sample() = Data.TREE(leftTranslationalWheelVelocity, rightTranslationalWheelVelocity, heading, location)
+  override fun sample() = Data.TREE(leftTranslationalWheelVelocity, rightTranslationalWheelVelocity, heading, location.scalarVector)
 }

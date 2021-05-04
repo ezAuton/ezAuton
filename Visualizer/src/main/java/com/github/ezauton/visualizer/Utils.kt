@@ -1,7 +1,12 @@
 package com.github.ezauton.visualizer
 
+import com.github.ezauton.core.record.Recording
+import com.github.ezauton.core.record.format
 import javafx.scene.image.Image
 import javafx.stage.FileChooser
+import tornadofx.FileChooserMode
+import tornadofx.chooseFile
+import java.io.File
 import java.io.InputStream
 import java.net.URL
 
@@ -25,3 +30,5 @@ val JSON_FILTER by lazy {
   val extFilter = FileChooser.ExtensionFilter("JSON files (*.json)", "*.json")
   arrayOf(extFilter)
 }
+
+fun chooseJsonFile() = chooseFile("Choose a JSON file", filters = JSON_FILTER, mode = FileChooserMode.Single).firstOrNull()?.toPath()

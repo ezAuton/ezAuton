@@ -13,7 +13,7 @@ interface AtTime {
   val time: Time
 }
 
-data class SimpleSegment<T: SIUnit<T>>(val from: ConcreteVector<T>, val to: ConcreteVector<T>)
+data class SimpleSegment(val from: ScalarVector, val to: ScalarVector)
 
 @OptIn(ExperimentalUnsignedTypes::class)
 @Serializable
@@ -33,7 +33,7 @@ sealed class Data {
 
   @Serializable
   data class PurePursuit(
-    val goalPoint: ConcreteVector<Distance>,
+    val goalPoint: ScalarVector,
     val finished: Boolean,
     val lookahead: Distance,
     val closestPoint: ScalarVector,
@@ -47,12 +47,12 @@ sealed class Data {
     val leftWheelVelocity: LinearVelocity,
     val rightWheelVelocity: LinearVelocity,
     val heading: Angle,
-    val location: ConcreteVector<Distance>
+    val location: ScalarVector
   ): Data()
 
 
   @Serializable
-  data class PathWrapper<T : SIUnit<T>>(val points: List<ConcreteVector<T>>): Data() {
+  data class PathWrapper(val points: List<ScalarVector>): Data() {
     val segments get() = points.windowed(2).map { (a,b) -> SimpleSegment(a,b) }
   }
 }
