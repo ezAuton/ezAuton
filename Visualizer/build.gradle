@@ -17,7 +17,6 @@ repositories {
 dependencies {
     implementation 'no.tornado:tornadofx:1.7.20'
     compile project(":Core")
-//    compile project(":Recorder")
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
     implementation "com.github.ezauton:Conversion:1.0-SNAPSHOT"
     testCompile group: 'junit', name: 'junit', version: '4.12'

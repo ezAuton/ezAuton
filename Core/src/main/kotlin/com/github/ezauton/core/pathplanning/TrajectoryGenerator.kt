@@ -65,11 +65,8 @@ private class TimeGetter(val map: SortedMap<Double, SpeedInterpolator>) : Speed 
     val headMap = map.headMap(distance.value)
     val from = if(headMap.isEmpty()) 0.0 else headMap.lastKey()
 
-    println("interpolator $from -> $to")
     val interpolator =  map[to]!!
     val relativeDist = distance.value - from
-    println("dist ${distance.value}")
-    println("relative $relativeDist")
     return interpolator[relativeDist.withUnit()]
   }
 

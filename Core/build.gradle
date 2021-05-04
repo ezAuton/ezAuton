@@ -31,7 +31,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0"
     ktlint "com.pinterest:ktlint:0.32.0"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testCompile project(":Recorder")
     fatCompile group: 'com.google.guava', name: 'guava', version: '19.0'
     implementation "com.github.ezauton:Conversion:1.0-SNAPSHOT"
 //    compile project(name = "Conversion")

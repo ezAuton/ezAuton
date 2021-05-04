@@ -34,7 +34,7 @@ fun purePursuit(
   translationalLocationEstimator: TranslationalLocationEstimator,
   translationalLocationDrivable: TranslationalLocationDrivable,
   lookahead: Lookahead,
-  stopDistance: Distance = 0.001.m,
+  stopDistance: Distance = 0.01.m,
 ) = action {
 
   val recordingContext = coroutineContext[RecordingContext]
@@ -51,8 +51,6 @@ fun purePursuit(
     periodic(period) { loop ->
 
       val currentLocation = translationalLocationEstimator.estimateLocation()
-
-      println("current loc $currentLocation")
 
       when (val update = ppMoveStrat.update(currentLocation, lookahead.lookahead)) {
         is Update.Finished -> {

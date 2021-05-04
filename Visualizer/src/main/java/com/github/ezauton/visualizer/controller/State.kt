@@ -35,8 +35,11 @@ class State : Controller() {
       field = value
     }
 
+  val robotYProperty = SimpleDoubleProperty()
+
   var robotY = 0.0
     set(value) {
+      robotYProperty.set(value)
       robotYRel.set(value - originY)
       field = value
     }

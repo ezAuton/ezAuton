@@ -7,12 +7,18 @@ import com.github.ezauton.core.pathplanning.Trajectory
 import com.github.ezauton.core.pathplanning.TrajectoryGenerator
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
+import com.github.ezauton.core.record.Data
 import com.github.ezauton.core.record.recording
+import com.github.ezauton.core.record.recordingFlow
 import com.github.ezauton.core.record.save
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.parallel
 import com.github.ezauton.core.utils.RealClock
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -102,22 +108,41 @@ class PPSimulatorTest {
 
     val drivable = TankRobotTransLocDrivable(leftMotor, rightMotor, locationEstimator, locationEstimator, simulatedRobot)
 
-    val purePursuit = purePursuit(Periodic(5.ms, before = updateKinematics), trajectory, locationEstimator, drivable, lookahead)
+    val purePursuit = purePursuit(Periodic(10.ms, before = updateKinematics), trajectory, locationEstimator, drivable, lookahead)
 
     val action = action {
       val recording = ephemeral {
-        val builder = recording {
-          include(trajectory.path.simpleRepr)
-          sample(5.ms, locationEstimator)
+        val flow = recordingFlow {
+//          include(trajectory.path.simpleRepr)
           parallel(purePursuit)
+          sample(10.ms, locationEstimator)
+        }
+
+
+
+        launch {
+          flow.map { it.data }.collect { data ->
+            when(data ){
+              is Data.TREE -> {
+//                println("${data.leftWheelVelocity}\t${data.rightWheelVelocity}",)
+//                println(data.heading.degrees)
+              }
+
+              is Data.PurePursuit -> {
+//                println(data.)
+              }
+              else ->{}
+            }
+//            println()
+          }
         }
 
         delay(10.seconds)
-        builder.build()
+//        builder.build()
       }
 
       println("saving")
-      recording.save("test.json")
+//      recording.save("test.json")
     }
 
     runBlocking {
