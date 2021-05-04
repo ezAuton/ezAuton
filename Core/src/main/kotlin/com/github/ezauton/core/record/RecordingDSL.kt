@@ -168,9 +168,9 @@ fun CoroutineScope.recordingFlow(block: RecordingDSL.() -> Unit): Flow<Packet> {
 }
 
 fun List<Packet>.realisticFlow(): Flow<Data> {
-  val start = now()
+  val stopwatch = Stopwatch(RealClock).apply { reset() }
   return asFlow().map {
-    val dTime = it.sentTime - start
+    val dTime = it.sentTime - stopwatch.read()
     if(dTime.isPositive) delay(dTime.millisL)
     it.data
   }

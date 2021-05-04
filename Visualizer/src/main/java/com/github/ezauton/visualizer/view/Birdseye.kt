@@ -67,7 +67,7 @@ class Birdseye : View() {
     }
 
     GlobalScope.launch(Dispatchers.JavaFx){
-      state.dataFlow.onEach { delay(2) }.collect {
+      state.dataFlow.collect {
         when (it) {
 //          is Data.DriveInput -> TODO()
 //          is Data.PathWrapper -> TODO()
