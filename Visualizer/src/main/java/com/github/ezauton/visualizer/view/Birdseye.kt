@@ -43,6 +43,8 @@ class Birdseye : View() {
         width = 200.0
 
         circle = circle {
+          centerXProperty().bind(state.robotXRel)
+          centerYProperty().bind(state.robotYRel)
           radius = 10.0
           fill = Color.RED
         }
@@ -54,7 +56,6 @@ class Birdseye : View() {
         }
 
         addEventFilter(MouseEvent.MOUSE_DRAGGED) { e ->
-          println("mouse dragged")
           val mouseNow = svec(e.x, e.y)
           val diff = mouseNow - mouseBefore
 
@@ -73,9 +74,8 @@ class Birdseye : View() {
 //          is Data.PathWrapper -> TODO()
 //          is Data.PositionInit -> TODO()
           is Data.PurePursuit -> {
-            circle.centerX = 10.0
             val closest = it.closestPoint.y
-            circle.centerY = closest * 10.0
+            state.robotY = closest * 10.0
           }
 //          is Data.StateChange -> TODO()
 //          is Data.TREE -> TODO()

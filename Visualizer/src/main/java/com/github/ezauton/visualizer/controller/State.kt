@@ -2,32 +2,51 @@ package com.github.ezauton.visualizer.controller
 
 import com.github.ezauton.core.record.Data
 import javafx.beans.property.SimpleDoubleProperty
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import tornadofx.Controller
-import tornadofx.getValue
-import tornadofx.setValue
 
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class State : Controller() {
 
-  val originXProperty = SimpleDoubleProperty(0.0)
-  val originYProperty = SimpleDoubleProperty(0.0)
+  val robotXRel = SimpleDoubleProperty(0.0)
+  val robotYRel = SimpleDoubleProperty(0.0)
+//  val originXProperty = SimpleDoubleProperty(0.0)
+//  val originYProperty = SimpleDoubleProperty(0.0)
 
-  var originX by originXProperty
-  var originY by originYProperty
+
+  var robotX = 0.0
+    set(value) {
+      robotXRel.set(value - originX)
+      field = value
+    }
 
 
-  val robotXProperty = SimpleDoubleProperty(0.0)
-  val robotYProperty = SimpleDoubleProperty(0.0)
+  var originX = 0.0
+    set(value) {
+      robotXRel.set(robotX - value)
+      field = value
+    }
 
-  var robotX by robotXProperty
-  var robotY by robotYProperty
+  var robotY = 0.0
+    set(value) {
+      robotYRel.set(value - originY)
+      field = value
+    }
 
-  val robotXRel get() = robotX - originX
-  val robotYRel get() = robotY - originY
+
+  var originY = 0.0
+    set(value) {
+      robotYRel.set(robotY - value)
+      field = value
+    }
 
   private val dataChannel = Channel<Data>(capacity = Channel.UNLIMITED)
 
