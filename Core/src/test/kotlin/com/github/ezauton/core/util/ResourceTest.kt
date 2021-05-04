@@ -5,9 +5,11 @@ import com.github.ezauton.core.action.delay
 import com.github.ezauton.core.action.require.BaseResource
 import com.github.ezauton.core.action.require.isOpen
 import com.github.ezauton.core.action.require.isTaken
+import com.github.ezauton.core.action.require.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 
@@ -29,18 +31,17 @@ class ResourceTest {
     assertTrue(resource1.isOpen)
     assertTrue(resource3.isOpen)
 
-    val hold = resource1.take()
+    resource1.take {
 
-    assertTrue(resource1.isTaken)
-    assertTrue(resource3.isTaken)
-    assertTrue(resource.isTaken)
+      assertTrue(resource1.isTaken)
+      assertTrue(resource3.isTaken)
+      assertTrue(resource.isTaken)
+      assertTrue(resource2.isOpen)
 
-    assertTrue(resource2.isOpen)
+    }
 
-    hold.giveBack()
-
-
-    assertAll("executables freed at end",
+    assertAll(
+      "executables freed at end",
       { assertTrue(resource.isOpen) },
       { assertTrue(resource1.isOpen) },
       { assertTrue(resource2.isOpen) },
@@ -55,36 +56,33 @@ class ResourceTest {
     val resource = BaseResource()
 
     val job1 = launch {
-      val hold = resource.ta
-      delay(100.ms)
 
-      hold.giveBack()
+      assertFalse(resource.isTaken)
+
+      resource.take {
+        assertTrue(resource.isTaken)
+        delay(100.ms)
+        assertTrue(resource.isTaken)
+      }
+
     }
 
 
     val job2 = launch {
       delay(50.ms)
 
-      assertFalse(resource.hasPossession())
-      assertTrue(resource.isOpen)
+      assertTrue(resource.isTaken)
 
-      resource.take()
+      resource.take {
+        assertTrue(resource.isTaken)
+      }
 
-      assertTrue(resource.hasPossession())
-      assertFalse(resource.isOpen)
+      assertFalse(resource.isTaken)
+
     }
 
     job1.join()
     job2.join()
 
-
-    val e1 = job1Exception
-    val e2 = job2Exception
-//    requireNotNull(e1)
-//    requireNotNull(e2)
-//    assertTrue(e1)
-//    assertTrue(e2)
-//
-//    assertTrue(canTake)
   }
 }

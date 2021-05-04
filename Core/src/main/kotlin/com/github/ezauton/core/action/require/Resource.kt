@@ -1,5 +1,10 @@
 package com.github.ezauton.core.action.require
 
+import com.github.ezauton.core.action.ResourcePriority
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+
 interface Resource {
   val status: ResourceStatus
 
@@ -46,6 +51,21 @@ fun ResourceHold.combine(other: ResourceHold): ResourceHold {
   }
 }
 
+suspend fun Collection<ResourcePriority>.combineTake(): ResourceHold {
+  if(isEmpty()) return ResourceHold.Empty
+
+  return coroutineScope {
+    val holdsDef = map {  (resource, pr) ->
+      async {
+        resource.takeUnsafe(pr)
+      }
+    }
+    val holds = holdsDef.awaitAll()
+    holds.combine()
+  }
+
+}
+
 fun Collection<ResourceHold>.combine(): ResourceHold = when (size) {
   0 -> ResourceHold.Empty
   else -> reduce { acc, resourceHold -> acc.combine(resourceHold) }
@@ -53,5 +73,5 @@ fun Collection<ResourceHold>.combine(): ResourceHold = when (size) {
 
 sealed class ResourceStatus {
   object Open : ResourceStatus()
-  data class Used(val priority: Int) : ResourceStatus()
+  data class Used(val lowestPriority: Int?) : ResourceStatus()
 }

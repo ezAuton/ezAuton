@@ -4,7 +4,7 @@ import com.github.ezauton.conversion.Time
 import com.github.ezauton.conversion.millis
 import com.github.ezauton.conversion.now
 import com.github.ezauton.core.action.require.ResourceHold
-import com.github.ezauton.core.action.require.combine
+import com.github.ezauton.core.action.require.combineTake
 import com.github.ezauton.core.utils.Stopwatch
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -79,7 +79,7 @@ fun <T> periodicAction(
   vararg resourcePriorities: ResourcePriority,
   block: suspend (PeriodicScope) -> T
 ): Action<List<T>> = action {
-  return@action periodic(period, loopMethod, duration, iterations, before, after, resourceManagement, *resourcePriorities){
+  return@action periodic(period, loopMethod, duration, iterations, before, after, resourceManagement, *resourcePriorities) {
     block(it)
   }
 }
@@ -102,16 +102,7 @@ suspend fun <T> periodic(
   val state = PeriodicScopeImpl(this)
 
   suspend fun doHold(): ResourceHold {
-    return when {
-      resourcePriorities.isNotEmpty() -> {
-        resourcePriorities.map { (resource, priority) ->
-          resource.take(priority)
-        }.combine()
-      }
-
-      else -> ResourceHold.Empty
-    }
-
+    return resourcePriorities.toList().combineTake()
   }
 
   fun waitTime(): Time {

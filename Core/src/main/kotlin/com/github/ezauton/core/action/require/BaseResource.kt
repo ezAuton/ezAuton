@@ -26,36 +26,27 @@ class BaseResource(vararg subResources: Resource) : Resource {
 
   override val status: ResourceStatus
     get() {
-      val lp = lowestPriority
-      val lowestSubPriority = subResourcesList.asSequence()
+
+      val used = subResourcesList.asSequence()
         .map { it.status }
         .filterIsInstance<ResourceStatus.Used>()
-        .map { it.priority }
-        .plus(lp)
+        .toList()
+
+      val lowestSubPriority = used
+        .map { it.lowestPriority }
+        .plus(lowestPriority)
         .filterNotNull()
         .minOrNull()
 
       if (lowestSubPriority != null) return ResourceStatus.Used(lowestSubPriority)
+      if (currentLock.isLocked || used.isNotEmpty()) return ResourceStatus.Used(null)
       return ResourceStatus.Open
     }
-
-
-  fun hasPossession(): Boolean {
-    val mutex = queue.first().mutex ?: return true;
-    return mutex.holdsLock(this) // TODO: not sure if this is right
-  }
 
   fun pollQueue() {
     val res: LockInfo = queue.poll() ?: return
     res.mutex.unlock()
   }
-
-  fun assertPossession() {
-    if (!hasPossession()) {
-      throw IllegalStateException("does not have possession")
-    }
-  }
-
 
   override suspend fun takeUnsafe(priority: Int): ResourceHold = coroutineScope {
 
