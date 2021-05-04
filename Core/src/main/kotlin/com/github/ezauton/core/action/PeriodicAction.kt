@@ -64,10 +64,24 @@ data class Periodic(
   }
 }
 
-class PeriodicBuilder
-
 suspend fun <T> periodic(params: Periodic, block: suspend (PeriodicScope) -> T) = coroutineScope {
   periodic(params.period, params.loopMethod, params.duration, params.iterations, params.before, params.after, params.resourceManagement, *params.resourcePriorities.toTypedArray(), block = block)
+}
+
+fun <T> periodicAction(
+  period: Time = DEFAULT_PERIOD,
+  loopMethod: DelayType = DelayType.FROM_START,
+  duration: Time? = null,
+  iterations: Int? = null,
+  before: Action<*>? = null,
+  after: Action<*>? = null,
+  resourceManagement: ResourceManagement = DEFAULT_RESOURCE_MANAGEMENT,
+  vararg resourcePriorities: ResourcePriority,
+  block: suspend (PeriodicScope) -> T
+): Action<List<T>> = action {
+  return@action periodic(period, loopMethod, duration, iterations, before, after, resourceManagement, *resourcePriorities){
+    block(it)
+  }
 }
 
 

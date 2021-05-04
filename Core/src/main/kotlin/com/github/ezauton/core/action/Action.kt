@@ -24,7 +24,15 @@ interface Action<T> : Flow<T> { // In the purest form an action is of type: susp
   override suspend fun collect(collector: FlowCollector<T>) {
     collector.emit(run())
   }
+
 }
+
+suspend fun <T> Action<T>.runWithTimeout(time: Time){
+  withTimeout(time){
+    run()
+  }
+}
+
 
 /**
  * Describes an Action, which is similar to a WPILib Commands, but has both linear, periodic, and other implementations.

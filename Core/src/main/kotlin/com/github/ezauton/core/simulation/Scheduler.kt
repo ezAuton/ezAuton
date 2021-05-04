@@ -10,6 +10,11 @@ fun <T> CoroutineScope.parallel(block: ActionFunc<T>): Deferred<T> {
   return parallel(action)
 }
 
+fun CoroutineScope.parallel(block: ActionFunc<Unit>): Job {
+  val action = action(block)
+  return parallel(action)
+}
+
 fun CoroutineScope.parallel(action: Action<Unit>) = launch(start = CoroutineStart.DEFAULT) {
   action.run()
 }
