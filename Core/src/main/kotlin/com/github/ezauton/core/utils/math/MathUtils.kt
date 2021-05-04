@@ -60,7 +60,6 @@ fun calculateCurvature(relativeGoalPoint: ConcreteVector<Distance>): Distance {
 
 fun <A, B> Map<A, B>.inverse() = entries.associateBy({ it.value }, { it.key })
 
-fun init() {}
 
 /**
  * Untraditional perpendicular

@@ -42,6 +42,7 @@ typealias SendAction<T> = Flow<T>
 typealias ActionFunc<T> = suspend CoroutineScope.() -> T
 typealias SendActionFunc<T> = suspend FlowCollector<T>.() -> Unit
 
+
 fun <T> action(block: ActionFunc<T>): Action<T> {
   return object : Action<T> {
     override suspend fun run(): T = coroutineScope {

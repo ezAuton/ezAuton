@@ -8,15 +8,12 @@ import com.github.ezauton.core.pathplanning.TrajectoryGenerator
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
 import com.github.ezauton.core.record.Data
-import com.github.ezauton.core.record.recording
 import com.github.ezauton.core.record.recordingFlow
-import com.github.ezauton.core.record.save
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.parallel
 import com.github.ezauton.core.utils.RealClock
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -113,7 +110,7 @@ class PPSimulatorTest {
     val action = action {
       val recording = ephemeral {
         val flow = recordingFlow {
-//          include(trajectory.path.simpleRepr)
+  //          include(trajectory.path.simpleRepr)
           parallel(purePursuit)
           sample(10.ms, locationEstimator)
         }
@@ -124,25 +121,25 @@ class PPSimulatorTest {
           flow.map { it.data }.collect { data ->
             when(data ){
               is Data.TREE -> {
-//                println("${data.leftWheelVelocity}\t${data.rightWheelVelocity}",)
-//                println(data.heading.degrees)
+  //                println("${data.leftWheelVelocity}\t${data.rightWheelVelocity}",)
+  //                println(data.heading.degrees)
               }
 
               is Data.PurePursuit -> {
-//                println(data.)
+  //                println(data.)
               }
               else ->{}
             }
-//            println()
+  //            println()
           }
         }
 
         delay(10.seconds)
-//        builder.build()
+  //        builder.build()
       }
 
       println("saving")
-//      recording.save("test.json")
+  //      recording.save("test.json")
     }
 
     runBlocking {

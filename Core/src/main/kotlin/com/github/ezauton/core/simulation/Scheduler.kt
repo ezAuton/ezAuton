@@ -22,3 +22,5 @@ fun CoroutineScope.parallel(action: Action<Unit>) = launch(start = CoroutineStar
 fun <T> CoroutineScope.parallel(action: Action<T>): Deferred<T> = async(start = CoroutineStart.DEFAULT) {
   action.run()
 }
+
+suspend fun <T> sequential(action: Action<T>): T = action.run()

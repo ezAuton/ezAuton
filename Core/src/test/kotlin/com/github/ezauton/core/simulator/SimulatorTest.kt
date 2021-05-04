@@ -1,103 +1,129 @@
-//package com.github.ezauton.core.simulator
-//
-//import com.github.ezauton.core.action.ActionGroup
-//import com.github.ezauton.core.action.DelayedAction
-//import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
-//import com.github.ezauton.core.simulation.SimulatedTankRobot
-//import com.github.ezauton.core.simulation.TimeWarpedSimulation
-//import com.github.ezauton.core.utils.ManualClock
-//import org.junit.jupiter.api.Assertions.*
-//import org.junit.jupiter.api.Test
-//import java.util.concurrent.ExecutionException
-//import java.util.concurrent.TimeUnit
-//import java.util.concurrent.TimeoutException
-//import java.util.concurrent.atomic.AtomicBoolean
-//import java.util.concurrent.atomic.AtomicInteger
-//
-//class SimulatorTest {
-//
-//  @Test
-//  @Throws(TimeoutException::class, ExecutionException::class)
-//  fun testSimpleAction() {
-//    val atomicBoolean = AtomicBoolean(false)
-//    val simulation = TimeWarpedSimulation()
-//    simulation.add(BaseAction({ atomicBoolean.set(true) }))
-//    simulation.runSimulation(100, TimeUnit.SECONDS)
-//    assertTrue(atomicBoolean.get())
-//  }
-//
-//  @Test
-//  @Throws(TimeoutException::class, ExecutionException::class)
-//  fun testDelayedAction() {
-//    val atomicBoolean = AtomicBoolean(false)
-//    val simulation = TimeWarpedSimulation()
-//    val delayedAction = DelayedAction(1, TimeUnit.SECONDS, { atomicBoolean.set(true) })
-//    simulation.add(delayedAction)
-//    simulation.runSimulation(100, TimeUnit.SECONDS)
-//    assertTrue(atomicBoolean.get())
-//  }
-//
-//  @Test
-//  @Throws(TimeoutException::class, ExecutionException::class)
-//  fun testActionGroup() {
-//    val atomicInteger = AtomicInteger(0)
-//
-//    val simulation = TimeWarpedSimulation(10.0)
-//    val actionGroup = ActionGroup()
-//
-//    val delayedAction = DelayedAction(1, TimeUnit.SECONDS, { atomicInteger.compareAndSet(2, 3) })
-//    delayedAction.onFinish({ })
-//
-//    val delayedAction2 = DelayedAction(10, TimeUnit.MILLISECONDS, { atomicInteger.compareAndSet(0, 1) })
-//    delayedAction2.onFinish({ })
-//
-//    val delayedAction3 = DelayedAction(500, TimeUnit.MILLISECONDS, { atomicInteger.compareAndSet(1, 2) })
-//    delayedAction3.onFinish({ })
-//
-//    // TODO: Order matters? See github #35
-//    actionGroup.addParallel(delayedAction3) // second
-//    actionGroup.with(delayedAction2) // first
-//    actionGroup.addSequential(delayedAction) // last
-//
-//    simulation.add(actionGroup)
-//    simulation.runSimulation(100, TimeUnit.SECONDS)
-//    assertEquals(3, atomicInteger.get())
-//  }
-//
-//  @Test
-//  fun testStraight() {
-//    val clock = ManualClock()
-//    val robot = SimulatedTankRobot(1.0, clock, 14.0, 0.3, 16.0)
-//    val encoderRotationEstimator = TankRobotEncoderEncoderEstimator(robot.leftDistanceSensor, robot.rightDistanceSensor, robot)
-//    encoderRotationEstimator.reset()
-//    for (i in 0..999) {
-//      robot.run(1.0, 1.0)
-//      encoderRotationEstimator.update()
-//      clock.incAndGet()
-//    }
-//    //        System.out.println("encoderRotationEstimator = " + encoderRotationEstimator.estimateLocation());
-//  }
-//
-//  @Test
-//  @Throws(InterruptedException::class)
-//  fun testTimeout() {
-//    val atomicInteger = AtomicInteger(0)
-//
-//    val simulation = TimeWarpedSimulation(1.0)
-//    val actionGroup = ActionGroup()
-//
-//    val action = BackgroundAction(20, TimeUnit.MILLISECONDS, Runnable { atomicInteger.incrementAndGet() })
-//
-//    // TODO: Order matters? See github #35
-//    actionGroup.addSequential(action)
-//
-//    simulation.add(actionGroup)
-//
-//    assertThrows(TimeoutException::class.java) { simulation.runSimulation(1, TimeUnit.SECONDS) }
-//
-//    val actual = atomicInteger.get()
-//    assertEquals(50f, actual.toFloat(), 2f)
-//    Thread.sleep(500) // other threads should have stopped, no more incrementing
-//    //        assertEquals(2, actual, atomicInteger.get());
-//  }
-//}
+package com.github.ezauton.core.simulator
+
+import com.github.ezauton.conversion.*
+import com.github.ezauton.core.action.*
+import com.github.ezauton.core.simulation.SimulatedTankRobot
+import com.github.ezauton.core.simulation.parallel
+import com.github.ezauton.core.simulation.sequential
+import com.github.ezauton.core.utils.RealClock
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeoutException
+import java.util.concurrent.atomic.AtomicInteger
+
+class SimulatorTest {
+
+  @Test
+  @Throws(TimeoutException::class, ExecutionException::class)
+  fun testSimpleAction() = runBlocking {
+    var bool = false
+    val action = action {
+      bool = true
+    }
+
+    action.runWithTimeout(1.seconds)
+
+    assertTrue(bool)
+  }
+
+  @Test
+  @Throws(TimeoutException::class, ExecutionException::class)
+  fun testDelayedAction() = runBlocking {
+
+    var bool = false
+
+    val delayedAction = action {
+      delay(1.seconds)
+      bool = true
+    }
+
+    delayedAction.runWithTimeout(2.seconds)
+
+    assertTrue(bool)
+  }
+
+  @Test
+  @Throws(TimeoutException::class, ExecutionException::class)
+  fun testActionGroup() = runBlocking {
+    val atomicInteger = AtomicInteger(0)
+
+    val delayedAction = action {
+      delay(1.seconds)
+      atomicInteger.compareAndSet(2, 3)
+      return@action
+    }
+
+    val delayedAction2 = action {
+      delay(10.ms)
+      atomicInteger.compareAndSet(0, 1)
+      return@action
+    }
+
+    val delayedAction3 = action {
+      delay(500.ms)
+      atomicInteger.compareAndSet(1, 2)
+      return@action
+    }
+
+
+    val action = action {
+      parallel(delayedAction3)
+      ephemeral {
+        parallel(delayedAction2)
+        sequential(delayedAction)
+      }
+    }
+
+    action.runWithTimeout(10.seconds)
+    assertEquals(3, atomicInteger.get())
+  }
+
+  @Test
+  fun testStraight() = runBlocking {
+
+    val clock = RealClock
+    val robot = SimulatedTankRobot(1.0.meters, clock, 14.0.mpss, 0.3.mps, 16.0.mps)
+
+    for (i in 0..100) {
+      robot.run(1.0.mps, 1.0.mps)
+      delay(10.ms)
+    }
+
+    assertTrue(robot.defaultLocEstimator.estimateLocation().y > 1.m)
+    assertTrue(robot.defaultLocEstimator.estimateLocation().x.abs() < 0.01.m)
+
+
+  }
+
+  @Test
+  @Throws(InterruptedException::class)
+  fun testTimeout() {
+    val atomicInteger = AtomicInteger(0)
+
+
+    val action = periodicAction(20.ms) {
+      atomicInteger.incrementAndGet()
+    }
+
+    val actionGroup = action {
+      sequential(action)
+    }
+
+    assertThrows(TimeoutCancellationException::class.java) {
+      runBlocking {
+        actionGroup.runWithTimeout(1.seconds)
+      }
+    }
+
+    runBlocking {
+      val actual = atomicInteger.get()
+      assertEquals(50f, actual.toFloat(), 2f)
+      delay(500.ms) // other threads should have stopped, no more incrementing
+      assertEquals(2.0f, actual.toFloat(), atomicInteger.get().toFloat())
+
+    }
+  }
+}

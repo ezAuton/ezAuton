@@ -55,12 +55,12 @@ class SimulatedTankRobot
 
     toUpdate = setOf(left, right)
 
-    this.defaultLocEstimator = TankRobotEncoderEncoderEstimator(leftDistanceSensor, rightDistanceSensor, this)
+    this.defaultLocEstimator = TankRobotEncoderEncoderEstimator(leftDistanceSensor, rightDistanceSensor, this).apply { reset() }
     this.defaultTransLocDriveable = TankRobotTransLocDrivable(left, right, defaultLocEstimator, defaultLocEstimator, this)
   }
 
   fun run(leftV: LinearVelocity, rightV: LinearVelocity) {
-    // TODO: sketchhhhhh
+    update()
     left.runVelocity(leftV.s.withUnit())
     right.runVelocity(rightV.s.withUnit())
   }
