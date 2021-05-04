@@ -1,17 +1,13 @@
 package com.github.ezauton.core.record
 
 import com.github.ezauton.conversion.Time
+import com.github.ezauton.conversion.now
 import com.github.ezauton.core.action.periodic
 import com.github.ezauton.core.utils.RealClock
 import com.github.ezauton.core.utils.Stopwatch
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newCoroutineContext
+import kotlinx.coroutines.flow.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -41,7 +37,7 @@ private class RecordingDSLFlowImpl(baseScope: CoroutineScope) : RecordingDSL, Re
 
   private val stopwatch = Stopwatch(RealClock).apply { reset() }
 
-  private val channel = Channel<Data>()
+  private val channel = Channel<Packet>()
 
   override fun <T : Data> sample(period: Time, vararg samplers: Sampler<T>) {
     launch {
@@ -56,7 +52,8 @@ private class RecordingDSLFlowImpl(baseScope: CoroutineScope) : RecordingDSL, Re
   }
 
   private fun add(sample: Data) {
-    channel.offer(sample)
+    val packet = Packet(sample, stopwatch.read())
+    channel.offer(packet)
   }
 
   override fun include(vararg data: Data) {
@@ -79,7 +76,7 @@ private class RecordingDSLImpl(baseScope: CoroutineScope) : RecordingDSL, Corout
   @OptIn(ExperimentalCoroutinesApi::class)
   override val coroutineContext = baseScope.newCoroutineContext(RecordingContext(this))
 
-  private val data = ArrayDeque<Data>()
+  private val data = ArrayDeque<Packet>()
 
   val stopwatch = Stopwatch(RealClock).apply { init() }
 
@@ -102,7 +99,8 @@ private class RecordingDSLImpl(baseScope: CoroutineScope) : RecordingDSL, Corout
   }
 
   private fun addSample(sample: Data) {
-    data.add(sample)
+    val packet = Packet(sample, stopwatch.read())
+    data.add(packet)
   }
 
   override fun <T : Data> receiveFlow(flow: Flow<T>) {
@@ -118,8 +116,7 @@ private class RecordingDSLImpl(baseScope: CoroutineScope) : RecordingDSL, Corout
 }
 
 @Serializable
-class Recording internal constructor(val samples: List<Data>) {
-
+class Recording internal constructor(val samples: List<Packet>) {
 
   @OptIn(ExperimentalPathApi::class)
   fun save(path: Path) {
@@ -144,6 +141,10 @@ class Recording internal constructor(val samples: List<Data>) {
   }
 }
 
+fun List<Data>.delayProperly() {
+
+}
+
 fun Recording.save(name: String) {
   val homeDir = System.getProperty("user.home")
   val filePath = Paths.get(homeDir, ".ezauton", name)
@@ -160,8 +161,17 @@ fun CoroutineScope.recording(block: RecordingDSL.() -> Unit): RecordingBuilder {
   return impl
 }
 
-fun CoroutineScope.recordingFlow(block: RecordingDSL.() -> Unit): Flow<Data> {
+fun CoroutineScope.recordingFlow(block: RecordingDSL.() -> Unit): Flow<Packet> {
   val impl = RecordingDSLFlowImpl(this)
   impl.block()
   return impl.flow
+}
+
+fun List<Packet>.realisticFlow(): Flow<Data> {
+  val start = now()
+  return asFlow().map {
+    val dTime = it.sentTime - start
+    if(dTime.isPositive) delay(dTime.millisL)
+    it.data
+  }
 }

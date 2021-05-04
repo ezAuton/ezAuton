@@ -100,4 +100,5 @@ class TankRobotEncoderEncoderEstimator
   }
 
   override fun sample() = Data.TREE(leftTranslationalWheelVelocity, rightTranslationalWheelVelocity, heading, location.scalarVector)
+
 }
