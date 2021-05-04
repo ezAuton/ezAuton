@@ -2,23 +2,17 @@ package com.github.ezauton.core.purepursuit
 
 import com.github.ezauton.conversion.*
 import com.github.ezauton.core.action.*
-import com.github.ezauton.core.localization.estimators.TREESample
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.pathplanning.Trajectory
 import com.github.ezauton.core.pathplanning.TrajectoryGenerator
 import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
-import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitData
-import com.github.ezauton.core.record.recordingFlow
+import com.github.ezauton.core.record.recording
+import com.github.ezauton.core.record.save
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.parallel
 import com.github.ezauton.core.utils.RealClock
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectIndexed
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -111,35 +105,23 @@ class PPSimulatorTest {
     val purePursuit = purePursuit(Periodic(5.ms, before = updateKinematics), trajectory, locationEstimator, drivable, lookahead)
 
     val action = action {
-      ephemeral {
-        val flow = recordingFlow {
+      val recording = ephemeral {
+        val builder = recording {
+          include(trajectory.path.simpleRepr)
           sample(5.ms, locationEstimator)
           parallel(purePursuit)
         }
 
-        launch {
-          flow.collect{ sample ->
-            when(sample){
-              is TREESample -> {
-                println(sample.leftWheelVelocity)
-              }
-              is PurePursuitData -> {
-                println(sample.closestPoint)
-              }
-              else -> {}
-            }
-          }
-//          flow.filterIsInstance<TREESample>().collectIndexed { index, value ->
-//
-//          }
-        }
-
-        delay(20.seconds)
+        delay(10.seconds)
+        builder.build()
       }
+
+      println("saving")
+      recording.save("test.json")
     }
 
     runBlocking {
-      withTimeout(20.seconds) {
+      withTimeout(15.seconds) {
         action.run()
       }
     }

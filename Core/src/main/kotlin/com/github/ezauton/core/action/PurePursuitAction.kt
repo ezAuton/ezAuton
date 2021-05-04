@@ -8,9 +8,9 @@ import com.github.ezauton.core.localization.TranslationalLocationEstimator
 import com.github.ezauton.core.pathplanning.PathProgressor
 import com.github.ezauton.core.pathplanning.Trajectory
 import com.github.ezauton.core.pathplanning.purepursuit.Lookahead
-import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitData
 import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrategy
 import com.github.ezauton.core.pathplanning.purepursuit.Update
+import com.github.ezauton.core.record.Data
 import com.github.ezauton.core.record.RecordingContext
 import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
 import kotlinx.coroutines.channels.Channel
@@ -38,7 +38,7 @@ fun purePursuit(
 ) = action {
 
   val recordingContext = coroutineContext[RecordingContext]
-  val dataChannel = if (recordingContext == null) null else Channel<PurePursuitData>()
+  val dataChannel = if (recordingContext == null) null else Channel<Data.PurePursuit>()
 
   recordingContext?.recording?.receiveFlow(dataChannel!!.consumeAsFlow())
 

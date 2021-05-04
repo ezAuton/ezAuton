@@ -6,7 +6,10 @@ import com.github.ezauton.conversion.now
 import com.github.ezauton.core.action.require.ResourceHold
 import com.github.ezauton.core.action.require.combine
 import com.github.ezauton.core.utils.Stopwatch
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 
 enum class ResourceManagement {
   UNTIL_FINISH,
@@ -23,9 +26,13 @@ interface PeriodicScope : CoroutineScope {
   val iteration: Int
 }
 
+class StopException : Throwable()
+
 private class PeriodicScopeImpl(val scope: CoroutineScope) : PeriodicScope, CoroutineScope by scope {
   override var iteration = 0
   override val stopwatch: Stopwatch = Stopwatch.new()
+
+  var shouldStop = false
 
   init {
     stopwatch.init()
@@ -33,7 +40,7 @@ private class PeriodicScopeImpl(val scope: CoroutineScope) : PeriodicScope, Coro
 
   override val start = now()
   override fun stop(): Nothing {
-    TODO()
+    throw StopException()
   }
 }
 
@@ -165,9 +172,13 @@ suspend fun <T> periodic(
     } while (!isFinished())
   }
 
-  when (resourceManagement) {
-    ResourceManagement.LET_GO_EACH_CYCLE -> letGoEachCycle()
-    ResourceManagement.UNTIL_FINISH -> untilFinish()
+  try {
+    when (resourceManagement) {
+      ResourceManagement.LET_GO_EACH_CYCLE -> letGoEachCycle()
+      ResourceManagement.UNTIL_FINISH -> untilFinish()
+    }
+  } catch (e: StopException) {
+    // disregard
   }
 
   return@coroutineScope list

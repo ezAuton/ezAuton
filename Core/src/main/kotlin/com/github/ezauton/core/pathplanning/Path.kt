@@ -4,8 +4,10 @@ import com.github.ezauton.conversion.ConcreteVector
 import com.github.ezauton.conversion.SIUnit
 import com.github.ezauton.conversion.ScalarVector
 import com.github.ezauton.conversion.withUnit
-import java.lang.IllegalStateException
-import java.util.*
+import com.github.ezauton.core.record.Data
+import kotlinx.serialization.Serializable
+
+
 
 /**
  * A path is the conglomerate of several [PathSegment]s, which are in turn made from two [ScalarVector]s.
@@ -17,6 +19,13 @@ class Path<T : SIUnit<T>> constructor(val pathSegments: List<PathSegment<T>>) {
 
 
   val type get() = pathSegments[0].type
+
+  val simpleRepr
+    get(): Data.PathWrapper<T> {
+      val points = pathSegments.map { it.from } + pathSegments.last().to
+      return Data.PathWrapper(points)
+    }
+
 
   private val distances = run {
     val inner = DoubleArray(pathSegments.size + 1) { 0.0 }
@@ -36,12 +45,12 @@ class Path<T : SIUnit<T>> constructor(val pathSegments: List<PathSegment<T>>) {
   fun pointAtDist(dist: T, extrapolate: Boolean = false): ConcreteVector<T> {
     val value = dist.value
 
-    if(value < 0){
+    if (value < 0) {
       require(extrapolate)
       return pathSegments.first().getAtDist(dist)
     }
 
-    if(value > distance.value){
+    if (value > distance.value) {
       require(extrapolate)
       return pathSegments.last().getAtDist(dist - distance)
     }

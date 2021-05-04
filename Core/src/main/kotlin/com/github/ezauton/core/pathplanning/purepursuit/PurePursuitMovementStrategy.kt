@@ -3,8 +3,7 @@ package com.github.ezauton.core.pathplanning.purepursuit
 import com.github.ezauton.conversion.*
 import com.github.ezauton.core.pathplanning.PathProgressor
 import com.github.ezauton.core.pathplanning.ProgressResult
-import com.github.ezauton.core.record.AbstractSample
-import com.github.ezauton.core.record.RecordingKey
+import com.github.ezauton.core.record.Data
 import kotlinx.coroutines.channels.Channel
 
 
@@ -32,7 +31,7 @@ class PurePursuitMovementStrategy
    * How close we need to be to the final waypoint for us to decide that we are finished
    */
   private val stopTolerance: Distance,
-  private val dataChannel: Channel<PurePursuitData>? = null
+  private val dataChannel: Channel<Data.PurePursuit>? = null
 ) {
 
   init {
@@ -80,23 +79,10 @@ class PurePursuitMovementStrategy
 
     if (dataChannel != null) {
       val closestPointDist = on.closestPoint.value.dist(loc)
-      val data = PurePursuitData(goalPoint, false, lookahead, on.closestPoint.value.scalarVector, closestPointDist.value, on.segmentIdx) // TODO: isFinished
+      val data = Data.PurePursuit(goalPoint, false, lookahead, on.closestPoint.value.scalarVector, closestPointDist.value, on.segmentIdx) // TODO: isFinished
       dataChannel.send(data)
     }
 
     return Update.Result(goalPoint, on)
   }
-}
-
-data class PurePursuitData(
-  val goalPoint: ConcreteVector<Distance>,
-  val finished: Boolean,
-  val lookahead: Distance,
-  val closestPoint: ScalarVector,
-  val closestPointDist: Double,
-  val currentSegmentIndex: Int
-): AbstractSample(PurePursuitData) {
-
-  companion object Key: RecordingKey
-
 }
