@@ -2,6 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.0'
 }
 
+
 group 'com.github.ezauton'
 version '1.0-SNAPSHOT'
 
@@ -29,6 +30,7 @@ jar {
 
 dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0"
+    implementation "org.jetbrains.kotlinx:atomicfu:0.15.0"
     ktlint "com.pinterest:ktlint:0.32.0"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     fatCompile group: 'com.google.guava', name: 'guava', version: '19.0'

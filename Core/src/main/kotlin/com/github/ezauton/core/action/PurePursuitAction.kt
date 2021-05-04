@@ -29,7 +29,7 @@ typealias Speed = (distance: Distance) -> LinearVelocity
  * @param translationalLocationDrivable The drivetrain of the robot
  */
 fun purePursuit(
-  period: Periodic,
+  period: Period,
   trajectory: Trajectory,
   translationalLocationEstimator: TranslationalLocationEstimator,
   translationalLocationDrivable: TranslationalLocationDrivable,

@@ -105,7 +105,7 @@ class PPSimulatorTest {
 
     val drivable = TankRobotTransLocDrivable(leftMotor, rightMotor, locationEstimator, locationEstimator, simulatedRobot)
 
-    val purePursuit = purePursuit(Periodic(10.ms, before = updateKinematics), trajectory, locationEstimator, drivable, lookahead)
+    val purePursuit = purePursuit(Period(10.ms, before = updateKinematics), trajectory, locationEstimator, drivable, lookahead)
 
     val action = action {
       val recording = ephemeral {

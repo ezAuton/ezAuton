@@ -49,7 +49,7 @@ enum class DelayType {
   FROM_END,
 }
 
-data class Periodic(
+data class Period(
   val period: Time = DEFAULT_PERIOD,
   val loopMethod: DelayType = DelayType.FROM_START,
   val duration: Time? = null,
@@ -60,11 +60,11 @@ data class Periodic(
   val resourcePriorities: List<ResourcePriority> = emptyList(),
 ) {
   companion object {
-    val DEFAULT = Periodic()
+    val DEFAULT = Period()
   }
 }
 
-suspend fun <T> periodic(params: Periodic, block: suspend (PeriodicScope) -> T) = coroutineScope {
+suspend fun <T> periodic(params: Period, block: suspend (PeriodicScope) -> T) = coroutineScope {
   periodic(params.period, params.loopMethod, params.duration, params.iterations, params.before, params.after, params.resourceManagement, *params.resourcePriorities.toTypedArray(), block = block)
 }
 
