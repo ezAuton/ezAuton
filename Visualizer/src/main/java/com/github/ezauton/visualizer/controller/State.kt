@@ -5,14 +5,14 @@ import javafx.beans.property.SimpleDoubleProperty
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.internal.ChannelFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import tornadofx.Controller
 import tornadofx.getValue
 import tornadofx.setValue
 
 
-class State: Controller() {
+class State : Controller() {
+
   val originXProperty = SimpleDoubleProperty(0.0)
   val originYProperty = SimpleDoubleProperty(0.0)
 
@@ -20,11 +20,20 @@ class State: Controller() {
   var originY by originYProperty
 
 
+  val robotXProperty = SimpleDoubleProperty(0.0)
+  val robotYProperty = SimpleDoubleProperty(0.0)
+
+  var robotX by robotXProperty
+  var robotY by robotYProperty
+
+  val robotXRel get() = robotX - originX
+  val robotYRel get() = robotY - originY
+
   private val dataChannel = Channel<Data>(capacity = Channel.UNLIMITED)
 
   val dataFlow get() = dataChannel.receiveAsFlow()
 
-  suspend fun insertData(data: Flow<Data>){
+  suspend fun insertData(data: Flow<Data>) {
     data.collect {
       dataChannel.offer(it)
     }

@@ -1,12 +1,13 @@
 package com.github.ezauton.visualizer.view
 
-import com.github.ezauton.conversion.seconds
 import com.github.ezauton.conversion.svec
 import com.github.ezauton.core.record.Data
 import com.github.ezauton.visualizer.controller.State
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.geometry.Insets
 import javafx.scene.input.MouseEvent
+import javafx.scene.paint.Color
+import javafx.scene.shape.Circle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -24,7 +25,7 @@ class Birdseye : View() {
   private var positionYProp = SimpleDoubleProperty(0.0)
   private var positionY by positionYProp
 
-  private val controller: State by inject()
+  private val state: State by inject()
 
   override val root = vbox {
 
@@ -32,16 +33,49 @@ class Birdseye : View() {
 
     padding = Insets(0.0, 0.0, 20.0, 0.0)
 
+    lateinit var circle: Circle
 
+    group {
+      rectangle {
+        fill = Color.GRAY
+
+        height = 200.0
+        width = 200.0
+
+        circle = circle {
+          radius = 10.0
+          fill = Color.RED
+        }
+
+        addEventFilter(MouseEvent.MOUSE_PRESSED) { e ->
+          println("mouse pressed")
+          mouseBefore = svec(e.x, e.y)
+          originBefore = svec(state.originX, state.originY)
+        }
+
+        addEventFilter(MouseEvent.MOUSE_DRAGGED) { e ->
+          println("mouse dragged")
+          val mouseNow = svec(e.x, e.y)
+          val diff = mouseNow - mouseBefore
+
+          state.originX = originBefore.x - diff.x
+          state.originY = originBefore.y - diff.y
+
+        }
+      }
+
+    }
 
     GlobalScope.launch(Dispatchers.JavaFx){
-      controller.dataFlow.onEach { delay(4) } .collect {
+      state.dataFlow.onEach { delay(2) }.collect {
         when (it) {
 //          is Data.DriveInput -> TODO()
 //          is Data.PathWrapper -> TODO()
 //          is Data.PositionInit -> TODO()
           is Data.PurePursuit -> {
-            positionY = it.closestPoint.y
+            circle.centerX = 10.0
+            val closest = it.closestPoint.y
+            circle.centerY = closest * 10.0
           }
 //          is Data.StateChange -> TODO()
 //          is Data.TREE -> TODO()
@@ -56,24 +90,8 @@ class Birdseye : View() {
 
 
 
-    textfield(positionYProp)
+    textfield(circle.centerYProperty())
 
-
-    addEventFilter(MouseEvent.MOUSE_PRESSED) { e ->
-      println("mouse pressed")
-      mouseBefore = svec(e.x, e.y)
-      originBefore = svec(controller.originX, controller.originY)
-    }
-
-    addEventFilter(MouseEvent.MOUSE_DRAGGED) { e ->
-      println("mouse dragged")
-      val mouseNow = svec(e.x, e.y)
-      val diff = mouseNow - mouseBefore
-
-      controller.originX = originBefore.x - diff.x
-      controller.originY = originBefore.y - diff.y
-
-    }
 
 
   }
