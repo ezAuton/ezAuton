@@ -1,19 +1,43 @@
 package com.github.ezauton.visualizer
 
+import com.github.ezauton.conversion.svec
+import javafx.beans.property.SimpleDoubleProperty
 import javafx.scene.input.MouseEvent
 import tornadofx.*
 
+
 class MyView : View() {
 
-  var originX = 0.0
-  var originY = 0.0
+
+  private val originXProperty = SimpleDoubleProperty(0.0)
+  private val originYProperty = SimpleDoubleProperty(0.0)
+
+  private var originX by originXProperty
+  private var originY by originYProperty
+
+  private var originBefore = svec(0, 0)
+  private var mouseBefore = svec(0, 0)
 
   override val root = vbox {
-    addEventFilter(MouseEvent.MOUSE_PRESSED, ::startDrag)
-    addEventFilter(MouseEvent.MOUSE_DRAGGED, ::animateDrag)
-    addEventFilter(MouseEvent.MOUSE_RELEASED, ::stopDrag)
-    addEventFilter(MouseEvent.MOUSE_RELEASED, ::drop)
+
+    textfield(originXProperty)
+
+    addEventFilter(MouseEvent.MOUSE_PRESSED) { e ->
+      mouseBefore = svec(e.x, e.y)
+      originBefore = svec(originX, originY)
+    }
+
+    addEventFilter(MouseEvent.MOUSE_DRAGGED) { e ->
+      val mouseNow = svec(e.x, e.y)
+      val diff = mouseNow - mouseBefore
+
+      originX = originBefore.x - diff.x
+      originY = originBefore.y - diff.y
+
+    }
+
   }
+
 }
 
 class VisualizerApp : App(MyView::class) {
