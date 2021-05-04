@@ -1,41 +1,28 @@
 package com.github.ezauton.visualizer
 
-import com.github.ezauton.conversion.svec
-import javafx.beans.property.SimpleDoubleProperty
-import javafx.scene.input.MouseEvent
+import com.github.ezauton.visualizer.view.Birdseye
+import javafx.scene.paint.Color
 import tornadofx.*
 
+
+
+class Test: View(){
+  override val root = stackpane {
+    button("Choose File") {
+      action {
+        chooseFile("yes", filters = JSON_FILTER)
+      }
+    }
+  }
+
+}
 
 class MyView : View() {
 
 
-  private val originXProperty = SimpleDoubleProperty(0.0)
-  private val originYProperty = SimpleDoubleProperty(0.0)
-
-  private var originX by originXProperty
-  private var originY by originYProperty
-
-  private var originBefore = svec(0, 0)
-  private var mouseBefore = svec(0, 0)
-
-  override val root = vbox {
-
-    textfield(originXProperty)
-
-    addEventFilter(MouseEvent.MOUSE_PRESSED) { e ->
-      mouseBefore = svec(e.x, e.y)
-      originBefore = svec(originX, originY)
-    }
-
-    addEventFilter(MouseEvent.MOUSE_DRAGGED) { e ->
-      val mouseNow = svec(e.x, e.y)
-      val diff = mouseNow - mouseBefore
-
-      originX = originBefore.x - diff.x
-      originY = originBefore.y - diff.y
-
-    }
-
+  override val root = borderpane {
+    top<Birdseye>()
+    bottom<Test>()
   }
 
 }
