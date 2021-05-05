@@ -18,8 +18,8 @@ class RampUpVelocityProcessor
  * @param clock The clock to keep time with
  * @param maxAccel The maximum acceleration of this motor.
  */
-  (velocityMotor: VelocityMotor, clock: Clock, private val maxAccel: AngularAcceleration) : VelocityProcessor(velocityMotor), Updatable {
-  private val accelStopwatch: Stopwatch = Stopwatch(clock).reset()
+  (velocityMotor: VelocityMotor, private val maxAccel: AngularAcceleration) : VelocityProcessor(velocityMotor), Updatable {
+  private val accelStopwatch: Stopwatch = Stopwatch.start()
 
   var lastVelocity = 0.radians / sec
     private set

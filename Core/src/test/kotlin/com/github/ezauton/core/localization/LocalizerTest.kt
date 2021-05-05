@@ -23,7 +23,7 @@ class LocalizerTest {
   @Throws(TimeoutException::class, ExecutionException::class)
   fun testThatTheLocalizersGiveSimilarResults() {
     val simulatedBot = SimulatedTankRobot(0.2.meters, RealClock, 3.0.mps / sec, (-4.0).mps, 4.0.mps)
-    simulatedBot.defaultLocEstimator.reset()
+    simulatedBot.locationEstimator.reset()
 
     val locEstimator = TankRobotEncoderEncoderEstimator(simulatedBot.leftDistanceSensor, simulatedBot.rightDistanceSensor, simulatedBot)
     val encRotEstimator = EncoderRotationEstimator(locEstimator, object : TranslationalDistanceSensor {
@@ -35,7 +35,7 @@ class LocalizerTest {
       override val velocity: LinearVelocity
         get() = (simulatedBot.leftDistanceSensor.velocity + simulatedBot.rightDistanceSensor.velocity) / 2
     })
-    val simpson = SimpsonEncoderRotationEstimator(locEstimator, simulatedBot.defaultLocEstimator, RealClock)
+    val simpson = SimpsonEncoderRotationEstimator(locEstimator, simulatedBot.locationEstimator, RealClock)
 
     locEstimator.reset()
     encRotEstimator.reset()

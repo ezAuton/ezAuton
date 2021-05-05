@@ -1,6 +1,6 @@
 package com.github.ezauton.core.coroutine
 
-import com.github.ezauton.core.action.ephemeral
+import com.github.ezauton.core.action.ephemeralScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -13,7 +13,7 @@ class CoroutineTest {
   fun `test ephemeral`() = runBlocking {
 
 
-    val counter = ephemeral {
+    val counter = ephemeralScope {
 
       var internalCounter = 0
       launch {

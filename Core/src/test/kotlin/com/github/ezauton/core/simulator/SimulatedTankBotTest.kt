@@ -34,7 +34,7 @@ class SimulatedTankBotTest {
 
     val clock = TimeWarpedClock(10.0)
     val bot = SimulatedTankRobot(0.2.m, clock, 3.0.mpss, 0.2.mps, 4.0.mps)
-    bot.defaultLocEstimator.reset()
+    bot.locationEstimator.reset()
     val leftMotor = bot.leftMotor
     val rightMotor = bot.rightMotor
 
@@ -55,7 +55,7 @@ class SimulatedTankBotTest {
     val purePursuitAction = purePursuit(Period(50.ms), trajectory, locEstimator, drivable , lookahead, stopDistance = 8.m)
 
     val actionGroup = action {
-      ephemeral {
+      ephemeralScope {
         parallel(background)
         sequential(purePursuitAction)
       }
@@ -84,7 +84,7 @@ class SimulatedTankBotTest {
     // stop the robot
     simulatedBot.run(0.0.mps, 0.0.mps)
 
-    val estimatedLocation = simulatedBot.defaultLocEstimator.estimateLocation()
+    val estimatedLocation = simulatedBot.locationEstimator.estimateLocation()
 
     println("estimated loc: $estimatedLocation")
     assertTrue(estimatedLocation.y > 4.5.m)

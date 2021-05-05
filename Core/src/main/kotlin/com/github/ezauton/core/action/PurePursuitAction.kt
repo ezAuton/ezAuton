@@ -68,3 +68,6 @@ fun purePursuit(
   dataChannel?.close()
   return@action
 }
+
+fun <T> T.purePursuit(period: Period, trajectory: Trajectory, lookahead: Lookahead, stopDistance: Distance = 0.01.m) where T : TranslationalLocationEstimator, T : TranslationalLocationDrivable =
+  purePursuit(period, trajectory, this, this, lookahead, stopDistance)

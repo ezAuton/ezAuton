@@ -18,8 +18,8 @@ class BaseSimulatedMotor
  *
  * @param clock The clock to keep track of time with
  */
-  (clock: Clock) : VelocityMotor, RotationalDistanceSensor {
-  private val stopwatch: Stopwatch = Stopwatch(clock)
+   : VelocityMotor, RotationalDistanceSensor {
+  private val stopwatch: Stopwatch = Stopwatch()
 
   /**
    * Assumed to be in dist/second

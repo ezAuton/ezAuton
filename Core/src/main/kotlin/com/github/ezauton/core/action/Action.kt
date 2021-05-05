@@ -52,7 +52,12 @@ fun <T> action(block: ActionFunc<T>): Action<T> {
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-suspend fun <T> ephemeral(block: suspend CoroutineScope.() -> T): T {
+suspend fun <T> maxDuration(time: Time, block: suspend CoroutineScope.() -> T): T {
+  return withTimeout(time, block)
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+suspend fun <T> ephemeralScope(block: suspend CoroutineScope.() -> T): T {
 
   val job = Job()
   val scope = CoroutineScope(job)

@@ -1,16 +1,17 @@
 package com.github.ezauton.core.utils
 
 import com.github.ezauton.conversion.Time
+import com.github.ezauton.conversion.now
 import com.github.ezauton.conversion.seconds
 
 /**
  * A handy stopwatch for recording time in seconds since it was last polled. Requires a ⏱ [Clock] to keep track
  * of time.
  */
-class Stopwatch(val clock: Clock) {
+class Stopwatch {
   companion object {
-    fun new(): Stopwatch {
-      return Stopwatch(RealClock)
+    fun start(): Stopwatch {
+      return Stopwatch().apply { init() }
     }
   }
   private var startDuration: Time = (-1).seconds
@@ -22,7 +23,7 @@ class Stopwatch(val clock: Clock) {
 
 
   fun init() {
-    startDuration = clock.time
+    startDuration = now()
   }
 
   /**
@@ -43,14 +44,14 @@ class Stopwatch(val clock: Clock) {
    */
   fun read(): Time {
     if (!isInit) throw IllegalArgumentException("Stopwatch must be initialized to use")
-    return clock.time - startDuration
+    return now() - startDuration
   }
 
   /**
    * Reset without reading
    */
   fun reset(): Stopwatch {
-    startDuration = clock.time
+    startDuration = now()
     return this
   }
 

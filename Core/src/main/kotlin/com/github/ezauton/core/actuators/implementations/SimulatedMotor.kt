@@ -22,17 +22,17 @@ class SimulatedMotor
  * @param maxVel The maximum velocity of the motor
  * @param kV Max voltage over max velocity (see FRC Drivetrain Characterization Paper eq. 11)). Used to simulate voltage-based driving as well.
  */
-  (clock: Clock, maxAccel: AngularAcceleration, minVel: AngularVelocity, maxVel: AngularVelocity, private val kV: Double) : VelocityMotor, RotationalDistanceSensor, VoltageMotor, Updatable {
+  (maxAccel: AngularAcceleration, minVel: AngularVelocity, maxVel: AngularVelocity, private val kV: Double) : VelocityMotor, RotationalDistanceSensor, VoltageMotor, Updatable {
 
   private val motorConstraints: BoundedVelocityProcessor
-  private val motor: BaseSimulatedMotor = BaseSimulatedMotor(clock)
+  private val motor: BaseSimulatedMotor = BaseSimulatedMotor()
   private val maxVelPerVolt: AngularVelocity
 
   private val toUpdate: Updatable
 
   init {
 
-    val leftRampUpMotor = RampUpVelocityProcessor(motor, clock, maxAccel)
+    val leftRampUpMotor = RampUpVelocityProcessor(motor, maxAccel)
     toUpdate = leftRampUpMotor
 //    updatableGroup.add(leftRampUpMotor)
 

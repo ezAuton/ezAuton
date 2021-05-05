@@ -69,7 +69,7 @@ class ActionTest {
         if (counter == 1) counter++
       }
 
-      ephemeral {
+      ephemeralScope {
         parallel {
           delay(2.seconds)
           if (counter == 1) counter++

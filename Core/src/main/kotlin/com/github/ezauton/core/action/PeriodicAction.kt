@@ -30,7 +30,7 @@ class StopException : Throwable()
 
 private class PeriodicScopeImpl(val scope: CoroutineScope) : PeriodicScope, CoroutineScope by scope {
   override var iteration = 0
-  override val stopwatch: Stopwatch = Stopwatch.new()
+  override val stopwatch: Stopwatch = Stopwatch.start()
 
   var shouldStop = false
 
@@ -128,7 +128,7 @@ suspend fun <T> periodic(
     }
   }
 
-  val stopwatch = Stopwatch.new().reset()
+  val stopwatch = Stopwatch.start().reset()
 
   fun isFinished(): Boolean {
     if (iterations != null && iterations == state.iteration) return true

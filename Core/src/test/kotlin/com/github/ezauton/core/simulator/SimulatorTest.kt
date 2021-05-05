@@ -71,7 +71,7 @@ class SimulatorTest {
 
     val action = action {
       parallel(delayedAction3)
-      ephemeral {
+      ephemeralScope {
         parallel(delayedAction2)
         sequential(delayedAction)
       }
@@ -92,8 +92,8 @@ class SimulatorTest {
       delay(10.ms)
     }
 
-    assertTrue(robot.defaultLocEstimator.estimateLocation().y > 1.m)
-    assertTrue(robot.defaultLocEstimator.estimateLocation().x.abs() < 0.01.m)
+    assertTrue(robot.locationEstimator.estimateLocation().y > 1.m)
+    assertTrue(robot.locationEstimator.estimateLocation().x.abs() < 0.01.m)
 
 
   }

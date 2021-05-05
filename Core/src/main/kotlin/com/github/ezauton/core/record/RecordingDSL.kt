@@ -1,7 +1,6 @@
 package com.github.ezauton.core.record
 
 import com.github.ezauton.conversion.Time
-import com.github.ezauton.conversion.now
 import com.github.ezauton.core.action.periodic
 import com.github.ezauton.core.utils.RealClock
 import com.github.ezauton.core.utils.Stopwatch
@@ -88,7 +87,6 @@ private class RecordingDSLImpl(baseScope: CoroutineScope) : RecordingDSL, Corout
           .forEach { sample ->
             addSample(sample)
           }
-
       }
     }
   }
@@ -155,10 +153,17 @@ interface RecordingBuilder {
   fun build(): Recording
 }
 
-fun CoroutineScope.recording(block: RecordingDSL.() -> Unit): RecordingBuilder {
-  val impl = RecordingDSLImpl(this)
-  impl.block()
-  return impl
+suspend fun recording(block: RecordingDSL.() -> Unit): Recording {
+  return coroutineScope {
+    val impl = RecordingDSLImpl(this)
+    val recording: Recording
+    try {
+      impl.block()
+    } finally {
+      recording = impl.build()
+    }
+    recording
+  }
 }
 
 fun CoroutineScope.recordingFlow(block: RecordingDSL.() -> Unit): Flow<Packet> {
@@ -171,7 +176,7 @@ fun List<Packet>.realisticFlow(): Flow<Data> {
   val stopwatch = Stopwatch(RealClock).apply { reset() }
   return asFlow().map {
     val dTime = it.sentTime - stopwatch.read()
-    if(dTime.isPositive) delay(dTime.millisL)
+    if (dTime.isPositive) delay(dTime.millisL)
     it.data
   }
 }
