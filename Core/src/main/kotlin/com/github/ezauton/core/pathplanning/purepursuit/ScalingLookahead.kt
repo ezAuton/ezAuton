@@ -20,6 +20,8 @@ class ScalingLookahead
  */
   (private val minDistance: Distance, private val maxDistance: Distance, private val minSpeed: LinearVelocity, maxSpeed: LinearVelocity, private val velocityEstimator: VelocityEst) : Lookahead {
 
+  constructor(distanceRange: ClosedRange<Distance>, speedRange: ClosedRange<LinearVelocity>, velocityEstimator: VelocityEst): this(distanceRange.start, distanceRange.endInclusive, speedRange.start, speedRange.endInclusive, velocityEstimator)
+
   private val dDistance = maxDistance - minDistance
   private val dSpeed = maxSpeed - minSpeed
 
@@ -34,4 +36,8 @@ class ScalingLookahead
       val lookahead = dDistance * ((speed - minSpeed) / dSpeed) + minDistance
       return lookahead.coerceIn(minDistance..maxDistance)
     }
+}
+
+fun VelocityEst.scalingLookahead(distanceRange: ClosedRange<Distance>, speedRange: ClosedRange<LinearVelocity>): ScalingLookahead {
+  return ScalingLookahead(distanceRange, speedRange, this)
 }

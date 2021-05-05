@@ -14,7 +14,7 @@ import com.github.ezauton.core.utils.math.getAngularDistance
 import com.github.ezauton.core.utils.math.polarVector2D
 
 
-interface TankRobotEncoderEncoderEstimator : RotLocEst, TransLocEst, TankRobotVelEst, Updatable, Sampler<Data.TREE> {
+interface TankRobotEncoderEncoderEstimator : RotLocEst, TransLocEst, TankRobotVelEst, Updatable, Sampler<Data.TankRobotState> {
   companion object {
     fun from(left: TranslationalDistanceSensor, right: TranslationalDistanceSensor, tankRobot: TankRobotConstants): TankRobotEncoderEncoderEstimator {
       return TankRobotEncoderEncoderEstimatorImpl(left, right, tankRobot).apply { reset() }
@@ -106,6 +106,6 @@ private class TankRobotEncoderEncoderEstimatorImpl
     return polarVector2D(magnitude = avgTranslationalWheelVelocity, angle = heading)
   }
 
-  override fun sample() = Data.TREE(leftTranslationalWheelVelocity, rightTranslationalWheelVelocity, heading, location.scalarVector)
+  override fun sample() = Data.TankRobotState(leftTranslationalWheelVelocity, rightTranslationalWheelVelocity, heading, location.scalarVector)
 
 }

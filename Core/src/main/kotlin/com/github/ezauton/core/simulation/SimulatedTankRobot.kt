@@ -35,7 +35,7 @@ private constructor(
   RotLocEst by locationEstimator,
   TankRobotVelEst by locationEstimator,
   TransLocEst by locationEstimator,
-  Sampler<Data.TREE> by locationEstimator,
+  Sampler<Data.TankRobotState> by locationEstimator,
   TransLocDrivable,
   Updatable {
 

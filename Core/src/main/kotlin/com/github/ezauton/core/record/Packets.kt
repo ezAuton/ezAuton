@@ -2,6 +2,7 @@ package com.github.ezauton.core.record
 
 import com.github.ezauton.conversion.*
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
 
 
 @OptIn(ExperimentalUnsignedTypes::class)
@@ -10,7 +11,9 @@ interface ForRobot {
 }
 
 @Serializable
-data class Packet(val data: Data, val sentTime: Time)
+data class Packet(val data: Data, val sentTime: Time) {
+  fun toJson() = format.encodeToString(this)
+}
 
 data class SimpleSegment(val from: ScalarVector, val to: ScalarVector)
 
@@ -42,7 +45,7 @@ sealed class Data {
 
 
   @Serializable
-  data class TREE(
+  data class TankRobotState(
     val leftWheelVelocity: LinearVelocity,
     val rightWheelVelocity: LinearVelocity,
     val heading: Angle,
