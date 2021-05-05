@@ -1,8 +1,8 @@
 package com.github.ezauton.core.record
 
 import com.github.ezauton.conversion.Time
+import com.github.ezauton.core.action.AbortActionException
 import com.github.ezauton.core.action.periodic
-import com.github.ezauton.core.utils.RealClock
 import com.github.ezauton.core.utils.Stopwatch
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -34,7 +34,7 @@ private class RecordingDSLFlowImpl(baseScope: CoroutineScope) : RecordingDSL, Re
   @OptIn(ExperimentalCoroutinesApi::class)
   override val coroutineContext = baseScope.newCoroutineContext(RecordingContext(this))
 
-  private val stopwatch = Stopwatch(RealClock).apply { reset() }
+  private val stopwatch = Stopwatch.start()
 
   private val channel = Channel<Packet>()
 
@@ -77,7 +77,7 @@ private class RecordingDSLImpl(baseScope: CoroutineScope) : RecordingDSL, Corout
 
   private val data = ArrayDeque<Packet>()
 
-  val stopwatch = Stopwatch(RealClock).apply { init() }
+  val stopwatch = Stopwatch.start()
 
   override fun <T : Data> sample(period: Time, vararg samplers: Sampler<T>) {
     launch {
@@ -154,16 +154,17 @@ interface RecordingBuilder {
 }
 
 suspend fun recording(block: RecordingDSL.() -> Unit): Recording {
-  return coroutineScope {
-    val impl = RecordingDSLImpl(this)
-    val recording: Recording
-    try {
+  var builder: RecordingBuilder? = null
+  try {
+     coroutineScope {
+      val impl = RecordingDSLImpl(this)
+      builder = impl
       impl.block()
-    } finally {
-      recording = impl.build()
     }
-    recording
+  } catch (e: AbortActionException){
+    // do nothing
   }
+  return builder?.build()!!
 }
 
 fun CoroutineScope.recordingFlow(block: RecordingDSL.() -> Unit): Flow<Packet> {
@@ -173,7 +174,7 @@ fun CoroutineScope.recordingFlow(block: RecordingDSL.() -> Unit): Flow<Packet> {
 }
 
 fun List<Packet>.realisticFlow(): Flow<Data> {
-  val stopwatch = Stopwatch(RealClock).apply { reset() }
+  val stopwatch = Stopwatch.start()
   return asFlow().map {
     val dTime = it.sentTime - stopwatch.read()
     if (dTime.isPositive) delay(dTime.millisL)

@@ -27,8 +27,8 @@ interface Action<T> : Flow<T> { // In the purest form an action is of type: susp
 
 }
 
-suspend fun <T> Action<T>.runWithTimeout(time: Time){
-  withTimeout(time){
+suspend fun <T> Action<T>.runWithTimeout(time: Time) {
+  withTimeout(time) {
     run()
   }
 }
@@ -51,9 +51,27 @@ fun <T> action(block: ActionFunc<T>): Action<T> {
   }
 }
 
+class AbortActionException: CancellationException()
+
 @OptIn(ExperimentalCoroutinesApi::class)
 suspend fun <T> maxDuration(time: Time, block: suspend CoroutineScope.() -> T): T {
-  return withTimeout(time, block)
+
+  var result: T? = null
+  supervisorScope {
+    println("started..")
+    val firstJob = launch {
+      result = block()
+    }
+
+    launch {
+      println("launched")
+      delay(time)
+      firstJob.cancel(AbortActionException())
+    }
+  }
+
+  return result!!
+
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -78,7 +96,7 @@ suspend fun delay(duration: Time) {
 
 
 @OptIn(ExperimentalTypeInference::class)
-fun <T> sendAction(@BuilderInference block: SendActionFunc<T>)= flow<T> {
+fun <T> sendAction(@BuilderInference block: SendActionFunc<T>) = flow<T> {
   block(this)
 }
 

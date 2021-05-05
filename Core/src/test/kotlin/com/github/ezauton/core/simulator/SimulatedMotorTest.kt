@@ -7,7 +7,6 @@ import com.github.ezauton.core.action.action
 import com.github.ezauton.core.action.delay
 import com.github.ezauton.core.action.runWithTimeout
 import com.github.ezauton.core.actuators.implementations.BaseSimulatedMotor
-import com.github.ezauton.core.utils.RealClock
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -21,7 +20,7 @@ class SimulatedMotorTest {
 
     val action = action {
 
-      val motor = BaseSimulatedMotor(RealClock)
+      val motor = BaseSimulatedMotor()
 
       assertEquals(0.0, motor.position.value, 0.1)
       motor.runVelocity(1.0.radians / sec)

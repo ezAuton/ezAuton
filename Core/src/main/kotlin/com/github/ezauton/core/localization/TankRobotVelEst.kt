@@ -7,7 +7,7 @@ import com.github.ezauton.core.localization.sensors.VelocityEst
 /**
  * Interface for any class that knows how fast the wheels on either side of the robot are going, given that the robot has a tank drivetrain
  */
-interface TankRobotVelocityEstimator : VelocityEst {
+interface TankRobotVelEst : VelocityEst {
 
   /**
    * @return Velocity of the left wheel. Can be negative or positive.

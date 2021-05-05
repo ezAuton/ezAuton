@@ -5,7 +5,6 @@ import com.github.ezauton.core.action.*
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.parallel
 import com.github.ezauton.core.simulation.sequential
-import com.github.ezauton.core.utils.RealClock
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
@@ -84,16 +83,15 @@ class SimulatorTest {
   @Test
   fun testStraight() = runBlocking {
 
-    val clock = RealClock
-    val robot = SimulatedTankRobot(1.0.meters, clock, 14.0.mpss, 0.3.mps, 16.0.mps)
+    val robot = SimulatedTankRobot.create(1.0.meters, 14.0.mpss, 0.3.mps, 16.0.mps)
 
     for (i in 0..100) {
       robot.run(1.0.mps, 1.0.mps)
       delay(10.ms)
     }
 
-    assertTrue(robot.locationEstimator.estimateLocation().y > 1.m)
-    assertTrue(robot.locationEstimator.estimateLocation().x.abs() < 0.01.m)
+    assertTrue(robot.estimateLocation().y > 1.m)
+    assertTrue(robot.estimateLocation().x.abs() < 0.01.m)
 
 
   }

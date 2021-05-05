@@ -6,7 +6,6 @@ import com.github.ezauton.conversion.radians
 import com.github.ezauton.conversion.zero
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor
-import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
 
 /**

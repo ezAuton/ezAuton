@@ -10,7 +10,6 @@ import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEs
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.parallel
-import com.github.ezauton.core.utils.RealClock
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -22,10 +21,9 @@ class LocalizerTest {
   @Test
   @Throws(TimeoutException::class, ExecutionException::class)
   fun testThatTheLocalizersGiveSimilarResults() {
-    val simulatedBot = SimulatedTankRobot(0.2.meters, RealClock, 3.0.mps / sec, (-4.0).mps, 4.0.mps)
-    simulatedBot.locationEstimator.reset()
+    val simulatedBot = SimulatedTankRobot.create(0.2.meters, 3.0.mps / sec, (-4.0).mps, 4.0.mps)
 
-    val locEstimator = TankRobotEncoderEncoderEstimator(simulatedBot.leftDistanceSensor, simulatedBot.rightDistanceSensor, simulatedBot)
+    val locEstimator = TankRobotEncoderEncoderEstimator.from(simulatedBot.leftDistanceSensor, simulatedBot.rightDistanceSensor, simulatedBot)
     val encRotEstimator = EncoderRotationEstimator(locEstimator, object : TranslationalDistanceSensor {
 
       override // correct because of linearity of integration
@@ -35,9 +33,9 @@ class LocalizerTest {
       override val velocity: LinearVelocity
         get() = (simulatedBot.leftDistanceSensor.velocity + simulatedBot.rightDistanceSensor.velocity) / 2
     })
-    val simpson = SimpsonEncoderRotationEstimator(locEstimator, simulatedBot.locationEstimator, RealClock)
+    val simpson = SimpsonEncoderRotationEstimator(locEstimator, simulatedBot)
 
-    locEstimator.reset()
+//    locEstimator.reset()
     encRotEstimator.reset()
     simpson.reset()
 

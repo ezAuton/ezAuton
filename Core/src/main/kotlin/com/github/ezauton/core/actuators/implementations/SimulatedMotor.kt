@@ -7,7 +7,6 @@ import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.actuators.VoltageMotor
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor
-import com.github.ezauton.core.utils.Clock
 
 /**
  * Unlike [BaseSimulatedMotor], this motor has static friction and finite acceleration

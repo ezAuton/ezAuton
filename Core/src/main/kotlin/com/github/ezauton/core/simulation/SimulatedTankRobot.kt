@@ -3,11 +3,12 @@ package com.github.ezauton.core.simulation
 import com.github.ezauton.conversion.*
 import com.github.ezauton.core.actuators.implementations.SimulatedMotor
 import com.github.ezauton.core.localization.RotLocEst
+import com.github.ezauton.core.localization.TankRobotVelEst
 import com.github.ezauton.core.localization.TransLocEst
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.localization.sensors.Encoders
-import com.github.ezauton.core.localization.sensors.VelocityEst
+import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
 import com.github.ezauton.core.record.Data
 import com.github.ezauton.core.record.Sampler
 import com.github.ezauton.core.robot.TankRobotConstants
@@ -26,14 +27,16 @@ private constructor(
   val leftMotor: SimulatedMotor,
   val rightMotor: SimulatedMotor,
   private val locationEstimator: TankRobotEncoderEncoderEstimator,
-  private val driving: TransLocDrivable
+  private val driving: TransLocDrivable,
+  val leftDistanceSensor: TranslationalDistanceSensor,
+  val rightDistanceSensor: TranslationalDistanceSensor,
 ) :
   TankRobotConstants by constraints,
   RotLocEst by locationEstimator,
-  VelocityEst by locationEstimator,
+  TankRobotVelEst by locationEstimator,
   TransLocEst by locationEstimator,
   Sampler<Data.TREE> by locationEstimator,
-  TransLocDrivable by driving,
+  TransLocDrivable,
   Updatable {
 
   companion object {
@@ -50,9 +53,13 @@ private constructor(
       val rightDistanceSensor = Encoders.toTranslationalDistanceSensor(1.0.meters, 1.0.mps, rightMotor)
       val locationEstimator = TankRobotEncoderEncoderEstimator.from(leftDistanceSensor, rightDistanceSensor, constraints)
       val driving = TankRobotTransLocDrivable(leftMotor, rightMotor, locationEstimator, locationEstimator, constraints)
-      return SimulatedTankRobot(constraints, leftMotor, rightMotor, locationEstimator, driving)
+      return SimulatedTankRobot(constraints, leftMotor, rightMotor, locationEstimator, driving, leftDistanceSensor, rightDistanceSensor)
     }
   }
+
+  override fun estimateAbsoluteVelocity() = locationEstimator.estimateAbsoluteVelocity()
+
+
 
   /**
    * @return A location estimator which automatically updates
@@ -70,5 +77,15 @@ private constructor(
     toUpdate.forEach { it.update() }
     locationEstimator.update()
     return true
+  }
+
+  override fun driveTowardTransLoc(speed: LinearVelocity, loc: ConcreteVector<Distance>) = run {
+    update()
+    driving.driveTowardTransLoc(speed, loc)
+  }
+
+  override fun driveSpeed(speed: LinearVelocity): Boolean = run {
+    update()
+    driving.driveSpeed(speed)
   }
 }

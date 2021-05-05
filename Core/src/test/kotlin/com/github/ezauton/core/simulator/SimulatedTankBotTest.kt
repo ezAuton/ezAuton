@@ -10,8 +10,6 @@ import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
 import com.github.ezauton.core.simulation.parallel
 import com.github.ezauton.core.simulation.sequential
-import com.github.ezauton.core.utils.RealClock
-import com.github.ezauton.core.utils.TimeWarpedClock
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -32,14 +30,13 @@ class SimulatedTankBotTest {
 
     val trajectory = pathGenerator.generate(0.05.seconds)
 
-    val clock = TimeWarpedClock(10.0)
-    val bot = SimulatedTankRobot(0.2.m, clock, 3.0.mpss, 0.2.mps, 4.0.mps)
-    bot.locationEstimator.reset()
+    val bot = SimulatedTankRobot.create(0.2.m, 3.0.mpss, 0.2.mps, 4.0.mps)
+
     val leftMotor = bot.leftMotor
     val rightMotor = bot.rightMotor
 
-    val locEstimator = TankRobotEncoderEncoderEstimator(bot.leftDistanceSensor, bot.rightDistanceSensor, bot)
-    locEstimator.reset()
+    val locEstimator = TankRobotEncoderEncoderEstimator.from(bot.leftDistanceSensor, bot.rightDistanceSensor, bot)
+//    locEstimator.reset()
 
 
     val background = periodicAction(50.ms) {
@@ -68,7 +65,7 @@ class SimulatedTankBotTest {
   @Throws(TimeoutException::class, ExecutionException::class)
   fun testStraight() = runBlocking {
 
-    val simulatedBot = SimulatedTankRobot(0.2.m, RealClock, 3.0.mpss, (-4.0).mps, 4.0.mps)
+    val simulatedBot = SimulatedTankRobot.create(0.2.m, 3.0.mpss, (-4.0).mps, 4.0.mps)
 
     val actionGroup = action {
       parallel {
@@ -84,7 +81,7 @@ class SimulatedTankBotTest {
     // stop the robot
     simulatedBot.run(0.0.mps, 0.0.mps)
 
-    val estimatedLocation = simulatedBot.locationEstimator.estimateLocation()
+    val estimatedLocation = simulatedBot.estimateLocation()
 
     println("estimated loc: $estimatedLocation")
     assertTrue(estimatedLocation.y > 4.5.m)

@@ -2,10 +2,10 @@ package com.github.ezauton.core.localization
 
 import com.github.ezauton.conversion.*
 import com.github.ezauton.core.localization.sensors.VelocityEst
-import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
 import com.github.ezauton.core.utils.math.min
 import com.github.ezauton.core.utils.math.polarVector2D
+import java.time.Clock
 import kotlin.math.max
 
 typealias TimeIndexedVelocityVec = Pair<Time, ConcreteVector<LinearVelocity>>
@@ -27,10 +27,9 @@ class SimpsonEncoderRotationEstimator
   (
   private val rotationalLocationEstimator: RotLocEst,
   private val velocitySensor: VelocityEst,
-  clock: Clock
 ) : RotLocEst, TransLocEst, Updatable {
 
-  private val stopwatch: Stopwatch = Stopwatch(clock)
+  private val stopwatch: Stopwatch = Stopwatch()
   private var velocity: LinearVelocity = Double.NaN.mps
   private var dPosVec = vec<Distance>()
   private var positionVec = vec<Distance>()

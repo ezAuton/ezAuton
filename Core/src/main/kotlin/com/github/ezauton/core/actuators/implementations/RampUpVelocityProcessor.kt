@@ -4,7 +4,6 @@ import com.github.ezauton.conversion.*
 import com.github.ezauton.core.actuators.VelocityMotor
 import com.github.ezauton.core.actuators.VelocityProcessor
 import com.github.ezauton.core.localization.Updatable
-import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
 
 /**

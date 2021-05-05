@@ -104,14 +104,14 @@ class PPSimulatorTest {
     }
 
 
-    val leftWheelVelocity = locationEstimator.leftTranslationalWheelVelocity
+    val leftWheelVelocity = robot.leftTranslationalWheelVelocity
     assertTrue(leftWheelVelocity in (-0.5).mps..0.5.mps)
 
-    val rightWheelVelocity = locationEstimator.rightTranslationalWheelVelocity
+    val rightWheelVelocity = robot.rightTranslationalWheelVelocity
     assertTrue(rightWheelVelocity in (-0.5).mps..0.5.mps)
 
     // The final location after the simulator
-    val finalLoc = locationEstimator.estimateLocation()
+    val finalLoc = robot.estimateLocation()
 
     // If the final loc is approximately equal to the last waypoint
     approxEqual(trajectory.path.end, finalLoc, 0.2)

@@ -2,7 +2,7 @@ package com.github.ezauton.core.localization.estimators
 
 import com.github.ezauton.conversion.*
 import com.github.ezauton.core.localization.RotLocEst
-import com.github.ezauton.core.localization.TankRobotVelocityEstimator
+import com.github.ezauton.core.localization.TankRobotVelEst
 import com.github.ezauton.core.localization.TransLocEst
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
@@ -14,7 +14,7 @@ import com.github.ezauton.core.utils.math.getAngularDistance
 import com.github.ezauton.core.utils.math.polarVector2D
 
 
-interface TankRobotEncoderEncoderEstimator : RotLocEst, TransLocEst, TankRobotVelocityEstimator, Updatable, Sampler<Data.TREE> {
+interface TankRobotEncoderEncoderEstimator : RotLocEst, TransLocEst, TankRobotVelEst, Updatable, Sampler<Data.TREE> {
   companion object {
     fun from(left: TranslationalDistanceSensor, right: TranslationalDistanceSensor, tankRobot: TankRobotConstants): TankRobotEncoderEncoderEstimator {
       return TankRobotEncoderEncoderEstimatorImpl(left, right, tankRobot).apply { reset() }

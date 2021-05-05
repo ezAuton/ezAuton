@@ -12,7 +12,7 @@ class LocationEstimatorTest {
   @Test
   fun `tank robot estimator interface`() {
 
-    val estimator1 = object : TankRobotVelocityEstimator {
+    val estimator1 = object : TankRobotVelEst {
       override fun estimateAbsoluteVelocity(): ConcreteVector<LinearVelocity> {
         return vec(0.0, -3.0)
       }
