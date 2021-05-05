@@ -8,7 +8,7 @@ import com.github.ezauton.core.localization.sensors.VelocityEst
  * Easy lookahead implementation given a speed. Takes in min speed, max speed, min lookahead, max lookahead and
  * performs a linear interpolation.
  */
-class LookaheadBounds
+class ScalingLookahead
 /**
  * Create some lookahead bounds
  *

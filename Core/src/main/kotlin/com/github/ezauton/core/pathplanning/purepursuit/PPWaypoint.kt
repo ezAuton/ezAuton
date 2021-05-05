@@ -1,8 +1,19 @@
 package com.github.ezauton.core.pathplanning.purepursuit
 
 import com.github.ezauton.conversion.*
+import com.github.ezauton.core.pathplanning.Trajectory
 import com.github.ezauton.core.pathplanning.TrajectoryGenerator
 import java.io.Serializable
+
+interface WaypointAdder {
+  fun point(x: Distance, y: Distance, speed: LinearVelocity, acceleration: LinearAcceleration, deceleration: LinearAcceleration)
+}
+
+fun trajectory(samplePeriod: Time, block: WaypointAdder.() -> Unit): Trajectory {
+  val impl = PPWaypoint.Builder()
+  impl.block()
+  return impl.buildTrajectoryGenerator().generate(samplePeriod)
+}
 
 /**
  * Waypoint used in Pure Pursuit which includes translational location, speed, accel, decel...
@@ -27,27 +38,27 @@ open class PPWaypoint
         '}'.toString()
   }
 
-  class Builder {
+  internal class Builder : WaypointAdder {
     private val waypointList = ArrayList<PPWaypoint>()
 
-    fun add(x: Distance, y: Distance, speed: LinearVelocity, acceleration: LinearAcceleration, deceleration: LinearAcceleration): Builder {
-      val waypoint = simple2D(x, y, speed, acceleration, deceleration)
+    override fun point(x: Distance, y: Distance, speed: LinearVelocity, acceleration: LinearAcceleration, deceleration: LinearAcceleration) {
+      val decelerationCorrected = deceleration.abs() * (-1) // always be negative
+      val waypoint = simple2D(x, y, speed, acceleration, decelerationCorrected)
       waypointList.add(waypoint)
-      return this
     }
 
     fun buildArray(): Array<PPWaypoint> {
       return waypointList.toTypedArray()
     }
 
-    fun buildPathGenerator(): TrajectoryGenerator {
+    fun buildTrajectoryGenerator(): TrajectoryGenerator {
       return TrajectoryGenerator(*buildArray())
     }
 
     fun flipY(): Builder {
       val ret = Builder()
       for (wp in waypointList) {
-        ret.add(-wp.location.get(0), wp.location.get(1), wp.speed, wp.acceleration, wp.deceleration)
+        ret.point(-wp.location.get(0), wp.location.get(1), wp.speed, wp.acceleration, wp.deceleration)
       }
       return ret
     }

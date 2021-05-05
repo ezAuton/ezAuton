@@ -4,7 +4,7 @@ import com.github.ezauton.conversion.*
 import com.github.ezauton.core.action.*
 import com.github.ezauton.core.localization.estimators.TankRobotEncoderEncoderEstimator
 import com.github.ezauton.core.pathplanning.TrajectoryGenerator
-import com.github.ezauton.core.pathplanning.purepursuit.LookaheadBounds
+import com.github.ezauton.core.pathplanning.purepursuit.ScalingLookahead
 import com.github.ezauton.core.pathplanning.purepursuit.PPWaypoint
 import com.github.ezauton.core.robot.implemented.TankRobotTransLocDrivable
 import com.github.ezauton.core.simulation.SimulatedTankRobot
@@ -45,7 +45,7 @@ class SimulatedTankBotTest {
       return@periodicAction
     }
 
-    val lookahead = LookaheadBounds(1.0.m, 5.0.m, 2.0.mps, 10.0.mps, locEstimator)
+    val lookahead = ScalingLookahead(1.0.m, 5.0.m, 2.0.mps, 10.0.mps, locEstimator)
 
     val drivable = TankRobotTransLocDrivable(leftMotor, rightMotor, locEstimator, locEstimator, bot)
 
