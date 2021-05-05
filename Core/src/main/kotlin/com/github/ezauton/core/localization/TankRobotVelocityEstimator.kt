@@ -2,12 +2,12 @@ package com.github.ezauton.core.localization
 
 import com.github.ezauton.conversion.ConcreteVector
 import com.github.ezauton.conversion.LinearVelocity
-import com.github.ezauton.core.localization.sensors.VelocityEstimator
+import com.github.ezauton.core.localization.sensors.VelocityEst
 
 /**
  * Interface for any class that knows how fast the wheels on either side of the robot are going, given that the robot has a tank drivetrain
  */
-interface TankRobotVelocityEstimator : VelocityEstimator {
+interface TankRobotVelocityEstimator : VelocityEst {
 
   /**
    * @return Velocity of the left wheel. Can be negative or positive.

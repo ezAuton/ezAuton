@@ -2,6 +2,6 @@ package com.github.ezauton.core.localization.sensors
 
 import com.github.ezauton.conversion.LinearVelocity
 
-interface VelocityEstimator {
+interface VelocityEst {
   val translationalVelocity: LinearVelocity
 }

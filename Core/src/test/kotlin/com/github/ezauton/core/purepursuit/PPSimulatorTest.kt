@@ -79,17 +79,17 @@ class PPSimulatorTest {
   @Throws(TimeoutException::class, ExecutionException::class)
   private fun test(name: String, trajectory: Trajectory) {
 
-    val robot = SimulatedTankRobot(lateralWheelDistance = 1.m, maxAccel =  14.0.mpss, minVel = 0.3.mps, maxVel = 16.0.mps)
-    val lookahead = LookaheadBounds(1.0.m, 5.0.m, 2.0.mps, 10.0.mps, robot.locationEstimator)
+    val robot = SimulatedTankRobot.create(lateralWheelDistance = 1.m, maxAccel =  14.0.mpss, minVel = 0.3.mps, maxVel = 16.0.mps)
+    val lookahead = LookaheadBounds(1.0.m, 5.0.m, 2.0.mps, 10.0.mps, robot)
 
-    val purePursuit = purePursuit(Period(10.ms), trajectory, robot.locationEstimator, robot.driving, lookahead)
+    val purePursuit = robot.purePursuit(period = 10.ms, trajectory, lookahead)
 
     val action = action {
       val recording = maxDuration(10.seconds) {
         recording {
           include(trajectory.path.simpleRepr)
           parallel(purePursuit)
-          sample(10.ms, robot.locationEstimator)
+          sample(10.ms, robot)
         }
       }
 

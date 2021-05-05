@@ -1,9 +1,9 @@
 package com.github.ezauton.core.localization.estimators
 
 import com.github.ezauton.conversion.*
-import com.github.ezauton.core.localization.RotationalLocationEstimator
+import com.github.ezauton.core.localization.RotLocEst
 import com.github.ezauton.core.localization.TankRobotVelocityEstimator
-import com.github.ezauton.core.localization.TranslationalLocationEstimator
+import com.github.ezauton.core.localization.TransLocEst
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
 import com.github.ezauton.core.record.Data
@@ -14,12 +14,19 @@ import com.github.ezauton.core.utils.math.getAngularDistance
 import com.github.ezauton.core.utils.math.polarVector2D
 
 
+interface TankRobotEncoderEncoderEstimator : RotLocEst, TransLocEst, TankRobotVelocityEstimator, Updatable, Sampler<Data.TREE> {
+  companion object {
+    fun from(left: TranslationalDistanceSensor, right: TranslationalDistanceSensor, tankRobot: TankRobotConstants): TankRobotEncoderEncoderEstimator {
+      return TankRobotEncoderEncoderEstimatorImpl(left, right, tankRobot).apply { reset() }
+    }
+  }
 
+}
 
 /**
  * Describes an object that can estimate the heading and absolute position of the robot solely using the encoders
  */
-class TankRobotEncoderEncoderEstimator
+private class TankRobotEncoderEncoderEstimatorImpl
 /**
  * Create a TankRobotEncoderEstimator
  *
@@ -31,7 +38,7 @@ class TankRobotEncoderEncoderEstimator
   private val left: TranslationalDistanceSensor,
   private val right: TranslationalDistanceSensor,
   private val tankRobot: TankRobotConstants
-) : RotationalLocationEstimator, TranslationalLocationEstimator, TankRobotVelocityEstimator, Updatable, Sampler<Data.TREE> {
+) : TankRobotEncoderEncoderEstimator {
 
   private var lastPosLeft: Distance = zero()
   private var lastPosRight: Distance = zero()

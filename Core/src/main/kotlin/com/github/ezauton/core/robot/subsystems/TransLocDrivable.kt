@@ -7,7 +7,7 @@ import com.github.ezauton.conversion.LinearVelocity
 /**
  * Maps a speed of travel and a location to an action from the robot to go towards that location with the given speed.
  */
-interface TranslationalLocationDrivable {
+interface TransLocDrivable {
   /**
    * Move the robot from our current location to a target location while respecting a maximum speed
    *

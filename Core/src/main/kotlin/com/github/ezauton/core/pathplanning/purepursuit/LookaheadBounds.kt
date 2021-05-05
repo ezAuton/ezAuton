@@ -2,7 +2,7 @@ package com.github.ezauton.core.pathplanning.purepursuit
 
 import com.github.ezauton.conversion.Distance
 import com.github.ezauton.conversion.LinearVelocity
-import com.github.ezauton.core.localization.sensors.VelocityEstimator
+import com.github.ezauton.core.localization.sensors.VelocityEst
 
 /**
  * Easy lookahead implementation given a speed. Takes in min speed, max speed, min lookahead, max lookahead and
@@ -18,7 +18,7 @@ class LookaheadBounds
  * @param maxSpeed Maximum speed where lookahead is allowed to be dynamic
  * @param velocityEstimator Estimator of the robot's velocity. Used to calculate lookahead based on current speed.
  */
-  (private val minDistance: Distance, private val maxDistance: Distance, private val minSpeed: LinearVelocity, maxSpeed: LinearVelocity, private val velocityEstimator: VelocityEstimator) : Lookahead {
+  (private val minDistance: Distance, private val maxDistance: Distance, private val minSpeed: LinearVelocity, maxSpeed: LinearVelocity, private val velocityEstimator: VelocityEst) : Lookahead {
 
   private val dDistance = maxDistance - minDistance
   private val dSpeed = maxSpeed - minSpeed

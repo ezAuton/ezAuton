@@ -1,7 +1,7 @@
 package com.github.ezauton.core.localization
 
 import com.github.ezauton.conversion.*
-import com.github.ezauton.core.localization.sensors.VelocityEstimator
+import com.github.ezauton.core.localization.sensors.VelocityEst
 import com.github.ezauton.core.utils.Clock
 import com.github.ezauton.core.utils.Stopwatch
 import com.github.ezauton.core.utils.math.min
@@ -25,10 +25,10 @@ class SimpsonEncoderRotationEstimator
  * @param velocitySensor An encoder or encoder-like object.
  */
   (
-  private val rotationalLocationEstimator: RotationalLocationEstimator,
-  private val velocitySensor: VelocityEstimator,
+  private val rotationalLocationEstimator: RotLocEst,
+  private val velocitySensor: VelocityEst,
   clock: Clock
-) : RotationalLocationEstimator, TranslationalLocationEstimator, Updatable {
+) : RotLocEst, TransLocEst, Updatable {
 
   private val stopwatch: Stopwatch = Stopwatch(clock)
   private var velocity: LinearVelocity = Double.NaN.mps
@@ -131,7 +131,7 @@ class SimpsonEncoderRotationEstimator
   }
 
   private class Parabola(point1: ScalarVector, point2: ScalarVector, point3: ScalarVector) {
-    
+
     private val a: Double
     private val b: Double
     private val c: Double

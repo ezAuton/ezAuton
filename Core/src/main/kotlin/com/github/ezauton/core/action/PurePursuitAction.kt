@@ -1,10 +1,7 @@
 package com.github.ezauton.core.action
 
-import com.github.ezauton.conversion.Distance
-import com.github.ezauton.conversion.LinearVelocity
-import com.github.ezauton.conversion.m
-import com.github.ezauton.conversion.mps
-import com.github.ezauton.core.localization.TranslationalLocationEstimator
+import com.github.ezauton.conversion.*
+import com.github.ezauton.core.localization.TransLocEst
 import com.github.ezauton.core.pathplanning.PathProgressor
 import com.github.ezauton.core.pathplanning.Trajectory
 import com.github.ezauton.core.pathplanning.purepursuit.Lookahead
@@ -12,7 +9,7 @@ import com.github.ezauton.core.pathplanning.purepursuit.PurePursuitMovementStrat
 import com.github.ezauton.core.pathplanning.purepursuit.Update
 import com.github.ezauton.core.record.Data
 import com.github.ezauton.core.record.RecordingContext
-import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
+import com.github.ezauton.core.robot.subsystems.TransLocDrivable
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.consumeAsFlow
@@ -31,8 +28,8 @@ typealias Speed = (distance: Distance) -> LinearVelocity
 fun purePursuit(
   period: Period,
   trajectory: Trajectory,
-  translationalLocationEstimator: TranslationalLocationEstimator,
-  translationalLocationDrivable: TranslationalLocationDrivable,
+  translationalLocationEstimator: TransLocEst,
+  translationalLocationDrivable: TransLocDrivable,
   lookahead: Lookahead,
   stopDistance: Distance = 0.01.m,
 ) = action {
@@ -69,5 +66,8 @@ fun purePursuit(
   return@action
 }
 
-fun <T> T.purePursuit(period: Period, trajectory: Trajectory, lookahead: Lookahead, stopDistance: Distance = 0.01.m) where T : TranslationalLocationEstimator, T : TranslationalLocationDrivable =
+fun <T> T.purePursuit(period: Period, trajectory: Trajectory, lookahead: Lookahead, stopDistance: Distance = 0.01.m) where T : TransLocEst, T : TransLocDrivable =
   purePursuit(period, trajectory, this, this, lookahead, stopDistance)
+
+fun <T> T.purePursuit(period: Time, trajectory: Trajectory, lookahead: Lookahead, stopDistance: Distance = 0.01.m) where T : TransLocEst, T : TransLocDrivable =
+  purePursuit(Period(period), trajectory, this, this, lookahead, stopDistance)

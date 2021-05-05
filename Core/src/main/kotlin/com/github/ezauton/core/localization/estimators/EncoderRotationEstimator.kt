@@ -1,8 +1,8 @@
 package com.github.ezauton.core.localization.estimators
 
 import com.github.ezauton.conversion.*
-import com.github.ezauton.core.localization.RotationalLocationEstimator
-import com.github.ezauton.core.localization.TranslationalLocationEstimator
+import com.github.ezauton.core.localization.RotLocEst
+import com.github.ezauton.core.localization.TransLocEst
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.sensors.TranslationalDistanceSensor
 import com.github.ezauton.core.utils.math.polarVector2D
@@ -19,9 +19,9 @@ class EncoderRotationEstimator
  * @param distanceSensor An encoder or encoder-like object.
  */
   (
-  private val rotationalLocationEstimator: RotationalLocationEstimator,
+  private val rotationalLocationEstimator: RotLocEst,
   private val distanceSensor: TranslationalDistanceSensor
-) : RotationalLocationEstimator, TranslationalLocationEstimator, Updatable {
+) : RotLocEst, TransLocEst, Updatable {
   private var velocity: LinearVelocity = zero()
   private var lastPosition: Distance  = zero()
   private var dPos: Distance = zero()

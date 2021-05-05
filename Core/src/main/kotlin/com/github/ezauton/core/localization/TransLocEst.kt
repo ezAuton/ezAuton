@@ -7,7 +7,7 @@ import com.github.ezauton.conversion.LinearVelocity
 /**
  * An interface for any class trying to estimate our location
  */
-interface TranslationalLocationEstimator {
+interface TransLocEst {
   /**
    * Usually, in (x, y) coordinates where the y axis is parallel to the long side of the field, return our position
    *

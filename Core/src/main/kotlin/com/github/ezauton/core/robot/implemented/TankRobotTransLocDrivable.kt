@@ -2,10 +2,10 @@ package com.github.ezauton.core.robot.implemented
 
 import com.github.ezauton.conversion.*
 import com.github.ezauton.core.actuators.VelocityMotor
-import com.github.ezauton.core.localization.RotationalLocationEstimator
-import com.github.ezauton.core.localization.TranslationalLocationEstimator
+import com.github.ezauton.core.localization.RotLocEst
+import com.github.ezauton.core.localization.TransLocEst
 import com.github.ezauton.core.robot.TankRobotConstants
-import com.github.ezauton.core.robot.subsystems.TranslationalLocationDrivable
+import com.github.ezauton.core.robot.subsystems.TransLocDrivable
 import com.github.ezauton.core.utils.math.absoluteToRelativeCoord
 import com.github.ezauton.core.utils.math.calculateCurvature
 
@@ -25,10 +25,10 @@ class TankRobotTransLocDrivable
   (
   private val leftMotor: VelocityMotor,
   private val rightMotor: VelocityMotor,
-  private val translationalLocationEstimator: TranslationalLocationEstimator,
-  private val rotationalLocationEstimator: RotationalLocationEstimator,
+  private val translationalLocationEstimator: TransLocEst,
+  private val rotationalLocationEstimator: RotLocEst,
   private val tankRobotConstants: TankRobotConstants
-) : TranslationalLocationDrivable {
+) : TransLocDrivable {
   var lastLeftTarget: LinearVelocity = 0.mps
     private set
   var lastRightTarget: LinearVelocity = 0.mps
