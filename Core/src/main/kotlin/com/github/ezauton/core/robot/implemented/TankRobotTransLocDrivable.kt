@@ -1,7 +1,7 @@
 package com.github.ezauton.core.robot.implemented
 
 import com.github.ezauton.conversion.*
-import com.github.ezauton.core.actuators.VelocityMotor
+import com.github.ezauton.core.actuators.RotVelMotor
 import com.github.ezauton.core.localization.RotLocEst
 import com.github.ezauton.core.localization.TransLocEst
 import com.github.ezauton.core.robot.TankRobotConstants
@@ -23,8 +23,8 @@ class TankRobotTransLocDrivable
  * @param tankRobotConstants A data class containing constants regarding the structure of the tank drive robot, such as lateral wheel distance
  */
   (
-  private val leftMotor: VelocityMotor,
-  private val rightMotor: VelocityMotor,
+  private val leftMotor: RotVelMotor,
+  private val rightMotor: RotVelMotor,
   private val translationalLocationEstimator: TransLocEst,
   private val rotationalLocationEstimator: RotLocEst,
   private val tankRobotConstants: TankRobotConstants

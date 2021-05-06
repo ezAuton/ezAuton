@@ -1,7 +1,7 @@
 package com.github.ezauton.core.actuators.implementations
 
 import com.github.ezauton.conversion.AngularVelocity
-import com.github.ezauton.core.actuators.VelocityMotor
+import com.github.ezauton.core.actuators.RotVelMotor
 import com.github.ezauton.core.actuators.VelocityProcessor
 import com.github.ezauton.core.localization.sensors.Tachometer
 
@@ -16,7 +16,7 @@ class StaticFrictionVelocityProcessor
  * @param toApply The motor to apply the processed velocity to
  * @param minVelMove The minimum velocity to move the motor
  */
-  (private val velocitySensor: Tachometer, toApply: VelocityMotor, private val minVelMove: AngularVelocity) : VelocityProcessor(toApply) {
+  (private val velocitySensor: Tachometer, toApply: RotVelMotor, private val minVelMove: AngularVelocity) : VelocityProcessor(toApply) {
 
   /**
    * Run the motor at the target velocity, unless the target velocity is too small and we are not moving

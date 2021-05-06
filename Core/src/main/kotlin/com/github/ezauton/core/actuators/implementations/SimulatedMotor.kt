@@ -3,7 +3,7 @@ package com.github.ezauton.core.actuators.implementations
 import com.github.ezauton.conversion.Angle
 import com.github.ezauton.conversion.AngularAcceleration
 import com.github.ezauton.conversion.AngularVelocity
-import com.github.ezauton.core.actuators.VelocityMotor
+import com.github.ezauton.core.actuators.RotVelMotor
 import com.github.ezauton.core.actuators.VoltageMotor
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor
@@ -21,7 +21,7 @@ class SimulatedMotor
  * @param maxVel The maximum velocity of the motor
  * @param kV Max voltage over max velocity (see FRC Drivetrain Characterization Paper eq. 11)). Used to simulate voltage-based driving as well.
  */
-  (maxAccel: AngularAcceleration, minVel: AngularVelocity, maxVel: AngularVelocity, private val kV: Double) : VelocityMotor, RotationalDistanceSensor, VoltageMotor, Updatable {
+  (maxAccel: AngularAcceleration, minVel: AngularVelocity, maxVel: AngularVelocity, private val kV: Double) : RotVelMotor, RotationalDistanceSensor, VoltageMotor, Updatable {
 
   private val motorConstraints: BoundedVelocityProcessor
   private val motor: BaseSimulatedMotor = BaseSimulatedMotor()

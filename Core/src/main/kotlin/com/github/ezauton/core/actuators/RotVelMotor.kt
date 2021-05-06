@@ -5,7 +5,7 @@ import com.github.ezauton.conversion.AngularVelocity
 /**
  * A motor which can be run at a certain velocity
  */
-interface VelocityMotor : Motor {
+interface RotVelMotor : Motor {
   /**
    * Run the motor at a certain velocity
    *

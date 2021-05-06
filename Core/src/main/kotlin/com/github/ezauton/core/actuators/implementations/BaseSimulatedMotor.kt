@@ -4,7 +4,7 @@ import com.github.ezauton.conversion.Angle
 import com.github.ezauton.conversion.AngularVelocity
 import com.github.ezauton.conversion.radians
 import com.github.ezauton.conversion.zero
-import com.github.ezauton.core.actuators.VelocityMotor
+import com.github.ezauton.core.actuators.RotVelMotor
 import com.github.ezauton.core.localization.sensors.RotationalDistanceSensor
 import com.github.ezauton.core.utils.Stopwatch
 
@@ -17,7 +17,7 @@ class BaseSimulatedMotor
  *
  * @param clock The clock to keep track of time with
  */
-   : VelocityMotor, RotationalDistanceSensor {
+   : RotVelMotor, RotationalDistanceSensor {
   private val stopwatch: Stopwatch = Stopwatch()
 
   /**
@@ -34,7 +34,7 @@ class BaseSimulatedMotor
    * The motor to which the velocity will be applied
    *
    */
-  var subscribed: VelocityMotor? = null
+  var subscribed: RotVelMotor? = null
 
   override var position = 0.0.radians
     get(): Angle {

@@ -16,8 +16,8 @@ object Actuators {
    * @param velToVoltage
    * @return
    */
-  fun roughConvertVoltageToVel(voltageMotor: VoltageMotor, velToVoltage: InterpolationMap): VelocityMotor {
-    return object : VelocityMotor {
+  fun roughConvertVoltageToVel(voltageMotor: VoltageMotor, velToVoltage: InterpolationMap): RotVelMotor {
+    return object : RotVelMotor {
       override fun runVelocity(targetVelocity: AngularVelocity) {
         voltageMotor.runVoltage(velToVoltage[targetVelocity.value])
       }
@@ -32,7 +32,7 @@ object Actuators {
    * @param maxSpeed
    * @return
    */
-  fun roughConvertVoltageToVel(voltageMotor: VoltageMotor, maxSpeed: Double): VelocityMotor {
+  fun roughConvertVoltageToVel(voltageMotor: VoltageMotor, maxSpeed: Double): RotVelMotor {
     val interpolationMap = OddInterpolationMap(0.0, 0.0)
     interpolationMap[maxSpeed] = 1.0
     return roughConvertVoltageToVel(voltageMotor, interpolationMap)

@@ -4,7 +4,7 @@ import com.github.ezauton.conversion.AngularVelocity
 import com.github.ezauton.conversion.seconds
 import com.github.ezauton.core.action.action
 import com.github.ezauton.core.action.periodic
-import com.github.ezauton.core.actuators.VelocityMotor
+import com.github.ezauton.core.actuators.RotVelMotor
 import com.github.ezauton.core.actuators.VoltageMotor
 
 
@@ -37,7 +37,7 @@ object PhysicalTest { // TODO: what we using this for
    * @param leftMotor
    * @param rightMotor
    */
-  fun testStraightVelocity(leftMotor: VelocityMotor, rightMotor: VelocityMotor, velocity: AngularVelocity) = action {
+  fun testStraightVelocity(leftMotor: RotVelMotor, rightMotor: RotVelMotor, velocity: AngularVelocity) = action {
     periodic(duration = 5.seconds) {
       leftMotor.runVelocity(velocity)
       rightMotor.runVelocity(velocity)

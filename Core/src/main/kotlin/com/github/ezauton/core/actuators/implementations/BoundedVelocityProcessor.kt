@@ -1,10 +1,7 @@
 package com.github.ezauton.core.actuators.implementations
 
 import com.github.ezauton.conversion.AngularVelocity
-import com.github.ezauton.conversion.LinearVelocity
-import com.github.ezauton.conversion.Units
-import com.github.ezauton.conversion.zero
-import com.github.ezauton.core.actuators.VelocityMotor
+import com.github.ezauton.core.actuators.RotVelMotor
 import com.github.ezauton.core.actuators.VelocityProcessor
 
 /**
@@ -17,7 +14,7 @@ class BoundedVelocityProcessor
  * @param toApply The motor to apply the processed velocity to
  * @param maxSpeed The maximum speed that the motor will be allowed to run at.
  */
-  (toApply: VelocityMotor, private val maxSpeed: AngularVelocity) : VelocityProcessor(toApply) {
+  (toApply: RotVelMotor, private val maxSpeed: AngularVelocity) : VelocityProcessor(toApply) {
 
   init {
     if (!maxSpeed.isPositive) {

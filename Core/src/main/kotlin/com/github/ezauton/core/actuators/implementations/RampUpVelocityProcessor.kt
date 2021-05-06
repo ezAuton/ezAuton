@@ -1,7 +1,7 @@
 package com.github.ezauton.core.actuators.implementations
 
 import com.github.ezauton.conversion.*
-import com.github.ezauton.core.actuators.VelocityMotor
+import com.github.ezauton.core.actuators.RotVelMotor
 import com.github.ezauton.core.actuators.VelocityProcessor
 import com.github.ezauton.core.localization.Updatable
 import com.github.ezauton.core.utils.Stopwatch
@@ -17,7 +17,7 @@ class RampUpVelocityProcessor
  * @param clock The clock to keep time with
  * @param maxAccel The maximum acceleration of this motor.
  */
-  (velocityMotor: VelocityMotor, private val maxAccel: AngularAcceleration) : VelocityProcessor(velocityMotor), Updatable {
+  (velocityMotor: RotVelMotor, private val maxAccel: AngularAcceleration) : VelocityProcessor(velocityMotor), Updatable {
   private val accelStopwatch: Stopwatch = Stopwatch.start()
 
   var lastVelocity = 0.radians / sec
