@@ -1,5 +1,6 @@
 package com.github.ezauton.visualizer.processor;
 
+import com.github.ezauton.core.trajectory.geometry.ImmutableVector;
 import com.github.ezauton.recorder.base.RobotStateRecorder;
 import com.github.ezauton.recorder.base.frame.RobotStateFrame;
 import com.github.ezauton.visualizer.util.DataProcessor;
@@ -8,9 +9,9 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class RobotStateDataProcessor implements DataProcessor {
     private final RobotStateRecorder robotRec;
     private final List<RobotStateFrame> dataFrames;
 
+    private Path traveledPath;
     private Rectangle robot;
     private Circle posCircle;
     private Label headingLabel, posLabel, velocityLabel;
@@ -35,6 +37,7 @@ public class RobotStateDataProcessor implements DataProcessor {
     public RobotStateDataProcessor(RobotStateRecorder robotRec) {
         this.robotRec = robotRec;
         dataFrames = robotRec.getDataFrames();
+        traveledPath = new Path();
     }
 
 
@@ -61,6 +64,21 @@ public class RobotStateDataProcessor implements DataProcessor {
         posCircle = new Circle(3, Paint.valueOf("white"));
         posCircle.setStroke(Paint.valueOf("black"));
 
+        traveledPath.getElements().add(new MoveTo(
+                getX(dataFrames.get(0).getPos().get(0)),
+                getY(dataFrames.get(0).getPos().get(1))
+        ));
+
+        for(RobotStateFrame dataFrames : dataFrames) {
+            ImmutableVector to = dataFrames.getPos();
+            traveledPath.getElements().add(new LineTo(
+                    getX(to.get(0)),
+                    getY(to.get(1))
+            ));
+        }
+
+        traveledPath.setStrokeWidth(1);
+        traveledPath.setStroke(Color.gray(0.5, 0.2));
 
         // heading info
         headingLabel = new Label("0 radians");
@@ -74,6 +92,7 @@ public class RobotStateDataProcessor implements DataProcessor {
         robot.setStroke(Paint.valueOf("black"));
         environment.getFieldAnchorPane().getChildren().add(0, robot);
         environment.getFieldAnchorPane().getChildren().add(posCircle);
+        environment.getFieldAnchorPane().getChildren().add(traveledPath);
 
         GridPane dataGridPane = environment.getDataGridPane(robotRec.getName());
         dataGridPane.addRow(0, new Label("Heading: "), headingLabel);
