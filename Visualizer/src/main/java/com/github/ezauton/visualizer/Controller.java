@@ -30,11 +30,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 enum StartPos {
-    LEFT_HAB2(163 / 443D, 485 / 492D),
-    LEFT_HAB1(163 / 443D, 421 / 492D),
-    CENTER(.5, 421 / 492D),
-    RIGHT_HAB2(1 - 163D / 443D, 485 / 492D),
-    RIGHT_HAB1(1 - 163D / 443D, 421 / 492D);
+    LEFT(33D / 443D, 1),
+    CENTER(206D / 443D, 1),
+    RIGHT(358D / 443D, 1);
 
     private final double proportionX;
     private final double proportionY;
