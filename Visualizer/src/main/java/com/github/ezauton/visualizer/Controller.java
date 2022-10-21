@@ -448,8 +448,10 @@ public class Controller implements Initializable {
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("JSON file", "*.json"));
         try {
             File jsonFile = fileChooser.showOpenDialog(Visualizer.getInstance().getStage());
-            loadRecording(jsonFile);
-            btnSelectJsonLogFile.setText(jsonFile.getName());
+            if(!Objects.isNull(jsonFile)) {
+                loadRecording(jsonFile);
+                btnSelectJsonLogFile.setText(jsonFile.getName());
+            }
         } catch (Exception err) {
             err.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -466,6 +468,7 @@ public class Controller implements Initializable {
      * @throws IOException If the file cannot be read from
      */
     private void loadRecording(File jsonFile) throws IOException {
+        if (Objects.isNull(jsonFile)) return;
         List<String> lines = Files.readAllLines(jsonFile.toPath());
         StringBuilder fileContentsSb = new StringBuilder();
         lines.forEach(fileContentsSb::append);
