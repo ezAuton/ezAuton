@@ -1,6 +1,7 @@
 package com.github.ezauton.core.action;
 
 import com.github.ezauton.core.localization.TranslationalLocationEstimator;
+import com.github.ezauton.core.localization.sensors.VelocityEstimator;
 import com.github.ezauton.core.pathplanning.Path;
 import com.github.ezauton.core.pathplanning.PathSegment;
 import com.github.ezauton.core.pathplanning.purepursuit.Lookahead;
@@ -17,6 +18,7 @@ public final class PurePursuitAction extends PeriodicAction  // TODO: Rename to 
 {
     private final PurePursuitMovementStrategy purePursuitMovementStrategy;
     private final TranslationalLocationEstimator translationalLocationEstimator;
+    private final VelocityEstimator velocityEstimator;
     private final Lookahead lookahead;
     private final TranslationalLocationDriveable translationalLocationDriveable;
     private double speedUsed;
@@ -32,10 +34,11 @@ public final class PurePursuitAction extends PeriodicAction  // TODO: Rename to 
      * @param lookahead                      An instance of {@link Lookahead} that can tell us how far along the path to look ahead
      * @param translationalLocationDriveable The drivetrain of the robot
      */
-    public PurePursuitAction(long period, TimeUnit timeUnit, PurePursuitMovementStrategy purePursuitMovementStrategy, TranslationalLocationEstimator translationalLocationEstimator, Lookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable) {
+    public PurePursuitAction(long period, TimeUnit timeUnit, PurePursuitMovementStrategy purePursuitMovementStrategy, TranslationalLocationEstimator translationalLocationEstimator, VelocityEstimator velocityEstimator, Lookahead lookahead, TranslationalLocationDriveable translationalLocationDriveable) {
         super(period, timeUnit);
         this.purePursuitMovementStrategy = purePursuitMovementStrategy;
         this.translationalLocationEstimator = translationalLocationEstimator;
+        this.velocityEstimator = velocityEstimator;
         this.lookahead = lookahead;
         this.translationalLocationDriveable = translationalLocationDriveable;
     }
@@ -44,7 +47,7 @@ public final class PurePursuitAction extends PeriodicAction  // TODO: Rename to 
     public void execute() {
         // Find out where to drive to
         ImmutableVector loc = translationalLocationEstimator.estimateLocation();
-        ImmutableVector goalPoint = purePursuitMovementStrategy.update(loc, lookahead.getLookahead());
+        ImmutableVector goalPoint = purePursuitMovementStrategy.update(loc, lookahead.getLookahead(velocityEstimator));
 
         Path path = purePursuitMovementStrategy.getPath();
         PathSegment current = path.getCurrent();

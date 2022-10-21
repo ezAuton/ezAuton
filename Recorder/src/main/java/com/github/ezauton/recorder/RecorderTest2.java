@@ -47,11 +47,11 @@ public class RecorderTest2 {
         TankRobotEncoderEncoderEstimator locEstimator = robot.getDefaultLocEstimator();
         locEstimator.reset();
 
-        Lookahead lookahead = new LookaheadBounds(1, 3, 2, 10, locEstimator);
+        Lookahead lookahead = new LookaheadBounds(1, 3, 2, 10);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
-        PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         Recording recording = new Recording();
 

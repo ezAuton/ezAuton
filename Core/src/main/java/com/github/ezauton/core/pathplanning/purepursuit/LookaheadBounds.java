@@ -14,7 +14,6 @@ public class LookaheadBounds implements Lookahead {
 
     private final double dDistance;
     private final double dSpeed;
-    private final VelocityEstimator velocityEstimator;
 
     /**
      * Create some lookahead bounds
@@ -23,15 +22,13 @@ public class LookaheadBounds implements Lookahead {
      * @param maxDistance       Maximum lookahead
      * @param minSpeed          Minimum speed where lookahead is allowed to be dynamic
      * @param maxSpeed          Maximum speed where lookahead is allowed to be dynamic
-     * @param velocityEstimator Estimator of the robot's velocity. Used to calculate lookahead based on current speed.
      */
-    public LookaheadBounds(double minDistance, double maxDistance, double minSpeed, double maxSpeed, VelocityEstimator velocityEstimator) {
+    public LookaheadBounds(double minDistance, double maxDistance, double minSpeed, double maxSpeed) {
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
         dDistance = maxDistance - minDistance;
         this.minSpeed = minSpeed;
         dSpeed = maxSpeed - minSpeed;
-        this.velocityEstimator = velocityEstimator;
     }
 
     /**
@@ -40,7 +37,7 @@ public class LookaheadBounds implements Lookahead {
      * @return The lookahead to use
      */
     @Override
-    public double getLookahead() {
+    public double getLookahead(VelocityEstimator velocityEstimator) {
         double speed = Math.abs(velocityEstimator.getTranslationalVelocity());
         double lookahead = dDistance * (speed - minSpeed) / dSpeed + minDistance;
         return Double.isNaN(lookahead) ? minDistance : Math.max(minDistance, Math.min(maxDistance, lookahead));

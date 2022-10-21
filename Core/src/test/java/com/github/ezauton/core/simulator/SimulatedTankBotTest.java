@@ -49,11 +49,11 @@ public class SimulatedTankBotTest {
 
         BackgroundAction background = new BackgroundAction(50, TimeUnit.MILLISECONDS, bot::update, locEstimator::update);
 
-        Lookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
+        Lookahead lookahead = new LookaheadBounds(1, 5, 2, 10);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, bot);
 
-        PurePursuitAction purePursuitAction = new PurePursuitAction(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PurePursuitAction purePursuitAction = new PurePursuitAction(50, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         ActionGroup actionGroup = new ActionGroup()
                 .with(background)

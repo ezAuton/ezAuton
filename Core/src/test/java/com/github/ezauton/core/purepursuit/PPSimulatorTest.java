@@ -110,7 +110,7 @@ public class PPSimulatorTest {
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(simulatedRobot.getLeftDistanceSensor(), simulatedRobot.getRightDistanceSensor(), simulatedRobot);
         locEstimator.reset();
 
-        Lookahead lookahead = new LookaheadBounds(1, 6, 2, 10, locEstimator);
+        Lookahead lookahead = new LookaheadBounds(1, 6, 2, 10);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot);
 
@@ -120,7 +120,7 @@ public class PPSimulatorTest {
         rec.addSubRecording(new TankDriveableRecorder("td", simulation.getClock(), simulatedRobot.getDefaultTransLocDriveable()));
 
 
-        PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, simulatedRobot::update);
 

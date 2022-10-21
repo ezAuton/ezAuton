@@ -58,11 +58,11 @@ public class RecorderTest {
         locEstimator = robot.getDefaultLocEstimator();
         locEstimator.reset();
 
-        lookahead = new LookaheadBounds(1, 7, 2, 10, locEstimator);
+        lookahead = new LookaheadBounds(1, 7, 2, 10);
 
         tankRobotTransLocDriveable = robot.getDefaultTransLocDriveable();
 
-        purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, lookahead, tankRobotTransLocDriveable);
+        purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, locEstimator, lookahead, tankRobotTransLocDriveable);
 
 
         updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, robot::update);
