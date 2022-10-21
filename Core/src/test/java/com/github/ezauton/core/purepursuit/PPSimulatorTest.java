@@ -30,8 +30,8 @@ public class PPSimulatorTest {
 
     private static final double LATERAL_WHEEL_DIST = 4;
 
-    //    @Test
-    public void testLeftToRightScale() throws TimeoutException, ExecutionException {
+    @Test
+    public void testLeftToLeftScale() throws TimeoutException, ExecutionException {
         PPWaypoint[] build = new PPWaypoint.Builder()
                 .add(0, 0, 16, 13, -12)
                 .add(0, 4, 16, 13, -12)
@@ -39,6 +39,21 @@ public class PPSimulatorTest {
                 .add(-0.5, 12.405, 13, 13, -12)
                 .add(-0.5, 17, 8.5, 13, -12)
                 .add(1.5, 19.4, 0, 13, -12)
+                .buildArray();
+
+        test("testLeftToLeftScale", build);
+    }
+
+    @Test
+    public void testLeftToRightScale() throws TimeoutException, ExecutionException {
+        PPWaypoint[] build = new PPWaypoint.Builder()
+                .add(0, 0, 0, 20, -10)
+                .add(0F, 10.589F, 10.F, 20, -10)
+                .add(0F, 17.0F, 10F, 20, -10)
+                .add(2.454F, 19.5F, 10F, 20, -10)
+                .add(15.0F, 19.5F, 11F, 20, -5)
+                .add(23.83F, 19.5F, 5.25F, 20, -5)
+                .add(17.833F, 26F, 0F, 10, -5)
                 .buildArray();
 
         test("testLeftToRightScale", build);
@@ -95,7 +110,7 @@ public class PPSimulatorTest {
         TankRobotEncoderEncoderEstimator locEstimator = new TankRobotEncoderEncoderEstimator(simulatedRobot.getLeftDistanceSensor(), simulatedRobot.getRightDistanceSensor(), simulatedRobot);
         locEstimator.reset();
 
-        Lookahead lookahead = new LookaheadBounds(1, 5, 2, 10, locEstimator);
+        Lookahead lookahead = new LookaheadBounds(1, 6, 2, 10, locEstimator);
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot);
 
