@@ -29,14 +29,14 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
 enum StartPos {
-    LEFT(33D / 443D, 1),
-    CENTER(206D / 443D, 1),
-    RIGHT(358D / 443D, 1);
+    LEFT(33D / 443D, Controller.FOO),
+    CENTER(206D / 443D, Controller.FOO),
+    RIGHT(358D / 443D, Controller.FOO);
 
     private final double proportionX;
     private final double proportionY;
-
     StartPos(double proportionX, double proportionY) {
 
         this.proportionX = proportionX;
@@ -58,6 +58,7 @@ enum StartPos {
 }
 
 public class Controller implements Initializable {
+    public static double FOO = 0.95;
 
     @FXML
     public Button btnSelectJsonLogFile;
@@ -474,7 +475,11 @@ public class Controller implements Initializable {
         lines.forEach(fileContentsSb::append);
         String json = fileContentsSb.toString();
 
-        this.currentRecording = JsonUtils.toObject(Recording.class, json);
-        animateSquareKeyframe(null);
+        try {
+            this.currentRecording = JsonUtils.toObject(Recording.class, json);
+            animateSquareKeyframe(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

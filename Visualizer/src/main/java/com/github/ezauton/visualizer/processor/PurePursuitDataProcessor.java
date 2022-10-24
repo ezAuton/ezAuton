@@ -38,7 +38,7 @@ public class PurePursuitDataProcessor implements DataProcessor {
         this.ppRec = ppRec;
 
         goalPoint = new Circle(3, Paint.valueOf("red"));
-        closestPoint = new Circle(3, Paint.valueOf("lawngreen"));
+        closestPoint = new Circle(3, Paint.valueOf("purple"));
 
         waypointPath = new Path();
 
@@ -94,10 +94,10 @@ public class PurePursuitDataProcessor implements DataProcessor {
         currentSegmentLine.setStrokeWidth(1);
         currentSegmentLine.setStroke(Paint.valueOf("orange"));
 
-        anchorPane.getChildren().add(closestPoint);
-        anchorPane.getChildren().add(goalPoint);
         anchorPane.getChildren().add(waypointPath);
         anchorPane.getChildren().add(currentSegmentLine);
+        anchorPane.getChildren().add(closestPoint);
+        anchorPane.getChildren().add(goalPoint);
 
         GridPane dataGridPane = environment.getDataGridPane(ppRec.getName());
 

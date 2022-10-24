@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PPSimulatorTest {
 
-    private static final double LATERAL_WHEEL_DIST = 4;
+    private static final double LATERAL_WHEEL_DIST = 25D / 12;
 
     @Test
     public void testLeftToLeftScale() throws TimeoutException, ExecutionException {
@@ -38,7 +38,7 @@ public class PPSimulatorTest {
                 .add(-0.5, 8.589, 16, 13, -12)
                 .add(-0.5, 12.405, 13, 13, -12)
                 .add(-0.5, 17, 8.5, 13, -12)
-                .add(1.5, 19.4, 0, 13, -12)
+                .add(4.0, 23.4, 0, 13, -12)
                 .buildArray();
 
         test("testLeftToLeftScale", build);
@@ -50,10 +50,10 @@ public class PPSimulatorTest {
                 .add(0, 0, 0, 20, -10)
                 .add(0F, 10.589F, 10.F, 20, -10)
                 .add(0F, 17.0F, 10F, 20, -10)
-                .add(2.454F, 19.5F, 10F, 20, -10)
-                .add(15.0F, 19.5F, 11F, 20, -5)
-                .add(23.83F, 19.5F, 5.25F, 20, -5)
-                .add(17.833F, 26F, 0F, 10, -5)
+                .add(2.454F, 18.5F, 10F, 20, -10)
+                .add(15.0F, 18.5F, 11F, 20, -6)
+                .add(21.83F, 18.5F, 6.75F, 20, -5)
+                .add(19F, 23F, 0F, 10, -5)
                 .buildArray();
 
         test("testLeftToRightScale", build);
@@ -89,7 +89,21 @@ public class PPSimulatorTest {
                 .add(0, 0, 0, 15, 13, -12)
                 .add(0, 13, 0, 10, 13, -12)
                 .add(20, 17, -Math.PI / 2, 8, 13, -12)
-                .add(23, 24, 0, 0.5, 13, -12)
+                .add(19F, 23F, Math.PI / 4, 0.5, 13, -12)
+                .buildPathGenerator()
+                .generate(0.05));
+    }
+
+    @Test
+    public void testSplineLoop() throws TimeoutException, ExecutionException {
+        test("testSplineLoop", new SplinePPWaypoint.Builder()
+                .add(0, 0, 0, 15, 13, -12)
+                .add(0, 10, 0, 10, 13, -12)
+                .add(5, 15, -Math.PI / 2, 8, 13, -12)
+                .add(10, 10, -Math.PI, 8, 13, -12)
+                .add(5, 5, Math.PI / 2, 8, 13, -12)
+                .add(0, 10, 0, 8, 13, -12)
+                .add(0, 20, 0, 8, 13, -12)
                 .buildPathGenerator()
                 .generate(0.05));
     }
@@ -114,25 +128,19 @@ public class PPSimulatorTest {
 
         TankRobotTransLocDriveable tankRobotTransLocDriveable = new TankRobotTransLocDriveable(leftMotor, rightMotor, locEstimator, locEstimator, simulatedRobot);
 
-        Recording rec = new Recording();
-        rec.addSubRecording(new PurePursuitRecorder(simulation.getClock(), path, ppMoveStrat));
-        rec.addSubRecording(new RobotStateRecorder(simulation.getClock(), locEstimator, locEstimator, 30 / 12D, 2));
-        rec.addSubRecording(new TankDriveableRecorder("td", simulation.getClock(), simulatedRobot.getDefaultTransLocDriveable()));
-
-
         PurePursuitAction purePursuitAction = new PurePursuitAction(20, TimeUnit.MILLISECONDS, ppMoveStrat, locEstimator, locEstimator, lookahead, tankRobotTransLocDriveable);
 
         BackgroundAction updateKinematics = new BackgroundAction(2, TimeUnit.MILLISECONDS, simulatedRobot::update);
 
         Recording recording = new Recording()
-                .addSubRecording(new RobotStateRecorder("robotstate", simulation.getClock(), locEstimator, locEstimator, simulatedRobot.getLateralWheelDistance(), 1.5))
+                .addSubRecording(new RobotStateRecorder("robotstate", simulation.getClock(), locEstimator, locEstimator, 32.5/12D, 36.5/12D))
                 .addSubRecording(new PurePursuitRecorder("pp", simulation.getClock(), path, ppMoveStrat))
                 .addSubRecording(new TankDriveableRecorder("td", simulation.getClock(), tankRobotTransLocDriveable));
 
         BackgroundAction updateRecording = new BackgroundAction(20, TimeUnit.MILLISECONDS, recording::update);
 
         // Used to update the velocities of left and right motors while also updating the calculations for the location of the robot
-        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator::update, rec::update);
+        BackgroundAction backgroundAction = new BackgroundAction(20, TimeUnit.MILLISECONDS, locEstimator::update);
 
         ActionGroup group = new ActionGroup()
                 .with(updateKinematics)

@@ -79,7 +79,7 @@ public class PathSegmentInterpolated extends LinearPathSegment {
                 double position = motionState.getPosition();
                 if (position < 0) {
                     double velLeft = speedStart - motionState.getSpeed();
-                    if (velLeft < 0) return;
+                    if (velLeft < 1e-6) return;
                     String msg = String.format("Deceleration (magnitude) value too low to execute trajectory from %s to %s. At max deceleration still needed to decelerate: %.2f", getFrom(), getTo(), velLeft);
                     throw new IllegalStateException(msg);
                 }

@@ -91,7 +91,7 @@ public class RobotStateDataProcessor implements DataProcessor {
         robot.setFill(Paint.valueOf("cyan"));
         robot.setStroke(Paint.valueOf("black"));
         environment.getFieldAnchorPane().getChildren().add(0, robot);
-        environment.getFieldAnchorPane().getChildren().add(posCircle);
+        environment.getFieldAnchorPane().getChildren().add(1, posCircle);
         environment.getFieldAnchorPane().getChildren().add(traveledPath);
 
         GridPane dataGridPane = environment.getDataGridPane(robotRec.getName());
@@ -118,7 +118,7 @@ public class RobotStateDataProcessor implements DataProcessor {
                 heading = frame.getHeading();
 
                 double robotX = x - robotWidthPx / 2D;
-                double robotY = y - robotLengthPx;
+                double robotY = y - robotLengthPx / 2D;
 
                 keyValues.add(new KeyValue(robot.xProperty(), robotX, interpolator));
                 keyValues.add(new KeyValue(robot.yProperty(), robotY, interpolator));
